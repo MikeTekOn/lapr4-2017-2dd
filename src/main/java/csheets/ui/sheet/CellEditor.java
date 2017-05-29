@@ -117,9 +117,12 @@ public class CellEditor extends JTextField implements TableCellEditor, Selection
 			} catch (FormulaCompilationException e) {
 				// Retrieves correct message
 				String message;
-				if (e.getCause() instanceof antlr.TokenStreamRecognitionException)
-					message = "The parser responded: " +
-						((antlr.TokenStreamRecognitionException)e.getCause()).recog.getMessage();
+//				if (e.getCause() instanceof antlr.TokenStreamRecognitionException)
+//					message = "The parser responded: " +
+//						((antlr.TokenStreamRecognitionException)e.getCause()).recog.getMessage();
+				if (e.getCause() instanceof org.antlr.v4.runtime.RecognitionException)
+					message = "The parser responded: " + ((org.antlr.v4.runtime.RecognitionException)e.getCause()).getCause().getMessage();
+
 				else if (e instanceof UnknownElementException)
 					message = "The parser recognized the formula, but a language"
 						+ " element (" + ((UnknownElementException)e).getIdentifier()
