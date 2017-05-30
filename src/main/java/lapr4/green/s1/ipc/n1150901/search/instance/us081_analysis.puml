@@ -1,0 +1,35 @@
+@startuml 
+
+    actor User 
+    participant "<<analysis>>\nSearchWorkbookUI" as UI
+    participant "<<analysis>>\nSearchWorkbookCtrl" as ctrl
+    participant "<<analysis>>\nCleansheet" as cleansheet
+    participant "<<analysis>>\nSpreadsheet" as sheet
+
+    User -> UI : begin
+    activate UI 
+    UI -> ctrl : listWorkbooks : getAllActiveWorkbooks()
+    activate ctrl
+    ctrl -> cleansheet : getWorkbooks()
+    ctrl <-- cleansheet
+    UI <-- ctrl
+    User <-- UI
+    deactivate ctrl
+    deactivate UI
+    User -> UI : chooseWorkbook(w)
+    activate UI
+    UI -> ctrl : checkIfWorkbookExists(w)
+    activate ctrl
+    loop for Workbook wb : listWorkbooks
+    alt wb == w
+    ctrl -> sheet : getTitle()
+    ctrl <-- sheet
+    ctrl -> sheet : getCells()
+    ctrl <-- sheet
+    end
+    end
+    UI <-- ctrl
+    UI -> UI : showSummary()
+    deactivate ctrl
+    
+@enduml
