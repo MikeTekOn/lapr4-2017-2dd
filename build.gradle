@@ -59,8 +59,8 @@ configurations {
 }
 
 dependencies {
-	antlr "org.antlr:antlr:3.4" // use ANTLR version 3
-// 	antlr "org.antlr:antlr4:4.5" // use ANTLR version 4
+//	antlr "org.antlr:antlr:3.4" // use ANTLR version 3
+ 	antlr "org.antlr:antlr4:4.7" // use ANTLR version 4
 
 	testCompile 'junit:junit:4.12'
 
@@ -82,7 +82,7 @@ dependencies {
 }
 
 sourceSets.main.output.resourcesDir = sourceSets.main.output.classesDir
-sourceSets.main.antlr.srcDirs = [ 'src/main/antlr3/']
+sourceSets.main.antlr.srcDirs = [ 'src/main/antlr4/']
 
 compileJava.dependsOn(processResources)
 
@@ -90,6 +90,16 @@ compileJava.dependsOn(processResources)
 //	sourceCompatibility = '1.8'
 //}
 
+// ANTLR 4.7 Support
+generateGrammarSource {
+    //println sourceSets.main.antlr.flatten()
+    //outputDirectory = [ "${project.buildDir}/generated-src/main/antlr"]
+    //arguments += ["-visitor", sourceSets.main.antlr.flatten()].flatten()
+    
+    //maxHeapSize = "64m"
+    arguments += ["-visitor"]
+//    arguments = ["-visitor", "-long-messages"]
+}
 
 task renderPlantUml (type: RenderPlantUmlTask);
 
