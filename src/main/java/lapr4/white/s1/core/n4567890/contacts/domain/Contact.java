@@ -51,14 +51,14 @@ public class Contact implements AggregateRoot<Long>, Serializable {
         // for ORM
     }
 
-    public Contact(final String name, final String firstName, final String lastName, final Agenda agenda) {
+    public Contact(final String name, final String firstName, final String lastName) {
+        if (name.isEmpty()|firstName.isEmpty()|lastName.isEmpty()){
+            throw new IllegalStateException();
+        }
         this.name = name;
         this.firstName = firstName;
         this.lastName = lastName;
-        // TODO implement rest of the method
-        
-        // Create a the contact Agenda
-        this.agenda=agenda;
+        this.agenda=new Agenda();
     }
     
     @Override
@@ -67,12 +67,6 @@ public class Contact implements AggregateRoot<Long>, Serializable {
             return super.toString();
         else
             return this.name()+" ("+this.lastName+", "+this.firstName+")";
-    }
-        
-    public Contact(final String name, final String firstName, final String lastName) {
-
-        // create with empty agenda
-        this(name, firstName, lastName, new Agenda());
     }
     
     public String name() {
