@@ -61,14 +61,17 @@
  * <h2>4. Design</h2>
  *
  * <h3>4.1. Functional Tests</h3>
- * Basically, from requirements and also analysis, we see that the core functionality of this use case is to be able to add an attribute to cells to be used to store a comment/text. We need to be able to set and get its value.
- * Following this approach we can start by coding a unit test that uses a subclass of <code>CellExtension</code> with a new attribute for user comments with the corresponding method accessors (set and get). A simple test can be to set this attribute with a simple string and to verify if the get method returns the same string.
- * As usual, in a test driven development approach tests normally fail in the beginning. The idea is that the tests will pass in the end. 
- * <p>
- * see: <code>lapr4.white.s1.core.n1234567.comments.CommentableCellTest</code><p>
- *
- * <b>Attention: This test should be moved and refactored to Acceptance Tests so that it is in accordance with the 2017 edition guidelines.</b>
- * 
+ * Although domain class testing is already guaranteed, we need to make sure the inserted script the class loader is trying to build is valid or capture and treat the exception in case it's not. Note that this only verifies for this functional increment.
+ * The next one has to run this task asynchronously, which means it wont evaluate the entire script before running it.
+ * A valid BeanShellScript is a scrip that is able to be evaluated by the shell and executed without exceptions. Note that the script may compile but throw exceptions in runtime, which makes it invalid.
+ * This makes it imperative to code a two step validation: the class has to load correctly and the script has to execute without throwing any exceptions.
+ *  <p>
+ * Unit test 1 - ensureBeanShellClassInstanceIsBuiltCorrectly
+ *  <p>
+ *  <p>
+ * Unit test 2 - EnsureBeanShellScriptExecutes
+ *  <p>
+ * -----------------------------------------------------------BELOW IS STILL UNCHANGED----------------------------------------------------------------------------
  * <h3>4.2. UC Realization</h3>
  * To realize this user story we will need to create a subclass of Extension. We will also need to create a subclass of UIExtension. For the sidebar we need to implement a JPanel. In the code of the extension <code>csheets.ext.style</code> we can find examples that illustrate how to implement these technical requirements.
  * The following diagrams illustrate core aspects of the design of the solution for this use case.
@@ -170,5 +173,5 @@
  * 
  * @author alexandrebraganca
  */
-package lapr4.blue.s1.lang.n1140822.javascripting.beanshellwindow;
+package lapr4.blue.s1.lang.n1140822.beanshellwindow;
 
