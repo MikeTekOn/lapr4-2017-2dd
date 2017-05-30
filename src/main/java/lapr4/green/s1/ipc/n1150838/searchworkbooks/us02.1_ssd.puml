@@ -1,0 +1,12 @@
+@startuml us02.1_ssd.png
+
+actor User
+participant "System"
+
+
+User->System:insert the path to search
+System->System:search for cls files
+User<--System:show the cls files found on the directory
+User->System:choose the workbook to open
+System->System:open the workbook
+@enduml
