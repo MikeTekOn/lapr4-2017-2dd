@@ -11,24 +11,23 @@ actor "CRM User" as Actor
 participant AddEventUI as UI <<presentation>>
 participant AddEventController as Controller <<application>>
 participant "event:Event" as Domain <<domain>>
-database EventRepository as Repository <<repository>>
+database ContactRepository as Repository <<repository>>
 
-Actor --> UI: Selects one contact in his list
 Actor --> UI: Add Event
 activate UI
     UI -> Controller: create
-    Actor --> UI: Due Date,\nDescription
-    UI -> Controller: addEvent(dueDate, description)
+    Actor --> UI: Name,\nFirst Name,\nLast Name,\nPhotograph
+    UI -> Controller: addContact(Name, First Name, Last Name, Photograph)
     activate Controller
-        Controller -> Domain: create(dueDate, description)
+        Controller -> Domain: create(Name, First Name, Last Name, Photograph)
         activate Domain
             Domain -> Domain: validate
-            Domain -> Controller: event
+            Domain -> Controller: contact
         deactivate Domain
-        Controller -> Repository: save(event)
-        Controller -> UI: event
+        Controller -> Repository: save(contact)
+        Controller -> UI: contact
     deactivate Controller
-    UI --> Actor: Display Event Info
+    UI --> Actor: Display Contact Info
 deactivate UI
 
 @enduml

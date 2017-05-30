@@ -105,7 +105,10 @@ public class Contact implements AggregateRoot<Long>, Serializable {
 
     @Override
     public boolean sameAs(Object other) {
-        // FIXME implement this method
+        if(other instanceof Contact){
+            Contact otherContact = (Contact) other;
+            return this.name.equalsIgnoreCase(otherContact.name);
+        }
         return false;
     }
 
