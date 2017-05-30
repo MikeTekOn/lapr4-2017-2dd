@@ -29,9 +29,13 @@
  * manual, the <b>iText</b> tool would be used. To do so, a dependency, stated
  * in their website needs to be added so that Gradle (and Maven) can automaticly
  * download the required ".jar"'s:
- * <p>
+ *
+ * <pre>
+ * {@code
  * // https://mvnrepository.com/artifact/com.itextpdf/root compile group:
  * 'com.itextpdf', name: 'root', version: '7.0.2'
+ * }
+ * </pre>
  * <p>
  *
  * After the analysis on the installation guide, a research was made in the
@@ -64,6 +68,10 @@
  * range of cells. Independently of the chosen option, a Chooser should appear
  * allowing the user to select the destination path.
  *
+ * In terms of the interfaction between the user and the software, it was
+ * developed an System Sequence Siagram to aid in its better interpretation.
+ * <p>
+ * <img src="core08_01_analysis_ssd.png" alt="image">
  * <p>
  * <h2>4. Design</h2>
  * <p>
