@@ -36,6 +36,16 @@
  * Interface DataTransmissionContext defines the context of data transportation. <p>
  * Class BasicDataTransmissionContext: simply redirects the data being sent/received to the channel where it will ne transported/arrive. <p>
  * Class SecureDataTransmissionContext: inserts a layer of security between the data being sent/received and the channel where it will ne transported/arrive. <p>
+ * <p>
+ *
+ *
+ * <b>Tests</b><p>
+ *
+ * <b>Test1:</b> SendSimpleMessageUnsecuredTest<p>
+ * <b>Test2:</b> SendSimpleMessageSecuredTest<p>
+ * It Should be possible to send simple text messages encryped or not. <p></p>
+ * See Package lapr4.green.s1.ipc.n1150738.securecomm:<p>
+ * SendSimpleMessageTest<p>
  *
  * @author Henrique Oliveira [1150738@isep.ipp.pt]
  */
