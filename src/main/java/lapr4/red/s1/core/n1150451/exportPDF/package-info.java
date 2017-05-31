@@ -62,14 +62,21 @@
  * final output should be added by using the "add" method of Document.
  * <p>
  * Regarding the application functionality itself, a new Menu (and not an
- * extesion) should be created for this new requirement, with new option "Export
+ * extension) should be created for this new requirement, with new option "Export
  * to PDF...". Clicking on it, a pop-up window should appear allowing the user
  * to select the "range" of the export: the workbook, a specific worksheet or a
  * range of cells. Independently of the chosen option, a Chooser should appear
  * allowing the user to select the destination path.
+ * <p>
+ * Also, it is important to refer that a similar functionality is also being
+ * developed in the LANG area, the only difference being that the output is a
+ * XML file (Lang08.1). To reduce code duplicates, a pattern should be used to
+ * avoid it.
  *
- * In terms of the interfaction between the user and the software, it was
+ * <p>
+ * In terms of the interaction between the user and the software, it was
  * developed an System Sequence Siagram to aid in its better interpretation.
+ *
  * <p>
  * <img src="core08_01_analysis_ssd.png" alt="image">
  * <p>
