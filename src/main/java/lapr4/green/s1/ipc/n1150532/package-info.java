@@ -45,7 +45,7 @@
  * <p>
  * <b>Client Worker</b> is responsible for sending the request to a server. There will be a UDP client and a TCP client.
  * <p>
- * <b>Data Transfer Object</b> is responsible for transmitting the data through the network connection.
+ * <b>Data Transfer Object</b> is responsible for transmitting the data through the network connection (also known as DTO).
  * <p>
  * <b>Handler</b> is responsible for interpreting the Data Transfer Object received and perform any action needed.
  * <p>
@@ -55,6 +55,22 @@
  * 
  * The user story <b>IPC06</b> is strongly related to this one since that requires an encryption technique.
  * More information can be found there.
+ * 
+ * <h1>Tests</h1>
+ * 
+ * <h2>Acceptance Tests</h2>
+ * 
+ * <b>Find peers in local network</b>: One instance should be able to broadcast connection details request and find all other connected instances within the local network.
+ * <p>
+ * <b>Share a range of cells</b>: One instance should be able to send a range of cells to the other instance, which in turn should show them at the right address and the correct value. For the time being, it is only necessary to transfer the value itself.
+ * 
+ * <h2>Other</h2>
+ * 
+ * <b>Connection Details Request</b>: A broadcast can be sent to the local network with another instance running. The client who broadcasted must receive the connection details from the other instance.
+ * <p>
+ * <b>Echo Request</b>: A simple echo request can be sent from one instance to another. The client shall connect to the server and request it an echo. The client must receive the echo response.
+ * <p>
+ * <b>Unit Testing</b>: The main methods involved must be tested individually to assure their result is as expected.
  * 
  * @author Manuel Meireles (1150532)
  */ 
