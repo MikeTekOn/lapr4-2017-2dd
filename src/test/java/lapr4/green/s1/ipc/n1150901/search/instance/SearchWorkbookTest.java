@@ -43,9 +43,9 @@ public class SearchWorkbookTest {
         w_client = new Workbook();
 
         String[][] server_content = new String[1][1];
-        server_content[0][0] = "caralho";
+        server_content[0][0] = "A";
         String[][] client_content = new String[1][1];
-        client_content[0][0] = "pila";
+        client_content[0][0] = "B";
 
         w_server.addSpreadsheet(server_content);
         w_client.addSpreadsheet(client_content);
