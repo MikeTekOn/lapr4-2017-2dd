@@ -39,7 +39,8 @@
  * case more features like: the possibility to insert several comments in a
  * cell, associate them to the author and persist the comments with the
  * workbook. To identify the user in the comment, the software should retrieve
- * automaticly the system's username.
+ * automaticly the system's username by using this function:
+ * <code>System.getProperty("user.name")</code>.
  * <p>
  * <h3>Domain Concepts Description</h3>
  * <p>
@@ -75,9 +76,8 @@
  * <p>
  * We will need to add a class named <oode>User</code> to save the system's
  * username, in order to associate the author to the comment. Following this, we
- * need a test to ensure that the user's name is not empty or with spaces only.
- * <p>
- * see: <code>lapr4.red.s1.core.n1150690.comments.UserTest</code>
+ * will not need to create a test class for ensure the name isn't null because
+ * the function presented in analysis section will always return a string.
  * <p>
  *
  * <h3>4.2. UC Realization</h3>

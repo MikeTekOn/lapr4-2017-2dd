@@ -62,11 +62,11 @@
  * final output should be added by using the "add" method of Document.
  * <p>
  * Regarding the application functionality itself, a new Menu (and not an
- * extension) should be created for this new requirement, with new option "Export
- * to PDF...". Clicking on it, a pop-up window should appear allowing the user
- * to select the "range" of the export: the workbook, a specific worksheet or a
- * range of cells. Independently of the chosen option, a Chooser should appear
- * allowing the user to select the destination path.
+ * extension) should be created for this new requirement, with new option
+ * "Export to PDF...". Clicking on it, a pop-up window should appear allowing
+ * the user to select the "range" of the export: the workbook, a specific
+ * worksheet or a range of cells. Independently of the chosen option, a Chooser
+ * should appear allowing the user to select the destination path.
  * <p>
  * Also, it is important to refer that a similar functionality is also being
  * developed in the LANG area, the only difference being that the output is a
@@ -94,7 +94,22 @@
  *
  * <h3>4.4. Design Patterns and Best Practices</h3>
  * <p>
+ * As mentioned in the Analysis section, a pattern should be used to avoid code
+ * duplication between this funcionality and the XML Exportation one. To do so,
+ * in conjuntion with the Lang08.1 responsible it was decided that a pattern
+ * developed by the Gang of Four (GoF) was going to be used for this purpose,
+ * the <b>Strategy Pattern</b>. In the Strategy Pattern, a class or an
+ * algorithm, can change behavior during the runtime of the software, being a
+ * good choice in this situation, since the data to be exported is the same in
+ * both PDF and XML exportation funcionalities. To implement this pattern, the
+ * following "base diagram" was used:
+ *  * <p>
+ * <img src="core08_01_design_basePattern.png" alt="image">
+ * <p>
  *
+ *
+ *
+ * <p>
  * <h2>5. Implementation</h2>
  * <p>
  *
