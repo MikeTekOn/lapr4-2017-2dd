@@ -1,0 +1,9 @@
+@startuml design_02.png
+
+participant FindWorkbooksPublisher <<Singleton>>
+participant UIFindWorkbooksExtension <<Observer>>
+
+FindWorkbooksPublisher->UIFindWorkbooksExtension:update(Object workbook)
+UIFindWorkbooksExtension->UIFindWorkbooksExtension: updateCurrentList(Workbook workbook)
+
+@enduml

@@ -1,0 +1,19 @@
+@startuml lang03_1_analysis_basic_sd.png
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor User 
+participant "<<analysis>>ConditionalFormattingUI" as UI
+participant "<<analysis>>ConditionalFormattingController" as Controller
+User -> UI : selects a cell and chooses the Conditional Formatting option
+UI -> Controller : getCell()
+Controller -> Spreadsheet : getCell()
+UI --> User : displays a sidebar window with a formula input and style options\nfor both condition outputs (true or false) 
+User -> UI : chooses the desired options
+UI -> Controller : changeCondFormStyle()
+Controller -> StylableCell : setCondFormStyle()
+UI --> User : saves the conditional formatting of the cell
+
+@enduml
+@enduml

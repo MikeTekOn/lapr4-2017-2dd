@@ -1,5 +1,5 @@
 /**
- * Technical documentation regarding the user story IPC02.1:  Search Local Workbooks. 
+ * Technical documentation regarding the user story IPC02.1:  Find Workbooks. 
  * <p>
  * 
  * <b>Attention: This feature increment and this documentation are work in progress! You should question what is already done!</b><p>
@@ -16,25 +16,29 @@
  * 
  *  
  * <b>Analysis</b><p>
- * <img src="us064_analysis.png" alt="image"> 
- * <p>
- * <b>Notes:</b><p>
  * 
- * Class CommWorker: This class is a thread that has the responsibility of communicating with the client.<p>
- * One possibility is for this class to handle in the same socket all the communications with the same client.<p>
- * For this to work we could implement a pattern like "producer-consumer" where CommWorker would be producer and we could have several consumers for each type of subclass of DTO (Data Transfer Object).<p>
- * According to the type of DTO CommWorker would "pass" control to the specific consumer that would "handle" the received DTO.<p>
- * Maybe a similar approach could be used in the client side? For instance, to deal with a server notification indicating that a cell has been updated in the server and needs to be updated as well in the client.<p>
- * CommServer should be singleton. <p>
- * There should also be a CommClient (singleton). This CommClient should be used to establish a connection with a server and handle synchronous and asynchronous communication. Asynchronous communication should be handled in a manner similar to the server side (with a thread?).<p>  
+ * <b>System Sequence Diagram (SSD)</b><p>
+ * 
+ * <img src="us02.1_ssd.png" alt="image"> <p>
+ * 
+ * <b>Notes:</b><p>
+ * Class Directory: This class is responsible for validate and save the directory entered by the user. This class also has implemented a search and load  method for cls files.<p>
+ * Class UIFindWorkbooksExtension: This class is responsible to build the side bar that the user will be able to use and choose a workbook to open.This class will be also a observer to know when a file was found and update the main window <p>
+ * Class ControllerFindWorkbooks: This class is responsible for controlling the flow of the use case.<p>
+ * Class FindWorkbooksPublisher: This class is a singleton that has the function to warn all the observers that a new cls file was found. <p>
+ * 
+ * <b>Rules:</b><p>
+ * A Directory should have a valid directory <p>
+ * 
+ * <b>Open Questions:</b><p>
+ * Should the directory still searching for workbooks after one is choose?
+ * Assumption: YES<p>
+ * 
  * 
  * <b>Tests</b><p>
- * This should include not only unit tests (e.g., class-oriented tests) but also use case tests (e.g., like in the TDD approach). <p>
  *
- * <b>Test1:</b> BaseEchoCommunicationTest<p>
- * There should be a simple echo service that should return the echo of each message received.<p>
- * See Package lapr4.black.s1.ipc.n2345678.comm:<p>
- * BaseEchoCommunicationTest, EchoClientHandler, EchoDTO, EchoServerHandler<p>
+ * <b>UnitTest:</b> ensureDirectoryPathIsValid<p>
+ * The directory only should be created with a valid path. Expect a exception<p>
  * 
  * <b>Test2:</b> ShareCellTest<p>
  * Test the initial connection regarding the sharing of the contents of a range of cells. Should we move/refactor this test to Acceptance Test?<p>
@@ -45,15 +49,14 @@
  * 
  * <b>Design</b><p>
  * First draft regarding the design.<p>
- * Will start by illustrating a scenario regarding the use of the CommWorker class.<p>
- * <b>Important Note:</b> Maybe all this functionality should be integrated with the extensions. For instance, extensions could "register" communication servers and asynchronous client handlers. The data (i.e. DTO) would be dispatched according to its type<p> 
+ * Will start by illustrating a scenario regarding the use case flow.<p>
  * 
- * <img src="us064_design1.png" alt="image"> 
+ * <img src="design_01.png" alt="image"> 
  * <p>
  * 
- *
+ *Second SD illustrate the behavior off the UIFindWorkbooksExtension as observer.<p>
  * 
- * <img src="us064_design2.png" alt="image"> 
+ * <img src="design_02.png" alt="image"> 
  * <p>
  *  
  * <b>Code</b><p>
@@ -78,7 +81,7 @@
  * <p>
  * 
  * 
- * @author alexandrebraganca
+ * @author 1150838 Nuno Pinto
  */
-package lapr4.green.s1.ipc.n1150838.searchworkbooks;
+package lapr4.green.s1.ipc.n1150838.findworkbooks;
 
