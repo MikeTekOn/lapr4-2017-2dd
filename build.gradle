@@ -61,10 +61,12 @@ configurations {
 dependencies {
 //	antlr "org.antlr:antlr:3.4" // use ANTLR version 3
  	antlr "org.antlr:antlr4:4.7" // use ANTLR version 4
-
 	testCompile 'junit:junit:4.12'
 
 //	compile 'org.antlr:antlr-runtime:3.4'
+
+  //https://mvnrepository.com/artifact/com.itextpdf/root
+  compile group: 'com.itextpdf', name: 'root', version: '7.0.2'
         
     compile 'org.eclipse.persistence:eclipselink:2.6.1'
 	compile 'org.eclipse.persistence:org.eclipse.persistence.jpa.modelgen.processor:2.6.1'

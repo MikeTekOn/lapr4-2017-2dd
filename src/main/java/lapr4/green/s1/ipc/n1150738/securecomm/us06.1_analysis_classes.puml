@@ -1,0 +1,17 @@
+@startuml analysis_classes.png
+
+interface DataTransmissionContext {
+    inputStream(InputStream socketInStream) : ObjectInputStream
+    outputStream(OutputStream socketOutStream) : ObjectOutputStream
+}
+
+class BasicDataTransmissionContext
+class SecuredTransmissionContext {
+    cipher: Cipher
+}
+
+DataTransmissionContext <|-- BasicDataTransmissionContext
+DataTransmissionContext <|-- SecuredTransmissionContext
+
+
+@enduml
