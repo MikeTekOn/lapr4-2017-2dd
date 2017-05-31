@@ -1,0 +1,44 @@
+@startuml core10_01_design1.png
+    participant "ContactPanel : JPanel" as cp
+    participant "uiAddEvent : AddEventDialog" as UIevent
+    participant "AddEventController" as ctrl
+    participant "contact: Contact" as contact
+    participant "agenda: Agenda" as agenda
+    participant "ev: Event" as event
+    database ContactRepository as Repository <<repository>>
+
+    note right of cp
+        The user selects a contact...
+    end note
+
+    create cp
+
+    create ctrl
+    cp -> ctrl : create(appSettings)
+
+
+
+    cp -> cp : contact=getSelectedContact()
+
+    create UIevent
+
+    cp -> UIevent : create()
+
+    note right of UIevent
+            The user selects the due date and writes description
+        end note
+
+    UIevent -> ctrl : addEvent(contact, description, dueDate)
+    create event
+
+        ctrl -> event : create()
+    ctrl -> contact : agenda()
+    ctrl -> agenda : add(ev)
+    ctrl -> Repository : save(contact)
+    UIevent -> cp : updateEvents(ev)
+
+    note right of cp
+        ... the ContactPanel displays the updated event list of the current contact.
+    end note
+
+@enduml
