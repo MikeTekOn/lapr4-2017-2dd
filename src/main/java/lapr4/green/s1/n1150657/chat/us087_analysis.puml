@@ -1,0 +1,18 @@
+@startuml us087_analysis.png
+
+actor ChatSender
+participant System
+actor ChatReceiver
+
+    ChatSender -> System : establish a connection with another Cleansheet user
+    System -> ChatReceiver : connection
+    System <-- ChatReceiver : connection established
+group loop
+    ChatSender -> System : send message
+    System -> ChatReceiver : receives message
+    System <-- ChatReceiver : reply to the message
+    ChatSender <-- System : receives the replied message
+end group
+    
+
+@enduml

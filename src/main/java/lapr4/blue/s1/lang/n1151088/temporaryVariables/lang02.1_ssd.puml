@@ -1,0 +1,8 @@
+@startuml lang02.1_ssd.png
+
+
+actor User
+participant "System" as S
+User -> S : Introduces a formula containing temporary variable(s)
+S --> User : Displays the formula result
+@enduml
