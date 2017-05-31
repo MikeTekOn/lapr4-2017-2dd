@@ -35,21 +35,29 @@ public class SearchWorkbookTest {
 
     @Before
     public void setUp() throws IOException {
+        //Create files for the workbooks
         f_server = new File("server_file.cls");
         f_client = new File("client_file.cls");
+        
+        //Create CleanSheets
         c_server = new CleanSheets();
         c_client = new CleanSheets();
+        
+        //Create Workbooks
         w_server = new Workbook();
         w_client = new Workbook();
 
+        //Create content for the SpreadSheet
         String[][] server_content = new String[1][1];
-        server_content[0][0] = "caralho";
+        server_content[0][0] = "A";
         String[][] client_content = new String[1][1];
-        client_content[0][0] = "pila";
+        client_content[0][0] = "B";
 
+        //Add spreadsheet to the workbook
         w_server.addSpreadsheet(server_content);
         w_client.addSpreadsheet(client_content);
 
+        //Save workbooks
         c_server.saveAs(w_server, f_server);
         c_client.saveAs(w_client, f_client);
     }
