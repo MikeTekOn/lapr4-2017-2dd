@@ -1,15 +1,15 @@
 /**
  * Technical documentation regarding the user story Core02.2: Tooltip and User Associated to Comment.
  *
- * <p>
+ * <p/>
  * <b>Scrum Master: -(yes/no)- no</b>
  *
- * <p>
+ * <p/>
  * <b>Area Leader: -(yes/no)- no</b>
  *
  * <h2>1. Notes</h2>
- * <p>
- * <p>
+ * <p/>
+ * <p/>
  *
  * <h2>2. Requirement</h2>
  * Cleansheets should register the name of the user that creates comments and
@@ -19,7 +19,7 @@
  * comment should also appear in all displays of comments. Comments should be
  * persisted with the workbook.
  *
- * <p>
+ * <p/>
  * <b>Use Case "Tooltip and User Associated to Comment":</b> The user selects
  * the cell where he/she wants to enter a comment. The system displays the
  * current comment of that cell. The user enter the text of the comment (or
@@ -39,7 +39,8 @@
  * case more features like: the possibility to insert several comments in a
  * cell, associate them to the author and persist the comments with the
  * workbook. To identify the user in the comment, the software should retrieve
- * automaticly the system's username.
+ * automaticly the system's username by using this function:
+ * <code>System.getProperty("user.name")</code>.
  * <p>
  * <h3>Domain Concepts Description</h3>
  * <p>
@@ -63,13 +64,45 @@
  *
  * <h3>4.1. Functional Tests</h3>
  * <p>
+ * From requirements and also analysis, we see that the core functionality of
+ * this use case is to be able to associate the system's username to the comment
+ * and allow a cell to have several comments. A new class is going to be created
+ * with the name "CommentableCellWithMulipleUsers". This class will extend the
+ * CommentableCell, since this has the basic functions releted with the
+ * comments.
+ * <p>
+ * see:
+ * <code>lapr4.red.s1.core.n1150690.comments.CommentableCellWithMultipleUsersTest</code>
+ * <p>
+ * We will need to add a class named <oode>User</code> to save the system's
+ * username, in order to associate the author to the comment. Following this, we
+ * will not need to create a test class for ensure the name isn't null because
+ * the function presented in analysis section will always return a string.
+ * <p>
  *
  * <h3>4.2. UC Realization</h3>
  * <p>
+ * <b>Note: As the diagrams of the use case Core02.1 they were already created,
+ * the following diagrams are an adpatation of them.</b>
+ * <p>
+ * <h3>User Selects a Cell</h3>
+ * The following diagram illustrates what happens when the user selects a cell.
+ * The idea is that when this happens the extension must display in the sidebar
+ * the comments of that cell (if they exists).
+ * <p>
+ * <img src="core02_02_design1.png" alt="image">
+ *
+ * <h3>User Updates the Comment of a Cell or Adds a New One</h3>
+ * The following diagram illustrates what happens when the user updates the text
+ * of the comment of the current cell or adds a new comment. To be noticed that
+ * this diagram does not depict the actual selection of a cell (that is
+ * illustrated in the previous diagram).
+ * <p>
+ * <img src="core02_02_design2.png" alt="image">
  *
  * <h3>4.3. Classes</h3>
  * <p>
- *
+ * <img src="core02_02_design_class_diagram.png" alt="image">
  * <h3>4.4. Design Patterns and Best Practices</h3>
  * <p>
  *
@@ -95,11 +128,12 @@
  * <p>
  * <b>Wednesday 31/05/2017</b>
  * <p>
- * Yesterday:
+ * Yesterday: finished the analysis process.
  * <p>
- * Today:
+ * Today: I start the design process and want, if possible, starts the
+ * implementation of the unit tests.
  * <p>
- * Blocking:
+ * Blocking:---
  * <p>
  * <b>Thursday 1/06/2017 </b>
  * <p>

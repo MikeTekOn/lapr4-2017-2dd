@@ -1,0 +1,24 @@
+@startuml design_01.png
+
+actor User
+participant UIFindWorkbooksExtension <<Observer>>
+participant ControllerFindWorkbooks
+participant Directory
+participant FindWorkbooksPublisher <<Singleton>>
+participant UIController 
+
+User->UIFindWorkbooksExtension:insert path
+UIFindWorkbooksExtension->ControllerFindWorkbooks:inserPath(String path)
+create Directory
+ControllerFindWorkbooks->Directory:new()
+ControllerFindWorkbooks->Directory:searchFiles()
+loop
+Directory->Directory:Workbook w=loadFile(String filePath)
+Directory->FindWorkbooksPublisher:notifyObservers(Object w)
+end
+User<--UIFindWorkbooksExtension:shows the found files
+User-->UIFindWorkbooksExtension:choose a file
+UIFindWorkbooksExtension->UIController:setActiveWorkbook(Workbook w)
+
+
+@enduml

@@ -2,16 +2,18 @@
  * Technical documentation regarding the user story Lang04.1: Insert Function Basic Wizard.
  * <p>
  * JIRA issue: LAPR4E17DD-148
- * <p>
+ * 
  * <p>
  * <b>Scrum Master: no</b>
- * <p>
+ * 
  * <p>
  * <b>Area Leader: no</b>
  * 
  * <h2>1. Notes</h2>
  * 
  * 2017/05/30 - started analysing the user story
+ * <p>
+ * 2017/05/31 - update analysis and started design
  * 
  * <h2>2. Requirement</h2>
  * <p>
@@ -20,7 +22,7 @@
  * The construction of this list should be made dynamically based on the properties file and self-description of the functions.
  * When a function is selected in the list its syntax should be displayed in a edit box.
  * The "syntax" should include the name of the functions and its parameters.
- * <p>
+ * 
  * 
  * <p>
  * For example, for the factorial function, that only has one parameter, the following text should be displayed in the edit box "= FACT(Number)".
@@ -29,36 +31,62 @@
  * If the user selects the "Apply" button the text of the syntax of the function should be written in the formula bar.
  * <p>
  * 
- * <p><b>Use Case "Insert Function Basic Wizard":</b><p>
+ * <b>Use Case "Insert Function Basic Wizard":</b>
  * 
- * <p><img src="ssd_insert_function_basic_wizard.png" alt="image"><p>
+ * <p>
+ * <img src="ssd_insert_function_basic_wizard.png" alt="image">
  * 
- * 
- * <p>  1. The user selects "Function Wizard" option.<p>
- * <p>  2. The system displays a new window that contains a list of functions.<p>
- * <p>  3. The user select a function.<p>
- * <p>  4. The system display the syntax and description of selected function.<p>
- * <p>  5. The user choose apply option.<p>
- * <p>  6. The system close the window and write the syntax function in the formula bar.<p>
- * 
+ * <ol>
+ * <li>  The user selects "Function Wizard" option.</li> 
+ * <li>  The system displays a new window that contains a list of functions.</li> 
+ * <li>  The user select a function.</li> 
+ * <li>  The system display the syntax and description of selected function.</li> 
+ * <li>  The user choose apply option.</li> 
+ * <li>  The system close the window and write the syntax function in the formula bar.</li> 
+ * </ol>
+
  * 
  * <h2>3. Analysis</h2>
+ * 
+ * <p>
+ * The user interface of the application it was implemented with Actions.
+ * To build this functionality we had to respect this pattern.
+ * The diagram above demonstrate what was done:
+ * <p>
+ * - ExtensionFunctionWizard
+ * <p>
+ * - UIExtensionFunctionWizard
+ * <p>
+ * - FunctionWizardMenu
+ * <p>
+ * - FunctionWizardAction
+ * 
+ * <p>
+ * <img src="cd1_insert_function_basic_wizard.png" alt="image">
+ * 
  * 
  * 
  * <h2>4. Design</h2>
  * 
  * <h3>4.1. Functional Tests</h3>
- * 
+ * <ol>
+ * <li>  Selects "Function Wizard" option.</li> 
+ * <li>  A new window will appear. Choose the function: FACT.</li> 
+ * <li>  On the label it will be possible see the description of the function and on edit box the syntax: =FACT()</li> 
+ * <li>  Then click "Apply" button.</li> 
+ * <li>  The system close the window and write the syntax function in the formula bar.</li> 
+ * </ol>
  * 
  * <h3>4.2. UC Realization</h3>
  * 
+ * <img src="sd_insert_function_basic_wizard.png" alt="image">
  * 
  * <h3>4.3. Classes</h3>
  * 
- * 
- * <h3>4.4. Design Patterns and Best Practices</h3>
- * 
- * 
+ * <p>
+ * Class Diagram:
+ * <p>
+ * <img src="cd2_insert_function_basic_wizard.png" alt="image">
  * 
  * 
  * <h2>5. Implementation</h2>
@@ -76,21 +104,13 @@
  * <b>Tuesday</b>
  * <p>
  * I worked on Analysis of the use story
- * <p>
  * 
+ * <p>
+ * <b>Wednesday</b>
+ * <p>
+ * Update analysis and started design
  * 
  * <h2>9. Self Assessment</h2> 
- * 
- * 
- * 
- * <h3>R3. Rubric Requirements Fulfilment: 3</h3>
- * 
- * <h3>R6. Rubric Requirements Analysis: 4</h3>
- * 
- *
- * <h3>R7. Rubric Design and Implement: 2</h3>
- * 
- * 
  * 
  * 
  * 

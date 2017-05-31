@@ -1,0 +1,23 @@
+@startuml us084_ssd.png
+
+actor User
+participant System
+
+group Import
+    User -> System : Selects the option to import data from a text file
+    User <-- System : Requests a text file to read its data
+    User -> System : Inserts the file path
+    User <-- System : Requests the range of cells to import data into and asks if the first line represents headers
+    User -> System : Inserts the range and defines the first line criteria
+    User <-- System : Displays the data read from the file onto the workbook
+end
+group Export
+    User -> System : Selects the option to export data to a text file
+    User <-- System : Requests a text file to write the data
+    User -> System : Inserts the file path
+    User <-- System : Requests the range of cells to export data from and asks if the first line represents headers
+    User -> System : Inserts the range and defines the first line criteria
+    User <-- System : Writes the data into the text file and informs success
+end
+
+@enduml us084_ssd.png

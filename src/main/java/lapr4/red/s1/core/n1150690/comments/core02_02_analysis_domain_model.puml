@@ -18,6 +18,11 @@
     interface CellListenner {
     }
     class "CommentableCell" as CommentableCell {
+        -String userComment;
+    }
+    class "CommentableCellWithMultipleUsers" as comUsers {
+        -User user;
+        -List<Pair<User,String> commentsWithUser;
     }
 
     class User{
@@ -46,7 +51,8 @@
     CellImpl o- CellExtension : extensions
 
     CellExtension <|-- CommentableCell
-    CommentableCell <|-- User
+    CommentableCell <|-- comUsers
+    comUsers o-- User
     
     Spreadsheet <|-- SpreadsheetImpl
     SpreadsheetImpl o- Cell: cells
