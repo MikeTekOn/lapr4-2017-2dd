@@ -1,5 +1,5 @@
 /**
- * Technical documentation regarding the user story IPC02.1:  Search Local Workbooks. 
+ * Technical documentation regarding the user story IPC02.1:  Find Workbooks. 
  * <p>
  * 
  * <b>Attention: This feature increment and this documentation are work in progress! You should question what is already done!</b><p>
@@ -23,9 +23,9 @@
  * 
  * <b>Notes:</b><p>
  * Class Directory: This class is responsible for validate and save the directory entered by the user. This class also has implemented a search and load  method for cls files.<p>
- * Class UISearchWorkbooksExtension: This class is responsible to build the side bar that the user will be able to use and choose a workbook to open. <p>
- * Class ControllerSearchWorkbooks: This class is responsible for controlling the flow of the use case.<p>
- * Class SearchWorkbooksPublisher: This class is a singleton that has the function to warn all the observers that a new cls file was found. <p>
+ * Class UIFindWorkbooksExtension: This class is responsible to build the side bar that the user will be able to use and choose a workbook to open.This class will be also a observer to know when a file was found and update the main window <p>
+ * Class ControllerFindWorkbooks: This class is responsible for controlling the flow of the use case.<p>
+ * Class FindWorkbooksPublisher: This class is a singleton that has the function to warn all the observers that a new cls file was found. <p>
  * 
  * <b>Rules:</b><p>
  * A Directory should have a valid directory <p>
@@ -38,7 +38,7 @@
  * <b>Tests</b><p>
  *
  * <b>UnitTest:</b> ensureDirectoryPathIsValid<p>
- * The directory only should be created with a valid path<p>
+ * The directory only should be created with a valid path. Expect a exception<p>
  * 
  * <b>Test2:</b> ShareCellTest<p>
  * Test the initial connection regarding the sharing of the contents of a range of cells. Should we move/refactor this test to Acceptance Test?<p>
@@ -84,5 +84,5 @@
  * 
  * @author 1150838 Nuno Pinto
  */
-package lapr4.green.s1.ipc.n1150838.searchworkbooks;
+package lapr4.green.s1.ipc.n1150838.findworkbooks;
 
