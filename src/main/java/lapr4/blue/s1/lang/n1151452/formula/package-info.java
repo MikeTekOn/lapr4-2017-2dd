@@ -122,7 +122,34 @@
  * </ol><p>
  * <p>
  * <p>
+ * <h2>4. Tests</h2>
  * <p>
+ * <b>Note: </b>Formulas can be tested interactively using <b>{@link csheets.core.formula.compiler.Console}</b><p>
+ * <p>
+ * <h3>4.1. Unit Tests</h3>
+ * <p><ol>
+ * <li>ensureBlockReturnsLastStatementResult
+ * <li>ensureBlockExecutesAllStatements
+ * <li>ensureExpressionIsAssignedToCell
+ * <li>ensureForLoopsStatementExecutions
+ * <li>ensureForLoopStopsWhenBoundaryConditionIsFalse
+ * </ol><p>
+ * <h3>4.1. Functional Tests</h3>
+ * <p>
+ * <b>4.1.1. Test block (by consequence test assignment) </b>
+ * <p>
+ * <ol>
+ * <li>Insert in cell A1 the following expression "={(A2:=1);(A3:=3);1+1}"
+ * <li>The following cells should have the following values: A1->2; A2->1; A3->3
+ * </ol>
+ * <p>
+ * <p>
+ * <b>4.1.2. Test for loop </b>
+ * <p>
+ * <ol>
+ * <li>Insert in cell A1 the following expression "=FOR{(A1:=1);(A1<=10);(A1:=A1+1)}"
+ * <li>The cell A1 should have the value 10 after the loop
+ * </ol>
  * <p>
  * <p>
  * <br>
