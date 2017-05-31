@@ -49,15 +49,14 @@
  * 
  * <b>Design</b><p>
  * First draft regarding the design.<p>
- * Will start by illustrating a scenario regarding the use of the CommWorker class.<p>
- * <b>Important Note:</b> Maybe all this functionality should be integrated with the extensions. For instance, extensions could "register" communication servers and asynchronous client handlers. The data (i.e. DTO) would be dispatched according to its type<p> 
+ * Will start by illustrating a scenario regarding the use case flow.<p>
  * 
- * <img src="us064_design1.png" alt="image"> 
+ * <img src="design_01.png" alt="image"> 
  * <p>
  * 
- *
+ *Second SD illustrate the behavior off the UIFindWorkbooksExtension as observer.<p>
  * 
- * <img src="us064_design2.png" alt="image"> 
+ * <img src="design_02.png" alt="image"> 
  * <p>
  *  
  * <b>Code</b><p>
