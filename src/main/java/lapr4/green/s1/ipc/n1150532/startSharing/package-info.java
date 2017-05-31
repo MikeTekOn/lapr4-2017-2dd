@@ -153,4 +153,4 @@
  * 
  * @author Manuel Meireles (1150532)
  */ 
-package lapr4.green.s1.ipc.n1150532;
+package lapr4.green.s1.ipc.n1150532.startSharing;
