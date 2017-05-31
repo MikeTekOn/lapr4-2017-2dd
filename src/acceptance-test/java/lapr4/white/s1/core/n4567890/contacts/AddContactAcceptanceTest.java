@@ -69,7 +69,9 @@ public class AddContactAcceptanceTest {
         aContact=controller.addContact("John Doe", "John", "Doe","");
 
         AddEventController c = new AddEventController(appProps);
-
+        Calendar date = Calendar.getInstance();
+        date.set(2017, Calendar.JUNE, 30);
+        c.addEvent(aContact,"Team Meeting",date);
         Calendar tomorrow=Calendar.getInstance();
         tomorrow.add(Calendar.DAY_OF_WEEK, 1);
     }
