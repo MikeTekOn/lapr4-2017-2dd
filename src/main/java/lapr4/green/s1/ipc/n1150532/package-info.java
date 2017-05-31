@@ -25,7 +25,7 @@
  * <p>
  * The handler may vary depending on the object to be transfered. This allow for a common communication base classes.
  * <p>
- * The requirements make no mention about the port numbers to use nor if they may be configured. Although a predefined value will be used, the port number shall allow easy configuration.
+ * The requirements also request the application to allow the port number to be configured. The changes to the configuration should be persistent.
  * 
  * <h2>Cell Sharing</h2>
  * 
