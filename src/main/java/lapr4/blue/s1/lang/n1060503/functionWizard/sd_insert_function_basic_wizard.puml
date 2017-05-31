@@ -1,0 +1,57 @@
+@startuml ssd_insert_function_basic_wizard.png
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor User 
+participant "FunctionWizardAction" as Action
+participant "FunctionWizardUI" as UI
+participant "FunctionWizardController" as CRTL
+
+User -> Action : selects "Function Wizard" option
+activate Action
+create UI
+
+Action -> UI : create
+deactivate Action
+activate UI
+create CRTL
+UI --> CRTL : create
+UI -> CRTL : getFunctions()
+activate CRTL
+CRTL -> Language : getFunctions()
+CRTL --> UI : 
+deactivate CRTL
+UI --> User : displays a new window that contains a list of functions 
+deactivate UI
+
+User -> UI : select a function
+activate UI
+UI -> CRTL : getDescription(String identifier)
+activate CRTL
+participant "<<Interface>>\nFunction" as Function
+CRTL -> Language : getFunction(String identifier)
+activate Language
+Language -> Function : getParameters()
+deactivate Language
+activate Function
+Function -> FunctionParameter : getDescription()
+deactivate Function
+CRTL --> UI :
+deactivate CRTL
+UI --> User : display the syntax and description of selected function
+deactivate UI
+
+User -> UI : choose apply option
+activate UI
+UI -> Action : insertSyntaxFormulaBar()
+deactivate UI
+activate Action
+
+Action --> User : close the window
+deactivate Action
+
+
+@enduml
