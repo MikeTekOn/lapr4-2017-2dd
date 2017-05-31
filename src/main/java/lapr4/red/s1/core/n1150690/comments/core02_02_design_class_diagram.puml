@@ -17,11 +17,12 @@
         -User user;
         -List<Pair<User,String> commentsWithUser;
     }
+note left: This is a new class
 
     class User{
         -String name;
     }
-    note left: This is a new class, all the others will contain changes
+    note left: This is a new class
 
     CellExtension <|-- CommentableCell
     CellExtension ..|> Cell
