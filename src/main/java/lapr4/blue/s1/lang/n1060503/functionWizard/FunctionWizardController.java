@@ -9,6 +9,6 @@ package lapr4.blue.s1.lang.n1060503.functionWizard;
  *
  * @author Pedro Fernandes
  */
-public class insertFunctionBasicWizardController {
+public class FunctionWizardController {
     
 }

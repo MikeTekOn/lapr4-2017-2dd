@@ -1,0 +1,51 @@
+@startuml
+
+  box "Server"
+    participant "ShareServer"
+    participant "ServerSocket"
+    participant "ShareWorker"
+    participant "aSocket:Socket" as aSocket
+  end box
+
+  box "Client"
+    participant "Client"
+    participant "Socket"
+    participant "ob:DTO" as DTO
+    participant "os:OutputStream" as OutputStream
+  end box
+
+
+create ServerSocket
+  ShareServer -> ServerSocket : new();
+  ShareServer -> ServerSocket : aSocket=accept();
+
+
+create Socket
+ Client -> Socket : new();
+ ServerSocket <-- Socket : connection established
+
+
+  create ShareWorker
+  ShareServer -> ShareWorker : new(aSocket);
+  ShareWorker -> aSocket : getInputStream();
+
+create FileChooser
+Client -> FileChooser: new()
+Client -> FileChooser: specifiesPath()
+
+
+create DTO
+  Client -> DTO : ob=new();
+  Client -> Socket : os=getOutputStream();
+  Client -> DTO : insertsFolderContent();
+
+create OutputStream
+  Socket -> OutputStream : new();
+  Client -> OutputStream : write(ob);
+
+
+
+
+
+
+@enduml

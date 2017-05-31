@@ -1,0 +1,9 @@
+@startuml
+class MacroExtensionUI
+class BeanShellLoaderController
+class BeanShellLoader
+class BeanShellClassInstance
+MacroExtensionUI --> BeanShellLoaderController
+BeanShellLoaderController ->BeanShellLoader
+BeanShellLoaderController ..> BeanShellClassInstance 
+@enduml
