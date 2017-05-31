@@ -60,6 +60,8 @@
  * 
  * <h2>Acceptance Tests</h2>
  * 
+ * <b>Configure port numbers</b>: The user changes the configuration and restarts the application. The user tries to change it again and the values are set to his last change.
+ * <p>
  * <b>Find peers in local network</b>: One instance should be able to broadcast connection details request and find all other connected instances within the local network.
  * <p>
  * <b>Share a range of cells</b>: One instance should be able to send a range of cells to the other instance, which in turn should show them at the right address and the correct value. For the time being, it is only necessary to transfer the value itself.
