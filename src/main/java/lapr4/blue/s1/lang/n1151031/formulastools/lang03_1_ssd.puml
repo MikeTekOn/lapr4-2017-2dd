@@ -1,0 +1,14 @@
+@startuml lang03_1_ssd.png
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor User 
+participant "System" as S
+User -> S : selects a cell and chooses the Conditional Formatting option
+S --> User : displays a sidebar window with a formula input and style options\nfor both condition outputs (true or false) 
+User -> S : chooses the desired options
+S --> User : saves the conditional formatting of the cell
+
+@enduml
+@enduml
