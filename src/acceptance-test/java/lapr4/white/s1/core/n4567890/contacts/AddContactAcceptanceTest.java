@@ -5,6 +5,7 @@
  */
 package lapr4.white.s1.core.n4567890.contacts;
 
+import lapr4.red.s1.core.n1150943.contacts.application.AddEventController;
 import lapr4.white.s1.core.n4567890.contacts.application.ContactController;
 import eapli.framework.persistence.DataConcurrencyException;
 import eapli.framework.persistence.DataIntegrityViolationException;
@@ -33,7 +34,6 @@ public class AddContactAcceptanceTest {
     private static Properties appProps=null;
     private static ContactController controller=null;
     private static Contact aContact=null;
-    private static Event aEvent=null;
    
     private static final String REPOSITORY_FACTORY_KEY = "persistence.repositoryFactory";
     private static final String REPOSITORY_FACTORY_VALUE = "lapr4.white.s1.core.n4567890.contacts.persistence.jpa.JpaRepositoryFactory";
@@ -66,11 +66,12 @@ public class AddContactAcceptanceTest {
         controller=new ContactController(appProps);
         
         // Populate the repository
-        aContact=controller.addContact("John Doe", "John", "Doe");
+        aContact=controller.addContact("John Doe", "John", "Doe","");
+
+        AddEventController c = new AddEventController(appProps);
 
         Calendar tomorrow=Calendar.getInstance();
         tomorrow.add(Calendar.DAY_OF_WEEK, 1);
-        aEvent=controller.addEvent(aContact, "Pay Taxes", tomorrow);        
     }
 
     @AfterClass
@@ -82,32 +83,18 @@ public class AddContactAcceptanceTest {
     @Test(expected = DataIntegrityViolationException.class)
     public void ensureNoContactDuplicates() throws DataConcurrencyException, DataIntegrityViolationException { 
 
-        controller.addContact("John Doe2", "John", "Doe2");
+        controller.addContact("John Doe2", "John", "Doe2","");
         
-        controller.addContact("John Doe2", "John", "Doe2");
+        controller.addContact("John Doe2", "John", "Doe2","");
     } 
     
     @Test 
     public void ensureNewContactHasAgenda() throws DataIntegrityViolationException, DataConcurrencyException { 
         
-        Contact contact=controller.addContact("Jane Doe3", "Jane", "Doe3");
+        Contact contact=controller.addContact("Jane Doe3", "Jane", "Doe3","");
         assertNotNull(contact.agenda().id());
     } 
 
-    @Test 
-    public void normalBehaviorAddEventToContact() throws DataIntegrityViolationException, DataConcurrencyException { 
-        
-        // First: Add or Select existing Contact
-        Contact contact=controller.addContact("Jane Doe4", "Jane", "Doe4");
-        
-        // Second: Add Event to Contact's Agenda
-        Event ev=null;
-        Calendar tomorrow=Calendar.getInstance();
-        tomorrow.add(Calendar.DAY_OF_WEEK, 1);
-        ev=controller.addEvent(contact, "Pay Taxes", tomorrow);
-        
-        assertNotNull(ev);
-    }     
     
     // @Ignore
     @Test(expected = DataIntegrityViolationException.class)
