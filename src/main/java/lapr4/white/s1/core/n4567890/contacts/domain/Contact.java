@@ -11,14 +11,20 @@ package lapr4.white.s1.core.n4567890.contacts.domain;
  */
 //import eapli.framework.domain.AggregateRoot;
 import eapli.framework.domain.AggregateRoot;
+
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Objects;
+import javax.imageio.ImageIO;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.swing.*;
 
 /**
  * Contact
@@ -51,13 +57,14 @@ public class Contact implements AggregateRoot<Long>, Serializable {
         // for ORM
     }
 
-    public Contact(final String name, final String firstName, final String lastName) {
+    public Contact(final String name, final String firstName, final String lastName, String photo) {
         if (name.isEmpty()|firstName.isEmpty()|lastName.isEmpty()){
             throw new IllegalStateException();
         }
         this.name = name;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.photo = photo;
         this.agenda=new Agenda();
     }
     
@@ -97,6 +104,18 @@ public class Contact implements AggregateRoot<Long>, Serializable {
         return this.agenda;
     }
 
+    public String photo() {
+        return photo;
+    }
+
+    /**
+     * Returns true if contact has events or false otherwise
+     * @return
+     */
+    public boolean hasEvents() {
+        return !agenda.isEmpty();
+    }
+
     @Override
     public boolean sameAs(Object other) {
         if(other instanceof Contact){
@@ -115,4 +134,5 @@ public class Contact implements AggregateRoot<Long>, Serializable {
     public Long id() {
         return this.pk;
     }
+
 }

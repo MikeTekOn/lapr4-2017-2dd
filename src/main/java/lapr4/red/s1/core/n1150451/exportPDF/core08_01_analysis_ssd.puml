@@ -8,6 +8,9 @@ SpreadSheet or Cells
 end note
 
 User -> UI: Selects the desired range
+User <-- UI: Asks if the output should contain headers
+
+User -> UI: Selects the option
 User <-- UI: Asks the destination path of the output file
 
 User -> UI: Selects the output path

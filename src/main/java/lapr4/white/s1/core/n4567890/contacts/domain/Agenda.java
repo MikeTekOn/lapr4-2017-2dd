@@ -24,21 +24,19 @@ import javax.persistence.OneToMany;
 @Entity
 public class Agenda implements Serializable {
 
-    // TODO: Devia ser um value object?
-    
     // ORM primary key
     @Id
     @GeneratedValue
-    private Long pk; 
-    
+    private Long pk;
+
     // Deve conter uma lista de eventos
     @OneToMany(cascade = CascadeType.ALL)
-    private final Set<Event> events = new HashSet<>();    
-    
+    private final Set<Event> events = new HashSet<>();
+
     protected Agenda() {
         // for ORM
     }
-    
+
     public Long id() {
         return this.pk;
     }
@@ -47,7 +45,15 @@ public class Agenda implements Serializable {
         if (ev == null) {
             throw new IllegalStateException();
         }
-        // FIXME validations are missing, e.g., add events in the past?
         return this.events.add(ev);
-    }    
+    }
+
+    /**
+     * returns true if the agenda has no events
+     * @return
+     */
+    protected boolean isEmpty(){
+        return events.isEmpty();
+    }
+
 }

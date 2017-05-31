@@ -8,27 +8,16 @@ package lapr4.white.s1.core.n4567890.contacts.ui;
 import csheets.CleanSheets;
 import eapli.framework.persistence.DataConcurrencyException;
 import eapli.framework.persistence.DataIntegrityViolationException;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.FlowLayout;
-import java.awt.Frame;
+import lapr4.white.s1.core.n4567890.contacts.application.ContactController;
+import lapr4.white.s1.core.n4567890.contacts.domain.Contact;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SpringLayout;
-import lapr4.white.s1.core.n4567890.contacts.application.ContactController;
-import lapr4.white.s1.core.n4567890.contacts.domain.Contact;
 
 /**
  *
@@ -38,27 +27,27 @@ public class ContactDialog extends JDialog implements ActionListener {
     private static ContactDialog dialog;
     private static String value = "";
     private JList list;
-    
+
     private static Contact _contact=null;
     private static boolean _success=false;
-    
+
     public enum ContactDialogMode {
         ADD,
         DELETE,
         EDIT
     }
-    
+
     public static Contact contact() {
         return _contact;
     }
-    
+
     public static boolean successResult() {
         return _success;
     }
-    
+
     private ContactDialogMode mode=ContactDialogMode.ADD;
     private ContactController ctrl=null;
- 
+
     /**
      * Set up and show the dialog.  The first Component argument
      * determines which frame the dialog depends on; it should be
@@ -82,59 +71,59 @@ public class ContactDialog extends JDialog implements ActionListener {
                                 title, contact);
         dialog.setVisible(true);
     }
-    
+
     public static void showDialog(Component frameComp,
                                     Component locationComp,
                                     ContactController ctrl,
                                     ContactDialogMode mode,
                                     String title) {
-        
+
         showDialog(frameComp, locationComp, ctrl, mode, title, null);
     }
-     
+
     // Widgets
     private JButton confirmButton=null;
     private JButton cancelButton=null;
-    
+
     private JLabel fullNameLabel=null;
     private JLabel firstNameLabel=null;
     private JLabel lastNameLabel=null;
-    
+
     private JTextField fullNameField=null;
     private JTextField firstNameField=null;
     private JTextField lastNameField=null;
-    
+
     private JPanel formPanel=null;
     private JPanel buttonPanel=null;
-    
+
     private JLabel statusLabel=null;
-    
+
     private void setupContactsWidgets() {
 
-            
+
             formPanel = new JPanel(new SpringLayout());
 
             // FullName
-            fullNameLabel=new JLabel(CleanSheets.getString("full_name_label"), JLabel.TRAILING);           
+            fullNameLabel=new JLabel(CleanSheets.getString("full_name_label"), JLabel.TRAILING);
             fullNameField=new JTextField(30);
             fullNameLabel.setLabelFor(fullNameField);
             formPanel.add(fullNameLabel);
             formPanel.add(fullNameField);
-            
+
             // FirstName
-            firstNameLabel=new JLabel(CleanSheets.getString("first_name_label"), JLabel.TRAILING);           
+            firstNameLabel=new JLabel(CleanSheets.getString("first_name_label"), JLabel.TRAILING);
             firstNameField=new JTextField(10);
             firstNameLabel.setLabelFor(firstNameField);
             formPanel.add(firstNameLabel);
             formPanel.add(firstNameField);
-            
+
             // LastName
-            lastNameLabel=new JLabel(CleanSheets.getString("last_name_label"), JLabel.TRAILING);           
+            lastNameLabel=new JLabel(CleanSheets.getString("last_name_label"), JLabel.TRAILING);
             lastNameField=new JTextField(10);
             lastNameLabel.setLabelFor(lastNameField);
             formPanel.add(lastNameLabel);
             formPanel.add(lastNameField);
-            
+
             SpringUtilities.makeCompactGrid(formPanel,
                                 3, 2, //rows, cols
                                 6, 6,        //initX, initY
@@ -214,11 +203,23 @@ public class ContactDialog extends JDialog implements ActionListener {
                     {
                         try {
                             // The User confirms the creation of a Contact
-                            _contact=this.ctrl.addContact(this.fullNameField.getText(), this.firstNameField.getText(), this.lastNameField.getText());
-                            
-                            _success=true;
-                            // Exit the dialog
-                            ContactDialog.dialog.setVisible(false);
+                            if(this.fullNameField.getText().isEmpty()|this.firstNameField.getText().isEmpty()|this.lastNameField.getText().isEmpty()){
+                                JOptionPane.showMessageDialog(rootPane,"Todos os campos são obrigatórios");
+                            }else{
+                                JFileChooser chooser = new JFileChooser("Escolha uma imagem para o utilizador");
+                                FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                                        "JPG & PNG Images", "jpg", "jpeg", "png");
+                                chooser.setFileFilter(filter);
+                                int returnVal = chooser.showOpenDialog(formPanel);
+                                String photo_path="";
+                                 if(returnVal == JFileChooser.APPROVE_OPTION) {
+                                    photo_path = chooser.getSelectedFile().getAbsolutePath();
+                                 }
+                                _contact=this.ctrl.addContact(this.fullNameField.getText(), this.firstNameField.getText(), this.lastNameField.getText(), photo_path);
+                                _success=true;
+                                // Exit the dialog
+                                ContactDialog.dialog.setVisible(false);
+                            }
                         } catch (DataConcurrencyException ex) {
                             Logger.getLogger(ContactDialog.class.getName()).log(Level.SEVERE, null, ex);
                             statusLabel.setForeground(Color.red);
