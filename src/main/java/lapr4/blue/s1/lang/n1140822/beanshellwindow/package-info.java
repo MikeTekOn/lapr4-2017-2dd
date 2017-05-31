@@ -34,17 +34,17 @@
  * <p>
  * 
  * As we can see, the simple sequence diagram for this use case looks very simplistic. As it was explained before, this is not always true, because beanshell can interact with the domain objects.
- * Even though we are not directly changing the domain and only using it - this is an extension - a domain analysis is still required and mandatory.
+ * Even though we are not directly changing and acessing the domain and only using it - this is an extension - a domain analysis is still required and mandatory.
  * <h3>Analysis of Core Technical Problem</h3>
  * We can see a class diagram of the domain model of the application <a href="../../../../overview-summary.html#modelo_de_dominio">here</a>.
  * The domain objects we will be interacting with in a larger scale are the Workbook and Cell objects. The changes we are making, and the values which the macros will work with come from these.
  * This requires a thorough study of the implementations of these objects to see how well they can be integrated in bean shell scripts.
  * <p>
- * We want an extensible extension. It is better to create bean shell classes in runtime, it adds extensibility - a lot - and allows for costumization and will also lower the coupling in our application.
+ * We want an extensible extension. It is better to create bean shell script classes in runtime, it adds extensibility - a lot - and allows for costumization and will also lower the coupling in our application.
  * For that to happen we should delegate this responsability to a class, which the only purpose is to build these dynamic classes, not run them.
  * After the dynamic class is created, it should be returned by the class loader to another class which will then execute the script within the newly constructed class.
- * After the script executes, it should output a result. For now, and since our domain only does mathematical calculations, the result it outputs is pretty straightforward. Even so, the creating of a object which will treat these results should be created, because, should the domain need results other than numeric, it is easier to implement.
- * This justifies the creation of another class its purpose is to treat the results and output in the required format.
+ * After the script executes, it should output a result. For now, and since our domain only supports mathematical calculations, the result it outputs is pretty straightforward. Even so, the creating of a object which will treat these results should be created, because, should the domain need results other than numeric, it is easier to implement.
+ * We will integrate the result that the domain usage outputs into this new class.
  * Of this analysis result the following classes:
  * <p>
  * <p>
@@ -61,45 +61,50 @@
  * <h2>4. Design</h2>
  *
  * <h3>4.1. Functional Tests</h3>
- * Basically, from requirements and also analysis, we see that the core functionality of this use case is to be able to add an attribute to cells to be used to store a comment/text. We need to be able to set and get its value.
- * Following this approach we can start by coding a unit test that uses a subclass of <code>CellExtension</code> with a new attribute for user comments with the corresponding method accessors (set and get). A simple test can be to set this attribute with a simple string and to verify if the get method returns the same string.
- * As usual, in a test driven development approach tests normally fail in the beginning. The idea is that the tests will pass in the end. 
+ * Although domain class testing is already guaranteed, we need to make sure the inserted script the class loader is trying to build is valid or capture and treat the exception in case it's not. Note that this only verifies for this functional increment.
+ * The next one has to run this task asynchronously, which means it wont evaluate the entire script before running it.
+ * A valid BeanShellScript is a scrip that is able to be evaluated by the shell and executed without exceptions. Note that the script may compile but throw exceptions in runtime, which makes it invalid.
+ * This makes it imperative to code a two step validation: the class has to load correctly and the script has to execute without throwing any exceptions.
+ *  <p>
+ * Unit test 1 - ensureBeanShellClassInstanceIsBuiltCorrectly
+ *  <p>
+ *  <p>
+ * Unit test 2 - ensureBeanShellScriptExecutes
+ *  <p>
  * <p>
- * see: <code>lapr4.white.s1.core.n1234567.comments.CommentableCellTest</code><p>
- *
- * <b>Attention: This test should be moved and refactored to Acceptance Tests so that it is in accordance with the 2017 edition guidelines.</b>
- * 
+ * Unit test 3 - ensureBeanShellScriptFailsIfBadCode
+ *  <p>
+ *  <p>
+ * Unit test 4 - ensureBeanShellClassInstanceIsNotBuiltIfNoCode
+ *  <p>
  * <h3>4.2. UC Realization</h3>
- * To realize this user story we will need to create a subclass of Extension. We will also need to create a subclass of UIExtension. For the sidebar we need to implement a JPanel. In the code of the extension <code>csheets.ext.style</code> we can find examples that illustrate how to implement these technical requirements.
- * The following diagrams illustrate core aspects of the design of the solution for this use case.
- * <p>
- * <b>Note:</b> It is very important that in the final version of this technical documentation the elements depicted in these design diagrams exist in the code!
+ * To realize this functional increment, we will need the classes depicted in the analysis section.
+ * In this section there will be two sequence diagrams: one that depicts the generic approach of building any beanshell script, and the other will illustrate the construction and the execution of the default script.
  * 
- * <h3>Extension Setup</h3>
- * The following diagram shows the setup of the "comments" extension when cleansheets is run.
  * <p>
- * <img src="core02_01_design.png" alt="image">
- * 
- *
- * <h3>User Selects a Cell</h3>
- * The following diagram illustrates what happens when the user selects a cell. The idea is that when this happens the extension must display in the sidebar the comment of that cell (if it exists).
+ * Sequence Diagram 1 - Generic class loading and script executing
  * <p>
- * <img src="core02_01_design2.png" alt="image">
- * 
- * <h3>User Updates the Comment of a Cell</h3>
- * The following diagram illustrates what happens when the user updates the text of the comment of the current cell. To be noticed that this diagram does not depict the actual selection of a cell (that is illustrated in the previous diagram).
  * <p>
- * <img src="core02_01_design3.png" alt="image">
+ * <img src="design_generic_sd.png" alt="image"> 
+ * <p>
+ * Sequence Diagram 2 - Default script class loading and executing
+ * <p>
+ * <img src="design_default_script_sd.png" alt="image"> 
+ * <p>
  * 
+ * The tricky part is building the script. We will have to read each line of the script file (or textbox in this case) and evaluate each one separatly. That task is realized in the create method of the builder class which is hidden in this diagram (simple text read).
+ * As explained, the evaluation of each line of code is executed by the newly  created instance returned by the loader.
+ * Note that you can define methods in this scripting language but they have to be defined in the same line of code.
  * <h3>4.3. Classes</h3>
  * 
- * -Document the implementation with class diagrams illustrating the new and the modified classes-
+ * <p>
+ * <img src="class_diagram.png" alt="image"> 
+ * <p>
  * 
  * <h3>4.4. Design Patterns and Best Practices</h3>
  * 
- * -Describe new or existing design patterns used in the issue-
- * <p>
- * -You can also add other artifacts to document the design, for instance, database models or updates to the domain model-
+ * This is an extension, so all extension related patterns are already explained in other documents. -insert reference to extension documentation.
+ * 
  * 
  * <h2>5. Implementation</h2>
  * 
@@ -170,5 +175,5 @@
  * 
  * @author alexandrebraganca
  */
-package lapr4.blue.s1.lang.n1140822.javascripting.beanshellwindow;
+package lapr4.blue.s1.lang.n1140822.beanshellwindow;
 

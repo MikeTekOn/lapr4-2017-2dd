@@ -1,0 +1,35 @@
+@startuml core02_01_analysis_cell_delegate.png
+    class UIExtensionComments {
+    }
+    class CommentController {
+    }
+    class CellExtension {
+    }
+   
+    interface Cell{
+    }
+
+    class "CommentableCell" as CommentableCell {
+        -String userComment;
+    }
+
+    class "CommentableCellWithMultipleUsers" as comUsers {
+        -User user;
+        -List<Pair<User,String> commentsWithUser;
+    }
+note left: This is a new class
+
+    class User{
+        -String name;
+    }
+    note left: This is a new class
+
+    CellExtension <|-- CommentableCell
+    CellExtension ..|> Cell
+    Cell <|-- CommentableCell
+    CommentableCell <|-- comUsers
+    comUsers o-- User
+    UIExtensionComments ..> CommentController
+    CommentController ..> CommentableCell
+@enduml
+

@@ -1,0 +1,74 @@
+@startuml formulas_domain_model.png
+
+'http://plantuml.com/skinparam.html'
+skinparam handwritten true
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+class Formula {
+	+Formula(Cell cell, Expression expression) 
+}
+interface Expression {
+	+Value evaluate()
+	+Object accept(ExpressionVisitor visitor)
+}
+interface Reference
+interface Operator
+interface UnaryOperator
+note right : <b>concrete classes:\nPercent, etc.
+interface BinaryOperator
+note left : <b>concrete classes:\nAdder, LessThan, etc.
+interface NaryOperator <<<b>analysis>>
+class SequenceBlock <<<b>analysis>>
+class Assignment <<<b>analysis>>
+class ForLoop <<<b>analysis>>
+note "<b>@override\napplyTo(Expression[] operands)" as n1
+SequenceBlock .. n1
+n1 .. ForLoop
+Assignment .. n1
+abstract class Operation <O extends Operator> {
+    getOperator() 
+}
+class UnaryOperation
+class BinaryOperation
+class NaryOperation <<<b>analysis>>
+class FunctionCall
+class Literal
+interface ExpressionVisitor {
+	+Object visitLiteral(Literal literal)
+	+Object visitUnaryOperation(UnaryOperation operation)
+	+Object visitBinaryOperation(BinaryOperation operation)
+	+Object visitReference(Reference reference)
+	+Object visitFunctionCall(FunctionCall call)
+	+Object <b>visitNaryOperation(NaryOperation operation)</b>
+}
+note right : <b>Vistior pattern to transverse\n<b>expressions and compile them
+Expression <|-- Formula
+Expression <|-- Reference
+Expression <|-- Operation
+Expression <|-- FunctionCall
+Expression <|-- Literal
+Operation <|-- UnaryOperation
+Operation <|-- BinaryOperation
+Operation <|-- NaryOperation
+Formula --> Reference : getReferences()
+Reference --> Cell : getCells();
+Cell --> Formula : getFormula
+UnaryOperation --> Expression : operand
+BinaryOperation --> Expression : leftOperand
+BinaryOperation --> Expression : rightOperand
+NaryOperation --> Expression : operands
+
+Operator <|-- UnaryOperator
+Operator <|-- BinaryOperator
+Operator <|-- NaryOperator
+
+UnaryOperation *-- UnaryOperator
+BinaryOperation *-- BinaryOperator
+NaryOperation *-- NaryOperator
+
+NaryOperator <|-- ForLoop
+NaryOperator <|-- SequenceBlock
+
+BinaryOperator <|-- Assignment
+@enduml
