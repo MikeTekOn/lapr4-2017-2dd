@@ -5,13 +5,8 @@
  */
 package lapr4.white.s1.core.n4567890.contacts.domain;
 
+import javax.persistence.*;
 import java.util.Calendar;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 /**
  *
@@ -33,12 +28,17 @@ public class Event {
     protected Event() {
         // for ORM
     }
-    
+
     public Event(final String description, final Calendar dueDate) {
-        this.description = description;
-        this.dueDate = dueDate;
-    }    
-    
+        if(dueDate.compareTo(Calendar.getInstance())>0){
+            this.description = description;
+            this.dueDate = dueDate;
+        }else {
+            throw new IllegalStateException();
+        }
+    }
+
+
     public String description() {
         return this.description;
     }

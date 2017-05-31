@@ -1,0 +1,11 @@
+@startuml
+actor User
+User -> MacroExtensionUI : Selects beanshell script option
+MacroExtensionUI -> BeanShellClassLoaderController : createClassFromScript(aScript)
+BeanShellClassLoaderController -> BeanShellClassLoader :create(aScript)
+ BeanShellClassLoader -> BeanShellClassLoaderController : return new BeanShellClassInstance()
+BeanShellClassLoaderController -> BeanShellClassInstance : beanShellResult = executeScript()
+BeanShellClassInstance -> BeanShellClassLoaderController : return new BeanShellResult()
+BeanShellClassLoaderController ->MacroExtensionUI : return beanShellResult
+MacroExtensionUI -> User : shows result
+@enduml
