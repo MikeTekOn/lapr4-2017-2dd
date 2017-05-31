@@ -1,0 +1,23 @@
+@startuml
+
+skinparam handwritten true
+skinparam monochrome true
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+class CommClientWorker
+class ClientHandler
+class DataTransferObject
+class CommServer
+class CommServerWorker
+class ServerHandler
+
+CommClientWorker "1" - "*" ClientHandler : uses >
+CommClientWorker "1" -- "1" DataTransferObject : sends >
+DataTransferObject "1" -- "1" CommClientWorker : are received by >
+DataTransferObject "1" -- "1" CommServerWorker : are received by >
+CommServerWorker "1" -- "1" DataTransferObject : sends >
+CommServer "1" - "*" CommServerWorker : creates >
+CommServerWorker "1" - "*" ServerHandler : uses >
+
+@enduml

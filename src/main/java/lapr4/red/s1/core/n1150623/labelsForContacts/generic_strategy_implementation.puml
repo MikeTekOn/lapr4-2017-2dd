@@ -1,0 +1,69 @@
+@startuml generic_strategy_implementation.png
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+title Generic Strategy Implementation
+
+note right of ObjType_B
+
+ .-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
+ code example
+ .-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
+
+ methodA()
+ {
+    int userChoice = getUserChoice();
+    <B>GenericExport<B > obj;
+
+    <B>switch(userChoice)
+    {
+        case 1:
+            <B>obj = Word_B(this);
+            break;
+        default:
+            <B>obj = PDF_B(this);
+            break;
+   }
+    <B>obj.export(this);
+ }
+end note
+
+class GenericExport <<interface>>{
++export(T obj);
+}
+
+class Word_A{
++@Override export(A obj);
+}
+
+class Word_B{
++@Override export(B obj);
+}
+
+class PDF_A{
++@Override export(A obj);
+}
+
+class PDF_B{
++@Override export(B obj);
+}
+
+
+class ObjType_A{
+- GenericExport<A> obj;
+}
+
+class ObjType_B{
+- GenericExport<B > obj;
+}
+
+GenericExport <--- ObjType_A
+GenericExport <--- ObjType_B
+Word_A --|> GenericExport
+Word_B --|> GenericExport
+PDF_A --|> GenericExport
+PDF_B --|> GenericExport
+
+@enduml

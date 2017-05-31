@@ -1,0 +1,42 @@
+@startuml us084_analysis_import.png
+
+actor User
+participant "<<analysis>>\nImportDataUI" as UI
+participant "<<analysis>>\nImportDataController" as Controller
+participant "<<analysis>>\nUIController" as UIController
+participant "<<analysis>>\nSpreadsheet" as Spreadsheet
+participant "<<analysis>>\nFileChooser" as FileChooser
+participant "<<analysis>>\nCellsDTO" as CellsDTO
+participant "<<analysis>>\nCell" as Cell 
+
+User -> UI : Selects option
+activate UI
+UI -> FileChooser : new()
+activate FileChooser
+UI <-- FileChooser : Requests file
+deactivate FileChooser
+User <-- UI : Requests file
+deactivate UI
+User -> UI : Selects file path
+activate UI
+UI -> FileChooser : getFileToOpen()
+activate FileChooser
+UI <-- FileChooser : file
+deactivate FileChooser
+create Controller
+UI -> Controller : new(file)
+activate Controller
+Controller -> Controller : cellList : getFileData(file)
+Controller -> UIController : getActiveSpreadsheet()
+loop for (Cell in cellList)
+    Controller -> CellsDTO : getContent()
+    Controller -> CellsDTO : getAddress()
+    Controller -> Spreadsheet : getCell(address)
+    Controller -> Cell : setContent(cont)
+end
+UI <-- Controller : success
+deactivate Controller
+User <-- UI : success
+deactivate UI
+
+@enduml us084_analysis_import.png

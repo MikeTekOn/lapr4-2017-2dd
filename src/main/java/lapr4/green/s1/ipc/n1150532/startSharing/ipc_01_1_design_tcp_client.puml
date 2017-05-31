@@ -1,0 +1,39 @@
+@startuml
+
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+participant "RequestConnectionAction"
+participant "CommExtension"
+participant "CommTCPClientsManager"
+participant "CommTCPClientWorker"
+participant "HandlerConnectionResponseDTO"
+participant "ObjectOutputStream"
+participant "ObjectInputStream"
+participant "ConnectionResponseDTO"
+
+RequestConnectionAction -> CommExtension : getCommTCPClient()
+RequestConnectionAction -> CommTCPClientsManager : requestConnectionTo( "server address", portNumber )
+create CommTCPClientWorker
+CommTCPClientsManager -> CommTCPClientWorker : client = new( "server address" , portNumber )
+create ObjectOutputStream
+CommTCPClientWorker -> ObjectOutputStream : new( socket )
+create ObjectInputStream
+CommTCPClientWorker -> ObjectInputStream : new( socket )
+CommTCPClientsManager -> CommTCPClientWorker : getObjectOutputStream()
+create ConnectionRequestDTO
+CommTCPClientsManager -> ConnectionRequestDTO : request = new()
+CommTCPClientsManager -> ObjectOutputStream : writeObject( request )
+CommTCPClientWorker -> ObjectInputStream : reply = readObject()
+create ConnectionResponseDTO
+ObjectInputStream -> ConnectionResponseDTO : new
+CommTCPClientWorker -> CommTCPClientsManager : getHandler( reply )
+CommTCPClientWorker -> HandlerConnectionResponseDTO : handleDTO( reply )
+note right of HandlerConnectionResponseDTO : Handler publishes a NewConnectionMadeEvent
+note right of CommTCPClientsManager : ClientsManager consumes the NewConnectionMadeEvent
+CommTCPClientsManager -> CommTCPClientsManager : addClient( "server address", client )
+
+@enduml

@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr4.blue.s1.lang.n1060503.functionWizard;
+package lapr4.blue.s1.lang.n1151088.temporaryVariables;
 
 /**
  *
- * @author Pedro Fernandes
+ * @author Diana Silva - 1151088@isep.ipp.pt
  */
-public class insertFunctionBasicWizardController {
+public class TemporaryVariable {
     
 }
