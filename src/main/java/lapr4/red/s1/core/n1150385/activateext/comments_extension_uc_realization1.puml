@@ -1,0 +1,52 @@
+@startuml
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+    actor User
+    participant "<<analysis>>\nEnableDisableExtensionsUI" as UI
+    participant "<<analysis>>\nEnableDisableExtensionsCTRL" as ctrl
+    participant "<<analysis>>\nUIController" as uictrl
+
+    User -> UI : selects extension
+    activate UI
+    note right of UI
+    The user sees the names of the
+    extensions in the UI
+    end note
+    UI -> ctrl : selectExtension(extensionName)
+    activate ctrl
+    ctrl -> uictrl : extension = getExtension(extensionName)
+    deactivate ctrl
+    deactivate UI
+
+    alt disables the extension
+    User -> UI : Clicks the Disable button
+    activate UI
+    UI -> ctrl : disableExtension()
+    activate ctrl
+    ctrl -> uictrl : disableExtension(extension);
+    activate uictrl
+    uictrl -> uictrl : fireExtensionDisabled(extension);
+    deactivate uictrl
+    deactivate ctrl
+    deactivate UI
+
+    else
+    User -> UI : Clicks the Enable button
+    activate UI
+    UI -> ctrl : enableExtension()
+    activate ctrl
+    ctrl -> uictrl : enableExtension(extension);
+    activate uictrl
+    uictrl -> uictrl : fireExtensionEnabled(extension);
+    deactivate uictrl
+    deactivate ctrl
+    deactivate UI
+    end
+
+
+
+@enduml

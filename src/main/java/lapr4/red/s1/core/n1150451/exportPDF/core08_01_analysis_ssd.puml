@@ -1,0 +1,15 @@
+@startuml
+actor User
+User -> UI: Starts the PDF exportation
+UI --> User: Asks the range of the desired output
+note right 
+The range being Workbook,
+SpreadSheet or Cells
+end note
+
+User -> UI: Selects the desired range
+User <-- UI: Asks the destination path of the output file
+
+User -> UI: Selects the output path
+User <-- UI: Informs about the sucess of the operation
+@enduml

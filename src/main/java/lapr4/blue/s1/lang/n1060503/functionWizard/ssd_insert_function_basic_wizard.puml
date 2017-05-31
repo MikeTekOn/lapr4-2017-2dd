@@ -1,0 +1,17 @@
+@startuml ssd_insert_function_basic_wizard.png
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor User 
+participant "System" as S
+User -> S : selects "Function Wizard" option
+S --> User : displays a new window that contains a list of functions 
+User -> S : select a function
+S --> User : display the syntax and description of selected function
+User -> S : choose apply option
+S --> User : close the window and write the syntax function in the formula bar
+
+@enduml

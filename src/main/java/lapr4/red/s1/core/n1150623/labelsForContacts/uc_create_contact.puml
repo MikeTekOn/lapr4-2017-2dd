@@ -1,0 +1,33 @@
+@startuml uc_create_contact.png
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+title Use Case: Create Contact
+
+actor "CRM User" as Actor  
+participant AddContactUI as UI <<presentation>>
+participant AddContactController as Controller <<application>>
+participant "contact:Contact" as Domain <<domain>>
+database ContactRepository as Repository <<repository>>
+
+Actor --> UI: Add Contact
+activate UI
+    UI -> Controller: create
+    Actor --> UI: Name,\nFirst Name,\nLast Name,\nPhotograph
+    UI -> Controller: addContact(Name, First Name, Last Name, Photograph)
+    activate Controller
+        Controller -> Domain: create(Name, First Name, Last Name, Photograph)
+        activate Domain
+            Domain -> Domain: validate
+            Domain -> Controller: contact
+        deactivate Domain
+        Controller -> Repository: save(contact)
+        Controller -> UI: contact
+    deactivate Controller
+    UI --> Actor: Display Contact Info
+deactivate UI
+
+@enduml

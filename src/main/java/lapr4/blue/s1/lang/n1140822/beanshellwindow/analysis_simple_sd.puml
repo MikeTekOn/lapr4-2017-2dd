@@ -1,0 +1,7 @@
+@startuml
+actor User
+User -> System : Selects beanshell script option
+System -> System : Fills window with default script
+System -> System : Executes script
+System -> User : shows result
+@enduml
