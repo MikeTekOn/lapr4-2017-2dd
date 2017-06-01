@@ -15,6 +15,8 @@
  * 
  * For the application to communicate, it is needed to broadcast a request for other applications to provide their connection details, i.e. the port number in which to send the connection request.
  * This implies that the application will also need a server to respond to such requests.
+ * The client must then receive all the replies from the different server.
+ * Since it does not know how many to expect, a timeout can be set in order for it to terminate after a while without replies.
  * For this purpose, the User Datagram Protocol (UDP) seems to be adequate.
  * <p>
  * Afterwards, a reliable connection is required to transfer data between the applications.
@@ -43,7 +45,7 @@
  * <p>
  * <b>Server Worker</b> is responsible for interpreting a client's request and send the response.
  * <p>
- * <b>Client Worker</b> is responsible for sending the request to a server. There will be a UDP client and a TCP client.
+ * <b>Client Worker</b> is responsible for sending the request to a server and interpreting the response. There will be a UDP client and a TCP client.
  * <p>
  * <b>Data Transfer Object</b> is responsible for transmitting the data through the network connection (also known as DTO).
  * <p>
@@ -52,6 +54,8 @@
  * <img src="ipc_01_1_analysis2.png" alt="image"> 
  * 
  * <h2>Special Notes</h2>
+ * 
+ * This user story is related to all the other IPC use cases, since it provides the communication base for them.
  * 
  * The user story <b>IPC06</b> is strongly related to this one since that requires an encryption technique.
  * More information can be found there.
