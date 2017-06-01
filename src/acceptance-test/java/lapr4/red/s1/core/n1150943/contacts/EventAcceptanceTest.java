@@ -2,7 +2,7 @@ package lapr4.red.s1.core.n1150943.contacts;
 
 import eapli.framework.persistence.DataConcurrencyException;
 import eapli.framework.persistence.DataIntegrityViolationException;
-import lapr4.red.s1.core.n1150943.contacts.application.AddEventController;
+import lapr4.red.s1.core.n1150943.contacts.application.EventController;
 import lapr4.white.s1.core.n4567890.contacts.application.ContactController;
 import lapr4.white.s1.core.n4567890.contacts.domain.Contact;
 import lapr4.white.s1.core.n4567890.contacts.domain.Event;
@@ -17,10 +17,10 @@ import static org.junit.Assert.assertNotNull;
 /**
  * Created by João Cardoso on 31-05-2017.
  */
-public class AddEventAcceptanceTest {
+public class EventAcceptanceTest {
 
     private static Properties appProps=null;
-    private static AddEventController controller1=null;
+    private static EventController controller1=null;
     private static ContactController controller2=null;
     private static Contact aContact=null;
     private static Event aEvent=null;
@@ -53,7 +53,7 @@ public class AddEventAcceptanceTest {
 
         // Setup for testing (JPA in Memory)
         setupProperties();
-        controller1=new AddEventController(appProps);
+        controller1=new EventController(appProps);
         controller2=new ContactController(appProps);
 
         // Populate the repository
@@ -69,7 +69,7 @@ public class AddEventAcceptanceTest {
 
         // First: Add or Select existing Contact
         Contact contact=controller2.addContact("Jane Doe4", "Jane", "Doe4","");
-        AddEventController c = new AddEventController(appProps);
+        EventController c = new EventController(appProps);
         // Second: Add Event to Contact's Agenda
         Event ev=null;
         Calendar tomorrow=Calendar.getInstance();

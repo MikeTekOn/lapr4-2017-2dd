@@ -10,12 +10,15 @@ import eapli.framework.persistence.DataConcurrencyException;
 import eapli.framework.persistence.DataIntegrityViolationException;
 import lapr4.white.s1.core.n4567890.contacts.application.ContactController;
 import lapr4.white.s1.core.n4567890.contacts.domain.Contact;
+import ui.ImageUtils;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -93,6 +96,7 @@ public class ContactDialog extends JDialog implements ActionListener {
     private JTextField firstNameField=null;
     private JTextField lastNameField=null;
 
+    private JPanel picPanel=null;
     private JPanel formPanel=null;
     private JPanel buttonPanel=null;
 
@@ -100,6 +104,14 @@ public class ContactDialog extends JDialog implements ActionListener {
 
     private void setupContactsWidgets() {
 
+//            picPanel = new JPanel(new FlowLayout());
+//
+//            try {
+//                ImageIcon profilePic = ImageUtils.getResizedPhoto(new File(_contact.photo()),70,70);
+//                picPanel.add(new JLabel(profilePic,JLabel.TRAILING));
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
 
             formPanel = new JPanel(new SpringLayout());
 
@@ -164,6 +176,7 @@ public class ContactDialog extends JDialog implements ActionListener {
             
             //Put everything together, using the content pane's BorderLayout.
             Container contentPane = getContentPane();
+            //contentPane.add(picPanel, BorderLayout.BEFORE_FIRST_LINE);
             contentPane.add(formPanel, BorderLayout.PAGE_START);
             contentPane.add(buttonPanel, BorderLayout.CENTER);  
             contentPane.add(statusLabel, BorderLayout.PAGE_END);
@@ -194,7 +207,11 @@ public class ContactDialog extends JDialog implements ActionListener {
         pack();
         setLocationRelativeTo(locationComp);
     }
- 
+
+    /**
+     * Edited by João Cardoso - 1150943 (Added option to choose profile photograph for a contact)
+     * @param e
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if ("confirm".equals(e.getActionCommand())) {
@@ -204,17 +221,20 @@ public class ContactDialog extends JDialog implements ActionListener {
                         try {
                             // The User confirms the creation of a Contact
                             if(this.fullNameField.getText().isEmpty()|this.firstNameField.getText().isEmpty()|this.lastNameField.getText().isEmpty()){
-                                JOptionPane.showMessageDialog(rootPane,"Todos os campos são obrigatórios");
+                                JOptionPane.showMessageDialog(rootPane,"All fields must be filled");
                             }else{
-                                JFileChooser chooser = new JFileChooser("Escolha uma imagem para o utilizador");
-                                FileNameExtensionFilter filter = new FileNameExtensionFilter(
-                                        "JPG & PNG Images", "jpg", "jpeg", "png");
-                                chooser.setFileFilter(filter);
-                                int returnVal = chooser.showOpenDialog(formPanel);
                                 String photo_path="";
-                                 if(returnVal == JFileChooser.APPROVE_OPTION) {
-                                    photo_path = chooser.getSelectedFile().getAbsolutePath();
-                                 }
+                                int option=JOptionPane.showConfirmDialog(rootPane,"Do you want to add a profile picture?","Profile Picture",JOptionPane.YES_NO_OPTION);
+                                if(option==JOptionPane.YES_OPTION){
+                                    JFileChooser chooser = new JFileChooser("Choose profile photo");
+                                    FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                                            "JPG & PNG Images", "jpg", "jpeg", "png");
+                                    chooser.setFileFilter(filter);
+                                    int returnVal = chooser.showOpenDialog(formPanel);
+                                    if(returnVal == JFileChooser.APPROVE_OPTION) {
+                                        photo_path = chooser.getSelectedFile().getAbsolutePath();
+                                    }
+                                }
                                 _contact=this.ctrl.addContact(this.fullNameField.getText(), this.firstNameField.getText(), this.lastNameField.getText(), photo_path);
                                 _success=true;
                                 // Exit the dialog
