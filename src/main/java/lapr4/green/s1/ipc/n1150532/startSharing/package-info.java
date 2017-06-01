@@ -72,11 +72,13 @@
  * 
  * <h2>Other</h2>
  * 
- * <b>Connection Details Request</b>: A broadcast can be sent to the local network with another instance running. The client who broadcasted must receive the connection details from the other instance.
+ * <b>UDP Echo Request</b>: A broadcast can be sent to the local network. The instance's server must receive the echo request and the instance's client the server's response.
  * <p>
- * <b>Echo Request</b>: A simple echo request can be sent from one instance to another. The client shall connect to the server and request it an echo. The client must receive the echo response.
+ * <b>TCP Echo Request</b>: A simple echo request can be sent from one instance to another (simulated). The client shall connect to the server and request it an echo. The client must receive the echo response.
  * <p>
  * <b>Unit Testing</b>: The main methods involved must be tested individually to assure their result is as expected.
+ * <p>
+ * <b>Attention!</b> The port numbers used in the tests must be different since they may run in parallel.
  * 
  * <h1>Design</h1>
  * 
