@@ -5,6 +5,8 @@
  */
 package lapr4.white.s1.core.n4567890.contacts.domain;
 
+import lapr4.red.s1.core.n1150943.contacts.alerts.EventReminder;
+
 import java.io.Serializable;
 import java.util.*;
 import javax.persistence.CascadeType;
@@ -30,6 +32,8 @@ public class Agenda implements Serializable {
     @OneToMany(cascade = CascadeType.ALL)
     private final Set<Event> events = new HashSet<>();
 
+
+
     protected Agenda() {
         // for ORM
     }
@@ -46,18 +50,27 @@ public class Agenda implements Serializable {
     }
 
     public boolean edit(int index, String newDescription, Calendar newDueDate){
-        Event[]events = (Event[]) this.events.toArray();
-        Event ev = events[index];
-        if (ev == null) {
-            throw new IllegalStateException();
+        int i=0;
+        Event ev=null;
+        for(Event e : events){
+            if(i==index){
+                ev=e;
+            }
+            i++;
         }
-        ev.update(newDescription, newDueDate);
+        ev.update(newDescription,newDueDate);
         return true;
     }
 
     public boolean remove(int index){
-        Event[]events = (Event[]) this.events.toArray();
-        Event ev = events[index];
+        int i=0;
+        Event ev=null;
+        for(Event e : events){
+            if(i==index){
+                ev=e;
+            }
+            i++;
+        }
         if (ev == null) {
             throw new IllegalStateException();
         }

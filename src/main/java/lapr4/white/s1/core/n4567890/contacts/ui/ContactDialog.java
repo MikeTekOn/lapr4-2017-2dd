@@ -10,15 +10,12 @@ import eapli.framework.persistence.DataConcurrencyException;
 import eapli.framework.persistence.DataIntegrityViolationException;
 import lapr4.white.s1.core.n4567890.contacts.application.ContactController;
 import lapr4.white.s1.core.n4567890.contacts.domain.Contact;
-import ui.ImageUtils;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -247,8 +244,8 @@ public class ContactDialog extends JDialog implements ActionListener {
                         } catch (DataIntegrityViolationException ex) {
                             Logger.getLogger(ContactDialog.class.getName()).log(Level.SEVERE, null, ex);
                             statusLabel.setForeground(Color.red);
-                            statusLabel.setText(CleanSheets.getString("status_data_integrity_error"));                            
-                        }                        
+                            statusLabel.setText(CleanSheets.getString("status_data_integrity_error"));
+                        }
                     }
                     break;
                     
@@ -256,8 +253,12 @@ public class ContactDialog extends JDialog implements ActionListener {
                     {
                         try {
                             boolean r;
-                            r =this.ctrl.removeContact(_contact);
-                            
+                            try {
+                                r = this.ctrl.removeContact(_contact);
+                            }catch(IllegalAccessException ex){
+                                JOptionPane.showMessageDialog(getContentPane(),"You can't remove this contact","Warning", JOptionPane.ERROR_MESSAGE);
+                                break;
+                            }
                             _success=true;
                             // Exit the dialog
                             ContactDialog.dialog.setVisible(false);
@@ -276,8 +277,13 @@ public class ContactDialog extends JDialog implements ActionListener {
                 case EDIT:
                     {
                         try {
-                            _contact=this.ctrl.updateContact(_contact, this.fullNameField.getText(), this.firstNameField.getText(), this.lastNameField.getText());
-                            
+                            try {
+                                _contact=this.ctrl.updateContact(_contact, this.fullNameField.getText(), this.firstNameField.getText(), this.lastNameField.getText());
+                            } catch (IllegalAccessException e1) {
+                                JOptionPane.showMessageDialog(getContentPane(),"You can't edit this contact","Warning", JOptionPane.ERROR_MESSAGE);
+                                break;
+                            }
+
                             _success=true;
                             // Exit the dialog
                             ContactDialog.dialog.setVisible(false);
