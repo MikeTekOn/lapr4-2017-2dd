@@ -1,0 +1,36 @@
+@startuml
+participant "User" as User
+participant "UIExtension" as UIExtension
+participant "UIController" as UIController
+participant "ShareFileExtensionUI" as ShareFileExtensionUI
+participant "ShareFileExtension" as ShareFileExtension
+participant "ShareFile" as ShareFile
+ 
+
+
+User->UIExtension: selects file share extension
+create UIController
+UIExtension->UIController: create();
+create ShareFileExtensionUI
+UIController->ShareFileExtensionUI: create();
+
+create ShareFileExtension
+ShareFileExtensionUI->ShareFileExtension: create();
+
+
+create ShareFile
+ShareFileExtension->ShareFile: create();
+
+ShareFileUI -> User: request the directory path
+User -> ShareFileUI: gives the information
+
+ShareFileUI->ShareFileController: lst = getFilesListFromDirectory(diretory)
+ShareFileController -> ShareFile: listFilesInDirectory(lst)
+
+User -> ShareFileUI: share the files
+ShareFileUI -> ShareFileController: startSharing(ip, port)
+ShareFileController->ShareFile: startSharing(ip, port)
+ShareFileUI->User: success
+
+
+@enduml

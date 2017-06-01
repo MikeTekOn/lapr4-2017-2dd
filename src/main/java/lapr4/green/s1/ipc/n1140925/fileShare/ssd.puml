@@ -1,0 +1,14 @@
+@startuml
+
+participant "User" as User
+participant "System" as System
+
+User->System: selects file share extension
+System -> User: request the directory path
+User -> System: gives the information
+User -> System: share the files
+System->User: success
+
+
+
+@enduml

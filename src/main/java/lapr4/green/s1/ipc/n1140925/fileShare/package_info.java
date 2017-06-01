@@ -23,18 +23,19 @@ etc.)<p>
  * For this to work we could implement a pattern like "producer-consumer" where CliSharer would be producer and we could have several consumers for each type of subclass of DTO (Data Transfer Object).<p>
  * According to the type of DTO CliSharer would "pass" control to the specific consumer that would "handle" the received DTO.<p>
  * Class cliReceivers: this class will comunicate with the server by receiving the list of files that are available for download. It will save the files on a specific folder selected by the diferent instances.  <p>
+ * 
+ *<b>Brief</b><p>
+ * The user opens the app and selects the extension for sharing files.
+ * The system request the path of the folder where the files he wants to send are.
+ * The user selects the path and start share. The system establishes a
+ * connection and request. The system get the files list. The other instances, may
+ * establish connection with the server and they will see the files list they can download.
+ * 
+ * 
  * <b>Tests</b><p>
- * This should include not only unit tests (e.g., class-oriented tests) but also use case tests (e.g., like in the TDD approach). <p>
- *
- * <b>Test1:</b> ShareFilesSendTest<p>
- * Test the initial connection regarding the possibility of sending the information about the shared files.<p>
- * ShareFilesSendTest
+ * This should be unit tests <p>
  * 
- * <b>Test2:</b> ShareFilesReceiveTest<p>
- * Test the initial connection regarding the possibility of receiving the shared of the files.<p>
- * ShareFilesSendTest<p>
- * 
- * <b>Test3:</b> FileListTest<p>
+ * <b>Test:</b> FileListTest<p>
  * Test if the info of the files was successfully sent to the server.
  * 
  * 

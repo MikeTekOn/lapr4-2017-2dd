@@ -29,6 +29,7 @@ public class Event {
         // for ORM
     }
 
+    //Validations made by João Cardoso - 1150943
     public Event(final String description, final Calendar dueDate) {
         if(dueDate.compareTo(Calendar.getInstance())>0 | !description.isEmpty()){
             this.description = description;
@@ -41,5 +42,29 @@ public class Event {
 
     public String description() {
         return this.description;
+    }
+
+    public Calendar dueDate(){return dueDate;}
+
+    protected void update(String newDescription, Calendar newDueDate) {
+        if(dueDate.compareTo(Calendar.getInstance())>0 | !description.isEmpty()) {
+            this.description = newDescription;
+            this.dueDate = newDueDate;
+        }else {
+            throw new IllegalStateException();
+        }
+    }
+
+    /**
+     * Created by João Cardoso - 1150943
+     * @return
+     */
+    public boolean isToday() {
+        int year, month, day;
+        Calendar today = Calendar.getInstance();
+        year = today.get(Calendar.YEAR);
+        month = today.get(Calendar.MONTH);
+        day = today.get(Calendar.DAY_OF_MONTH);
+        return (dueDate.get(Calendar.YEAR)==year && dueDate.get(Calendar.MONTH)==month && dueDate.get(Calendar.DAY_OF_MONTH)==day);
     }
 }

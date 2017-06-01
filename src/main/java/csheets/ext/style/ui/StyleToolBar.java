@@ -122,6 +122,9 @@ public class StyleToolBar extends JToolBar implements SelectionListener {
 	 * @param event the selection event that was fired
 	 */
 	public void selectionChanged(SelectionEvent event) {
+		if(event.getCell().getExtension(StyleExtension.NAME) == null)
+			return;
+
 		if (event.getCell() != null && event.isCellChanged()) {
 			StylableCell cell = (StylableCell)event.getCell().getExtension(
 				StyleExtension.NAME);

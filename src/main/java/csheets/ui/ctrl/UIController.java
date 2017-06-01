@@ -42,6 +42,8 @@ import csheets.ext.Extension;
 import csheets.ext.ExtensionManager;
 import csheets.ui.ext.UIExtension;
 import csheets.ui.sheet.CellTransferHandler;
+import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionEvent;
+import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionStateListener;
 
 /**
  * A controller for managing the current selection, i.e. the active workbook,
@@ -49,7 +51,7 @@ import csheets.ui.sheet.CellTransferHandler;
  * workbooks and of user interface extensions.
  * @author Einar Pehrson
  */
-public class UIController implements SpreadsheetAppListener {
+public class UIController implements SpreadsheetAppListener, ExtensionStateListener {
 
 	/** The active workbook */
 	private Workbook activeWorkbook;
@@ -74,6 +76,9 @@ public class UIController implements SpreadsheetAppListener {
 
 	/** The user interface extensions that have been loaded */
 	private UIExtension[] extensions;
+
+	/** The extension state listeners registered to receive events */
+	private List<ExtensionStateListener> extensionStateListeners = new ArrayList<>();
 
 	/** The selection listeners registered to receive events */
 	private List<SelectionListener> selListeners = new ArrayList<SelectionListener>();
@@ -102,6 +107,7 @@ public class UIController implements SpreadsheetAppListener {
 		}
 		this.extensions =
 			uiExtensions.toArray(new UIExtension[uiExtensions.size()]);
+		ExtensionManager.getInstance().addExtensionListener(this);
 	}
 
 /*
@@ -330,6 +336,22 @@ public class UIController implements SpreadsheetAppListener {
 	}
 
 	/**
+	 * Registers the given listener on the user interface controller.
+	 * @param listener the listener to be added
+	 */
+	public void addExtensionListener(ExtensionStateListener listener) {
+		extensionStateListeners.add(listener);
+	}
+
+	/**
+	 * Removes the given listener from the user interface controller.
+	 * @param listener the listener to be removed
+	 */
+	public void removeExtensionListener(ExtensionStateListener listener) {
+		extensionStateListeners.remove(listener);
+	}
+
+	/**
 	 * Notifies all registered listeners that the selection changed.
 	 * @param event the event to fire
 	 */
@@ -347,6 +369,30 @@ public class UIController implements SpreadsheetAppListener {
 		for (EditListener listener : editListeners.toArray(
 				new EditListener[editListeners.size()]))
 			listener.workbookModified(event);
+	}
+
+	/**
+	 * Notifies all registered listeners that the list of extensions was modified
+	 * @param event the event to fire
+	 */
+	private void fireExtensionListChanged(ExtensionEvent event){
+		for (ExtensionStateListener listener : extensionStateListeners){
+			listener.extensionStateChanged(event);
+		}
+	}
+
+	@Override
+	public void extensionStateChanged(ExtensionEvent event) {
+		List<UIExtension> uiExtensions = new LinkedList<>();
+		for (Extension extension : ExtensionManager.getInstance().getExtensions()) {
+			UIExtension uiExtension = extension.getUIExtension(this);
+			if (uiExtension != null)
+				uiExtensions.add(uiExtension);
+		}
+		this.extensions =
+				uiExtensions.toArray(new UIExtension[uiExtensions.size()]);
+		// We create a new event because listeners expect events from this class
+		fireExtensionListChanged(new ExtensionEvent(this));
 	}
 
 	/**

@@ -56,10 +56,11 @@ public class SideBarAction extends FocusOwnerAction {
 
 		// Fetches parent, and removes component if appropriate
 		Container parent = component.getParent();
-		if (parent instanceof JTabbedPane)
+		if (parent instanceof JTabbedPane){
 			sideBar = (JTabbedPane)parent;
-		if (!component.isEnabled())
-			sideBar.remove(component);
+			if (!component.isEnabled())
+				sideBar.remove(component);
+		}
 
 		// Configures action
 		String name = extension.getExtension().getName();

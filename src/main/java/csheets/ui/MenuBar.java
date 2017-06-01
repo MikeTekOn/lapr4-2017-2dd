@@ -106,7 +106,6 @@ public class MenuBar extends JMenuBar {
 
 		// Populates the view sub-menus
 		for (UIExtension extension : uiController.getExtensions()) {
-
 			CellDecorator cellDec = extension.getCellDecorator();
 			if (cellDec != null)
 				cellDecMenu.add(new JCheckBoxMenuItem(new CellDecoratorAction(
@@ -156,6 +155,8 @@ public class MenuBar extends JMenuBar {
 				extensionsMenu.add(extensionMenu);
 			}
 		}
+		extensionsMenu.addSeparator();
+		extensionsMenu.add(actionManager.getAction("manageExtensions"));
 
 		// Creates the window menu
 		add(new WindowMenu(app, uiController));

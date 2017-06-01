@@ -9,9 +9,12 @@ skinparam shadowing false
 participant "CommExtension"
 participant "CommUDPServer"
 participant "HandlerConnectionDetailsRequestDTO"
-participant "ObjectOutputStream"
+participant "DatagramSocket"
+participant "DatagramPacket"
+participant "ByteArrayInputStream"
 participant "ObjectInputStream"
-participant "ConnectionDetailsRequestDTO"
+participant "ByteArrayOutputStream"
+participant "ObjectOutputStream"
 participant "ConnectionDetailsResponseDTO"
 
 create CommUDPServer
@@ -19,15 +22,30 @@ CommExtension -> CommUDPServer : getServer()
 create HandlerConnectionDetailsRequestDTO
 CommExtension -> HandlerConnectionDetailsRequestDTO : handler = new()
 CommExtension -> CommUDPServer : addHandler( handler )
-create ObjectOutputStream
-CommUDPServer -> ObjectOutputStream : new( socket )
+create DatagramSocket
+CommUDPServer -> DatagramSocket : new
+loop
+CommUDPServer -> DatagramSocket : data = byte[ getReceiverBufferSize() ]
+create ByteArrayInputStream
+CommUDPServer -> ByteArrayInputStream : bis = new( data )
+create DatagramPacket
+CommUDPServer -> DatagramPacket : udpPacket = new( data , data.length )
+CommUDPServer -> DatagramSocket : receive( udpPacket )
 create ObjectInputStream
-CommUDPServer -> ObjectInputStream : new( socket )
+CommUDPServer -> ObjectInputStream : new( bis )
+create ByteArrayOutputStream
+CommUDPServer -> ByteArrayOutputStream : bos = new()
+create ObjectOutputStream
+CommUDPServer -> ObjectOutputStream : new( bos )
 CommUDPServer -> ObjectInputStream : dto = readObject()
-ObjectInputStream -> ConnectionDetailsRequestDTO : new
 CommUDPServer -> CommUDPServer : getHandler( dto )
 CommUDPServer -> HandlerConnectionDetailsRequestDTO : handleDTO( dto )
-HandlerConnectionDetailsRequestDTO -> ConnectionDetailsResponseDTO : reply = new ()
+HandlerConnectionDetailsRequestDTO -> ConnectionDetailsResponseDTO : reply = new()
 HandlerConnectionDetailsRequestDTO -> ObjectOutputStream : writeObject( reply )
+CommUDPServer -> ObjectOutputStream : data = toByteArray()
+CommUDPServer -> DatagramPacket : setData( data )
+CommUDPServer -> DatagramPacket : setLength( data.length )
+CommUDPServer -> DatagramSocket : send( udpPacket )
+end loop
 
 @enduml
