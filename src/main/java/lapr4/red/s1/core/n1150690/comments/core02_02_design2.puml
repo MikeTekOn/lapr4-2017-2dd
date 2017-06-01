@@ -2,14 +2,17 @@
     participant "uic: UIController" as uic
     participant "uiExtension : UIExtensionComments" as UIExt
     participant "User" as u
-    participant "Cell" as cell
+    participant "CommentableCellWithMultipleUsers" as cell
     participant "CommentPanel : JPanel" as cp
-    participant "CommentController" as ctrl
+    participant "AddCommentWithUserController" as ctrl
     participant "commentField: JTextArea" as commentField
     participant "applyAction: ApplyAction" as applyAction
     
+    create cp
+    UIExt -> cp :  create(uic) 
+
     create ctrl
-    UIExt -> ctrl : create()
+    cp -> ctrl : create(uic, cp)
 
     note right #aqua
         This is a refactor of 
@@ -17,8 +20,7 @@
         previous use case (Core02.1)
     end note
 
-    create cp
-    UIExt -> cp :  create(uic) 
+    
 
     cp -> uic : addSelectionListener(this)
     
@@ -49,20 +51,22 @@
         deactivate applyAction
 
         activate ctrl
-        ctrl -> cell : changeUserComment(oldComment, newComment, currentUser)
+        create u
+        ctrl -> u : create()
+        ctrl -> cell : changeUserComment(oldComment, newComment, user)
         ctrl -> uic : setWorkbookModified(...)
         deactivate ctrl
     else user adds a comment
         commentField -> applyAction : focusLost(FocusEvent e)
         activate applyAction
         applyAction -> commentField : comment=getText()
-        applyAction -> ctrl : setComment(cell, comment)
+        applyAction -> ctrl : addComment(cell, comment)
         deactivate applyAction
-
         activate ctrl
-        ctrl -> cell : addUserComment(comment)
         create u
-        cell -> u : create()
+        ctrl -> u : create()
+        ctrl -> cell : addUserComment(comment, user)
+        
         ctrl -> uic : setWorkbookModified(...)
         deactivate ctrl
     end

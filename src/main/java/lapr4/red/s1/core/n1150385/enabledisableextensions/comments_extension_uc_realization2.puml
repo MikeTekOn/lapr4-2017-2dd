@@ -1,0 +1,8 @@
+@startuml
+
+participant "CustomExtension"
+participant "UIController" as UI
+
+CustomExtension -> UI: addSelectionListener(<i><color #red>this</i>)
+
+@enduml

@@ -1,0 +1,18 @@
+@startuml
+interface ExportStrategy{
+    ExportStrategy s
+    export(List<Cell>)
+}
+class ExportPDF{
+    export(List<CelL>)
+}
+class ExportXML{
+    export(List<Cell>)
+}
+class ExportContext{
+    executeStrategy()
+}
+ExportStrategy <|..ExportPDF
+ExportStrategy <|..ExportXML
+ExportContext -|> ExportStrategy : uses 
+@enduml

@@ -1,0 +1,14 @@
+@startuml
+
+participant "ExtensionManager" as Manager
+
+-> Manager : enableExtension(<i>extension</i>)
+activate Manager
+alt Successfully enables the extension
+Manager -> Manager : fireExtensionsChangedEvent()
+else Extension already enabled
+note right of Manager: nothing happens
+end
+deactivate Manager
+
+@enduml

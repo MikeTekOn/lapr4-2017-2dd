@@ -73,7 +73,9 @@ import csheets.ui.ext.UIExtension;
 import csheets.ui.sheet.AddressBox;
 import csheets.ui.sheet.CellEditor;
 import csheets.ui.sheet.WorkbookPane;
-import java.awt.GridLayout;
+import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionEvent;
+import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionStateListener;
+import lapr4.red.s1.core.n1150385.enabledisableextensions.ManageExtensionsAction;
 import lapr4.blue.s1.lang.n1060503.functionWizard.ui.FunctionWizard;
 
 /**
@@ -81,13 +83,21 @@ import lapr4.blue.s1.lang.n1060503.functionWizard.ui.FunctionWizard;
  * @author Einar Pehrson
  */
 @SuppressWarnings("serial")
-public class Frame extends JFrame implements SelectionListener {
+public class Frame extends JFrame implements SelectionListener, ExtensionStateListener {
 
 	/** The base of the window title */
 	public static final String TITLE = "CleanSheets";
 
 	/** The CleanSheets application */
 	private CleanSheets app;
+
+	private ActionManager actionManager;
+	private UIController uiController;
+
+	WorkbookPane workbookPane;
+	CellEditor cellEditor;
+	AddressBox addressBox;
+        FunctionWizard functionWizard;
 
 	/**
 	 * Creates a new frame.
@@ -96,14 +106,14 @@ public class Frame extends JFrame implements SelectionListener {
 	public Frame(CleanSheets app) {
 		// Stores members and creates controllers
 		this.app = app;
-		UIController uiController = new UIController(app);
+		uiController = new UIController(app);
 
 		// Creates action manager
 		FileChooser chooser = null;
 		try {
 			chooser = new FileChooser(this, app.getUserProperties());
 		} catch (java.security.AccessControlException ace) {}
-		ActionManager actionManager = new ActionManager(app, uiController, chooser);
+		actionManager = new ActionManager(app, uiController, chooser);
 
 		// Registers file actions
 		actionManager.registerAction("new", new NewAction(app));
@@ -140,13 +150,24 @@ public class Frame extends JFrame implements SelectionListener {
 		actionManager.registerAction("help", new HelpAction());
 		actionManager.registerAction("license", new LicenseAction());
 		actionManager.registerAction("about", new AboutAction());
+                
+                // Register extension managing actions
+		actionManager.registerAction("manageExtensions", new ManageExtensionsAction(this));
 
 		// Creates spreadsheet components
-		WorkbookPane workbookPane = new WorkbookPane(uiController, actionManager);
-		CellEditor cellEditor = new CellEditor(uiController);
-		AddressBox addressBox = new AddressBox(uiController);
-                FunctionWizard functionWizard = new FunctionWizard(uiController);
+		workbookPane = new WorkbookPane(uiController, actionManager);
+		cellEditor = new CellEditor(uiController);
+		addressBox = new AddressBox(uiController);
+                functionWizard = new FunctionWizard(uiController);
 
+		registerListeners();
+		recreatePanels();
+		pack();
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+		setLocationRelativeTo(null);
+	}
+
+	private void recreatePanels(){
 		// Creates tool bars
 		JPanel toolBarPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
 		toolBarPanel.add(new StandardToolBar(actionManager));
@@ -157,9 +178,9 @@ public class Frame extends JFrame implements SelectionListener {
 		}
 
 		// Creates and lays out top panel
-                JPanel cellFunctionPanel = new JPanel(new BorderLayout());
-                cellFunctionPanel.add(functionWizard, BorderLayout.WEST);
-                cellFunctionPanel.add(cellEditor, BorderLayout.CENTER);
+		JPanel cellFunctionPanel = new JPanel(new BorderLayout());
+		cellFunctionPanel.add(functionWizard, BorderLayout.WEST);
+		cellFunctionPanel.add(cellEditor, BorderLayout.CENTER);
 		JPanel cellPanel = new JPanel(new BorderLayout());
 		cellPanel.add(addressBox, BorderLayout.WEST);
 		cellPanel.add(cellFunctionPanel, BorderLayout.CENTER);
@@ -176,37 +197,38 @@ public class Frame extends JFrame implements SelectionListener {
 			JComponent extBar = extension.getSideBar();
 			if (extBar != null)
 				sideBar.insertTab(extension.getExtension().getName(), extension.getIcon(),
-					extBar, null, sideBar.getTabCount());
+						extBar, null, sideBar.getTabCount());
 		}
 
 		// Lays out split pane
 		workbookPane.setMinimumSize(new Dimension(300, 100));
 		sideBar.setMinimumSize(new Dimension(140, 100));
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-			workbookPane, sideBar);
+				workbookPane, sideBar);
 		splitPane.setOneTouchExpandable(true);
 		splitPane.setResizeWeight(1.0);
 
 		// Configures layout and adds panels
 		Container pane = getContentPane();
+		pane.removeAll();
 		pane.setPreferredSize(new Dimension(640, 480));
 		pane.setLayout(new BorderLayout());
 		pane.add(topPanel, BorderLayout.NORTH);
 		pane.add(splitPane, BorderLayout.CENTER);
 		setJMenuBar(new MenuBar(app, actionManager, uiController));
 
-		// Registers listeners
-		uiController.addSelectionListener(this);
-		addWindowListener(new WindowClosingHandler(this,
-			actionManager.getAction("exit")));
-
 		// Configures appearance
 		setTitle(TITLE);
 		setIconImage(Toolkit.getDefaultToolkit().getImage(
-			CleanSheets.class.getResource("res/img/sheet.gif")));
-		pack();
-		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-		setLocationRelativeTo(null);
+				CleanSheets.class.getResource("res/img/sheet.gif")));
+	}
+
+	private void registerListeners(){
+		// Registers listeners
+		uiController.addSelectionListener(this);
+		uiController.addExtensionListener(this);
+		addWindowListener(new WindowClosingHandler(this,
+				actionManager.getAction("exit")));
 	}
 
 	/**
@@ -223,6 +245,20 @@ public class Frame extends JFrame implements SelectionListener {
 				setTitle(TITLE + " - Untitled");
 		} else
 			setTitle(TITLE);
+	}
+
+	@Override
+	public void extensionStateChanged(ExtensionEvent event) {
+		// Recreates tool bars
+		JPanel toolBarPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
+		toolBarPanel.add(new StandardToolBar(actionManager));
+		for (UIExtension extension : uiController.getExtensions()) {
+			JToolBar extToolBar = extension.getToolBar();
+			if (extToolBar != null)
+				toolBarPanel.add(extToolBar);
+		}
+		this.recreatePanels();
+		this.repaint();
 	}
 
 	/**

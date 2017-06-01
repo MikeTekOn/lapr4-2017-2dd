@@ -1,0 +1,26 @@
+@startuml
+actor User
+User -> ExportPDFUI : Initiates Functionality
+ExportPDFUI->ExportPDFController: initiateExport()
+create ExportPDF
+ExportPDFController->ExportPDF : create
+create ExportContext
+ExportPDFController->ExportContext : create(exportPDF)
+User -> ExportPDFUI : Selects Range
+ExportPDFUI->ExportPDFController: selectRange(r)
+ExportPDFController->ExportPDF: selectRange(r)
+opt
+User -> ExportPDFUI : Chooses to have sections
+ExportPDFUI->ExportPDFController: toggleSections()
+ExportPDFController->ExportPDF: toggleSections()
+end
+User -> ExportPDFUI : Selects destination path
+ExportPDFUI->ExportPDFController: selectPath(path)
+ExportPDFController->ExportPDF: selectPath(path)
+
+User -> ExportPDFUI : Confirms the data
+ExportPDFUI -> ExportPDFController : export()
+
+ExportPDFController -> ExportContext : executeStrategy()
+ExportContext --> ExportPDF : export()
+@enduml

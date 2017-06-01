@@ -1,0 +1,14 @@
+@startuml
+
+participant "Frame" as frame
+participant "UIController" as UI
+participant "ExtensionManager" as Manager
+
+UI -> Manager : addExtensionListener(<i>this</i>)
+frame -> UI: addExtensionListener(<i>this</i>)
+note left of UI
+The order is not really
+important
+end note
+
+@enduml

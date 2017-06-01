@@ -37,29 +37,31 @@
  *
  * <h2>3. Analysis</h2>
  * <p>
- * 
+ *
  * Since workbook search will be supported in a new extension to Cleansheets we
- * need to study extensions implementation on Cleansheets application.  *
- * An extension (searchExtension) must be created and it needs to be a subclass
- * of the Extension abstract class. The Extension class has a method called
+ * need to study extensions implementation on Cleansheets application. * An
+ * extension (searchExtension) must be created and it needs to be a subclass of
+ * the Extension abstract class. The Extension class has a method called
  * getUIExtension that should be implemented and return an instance of a class
  * that is a subclass of UIExtension. In this subclass of UIExtension there is a
  * method (getSideBar) that returns the sidebar for the extension. A sidebar is
  * a JPanel.
- * 
+ *
  * <p>
- * 
+ *
  * Regular expressions used as search filter that were previously inserted by
  * user can be represented by Patterns in Java. Using Matcher class we can find
  * Workbook contents through the expressions.
+ *
+ * <img src="core08_01_analysis_ssd.png" alt="image">
  *
  * <p>
  * <h2>4. Design</h2>
  * <p>
  *
  * <h3>4.1. Functional Tests</h3>
- * 
- * 
+ *
+ *
  * <p>
  *
  * <h3>4.2. UC Realization</h3>

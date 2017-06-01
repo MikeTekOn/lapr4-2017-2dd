@@ -17,20 +17,20 @@
  * 
  *  
  * <b>Analysis</b><p>
- * <img src="us064_analysis.png" alt="image">
+ * <img src="us06.1_analysis_classes.png" alt="image">
  * <p>
  * <b>Notes:</b><p>
  * The problem: This use case happens in the context of the transport medium of data through the connection. Where a "security layer"
  * is needed to encapsulate the sending and receiving of data. In order to secure the info being exchanged there is two possible scenarios. <p>
  *   Current Situation: A DTO is processed/constructed by a Handler that writes/reads it to/from an ObjectOutputStream/ObjectInputStream constructed on top of the socket's OutputStream/InputStream.
- *   Scenario 1: Encryption/decryption happens for each dto at handler level.
- *   -- Con1: The connection is not granted to be secured since there can still be secured objects and unsecured objects mixed being transmitted in the same connection.
- *   -- Con2: Excessive encryption/decryption logic and connection properties (secured or not) coupled to the handler.
- *   Scenario 2: Encryption/decryption happens at byte level where the ObjectOutputStream/ObjectOutputStream meats the socket's OutputStream/InputStream.
- *   -- Con1: Editing existing code.
- *   -- Pro1: The responsibility is solely part of the connection and the data is agnostic towards its transmission representation.
- *   -- Pro2: The connection can now be described as secured or not.
- *   -- Pro3: The system wont have as many parts knowing how to encrypt/decrypt data.
+ *   <p>Scenario 1: Encryption/decryption happens for each dto at handler level.
+ *   <p>-- Con1: The connection is not granted to be secured since there can still be secured objects and unsecured objects mixed being transmitted in the same connection.
+ *   <p>-- Con2: Excessive encryption/decryption logic and connection properties (secured or not) coupled to the handler.
+ *   <p>Scenario 2: Encryption/decryption happens at byte level where the ObjectOutputStream/ObjectOutputStream meats the socket's OutputStream/InputStream.
+ *   <p>-- Con1: Editing existing code.
+ *   <p>-- Pro1: The responsibility is solely part of the connection and the data is agnostic towards its transmission representation.
+ *   <p>-- Pro2: The connection can now be described as secured or not.
+ *   <p>-- Pro3: The system wont have as many parts knowing how to encrypt/decrypt data.
  *
  * <p>
  * Interface DataTransmissionContext defines the context of data transportation. <p>
@@ -43,10 +43,24 @@
  *
  * <b>Test1:</b> SendSimpleMessageUnsecuredTest<p>
  * <b>Test2:</b> SendSimpleMessageSecuredTest<p>
- * It Should be possible to send simple text messages encryped or not. <p></p>
+ * It Should be possible to send simple text messages encryped or not. <p>
  * See Package lapr4.green.s1.ipc.n1150738.securecomm:<p>
  * SendSimpleMessageTest<p>
  *
+ *
+ * <b>Design</b><p>
+ * First draft regarding the design.<p>
+ * Will start by illustrating what the implementations of DataTransmissionContext are supposed to do.<p>
+ *
+ * <img src="us06.1_design_basicdatatransmission.png" alt="image">
+ * <p>
+ * <img src="us06.1_design_securedatatransmission.png" alt="image">
+ * <p>
+ *
+ *
+ *
+ * <img src="us064_design2.png" alt="image">
+ * <p>
  * @author Henrique Oliveira [1150738@isep.ipp.pt]
  */
 package lapr4.green.s1.ipc.n1150738.securecomm;

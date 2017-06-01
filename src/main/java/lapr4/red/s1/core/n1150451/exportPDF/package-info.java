@@ -62,32 +62,72 @@
  * final output should be added by using the "add" method of Document.
  * <p>
  * Regarding the application functionality itself, a new Menu (and not an
- * extesion) should be created for this new requirement, with new option "Export
- * to PDF...". Clicking on it, a pop-up window should appear allowing the user
- * to select the "range" of the export: the workbook, a specific worksheet or a
- * range of cells. Independently of the chosen option, a Chooser should appear
- * allowing the user to select the destination path.
+ * extension) should be created for this new requirement, with new option
+ * "Export to PDF...". Clicking on it, a pop-up window should appear allowing
+ * the user to select the "range" of the export: the workbook, a specific
+ * worksheet or a range of cells. Independently of the chosen option, a Chooser
+ * should appear allowing the user to select the destination path.
+ * <p>
+ * Also, it is important to refer that a similar functionality is also being
+ * developed in the LANG area, the only difference being that the output is a
+ * XML file (Lang08.1). To reduce code duplicates, a pattern should be used to
+ * avoid it.
  *
- * In terms of the interfaction between the user and the software, it was
+ * <p>
+ * In terms of the interaction between the user and the software, it was
  * developed an System Sequence Siagram to aid in its better interpretation.
+ * <p>
+ * Also, since there will be no new domain concepts, that will not be unit
+ * tests.
  * <p>
  * <img src="core08_01_analysis_ssd.png" alt="image">
  * <p>
  * <h2>4. Design</h2>
  * <p>
- *
  * <h3>4.1. Functional Tests</h3>
  * <p>
- *
+ * Regarding the functional tests, a test should be made to ensure that the
+ * created pdf is equal to the desired pdf to be created. With that, a
+ * comparison must be made between the exported PDF and the desired one. To do
+ * so, and since this is a functional test, it should only be made after the
+ * implementation, so this section will be updated later.
+ * <p>
  * <h3>4.2. UC Realization</h3>
+ * Sequence Diagram
+ * <p>
+ * <img src="core08_01_design_sd.png" alt="image">
  * <p>
  *
  * <h3>4.3. Classes</h3>
  * <p>
- *
+ * Analysing the proposed sequence diagram, the following class diagram was
+ * developed:
+ * <p>
+ * <img src="core08_01_design_cd.png" alt="image">
+ * <p>
  * <h3>4.4. Design Patterns and Best Practices</h3>
  * <p>
+ * As mentioned in the Analysis section, a pattern should be used to avoid code
+ * duplication between this funcionality and the XML Exportation one. To do so,
+ * in conjuntion with the Lang08.1 responsible it was decided that a pattern
+ * developed by the Gang of Four (GoF) was going to be used for this purpose,
+ * the <b>Strategy Pattern</b>. In the Strategy Pattern, a class or an
+ * algorithm, can change behavior during the runtime of the software, being a
+ * good choice in this situation, since the data to be exported is the same in
+ * both PDF and XML exportation funcionalities. To implement this pattern, the
+ * following "base diagram" was used:
+ * <p>
+ * <img src="core08_01_design_basePattern.png" alt="image">
+ * <p>
  *
+ * Having this in consideration and applying this base diagram to the Use Case
+ * itself:
+ * <p>
+ * <img src="core08_01_design_pattern.png" alt="image">
+ * <p>
+ *
+ *
+ * <p>
  * <h2>5. Implementation</h2>
  * <p>
  *
@@ -110,9 +150,9 @@
  * <p>
  * <b>Wednesday 31/05/2017</b>
  * <p>
- * Yesterday:
+ * Yesterday: Finished the analysis and started the design
  * <p>
- * Today:
+ * Today: Try to finish the design and start the test planning
  * <p>
  * Blocking:
  * <p>

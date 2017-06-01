@@ -1,0 +1,47 @@
+@startuml block_instructions_cd.png
+
+'http://plantuml.com/skinparam.html'
+skinparam handwritten true
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+interface Expression {
+	+Value evaluate()
+	+Object accept(ExpressionVisitor visitor)
+}
+interface Operator
+interface BinaryOperator
+note left : <b>concrete classes:\nAdder, LessThan, etc.
+interface NaryOperator <<<b>design>>
+class SequenceBlock <<<b>design>>
+class Assignment <<<b>design>>
+class ForLoop <<<b>design>>
+note "<b>@override\napplyTo(Expression[] operands)" as n1
+SequenceBlock .. n1
+n1 .. ForLoop
+Assignment .. n1
+abstract class Operation <O extends Operator> {
+    getOperator()
+}
+class BinaryOperation
+class NaryOperation <<<b>design>>
+note right : <b>Vistior pattern to transverse\n<b>expressions and compile them
+Expression <|- Operation
+Operation <|--- BinaryOperation
+Operation <|-- NaryOperation
+BinaryOperation --> Expression : leftOperand
+BinaryOperation --> Expression : rightOperand
+NaryOperation --> Expression : operands
+
+Operator <|- BinaryOperator
+Operator <|- NaryOperator
+
+BinaryOperation *--- BinaryOperator
+NaryOperation *--- NaryOperator
+
+NaryOperator <|-- ForLoop
+NaryOperator <|-- SequenceBlock
+
+BinaryOperator <|-- Assignment
+
+@enduml
