@@ -4,21 +4,18 @@ skinparam packageStyle rect
 skinparam defaultFontName FG Virgil
 skinparam shadowing false
 
- Labels must include at least the
- name, photograph, addresses, emails
- and telephone numbers of the contact.
 
 interface GenericExport <<interface>>{
     +export(Label label)
 }
 
 class Label{
-    - contact_Photo
-    - contact_Name
-    - contact_LastName
-    -
-    -
-
+    - contact_Photo : String
+    - contact_Name : String
+    - contact_Addresses Set<String>
+    - contact_emails : Set<String>
+    - contact_phone_numbers :String
+    - contact_Events : Set<Events>
 }
 
 
@@ -30,7 +27,12 @@ class LabelList{
 }
 
 class LabelsToPDF{
-    +@Override export(Label label)
+    +@Override export(LabelList labels)
 }
+
+GenericExport <|.. LabelsToPDF
+GenericExport <-- LabelList
+LabelList *- Label
+
 
 @enduml
