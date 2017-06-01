@@ -95,11 +95,12 @@
  * Although it could be implemented with the Strategy Pattern, since it is not suppose to change during runtime, it seems a little to excessive.
  * A suitable solution is to define the port number at the properties of the application.
  * This provides the versatility needed to change the value when needed at a low effort cost. 
+ * The port numbers for the UDP server and the TCP server must be different.
  * 
  * <h2>Handlers</h2>
  * 
  * The handlers are intended to deal with any DTO they might receive.
- * The workers must know which handler to use to each DTO.
+ * The workers must know which handler to use on each DTO.
  * Since the right handler to use is only known at runtime and it changes accordingly to the DTO received, a suitable solution seems to be the Strategy Pattern.
  * This pattern can be implemented by using a map of handlers, whose key would be the DTO class and the value the matching handler.
  * In case there is no matching handler, the received DTO will be ignored, i.e. no action will be performed.
@@ -146,10 +147,12 @@
  * 
  * <h2>Terminate TCP Connections</h2>
  * 
+ * The use case does not explicitly request the connection to be closed.
+ * However, it seems to be useful to find a way to do it, if the necessity arises.
  * The client will send a Close Connection Request DTO to the server.
  * The server will then check if its instance also has a client running.
  * If so, its client will also send a Close Connection Request DTO.
- * Afterwards, the server responds with a Connection Response DTO to the client and closes the connection.
+ * Afterwards, the server responds with a Close Connection Response DTO to the client and closes the connection.
  * The client receives the answer and closes its own connection.
  * 
  * <h2>Share Cells</h2>
