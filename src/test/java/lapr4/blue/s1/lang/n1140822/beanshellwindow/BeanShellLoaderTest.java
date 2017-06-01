@@ -5,6 +5,8 @@
  */
 package lapr4.blue.s1.lang.n1140822.beanshellwindow;
 
+import csheets.CleanSheets;
+import csheets.ui.ctrl.UIController;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.LinkedList;
@@ -38,6 +40,7 @@ public class BeanShellLoaderTest {
 
     @After
     public void tearDown() {
+       
     }
 
     /**
@@ -45,6 +48,7 @@ public class BeanShellLoaderTest {
      */
     @Test
     public void ensureBeanShellClassInstanceIsBuiltCorrectly() throws Exception {
+        UIController controller = new UIController(new CleanSheets());
         System.out.println(" ensureBeanShellClassInstanceIsBuiltCorrectly");
         String code = "print(\"test\");";
         File file = new File("fileTest.bsh");
@@ -55,11 +59,12 @@ public class BeanShellLoaderTest {
         BeanShellLoader instance = new BeanShellLoader();
         LinkedList<String> list = new LinkedList<>();
         list.add("print(\"test\");");
-        BeanShellInstance expResult = new BeanShellInstance(list);
-        BeanShellInstance result = instance.create(scriptName);
-        assertEquals(expResult, result);
+        BeanShellInstance expResult = new BeanShellInstance(list,controller);
+        BeanShellInstance result = instance.create(scriptName,controller);
         file.delete();
         file.deleteOnExit();
+        assertEquals(expResult, result);
+
     }
 
     /**
@@ -67,6 +72,7 @@ public class BeanShellLoaderTest {
      */
     @Test(expected = IllegalStateException.class)
     public void ensureBeanShellClassInstanceIsNotBuiltIfNoCode() throws Exception {
+         UIController controller = new UIController(new CleanSheets());
         System.out.println(" ensureBeanShellClassInstanceIsBuiltCorrectly");
         String code = "";
         File file2 = new File("fileTest2.bsh");
@@ -77,11 +83,12 @@ public class BeanShellLoaderTest {
         BeanShellLoader instance = new BeanShellLoader();
         LinkedList<String> list = new LinkedList<>();
         list.add("print(\"test\");");
-        BeanShellInstance expResult = new BeanShellInstance(list);
-        BeanShellInstance result = instance.create(scriptName);
-        assertEquals(expResult, result);
+        BeanShellInstance expResult = new BeanShellInstance(list,controller);
+        BeanShellInstance result = instance.create(scriptName,controller);
         file2.delete();
-         file2.deleteOnExit();
+        file2.deleteOnExit();
+        assertEquals(expResult, result);
+
     }
 
 }
