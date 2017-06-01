@@ -90,10 +90,19 @@
  * 
  * <h3>4.4. Design Patterns and Best Practices</h3>
  * 
- * -Describe new or existing design patterns used in the issue-
+ * - Since the goal of this Use case is to export information, we concluded that it should be possible, in the future, to easily implement more export options. For now we will only do the exportation to a PDF file, but, for instance, at some point, there may be a need to pass that information to a XML file or CSV or TXT.
+ *
  * <p>
- * -You can also add other artifacts to document the design, for instance, database models or updates to the domain model-
- * 
+ *
+ * Basically we will implement a pattern that will facilitate the implementation of new export options in the future, if needed - <i>Strategy</i> Pattern.
+ * This a generalized way of implementing this pattern:
+ *
+ * <h4>Create and Persist Event [Core-10.1]</h3>
+ * <p>
+ * <img src="generic_strategy_implementation.png" alt="image">
+ * <p>
+ * <p>
+ *
  * <h2>5. Implementation</h2>
  * 
  * -Reference the code elements that where updated or added-

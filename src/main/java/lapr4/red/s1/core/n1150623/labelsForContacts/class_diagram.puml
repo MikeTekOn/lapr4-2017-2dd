@@ -1,0 +1,36 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+ Labels must include at least the
+ name, photograph, addresses, emails
+ and telephone numbers of the contact.
+
+interface GenericExport <<interface>>{
+    +export(Label label)
+}
+
+class Label{
+    - contact_Photo
+    - contact_Name
+    - contact_LastName
+    -
+    -
+
+}
+
+
+class LabelList{
+    - labelList : ArrayList<Label>
+    - GenericExport<LabelList>
+    + addLabel(Label label);
+    + exportPDF()
+}
+
+class LabelsToPDF{
+    +@Override export(Label label)
+}
+
+@enduml
