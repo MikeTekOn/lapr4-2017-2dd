@@ -1,6 +1,6 @@
 @startuml
 actor User
-User -> UI: Starts the PDF exportation
+User -> UI: Starts the XML exportation
 UI --> User: Asks the range of the desired output
 note right 
 The range being Workbook,
@@ -8,9 +8,6 @@ SpreadSheet or Cells
 end note
 
 User -> UI: Selects the desired range
-User <-- UI: Asks if the output should contain headers
-
-User -> UI: Selects the option
 User <-- UI: Asks the destination path of the output file
 
 User -> UI: Selects the output path

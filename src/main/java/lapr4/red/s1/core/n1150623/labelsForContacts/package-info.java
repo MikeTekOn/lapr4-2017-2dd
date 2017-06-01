@@ -18,16 +18,19 @@
  *
  * <h2>2. Requirement</h2>
  *
- * - The user should be able to generate labels for contacts.
- * - A PDF document should be generated in which each page has a label of one contact.
+ * It should be able to generate labels for contacts by:
+ * - Creating a PDF document which each page has a label of one contact.
  * - Labels must include at least the name, photograph, addresses, emails and telephone numbers of the contact.
- * - The user should also have the option to select if the events of the contacts should be included in the PDF.
- * - In this case the user must enter the date interval that is used to select the events.
+ * - The user should also have the option to select if the events of the contacts should be included in the PDF , and in this case the user must enter the date interval that is used to select the events.
  * - It should be possible to select the contacts using regular expression on the name of the contact and/or selecting a
  * specific town or city.
  *
  * <p>
- * <b>Use Case "Labels for Contacts":</b> The user opens the contacts page and chooses to export contact information to pdf. The system asks the user about the possibility of including the contact's event list. The user selects his preference. The system converts information about contacts to pdf according to the option chosen by the user.
+ * <b>Use Case "Labels for Contacts":</b>
+ * The user opens the contacts page and chooses to export contact information to pdf.
+ * The system asks the user about the possibility of including the contact's event list.
+ * The user selects his preference - if he wants to add them, we will be asked by the system to tell the begging and end dates for filtering the events.
+ * The system converts information about contacts to pdf according to the option chosen by the user.
  * 
  *  
  * <h2>3. Analysis</h2>
@@ -46,18 +49,18 @@
  * <p>
  *
  *
- * All information can be found in the repositories.
- * Now the problem lays on getting the exportation to pdf done and to solve that problem, as it's said in the manual, we will use the
- * external library <b><i>"iText"</i></b> (to be inserted in the pom.xml file).
+ * All information can be found in the repositories and can easily be accessed.
+ * Only the requested information will be taken from the repositories.
+ * Now the problem lays on getting the exportation to pdf done and to solve that problem, as it's said in the manual, we will use the external library <b><i>"iText"</i></b> (added to the dependencies on build.gradle).
  *
  *
  * <h2>4. Design</h2>
  *
- * <h3>4.1. Functional Tests</h3>
+ * <h3>4.1. Unit Tests</h3>
  *
  * Following the analysis and seeing the requirements mentioned int the manual, the principal functionality of this use case is to correctly export information in system to a .pdf file.
- * This way we can start by coding a unit test that that verifies if the value exportation result has all the information nedded.
- * As usual, in a test driven development approach tests normally fail in the beginning. The idea is that the tests will pass in the end.
+ * We can also verify if the filters for choosing contacts are working and the selection events to add is functioning properly.
+ * It only remains to verify if the value of the exportation result has all the information needed.
  *
  * <p>
  *
@@ -109,8 +112,7 @@
  * 
  * 
  * <h2>8. Work Log</h2> 
- * 
- * -Insert here a log of you daily work. This is in essence the log of your daily standup meetings.-
+ *
  * <p>
  * Example
  * <p>
@@ -134,16 +136,20 @@
  * <p>
  * Yesterday I worked on: 
  * <p>
- * 1. ...
+ * 1. This Use Case Analysis
+ * 2. Reviewed de code
  * <p>
  * Today
  * <p>
- * 1. ...
+ * 1. I'll make the design of the Use Case
  * <p>
  * Blocking:
  * <p>
- * 1. ...
- * 
+ * 1. None
+ *
+ *
+ *
+ *
  * <h2>9. Self Assessment</h2> 
  * 
  * -Insert here your self-assessment of the work during this sprint regarding Rubrics R3, R6 and R7.-

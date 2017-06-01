@@ -17,6 +17,8 @@ import lapr4.white.s1.core.n4567890.contacts.domain.Event;
 import lapr4.white.s1.core.n4567890.contacts.persistence.ContactRepository;
 import lapr4.white.s1.core.n4567890.contacts.persistence.PersistenceContext;
 
+import javax.swing.*;
+
 
 /**
  *
@@ -36,11 +38,14 @@ public class ContactController implements Controller {
         this.contactsRepository=this.persistenceContext.repositories().contacts();
     }
 
-    public Contact addContact(String name, String firstName, String lastName) throws DataConcurrencyException, DataIntegrityViolationException {
-        return this.contactsRepository.save(new Contact(name, firstName, lastName));
+    public Contact addContact(String name, String firstName, String lastName, String photo) throws DataConcurrencyException, DataIntegrityViolationException {
+        return this.contactsRepository.save(new Contact(name, firstName, lastName, photo));
     }
 
     public boolean removeContact(Contact contact) throws DataConcurrencyException, DataIntegrityViolationException {
+        if(contact.hasEvents()){
+            throw new DataIntegrityViolationException();
+        }
         return this.contactsRepository.removeContact(contact);
     }
     
@@ -59,19 +64,5 @@ public class ContactController implements Controller {
         Optional<Contact> c=this.contactsRepository.findOne(id);
         if (c.isPresent()) return c.get();
         else return null;
-    }
-
-    public Event addEvent(Contact contact, String eventDescription, Calendar dueDate) throws DataConcurrencyException, DataIntegrityViolationException {
-        
-        // Create a new Event for this contact...
-        // FIXME: We should change this to use a Builder 
-        Event ev=new Event(eventDescription, dueDate);
-        
-        contact.agenda().add(ev);
-        
-        // TODO: When do we save?...
-        this.contactsRepository.save(contact);
-        
-        return ev; 
     }
 }
