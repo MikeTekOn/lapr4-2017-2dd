@@ -124,4 +124,4 @@
  * 1. nothing
  * <p>
  */
-package lapr4.red.s1.core.n1150385.activateext;
+package lapr4.red.s1.core.n1150385.enabledisableextensions;
