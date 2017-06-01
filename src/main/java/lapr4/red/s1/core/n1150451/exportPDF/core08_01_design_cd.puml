@@ -1,0 +1,29 @@
+@startuml
+class ExportPDFUI{
+}
+class ExportPDFController{
+    initiateExport()
+    selectRange(r)
+    toggleSections()
+    selectPath(path)
+    export()
+}
+class ExportPDF{
+    selectRange(r)
+    toggleSections()
+    selectPath(path)
+    export()
+}
+class ExportContext{
+    executeStrategy()
+}
+interface ExportStrategy{
+    ExportStrategy s
+    export(List<Cell>)
+}
+ExportPDFUI ..> ExportPDFController
+ExportPDFController ..> ExportPDF
+ExportPDF ..> ExportContext
+ExportPDF ..|> ExportStrategy
+ExportPDFController ..|> ExportStrategy
+@enduml
