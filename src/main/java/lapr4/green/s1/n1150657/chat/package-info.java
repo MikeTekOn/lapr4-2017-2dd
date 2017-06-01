@@ -34,12 +34,40 @@
  * 
  * <h2>3. Tests</h2>
  * This should include the functional tests, applying Test-Driven
- * Development, and unit tests.<p>
+ * Development, and unit tests.
  * 
- * <b>Test1</b><p>
+ * <h3>3.1 Functional Tests:</h3>
+ * <li><b>Test1 - </b>ConnectionWithAnotherInstanceTest</li></ul>
+ * This test will provide information regarding the connection, in other words, if the connection with 
+ * another instance is truly made.<p>
+ * See TODO<p>
+ * 
+ * <li><b>Test2 - </b>MessageSentToAnotherInstanceTest</li></ul>
+ * The base of this functionality is to send a message to another instance, wich mean is important to test
+ * if a message is sent.<p>
+ * See TODO<p>
+ * 
+ * <li><b>Test3 - </b>MessageReceivedTest</li></ul>
+ * The other side of sending message is to receive it. This test will comprove that an instance will receive a message.<p>
+ * See TODO<p>
+ * 
+ * <li><b>Test4 - </b>MessageRepliedTest</li></ul>
+ * The test will demonstrate the possibily to answear to a message.<p>
+ * See TODO<p>
+ * 
+ * <h3>3.2 Unit Tests:<h3>
  * TODO
+ * 
  * <h2>4. Design</h2>
- * TODO
+ * This sequence diagram represents the design for the tcp connection regardless the client.
+ * The way the system will interact to established a connection and send a message.<p>
+ * <img src="us087_design1.png" alt="image">
+ * <p>
+ * Another sequence diagram was made to represent the server side.<p>
+ * <img src="us087_design2.png" alt="image">
+ * <p>
+ * 
+ * 
  * <h2>5. Code</h2>
  * TODO
  */
