@@ -2,16 +2,16 @@
     participant "uic: UIController" as uic
     participant "uiExtension : UIExtensionComments" as UIExt
     participant "CommentPanel : JPanel" as cp
-    participant "CommentController" as ctrl
+    participant "AddCommentWithUserController" as ctrl
     participant "event: SelectionEvent" as event
     participant "cell: Cell" as cell
     participant "activeCell: CommentableCellWithMultipleUsers" as activeCell
 
-    create ctrl
-    UIExt -> ctrl: create()
-    
     create cp
     UIExt -> cp :  create(uic) 
+    
+    create ctrl
+    cp -> ctrl: create(uic, cp)   
     cp -> uic : addSelectionListener(this)
 
     note right of uic

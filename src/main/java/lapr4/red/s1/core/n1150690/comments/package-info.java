@@ -122,26 +122,26 @@
  * Yesterday: our team distributed the funcionalities to be worked on this
  * sprint.
  * <p>
- * Today: I start the analysis process.
+ * Today: I will start the analysis process.
  * <p>
  * Blocking:---
  * <p>
  * <b>Wednesday 31/05/2017</b>
  * <p>
- * Yesterday: finished the analysis process.
+ * Yesterday: I finished the analysis process.
  * <p>
- * Today: I start the design process and want, if possible, starts the
+ * Today: I will start the design process and want, if possible, starts the
  * implementation of the unit tests.
  * <p>
  * Blocking:---
  * <p>
  * <b>Thursday 1/06/2017 </b>
  * <p>
- * Yesterday:
+ * Yesterday: I finished the design and the unit tests.
  * <p>
- * Today:
+ * Today: I will start the implementation process.
  * <p>
- * Blocking:
+ * Blocking:---
  * <p>
  * <b>Friday 2/06/2017</b>
  * <p>
