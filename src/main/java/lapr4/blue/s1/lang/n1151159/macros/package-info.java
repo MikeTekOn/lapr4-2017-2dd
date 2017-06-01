@@ -79,12 +79,47 @@
  *
  * <img src="domain_model_macros.png" alt="image">
  *
- *
- *
  * <p>
  *     What's new compared to the previous implemented grammar is the <b>recursive call of the expression rule</b> and
  *     the rule to <b>ignore comments</b>.
  * </p>
+ *
+ *
+ *
+ *
+ * <h2>4. Tests</h2>
+ * <p>Notes Tests related to the formulas can be found at <b>{@link lapr4.gray.s1.lang.n3456789.formula;}</b></p>
+ * <p>Also, formulas can be tested interactively using <b>{@link csheets.core.formula.compiler.Console}</b></p>
+ *
+ * <h3>4.1. Unit Tests</h3>
+ * <ol>
+ *     <li>ensureMacroResultReturnsLastExpression</li>
+ *     <li>ensureMacroExecutesAllStatements</li>
+ *     <li>ensureAssignmentChangesCell</li>
+ * </ol>
+ *
+ * <h3>4.1. Functional Tests Plan</h3>
+ * <p>4.1.1. Test the macro window and macro results:</p>
+ * <ol>
+ *     <li>Open the macro window</li>
+ *     <li>
+ *         Insert the following macro:
+ *         <ul>
+ *             <li>A1:=2+2</li>
+ *             <li>5*5</li>
+ *             <li>B2:=2*3</li>
+ *             <li>;Sums the cell A1 with the cell B2</li>
+ *             <li>B3:=sum(A1;B2)</li>
+ *             <li>50-B3+1</li>
+ *         </ul>
+ *     </li>
+ *     <li>The macro result window must have the output 41.</li>
+ *     <li>The cell A1 must have the value 4.</li>
+ *     <li>The cell B2 must have the value 6.</li>
+ *     <li>The cell B3 must have the value 10.</li>
+ *     <li></li>
+ * </ol>
+ *
  *
  *
  *
@@ -110,7 +145,6 @@
  * </ol>
  *
  *
- *
  * <p><b>Wednesday</b></p>
  *
  * <p><b>Yesterday I've worked on:</b></p>
@@ -124,6 +158,27 @@
  *
  * <ol>
  *     <li>Conclude the use case analysis.</li>
+ * </ol>
+ *
+ * <p><b>Blocking:</b></p>
+ * <ol>
+ *     <li>Nothing</li>
+ * </ol>
+ *
+ *
+ * <p><b>Thursday</b></p>
+ *
+ * <p><b>Yesterday I've worked on:</b></p>
+ * <ol>
+ *     <li>Conclusion of analysis</li>
+ *     <li>Tests plan</li>
+ * </ol>
+ *
+ * <p><b>Today</b></p>
+ *
+ * <ol>
+ *     <li>Finish the tests plan</li>
+ *     <li>Design</li>
  * </ol>
  *
  * <p><b>Blocking:</b></p>

@@ -82,7 +82,10 @@
  * <p>
  * <h2>4. Design</h2>
  * <p>
- *
+ * Sequence Diagram
+ * <p>
+ * <img src="core08_01_design_sd.png" alt="image">
+ * <p>
  * <h3>4.1. Functional Tests</h3>
  * <p>
  *

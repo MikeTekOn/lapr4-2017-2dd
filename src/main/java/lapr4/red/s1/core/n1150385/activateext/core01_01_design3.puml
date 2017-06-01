@@ -1,0 +1,20 @@
+@startuml
+
+participant "Extension" as ext
+participant "ExtensionManager" as Manager
+
+Manager -> ext : extensionStateChanged(<i>this</i>)
+activate ext
+alt If this extension was disabled
+ext -> ext : extensionDisabled()
+else
+note right of ext
+This methods can be overriden
+by classes that extend this class.
+(Most usually custom extensions)
+end note
+ext -> ext : extensionEnabled()
+end
+deactivate ext
+
+@enduml
