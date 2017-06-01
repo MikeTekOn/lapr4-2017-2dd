@@ -73,6 +73,8 @@ import csheets.ui.ext.UIExtension;
 import csheets.ui.sheet.AddressBox;
 import csheets.ui.sheet.CellEditor;
 import csheets.ui.sheet.WorkbookPane;
+import java.awt.GridLayout;
+import lapr4.blue.s1.lang.n1060503.functionWizard.ui.FunctionWizard;
 
 /**
  * The main frame of the GUI.
@@ -143,6 +145,7 @@ public class Frame extends JFrame implements SelectionListener {
 		WorkbookPane workbookPane = new WorkbookPane(uiController, actionManager);
 		CellEditor cellEditor = new CellEditor(uiController);
 		AddressBox addressBox = new AddressBox(uiController);
+                FunctionWizard functionWizard = new FunctionWizard(uiController);
 
 		// Creates tool bars
 		JPanel toolBarPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
@@ -154,9 +157,12 @@ public class Frame extends JFrame implements SelectionListener {
 		}
 
 		// Creates and lays out top panel
+                JPanel cellFunctionPanel = new JPanel(new BorderLayout());
+                cellFunctionPanel.add(functionWizard, BorderLayout.WEST);
+                cellFunctionPanel.add(cellEditor, BorderLayout.CENTER);
 		JPanel cellPanel = new JPanel(new BorderLayout());
 		cellPanel.add(addressBox, BorderLayout.WEST);
-		cellPanel.add(cellEditor, BorderLayout.CENTER);
+		cellPanel.add(cellFunctionPanel, BorderLayout.CENTER);
 		JPanel topPanel = new JPanel(new BorderLayout());
 		topPanel.add(toolBarPanel, BorderLayout.NORTH);
 		topPanel.add(cellPanel, BorderLayout.SOUTH);

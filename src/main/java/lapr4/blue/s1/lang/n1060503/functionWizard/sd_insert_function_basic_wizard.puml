@@ -46,12 +46,13 @@ deactivate UI
 
 User -> UI : choose apply option
 activate UI
-UI -> Action : insertSyntaxFormulaBar()
-deactivate UI
-activate Action
+UI -> CRTL : insertSyntaxFormulaBar()
 
-Action --> User : close the window
-deactivate Action
+activate CRTL
+deactivate CRTL
+
+UI --> User : close the window
+deactivate UI
 
 
 @enduml
