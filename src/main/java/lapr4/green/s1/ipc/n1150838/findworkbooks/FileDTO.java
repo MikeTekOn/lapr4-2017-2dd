@@ -9,25 +9,19 @@ import csheets.core.Workbook;
 import java.io.Serializable;
 
 /**
- *
+ * DTO to transfer file information through events
  * @author nunopinto
  */
-public class WorkbookDTO implements Serializable, Comparable<WorkbookDTO>{
-    
-    private Workbook workbook;
+public class FileDTO implements Serializable, Comparable<FileDTO>{
+
     private String fileName;
+    private String filePath;
     
-    public WorkbookDTO(Workbook workbook,String fileName){
-        this.workbook=workbook;
+    public FileDTO(String fileName,String filePath){
         this.fileName=fileName;
+        this.filePath=filePath;
     }
     
-    /**
-     * @return the workbook
-     */
-    public Workbook getWorkbook() {
-        return workbook;
-    }
 
     /**
      * @return the fileName
@@ -35,16 +29,28 @@ public class WorkbookDTO implements Serializable, Comparable<WorkbookDTO>{
     public String getFileName() {
         return fileName;
     }
+    
+        /**
+     * @return the filePath
+     */
+    public String getFilePath() {
+        return filePath;
+    }
 
     @Override
-    public int compareTo(WorkbookDTO o) {
+    public int compareTo(FileDTO o) {
         return getFileName().compareTo(o.getFileName());
     }
-    
+    /**
+     * clones the DTO
+     * @return 
+     */
     @Override
-    public WorkbookDTO clone() {
-        return new WorkbookDTO(workbook,fileName);
+    public FileDTO clone() {
+        return new FileDTO(fileName,filePath);
     }
+
+
 
     
 }
