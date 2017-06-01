@@ -85,7 +85,9 @@
  * There should be at least a spreadsheet with cells not empty.
  * <p>
  * 
- * 
+ * <h2>8. Design</h2>
+ * <img src="us081_design.png" alt="design">
+ * <p>
  *
  * @author Miguel Silva (1150901)
  */
