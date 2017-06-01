@@ -55,7 +55,7 @@ public class CommTCPEchoRequest {
      */
     @Before
     public void setUp() {
-        portNumber = 17000;
+        portNumber = 15351;
         tcpServer = CommTCPServer.getServer(portNumber);
         tcpServer.addHandler(EchoDTO.class, new EchoServerHandler());
         tcpClientsManager = new CommTCPClientsManager();
