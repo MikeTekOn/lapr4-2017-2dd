@@ -1,8 +1,8 @@
 @startuml
 actor User
 User -> MacroExtensionUI : Selects beanshell script option
-MacroExtensionUI -> BeanShellClassLoaderController : createClassFromScript(aScript)
-BeanShellClassLoaderController -> BeanShellClassLoader :create(aScript) --- this is the default script
+MacroExtensionUI -> BeanShellClassLoaderController : createClassFromScript(aScript,uiController)
+BeanShellClassLoaderController -> BeanShellClassLoader :create(aScript,uiController) --- this is the default script
  BeanShellClassLoader -> BeanShellClassLoaderController : return new BeanShellClassInstance()
 BeanShellClassLoaderController -> BeanShellClassInstance : beanShellResult = executeScript()
  BeanShellClassInstance ->  BeanShellClassInstance : new Workbook();

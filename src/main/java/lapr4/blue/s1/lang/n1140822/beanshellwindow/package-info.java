@@ -56,6 +56,8 @@
  * <p>
  *  BeanShellResult
  * <p>
+  * <p>
+ *  BeanShellResult
  * <p>
  * 
  * <h2>4. Design</h2>
@@ -80,7 +82,8 @@
  * <h3>4.2. UC Realization</h3>
  * To realize this functional increment, we will need the classes depicted in the analysis section.
  * In this section there will be two sequence diagrams: one that depicts the generic approach of building any beanshell script, and the other will illustrate the construction and the execution of the default script.
- * 
+ * In order to reflect the changes on the UI we need to send a reference to the UIController class, which fires events to repaint and update the UI. Since this is a controller, it still respects the MvC pattern, although, the decision to send this object into the deep domain objects (beanshellclassinstance) is due to the fact that beanshell can only return serializable objects.
+ * We would have to create a uiController inside the beanshell script (user shouldnt be bothered by this) and serialize it, then rebuild it on the application side and update our UIController with this one as reference. It is just easier for the user to not get bothered with this.
  * <p>
  * Sequence Diagram 1 - Generic class loading and script executing
  * <p>
@@ -103,32 +106,30 @@
  * 
  * <h3>4.4. Design Patterns and Best Practices</h3>
  * 
- * This is an extension, so all extension related patterns are already explained in other documents. -insert reference to extension documentation.
+ * This is an extension, so all extension related patterns are already explained in other documents, such as the hollywood pattern.
+ * As the rest of the project, we will be using the MvC pattern.
  * 
  * 
  * <h2>5. Implementation</h2>
  * 
- * -Reference the code elements that where updated or added-
+ * Added the planned classes.
+ * Added junit testing to guarantee domain rules are enforced.
+ * Implemented controller class.
  * <p>
- * -Also refer all other artifacts that are related to the implementation and where used in this issue. As far as possible you should use links to the commits of your work-
+ * 
  * 
  * <h2>6. Integration/Demonstration</h2>
  * 
- * -In this section document your contribution and efforts to the integration of your work with the work of the other elements of the team and also your work regarding the demonstration (i.e., tests, updating of scripts, etc.)-
+ * When integrating, it was verified the changes were not showing appropriatly on the user interface. This led to changes in the implementation which are now reflected in this document.
  * 
  * <h2>7. Final Remarks</h2>
- * 
- * -In this section present your views regarding alternatives, extra work and future work on the issue.-
+ * Future possible changes and improvements: Total domain interaction as depicted in the CleanSheets API UC, improve reading method to allow method implementations on different lines.
  * <p>
  * As an extra this use case also implements a small cell visual decorator if the cell has a comment. This "feature" is not documented in this page.
  * 
  * 
  * <h2>8. Work Log</h2> 
  * 
- * -Insert here a log of you daily work. This is in essence the log of your daily standup meetings.-
- * <p>
- * Example
- * <p>
  * <b>Monday</b>
  * <p>
  * Yesterday I worked on:
@@ -159,7 +160,7 @@
  * 
  * <h2>9. Self Assessment</h2> 
  * 
- * -Insert here your self-assessment of the work during this sprint regarding Rubrics R3, R6 and R7.-
+ * 
  * 
  * <h3>R3. Rubric Requirements Fulfilment: 3</h3>
  * 
@@ -173,7 +174,6 @@
  * 
  * 2- many defects. The code follows good practices although some design patterns should have been applied. The technical documentation covers the majority of the solution although it may have some errors. However the appropriate type of technical artifacts for documenting design are present and the ideia behind the solution is understandable. Code does not "goes against" the design options of the original code of the project. Unit tests seem to cover a significant amount of functionalities (e.g., more than 50%) but there was not test first approach.
  * 
- * @author alexandrebraganca
  */
 package lapr4.blue.s1.lang.n1140822.beanshellwindow;
 
