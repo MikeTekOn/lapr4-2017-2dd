@@ -3,33 +3,33 @@
     actor User 
     participant "<<analysis>>\nSearchWorkbookUI" as UI
     participant "<<analysis>>\nSearchWorkbookCtrl" as ctrl
+    participant "<<analysis>>\nCommManager" as comm
     participant "<<analysis>>\nCleansheet" as cleansheet
     participant "<<analysis>>\nSpreadsheet" as sheet
 
-    User -> UI : begin
+    User -> UI : Chooses the menu of the user story
     activate UI 
-    UI -> ctrl : listWorkbooks : getAllActiveWorkbooks()
+    UI -> ctrl : listOfInstances : getAllActiveInstances()
     activate ctrl
-    ctrl -> cleansheet : getWorkbooks()
-    ctrl <-- cleansheet
+    ctrl -> comm : getInstances()
+    ctrl <-- comm
     UI <-- ctrl
-    User <-- UI
+    User <-- UI : Show available instances
     deactivate ctrl
     deactivate UI
-    User -> UI : chooseWorkbook(w)
+    User -> UI : Selects instance and name of workbook
     activate UI
-    UI -> ctrl : checkIfWorkbookExists(w)
-    activate ctrl
-    loop for Workbook wb : listWorkbooks
-    alt wb == w
+    UI -> cleansheet : boolean b = isWorkbookStored(w)
+    activate cleansheet
+    alt b == true
     ctrl -> sheet : getTitle()
     ctrl <-- sheet
     ctrl -> sheet : getCells()
     ctrl <-- sheet
     end
-    end
+    deactivate cleansheet
     UI <-- ctrl
     UI -> UI : showSummary()
-    deactivate ctrl
+    User <-- UI : Presents the result and summary
     
 @enduml

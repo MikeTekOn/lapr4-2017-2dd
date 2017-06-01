@@ -1,0 +1,28 @@
+@startuml
+
+    participant "UIExtensionSearchWorkbook" as UI
+    participant "CtrlExtensionSearchWorkbook" as ctrl
+    participant "CommTCPClientsManager" as tcp
+    participant "Cleansheet" as cleansheet
+    participant "Spreadsheet" as sheet
+
+    activate UI 
+    UI -> ctrl : listOfInstances : getAllActiveInstances()
+    activate ctrl
+    ctrl -> tcp : getInstances()
+    ctrl <-- tcp
+    UI <-- ctrl
+    deactivate ctrl
+    UI -> cleansheet : boolean b = isWorkbookStored(w)
+    activate cleansheet
+    alt b == true
+    ctrl -> sheet : title = getTitle()
+    ctrl <-- sheet
+    ctrl -> sheet : content =  getCells()
+    ctrl <-- sheet
+    end
+    deactivate cleansheet
+    UI <-- ctrl
+    UI -> UI : showSummary(title, content)
+
+@enduml

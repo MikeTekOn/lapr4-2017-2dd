@@ -86,7 +86,12 @@
  * <p>
  * <h3>4.1. Functional Tests</h3>
  * <p>
- *
+ * Regarding the functional tests, a test should be made to ensure that the
+ * created pdf is equal to the desired pdf to be created. With that, a
+ * comparison must be made between the exported PDF and the desired one. To do
+ * so, and since this is a functional test, it should only be made after the
+ * implementation, so this section will be updated later.
+ * <p>
  * <h3>4.2. UC Realization</h3>
  * Sequence Diagram
  * <p>
