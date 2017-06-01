@@ -32,18 +32,21 @@ import javax.swing.table.DefaultTableCellRenderer;
 import csheets.core.Cell;
 import csheets.core.IllegalValueTypeException;
 import csheets.core.Value;
+import csheets.ext.ExtensionManager;
 import csheets.ext.style.StylableCell;
 import csheets.ext.style.StyleExtension;
 import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.CellDecorator;
 import csheets.ui.ext.UIExtension;
+import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionEvent;
+import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionStateListener;
 
 /**
  * The renderer used for cells in a spreadsheet.
  * @author Einar Pehrson
  */
 @SuppressWarnings("serial")
-public class CellRenderer extends DefaultTableCellRenderer {
+public class CellRenderer extends DefaultTableCellRenderer implements ExtensionStateListener {
 
 	/** The cell decorators invoked by the renderer */
 	private LinkedList<CellDecorator> decorators = new LinkedList<CellDecorator>();
@@ -63,6 +66,7 @@ public class CellRenderer extends DefaultTableCellRenderer {
 	 */
 	public CellRenderer(UIController uiController) {
 		// Fetches decorators
+		uiController.addExtensionListener(this);
 		for (UIExtension extension : uiController.getExtensions()) {
 			CellDecorator decorator = extension.getCellDecorator();
 			if (decorator != null)
@@ -72,7 +76,10 @@ public class CellRenderer extends DefaultTableCellRenderer {
 
 	public Component getTableCellRendererComponent(JTable table, Object o,
 			boolean selected, boolean hasFocus, int row, int column) {
-		super.getTableCellRendererComponent(table, o, selected, hasFocus, row, column);
+		Component c = super.getTableCellRendererComponent(table, o, selected, hasFocus, row, column);
+
+		if(ExtensionManager.getInstance().getExtension(StyleExtension.NAME) == null)
+			return c;
 
 		// Stores members
 		this.cell = (Cell)o;
@@ -126,5 +133,15 @@ public class CellRenderer extends DefaultTableCellRenderer {
 			for (CellDecorator decorator : decorators)
 				if (decorator.isEnabled())
 					decorator.decorate(this, g, cell, selected, hasFocus);
+	}
+
+	@Override
+	public void extensionStateChanged(ExtensionEvent event) {
+		this.decorators.clear();
+		for (UIExtension extension : ((UIController)event.getSource()).getExtensions()) {
+			CellDecorator decorator = extension.getCellDecorator();
+			if (decorator != null)
+				decorators.add(decorator);
+		}
 	}
 }

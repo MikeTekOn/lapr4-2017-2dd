@@ -5,29 +5,25 @@
  */
 package lapr4.white.s1.core.n4567890.contacts;
 
-import lapr4.red.s1.core.n1150943.contacts.application.AddEventController;
+import lapr4.red.s1.core.n1150943.contacts.application.EventController;
 import lapr4.white.s1.core.n4567890.contacts.application.ContactController;
 import eapli.framework.persistence.DataConcurrencyException;
 import eapli.framework.persistence.DataIntegrityViolationException;
 import java.util.Calendar;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import lapr4.white.s1.core.n4567890.contacts.domain.Contact;
-import lapr4.white.s1.core.n4567890.contacts.domain.Event;
-import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import org.junit.Before;
+
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  *
- * @author alexandrebraganca
+ * @author alexandrebraganca edited by João Cardoso - 1150943
  */
 public class AddContactAcceptanceTest {
     
@@ -68,7 +64,7 @@ public class AddContactAcceptanceTest {
         // Populate the repository
         aContact=controller.addContact("John Doe", "John", "Doe","");
 
-        AddEventController c = new AddEventController(appProps);
+        EventController c = new EventController(appProps);
         Calendar date = Calendar.getInstance();
         date.set(2017, Calendar.JUNE, 30);
         c.addEvent(aContact,"Team Meeting",date);

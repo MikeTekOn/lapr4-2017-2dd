@@ -1,7 +1,7 @@
 /**
  * Technical documentation regarding the user story Lang04.1: Insert Function Basic Wizard.
  * <p>
- * JIRA issue: LAPR4E17DD-148
+ * JIRA issue: LAPR4E17DD-60
  * 
  * <p>
  * <b>Scrum Master: no</b>
@@ -11,9 +11,7 @@
  * 
  * <h2>1. Notes</h2>
  * 
- * 2017/05/30 - started analysing the user story
- * <p>
- * 2017/05/31 - update analysis and started design
+ * <h3>Already implemented the button next to the formula bar, which was only requested in sprint 2</h3>
  * 
  * <h2>2. Requirement</h2>
  * <p>
@@ -49,28 +47,30 @@
  * <h2>3. Analysis</h2>
  * 
  * <p>
- * The user interface of the application it was implemented with Actions.
+ * The user interface of the application it was implemented with an Action.
  * To build this functionality we had to respect this pattern.
- * The diagram above demonstrate what was done:
  * <p>
- * - ExtensionFunctionWizard
+ * It was necessary to create a menu option to launch the functionality.
  * <p>
- * - UIExtensionFunctionWizard
+ * The situation with the client was clarified and it was decided that could already be done the allocation of the button next to the formula bar
  * <p>
- * - FunctionWizardMenu
+ * Cliking the button will generate an action, that has the responsability of create the interface with the user.
+ * 
  * <p>
- * - FunctionWizardAction
+ * The diagram below demonstrate what was done:
  * 
  * <p>
  * <img src="cd1_insert_function_basic_wizard.png" alt="image">
  * 
- * 
+ * <p>
+ * After analyzing the code already implemented, it was verified that the responsibility to indicate the list of functions is "Language" class.
+ * This class implements an interface - "Function" - several attributes of each function can be accessed, one of which is the description.
  * 
  * <h2>4. Design</h2>
  * 
  * <h3>4.1. Functional Tests</h3>
  * <ol>
- * <li>  Selects "Function Wizard" option.</li> 
+ * <li>  Selects Function Wizard option ("fx" button).</li> 
  * <li>  A new window will appear. Choose the function: FACT.</li> 
  * <li>  On the label it will be possible see the description of the function and on edit box the syntax: =FACT()</li> 
  * <li>  Then click "Apply" button.</li> 

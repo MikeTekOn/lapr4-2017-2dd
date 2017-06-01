@@ -7,8 +7,10 @@ package lapr4.blue.s1.lang.n1140822.beanshellwindow;
 
 import bsh.EvalError;
 import bsh.Interpreter;
-import csheets.core.Address;
+import csheets.ui.ctrl.UIController;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -25,20 +27,27 @@ public class BeanShellInstance {
      * Lines of code in the script.
      */
     private LinkedList<String> code;
+    
+    Map<String,Object> results;
 
-    public BeanShellInstance(LinkedList<String> code) {
+    UIController controller;
+    public BeanShellInstance(LinkedList<String> code,UIController controller) {
         this.bshInterpreter = new Interpreter();
         this.code = code;
+        results = new HashMap<>();
+        this.controller = controller;
     }
 
     /**
      * Executes a set of instructions.
      * @throws EvalError if instruction is not valid piece of code
      */
-    public void executeScript() throws EvalError {
+    public Map<String,Object> executeScript() throws EvalError {
+        bshInterpreter.set("uiController",controller);
         for (String codeLine : code) {
-            this.bshInterpreter.eval(codeLine);
+            results.put(codeLine,this.bshInterpreter.eval(codeLine));
         }
+        return results;
     }
 
     @Override

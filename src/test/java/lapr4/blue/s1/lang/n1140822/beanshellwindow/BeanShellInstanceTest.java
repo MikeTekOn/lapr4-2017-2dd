@@ -6,6 +6,8 @@
 package lapr4.blue.s1.lang.n1140822.beanshellwindow;
 
 import bsh.EvalError;
+import csheets.CleanSheets;
+import csheets.ui.ctrl.UIController;
 import java.util.LinkedList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -45,17 +47,19 @@ public class BeanShellInstanceTest {
     @Test(expected = EvalError.class)
     public void  ensureBeanShellScriptFailsIfBadCode() throws EvalError {
         System.out.println("ensureBeanShellScriptFailsIfBadCode");
+         UIController controller = new UIController(new CleanSheets());
         LinkedList<String> list = new LinkedList<>();
         list.add("print(\"test\")asd;");
-        BeanShellInstance instance = new BeanShellInstance(list);
+        BeanShellInstance instance = new BeanShellInstance(list,controller);
         instance.executeScript();
     }
     
      public void  ensureBeanShellScriptExecutes() throws EvalError {
         System.out.println("ensureBeanShellScriptExecutes");
+         UIController controller = new UIController(new CleanSheets());
         LinkedList<String> list = new LinkedList<>();
         list.add("print(\"test\");");
-        BeanShellInstance instance = new BeanShellInstance(list);
+        BeanShellInstance instance = new BeanShellInstance(list,controller);
         instance.executeScript();
         //if no exception then its sucessfull
     }
