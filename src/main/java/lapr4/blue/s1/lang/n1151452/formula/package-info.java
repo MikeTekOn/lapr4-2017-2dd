@@ -9,7 +9,7 @@
  * <li><b>Spent significant time analyzing the already implemented code base for this feature.</b>
  * <li>The code base implemented "on top" of the cleansheets core, does not follow the core pattern. <b>Should we refactor to obey core pattern? A: YES</b>
  * <li>The class {@link org.antlr.v4.runtime.ANTLRInputStream} is deprecated, but we decided to continue to use it because the related documentation
- * states that "If you use both the the deprecated and the new streams, you will see a nontrivial performance degradation", and since the cleansheets core is not update we will maintain the use.
+ * states that "If you use both the the deprecated and the new streams, you will see a nontrivial performance degradation", and since the cleansheets core is not updated we will maintain the use.
  * </ol>
  * <p>
  * <p>
@@ -41,7 +41,7 @@
  * <li>The recognized operators are being loaded from the language.props (cleansheets core package), except for the new implementations of <b>sequence operator</b>
  * and <b>assignment operator</b> that are being load directly in {@link lapr4.gray.s1.lang.n3456789.formula.lang.Language}. <b>Should we refactor to obey core pattern? A: Yes, next point.</b>
  * <li>Refactor partially implemented feature to obey core structure (see below detail of Language class).
- * <li>The new operator FORLOOP (that should be based on the {@link lapr4.gray.s1.lang.n3456789.formula.lang.SequenceOperator}). In more detail, for should be customized sequence block, where
+ * <li>The new operator FORLOOP (that should be based on the {@link lapr4.gray.s1.lang.n3456789.formula.lang.SequenceOperator}). In more detail, a for loop should be a customized sequence block, where
  * the first expression should be the <b>initializer</b> and the second <b>boundary condition</b> the remaining expressions behaves the same way as a sequence, but looping until the boundary condition is met.
  * </ol><p>
  * <p>
@@ -111,7 +111,7 @@
  * <p>
  * <h3>3.2. Domain Model (<i>Excerpt</i>)</h3>
  * <p>
- * <img src="formula_domain_model.png" alt="image"><p>
+ * <img src="formula_domain_model.png" alt="formula_domain_model"><p>
  * <p>
  * <h3>3.3. Open Questions</h3>
  * <p><ol>
@@ -122,7 +122,66 @@
  * </ol><p>
  * <p>
  * <p>
+ * <h2>4. Tests</h2>
  * <p>
+ * <b>Note: </b>Formulas can be tested interactively using <b>{@link csheets.core.formula.compiler.Console}</b><p>
+ * <p>
+ * <h3>4.1. Unit Tests</h3>
+ * <p><ol>
+ * <li>ensureBlockReturnsLastStatementResult
+ * <li>ensureBlockExecutesAllStatements
+ * <li>ensureExpressionIsAssignedToCell
+ * <li>ensureForLoopsStatementExecutions
+ * <li>ensureForLoopStopsWhenBoundaryConditionIsFalse
+ * </ol><p>
+ * <h3>4.1. Functional Tests</h3>
+ * <p>
+ * <b>4.1.1. Test block (by consequence test assignment) </b>
+ * <p>
+ * <ol>
+ * <li>Insert in cell A1 the following expression "={(A2:=1);(A3:=3);1+1}"
+ * <li>The following cells should have the following values: A1 = 2; A2 = 1; A3 = 3
+ * </ol>
+ * <p>
+ * <p>
+ * <b>4.1.2. Test for loop </b>
+ * <p>
+ * <ol>
+ * <li>Insert in cell A1 the following expression "=FOR{(A1:=1);(A1&#60;10);(A1:=A1+1)}"
+ * <li>The cell A1 should have the value 10 after the loop
+ * </ol>
+ * <p>
+ * <p>
+ * <h2>5. Design</h2>
+ * <p>
+ * <b>Note:</b>We proposed to surround the assignment operator with round brackets so that the impact in the grammar is minor <b>"=(a1:=a3+1)+23"</b>.<p>
+ * <p>
+ * <h3>5.1. Language Class Design</h3>
+ * <p>
+ * <img src="new_language_sd.png" alt="new_language_sd">
+ * <p>
+ * <h3>5.2. Assignment Operator Design</h3>
+ * <p>
+ * <img src="assignment_sd.png" alt="assignment_sd">
+ * <p>
+ * <h3>5.3. Sequence Block Design</h3>
+ * <p>
+ * <img src="sequence_block_sd.png" alt="sequence_block_sd">
+ * <p>
+ * <h3>5.4. For Loop Design</h3>
+ * <p>
+ * <img src="for_loop_sd.png" alt="for_loop_sd">
+ * <p>
+ * <h3>5.4. Class Diagram</h3>
+ * <p>
+ * <img src="block_instructions_cd.png" alt="block_instructions_cd">
+ * <p>
+ * <h3>5.5. Design Patterns and Best Practices</h3>
+ * <p>
+ * The cleansheets core implementation already uses the <b>visitor pattern</b> to interact with the ANTLR generated classes, as well
+ * as the <b>decorator pattern</b> to design the expressions functionality.
+ * <p>
+ * We well continue the best practices and implement our FI using the same patterns.
  * <p>
  * <p>
  * <br>

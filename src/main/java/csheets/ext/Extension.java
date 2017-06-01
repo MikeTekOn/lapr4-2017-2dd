@@ -24,18 +24,23 @@ import csheets.core.Cell;
 import csheets.core.Spreadsheet;
 import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.UIExtension;
+import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionEvent;
+import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionStateListener;
 
 /**
  * An interface for extensions to the CleanSheets application.
  * @author Einar Pehrson
  */
-public abstract class Extension implements Comparable<Extension> {
+public abstract class Extension implements Comparable<Extension>, ExtensionStateListener {
 
 	/** The name of the extension */
 	private final String name;
 
 	/** The base key to use for properties of the extension */
 	private final String basePropKey;
+
+	/** Whether or not the extension is enabled */
+	private boolean enabled = true;
 
 	/**
 	 * Creates a new extension.
@@ -102,5 +107,32 @@ public abstract class Extension implements Comparable<Extension> {
 	 */
 	public UIExtension getUIExtension(UIController uiController) {
 		return null;
+	}
+
+	/**
+	 * Returns if this extension is enabled
+	 * @return if this extension is enabled
+	 */
+	public boolean isEnabled() { return enabled; }
+
+	/**
+	 * This method is called whenever the extension is disabled.
+	 */
+	private void extensionDisabled() { enabled = false; }
+
+	/**
+	 * This method is called whenever this extension is enabled. An extension
+	 * is considered enabled when it is loaded into the program, so, in order
+	 * to be enabled, it first needs to be disabled.
+	 */
+	private void extensionEnabled() { enabled = true; }
+
+	@Override
+	public void extensionStateChanged(ExtensionEvent event) {
+		if(enabled && ExtensionManager.getInstance().getExtension(name) == null){
+			extensionDisabled();
+		}else if(!enabled && ExtensionManager.getInstance().getExtension(name) != null){
+			extensionEnabled();
+		}
 	}
 }

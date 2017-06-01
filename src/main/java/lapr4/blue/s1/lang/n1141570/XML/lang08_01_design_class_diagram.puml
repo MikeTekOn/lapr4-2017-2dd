@@ -1,0 +1,28 @@
+@startuml
+class ExportXMLUI{
+}
+class ExportXMLController{
+    initiateExport()
+    selectRange(r)
+    configureTagNames(tagNames)
+    selectPath(path)
+    export()
+}
+class ExportXML{
+    selectRange(r)
+    configureTagNames(tagNames)
+    selectPath(path)
+}
+class ExportContext{
+    executeStrategy()
+}
+interface ExportStrategy{
+    ExportStrategy s
+    export(List<Cell>)
+}
+ExportXMLUI ..> ExportXMLController
+ExportXMLController ..> ExportXML
+ExportXML ..> ExportContext
+ExportXML ..|> ExportStrategy
+ExportXMLController ..|> ExportStrategy
+@enduml

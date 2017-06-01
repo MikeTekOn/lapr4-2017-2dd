@@ -7,28 +7,47 @@ skinparam defaultFontName FG Virgil
 skinparam shadowing false
 
 participant "SearchPeersAction"
-participant "CommUDPClient"
-participant "HandlerConnectionDetailsResponseDTO"
-participant "ObjectOutputStream"
-participant "ObjectInputStream"
 participant "ConnectionDetailsRequestDTO"
-participant "ConnectionDetailsResponseDTO"
+participant "HandlerConnectionDetailsResponseDTO"
+participant "CommUDPClient"
+participant "DatagramSocket"
+participant "ByteArrayOutputStream"
+participant "ObjectOutputStream"
+participant "DatagramPacket"
+participant "ByteArrayInputStream"
+participant "ObjectInputStream"
 
-create CommUDPClient
-SearchPeersAction -> CommUDPClient : client = new( portNumber )
-create ObjectOutputStream
-CommUDPClient -> ObjectOutputStream : new( socket )
-create ObjectInputStream
-CommUDPClient -> ObjectInputStream : new( socket )
 create ConnectionDetailsRequestDTO
-CommUDPClient -> ConnectionDetailsRequestDTO : request = new()
-CommUDPClient -> ObjectOutputStream : writeObject( request )
+SearchPeersAction -> ConnectionDetailsRequestDTO : dto = new()
+SearchPeersAction -> HandlerConnectionDetailsResponseDTO : handler = new()
+create CommUDPClient
+SearchPeersAction -> CommUDPClient : new( dto , portNumber , waitingTime )
+SearchPeersAction -> CommUDPClient : addHandler( handler )
+create DatagramSocket
+CommUDPClient -> DatagramSocket : new
+CommUDPClient -> DatagramSocket : setBroadcast( true )
+CommUDPClient -> DatagramSocket : setSoTimeout( waitingTime )
+create ByteArrayOutputStream
+CommUDPClient -> ByteArrayOutputStream : bos = new()
+create ObjectOutputStream
+CommUDPClient -> ObjectOutputStream : new( bos )
+CommUDPClient -> ObjectOutputStream : writeObject( dto )
+CommUDPClient -> ByteArrayOutputStream : data = toByteArray()
+create DatagramPacket
+CommUDPClient -> DatagramPacket : udpPacket = new( data , "broadcast address" , portNumber )
+CommUDPClient-> DatagramSocket : send( udpPacket )
+loop
+CommUDPClient-> DatagramPacket : new( data , data.length )
+CommUDPClient-> DatagramSocket : receive( udpPacket )
+create ByteArrayInputStream
+CommUDPClient -> ByteArrayInputStream : bis = new( data )
+create ObjectInputStream
+CommUDPClient -> ObjectInputStream : new( bis )
 CommUDPClient -> ObjectInputStream : reply = readObject()
-create ConnectionDetailsResponseDTO
-ObjectInputStream -> ConnectionDetailsResponseDTO : new
 CommUDPClient -> CommUDPClient : getHandler( reply )
-CommUDPClient -> HandlerConnectionResponseDTO : handleDTO( reply )
-note right of HandlerConnectionResponseDTO : Handler publishes a NewConnectionAvailableEvent
-SearchPeersAction -> SearchPeersAction : wait()
-SearchPeersAction -> CommUDPClient : terminateExecution()
+CommUDPClient -> HandlerConnectionDetailsResponseDTO : handleDTO( reply )
+HandlerConnectionDetailsResponseDTO -> HandlerConnectionDetailsResponseDTO : isMyReply( reply )
+note right of HandlerConnectionDetailsResponseDTO : Handler publishes a NewPeerEvent
+end loop
+
 @enduml
