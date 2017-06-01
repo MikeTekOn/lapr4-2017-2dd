@@ -76,6 +76,7 @@ import csheets.ui.sheet.WorkbookPane;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionEvent;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionStateListener;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ManageExtensionsAction;
+import lapr4.blue.s1.lang.n1060503.functionWizard.ui.FunctionWizard;
 
 /**
  * The main frame of the GUI.
@@ -96,6 +97,7 @@ public class Frame extends JFrame implements SelectionListener, ExtensionStateLi
 	WorkbookPane workbookPane;
 	CellEditor cellEditor;
 	AddressBox addressBox;
+        FunctionWizard functionWizard;
 
 	/**
 	 * Creates a new frame.
@@ -148,14 +150,15 @@ public class Frame extends JFrame implements SelectionListener, ExtensionStateLi
 		actionManager.registerAction("help", new HelpAction());
 		actionManager.registerAction("license", new LicenseAction());
 		actionManager.registerAction("about", new AboutAction());
-
-		// Register extension managing actions
+                
+                // Register extension managing actions
 		actionManager.registerAction("manageExtensions", new ManageExtensionsAction(this));
 
 		// Creates spreadsheet components
 		workbookPane = new WorkbookPane(uiController, actionManager);
 		cellEditor = new CellEditor(uiController);
 		addressBox = new AddressBox(uiController);
+                functionWizard = new FunctionWizard(uiController);
 
 		registerListeners();
 		recreatePanels();
@@ -175,9 +178,12 @@ public class Frame extends JFrame implements SelectionListener, ExtensionStateLi
 		}
 
 		// Creates and lays out top panel
+		JPanel cellFunctionPanel = new JPanel(new BorderLayout());
+		cellFunctionPanel.add(functionWizard, BorderLayout.WEST);
+		cellFunctionPanel.add(cellEditor, BorderLayout.CENTER);
 		JPanel cellPanel = new JPanel(new BorderLayout());
 		cellPanel.add(addressBox, BorderLayout.WEST);
-		cellPanel.add(cellEditor, BorderLayout.CENTER);
+		cellPanel.add(cellFunctionPanel, BorderLayout.CENTER);
 		JPanel topPanel = new JPanel(new BorderLayout());
 		topPanel.add(toolBarPanel, BorderLayout.NORTH);
 		topPanel.add(cellPanel, BorderLayout.SOUTH);

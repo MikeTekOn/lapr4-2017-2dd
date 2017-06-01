@@ -1,9 +1,6 @@
 /**
- * Technical documentation regarding the user story Lang05.1: Macro Window
+ * <p>Technical documentation regarding the user story Lang05.1: Macro Window</p>
  *
- * <p><b>Scrum Master: no</b></p>
- *
- * <p><b>Area Leader: no</b></p>
  *
  *
  *
@@ -13,6 +10,7 @@
  *     The functional increment <b>Lang07 - Java Scripting</b> is to be
  *     integrated on this one. The user interface is common.
  * </p>
+ *
  *
  *
  *
@@ -39,6 +37,8 @@
  *     and the macro is executed.
  * </p>
  *
+ * <img src="communication_ssd.png" alt="image">
+ *
  *
  *
  * <h2>3. Analysis</h2>
@@ -50,11 +50,11 @@
  * </p>
  *
  *
- *
  * <p><b>Clarifications</b></p>
  *
  * <p><b>Q: </b>What kind of expressions should a macro support? Just formulas or expressions in general?</p>
  * <p><b>A: </b>Expression in general.</p>
+ *
  *
  * <p>
  *     As we need to create a new dedicated extension for macros, it was necessary to analyse how the extensions work.
@@ -98,8 +98,8 @@
  *     <li>ensureAssignmentChangesCell</li>
  * </ol>
  *
- * <h3>4.1. Functional Tests Plan</h3>
- * <p>4.1.1. Test the macro window and macro results:</p>
+ * <h3>4.2. Functional Tests Plan</h3>
+ * <p>5.1.1. Test the macro window and macro results:</p>
  * <ol>
  *     <li>Open the macro window</li>
  *     <li>
@@ -120,6 +120,28 @@
  *     <li></li>
  * </ol>
  *
+ *
+ *
+ *
+ * <h2>5. Design</h2>
+ *
+ *
+ * <h3>5.1. Macro Sequence Diagram</h3>
+ *
+ * <img src="macro_sd.png" alt="new_language_sd">
+ *
+ *
+ * <h3>5.2. Macro Class Diagram</h3>
+ *
+ * <img src="macro_cd.png" alt="new_language_sd">
+ *
+ *
+ * <h3>5.3. Design Patterns</h3>
+ * <p>
+ *     To transverse and compile the formulas, the <b>Visitor</b> design pattern is used, generating the
+ *     <b>MacroBaseVisitor</b> using the grammar defined with ANTLR.
+ * </p>
+ * <p>The <b>Decorator</b> design pattern is also used to design the formulas implementations.</p>
  *
  *
  *

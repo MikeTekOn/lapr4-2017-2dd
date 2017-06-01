@@ -3,6 +3,7 @@
  */
 package lapr4.blue.s1.lang.n1140822.beanshellwindow;
 
+import csheets.ui.ctrl.UIController;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.LinkedList;
@@ -32,8 +33,9 @@ public class BeanShellLoader {
      *
      * @param scriptName the script
      * @return the class instance
+     * @throws java.io.FileNotFoundException if script file is not found
      */
-    public BeanShellInstance create(String scriptName) throws FileNotFoundException {
+    public BeanShellInstance create(String scriptName,UIController controller) throws FileNotFoundException {
         this.scriptName = scriptName;
         LinkedList<String> code = new LinkedList<>();
         Scanner scan = new Scanner(new File(scriptName));
@@ -45,7 +47,7 @@ public class BeanShellLoader {
         {
             throw new IllegalStateException("Cannot create script without any code.");
         }
-        instance = new BeanShellInstance(code);
+        instance = new BeanShellInstance(code,controller);
         return instance;
     }
 
