@@ -156,10 +156,10 @@ public class ContactPanel extends JPanel implements ActionListener {
             contactsAddEventButton.setActionCommand(ContactPanel.addEventAction);
             contactsAddEventButton.addActionListener(this);
             contactsEditEventButton=new JButton("Edit Event");
-            contactsEditEventButton.setActionCommand(ContactPanel.addEventAction);
+            contactsEditEventButton.setActionCommand(ContactPanel.editEventAction);
             contactsEditEventButton.addActionListener(this);
             contactsRemoveEventButton=new JButton("Remove Event");
-            contactsRemoveEventButton.setActionCommand(ContactPanel.addEventAction);
+            contactsRemoveEventButton.setActionCommand(ContactPanel.removeEventAction);
             contactsRemoveEventButton.addActionListener(this);
 
             agendaButtonPane.add(contactsAddEventButton);

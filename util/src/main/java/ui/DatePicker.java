@@ -14,7 +14,7 @@ import javax.swing.*;
         JDialog d;
         JButton[] button = new JButton[49];
 
-        public DatePicker(JFrame parent) {
+        public DatePicker(JPanel parent) {
             d = new JDialog();
             d.setModal(true);
             String[] header = { "Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat" };
