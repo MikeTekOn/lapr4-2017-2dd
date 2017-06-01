@@ -9,15 +9,12 @@
  * <p>
  * <b>Area Leader: -(yes/no)- no</b>
  * 
- * <h2>1. Notes</h2>
- * 
- * -Notes about the week's work.-
- * <p>
- * -In this section you should register important notes regarding your work during the sprint.
- * For instance, if you spend significant time helping a colleague or if you work in more than a feature.-
- *
  * <h2>2. Requirement</h2>
- * Setup of export to an XML file. The user should be able to export the contents of an workbook, worksheet or part of an worksheet to an XML file.  
+ * It should be possible to export the contents of an workbook, worksheet or part of an worksheet to an
+ * XML file. As we want to optimize as much as possible the process the solution should not rely on any 
+ * third party library. Cleansheets should have a window to configure the XML tags to use for each type of 
+ * element. The export should only include the value of the cells. The export menu option should appear in 
+ * the File menu.
  * 
  * <p>
  * <b>Use Case "Export XML":</b> The user selects the cell/s where he/she wants to export or if no cell selected
@@ -30,7 +27,7 @@
  * The first sequence diagram in the section <a href="../../../../overview-summary.html#arranque_da_aplicacao">Application Startup</a> tells us that extensions must be subclasses of the Extension abstract class and need to be registered in special files.
  * The Extension class has a method called getUIExtension that should be implemented and return an instance of a class that is a subclass of UIExtension.
  * In this subclass of UIExtension there is a method (getMenu) that returns the JMenu for the extension.
- * 
+ * <p>
  * As we want to optimize as much as possible the process of exporting to a xml file, the solution should not rely on any
  * third party library so we discovered that Java supports 4 methods to parse XML out of the box: DOM Parser/Builder, SAX Parser, StAx Reader/Writer, JAXB. 
  * We choose to use Java Dom Parser as DOM provides many handy classes to create XML file easily. Firstly we have to create a Document with DocumentBuilder class,
@@ -40,7 +37,6 @@
  * After this previous analysis, we have discovered that is commonly used the following code.
  * <pre>
  * {@code 
- * 
  * DocumentBuilderFactory documentFactory;
  * DocumentBuilder documentBuilder;
  * Document doc;
@@ -50,7 +46,7 @@
  * transformer.transform(sourcem result);
  * }
  * </pre>
- *  * <p>
+ *   <p>
  * Regarding the application functionality itself, a new extension should be created in the File menu, with new option
  * "Export to XML...". Clicking on it, a pop-up window should appear allowing
  * the user to select the "range" of the export: the workbook, a specific
@@ -67,7 +63,18 @@
  * <p>
  * <img src="lang08_01_analysis_ssd.png" alt="image">
  * <p>
- * 
+ * * <h2>4. Design</h2>
+ * <p>
+ *
+ * <h3>4.1. Functional Tests</h3>
+ * <p>
+ *
+ * <h3>4.2. UC Realization</h3>
+ * <p>
+ *
+ * <h3>4.3. Classes</h3>
+ * <p>
+
  * <h3>4.4. Design Patterns and Best Practices</h3>
  * <p>
  * As mentioned in the Analysis section, a pattern should be used to avoid code
@@ -79,7 +86,7 @@
  * good choice in this situation, since the data to be exported is the same in
  * both PDF and XML exportation functionalities. To implement this pattern, the
  * following "base diagram" was used:
- *  * <p>
+ * <p>
  * <img src="lang08_01_design_basePattern.png" alt="image">
  * <p>
  *
