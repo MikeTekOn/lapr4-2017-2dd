@@ -1,0 +1,50 @@
+@startuml new_language_sd.png
+
+'http://plantuml.com/skinparam.html'
+skinparam handwritten true
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+
+participant Language <<lapr4>>
+participant core.Language <<core>>
+participant "is : InputStream" as is
+
+== Initialization ==
+[-> Language: << static >>\ngetInstance()
+note over of core.Language #aqua
+	store as baseInstance
+end note
+Language -> core.Language: << static >>\ngetInstance()
+create Properties
+Language -> Properties: create()
+Language -> is: getResourceAsStream(propsFile)
+Language -> Properties: load(is)
+loop forEach className : keySet()
+alt binaryOperator
+Language -> Language: binaryOperators.add(class)
+else naryOperator
+Language -> Language: naryOperators.add(class)
+end
+end
+== Example Usage #1 ==
+[-> Language: getFunction(id)
+Language -> core.Language: getFunction(id)
+== Example Usage #2 ==
+[-> Language: getNaryOperator(id)
+Language -> Language: getNaryOperator(id)
+note over of Language
+	searchs in naryOperators List
+end note
+== Example Usage #3 ==
+[-> Language: getBinaryOperator(id)
+group try
+Language -> core.Language: getBinaryOperator(id)
+else catch
+Language -> Language: getBinaryOperator(id)
+end
+note over of Language
+	searchs in binaryOperators List
+end note
+
+@enduml

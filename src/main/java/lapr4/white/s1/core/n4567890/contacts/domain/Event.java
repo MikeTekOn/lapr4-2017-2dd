@@ -30,7 +30,7 @@ public class Event {
     }
 
     public Event(final String description, final Calendar dueDate) {
-        if(dueDate.compareTo(Calendar.getInstance())>0){
+        if(dueDate.compareTo(Calendar.getInstance())>0 | !description.isEmpty()){
             this.description = description;
             this.dueDate = dueDate;
         }else {

@@ -24,7 +24,7 @@
  * <b>Use Case "Temporary Variables":</b>
  * 
  * <ol>
- *  <li>The user introduces a formula containing temporary variables.</li>
+ *  <li>The user introduces a formula containing temporary variable(s).</li>
  *  <li>The system displays the formula result</li>
  * </ol>
  * 
@@ -66,16 +66,38 @@
  * 
  * <h2>4. Design</h2>
  * 
- * <h3>4.1. Functional Tests</h3>
+ * <h3>4.1. Tests</h3>
+ * <b>Domain Tests</b>
+ * <ol>
+ *   <li>startWithUnderscore()</li>
+ *   <li>haveLetterAfterUnderscore()</li>
+ *   <li>rejectNumberAfterUnderscore()</li>
+ *   <li>acceptDigitsAndLettersName()</li>
+ * </ol>
  * 
+ * <b>Functional Tests</b>
+ * <ol>
+ *   <li>addTemporaryVariableToContentorFirstTime()</li>
+ *   <li>addTemporaryVariableToContentorAlreadyExists</li>
+ *   <li>testBasicExpressionWithTemporary() -&gt; example "_Var:=1+2"</li>
+ *   <li>testAssignmentOperatorWithTemporary() -&gt; example "_Var:=A1"</li>
+ *   <li>testFunctionExpressionWithTemporary() -&gt; example "_Var:= sum(A2:A4)"</li>
+*    <li>testFormulaBlocksWithTemporary() -&gt; ex: "= {A=1+2; _Var:= 1+A ;"
+*   <li>testFormulaManyTemporaryVariables() -&gt; ex: "={_Var1:=2; _Var2:=3; _Var3:=_Var1+_Var2; A= _Var+3]"
+*   <li>formulaWithTemporaryVariable()</li>
+ * </ol> 
  * 
  * <h3>4.2. UC Realization</h3>
  * 
+ * <img src="lang02.1_sd.png" alt="image">
  * 
  * <h3>4.3. Classes</h3>
  * 
+ * <img src="lang02_1cd.png" alt="image">
  * 
  * <h3>4.4. Design Patterns and Best Practices</h3>
+ * 
+ * 
  * 
  * <h2>5. Implementation</h2>
  * 

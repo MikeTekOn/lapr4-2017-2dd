@@ -1,15 +1,15 @@
 /**
  * Technical documentation regarding the user story Core02.2: Tooltip and User Associated to Comment.
  *
- * <p/>
+ * <p>
  * <b>Scrum Master: -(yes/no)- no</b>
  *
- * <p/>
+ * <p>
  * <b>Area Leader: -(yes/no)- no</b>
  *
  * <h2>1. Notes</h2>
- * <p/>
- * <p/>
+ * <p>
+ * <p>
  *
  * <h2>2. Requirement</h2>
  * Cleansheets should register the name of the user that creates comments and
@@ -19,7 +19,7 @@
  * comment should also appear in all displays of comments. Comments should be
  * persisted with the workbook.
  *
- * <p/>
+ * <p>
  * <b>Use Case "Tooltip and User Associated to Comment":</b> The user selects
  * the cell where he/she wants to enter a comment. The system displays the
  * current comment of that cell. The user enter the text of the comment (or
@@ -32,14 +32,15 @@
  * <p>
  * This use case it's an extended version of the <b>Core02.1: Comments on
  * Cells</b> use case. In this
- * <a href="../../../../../comments/package-info.java"/>page</a> you can find
+ * <a href="../../../../../comments/package-info.java">page</a> you can find
  * all the necessary documentation about the Core02.1 use case.
  * <p>
  * For this functionality in specific, we only need to added to the previous use
  * case more features like: the possibility to insert several comments in a
  * cell, associate them to the author and persist the comments with the
  * workbook. To identify the user in the comment, the software should retrieve
- * automaticly the system's username.
+ * automaticly the system's username by using this function:
+ * <code>System.getProperty("user.name")</code>.
  * <p>
  * <h3>Domain Concepts Description</h3>
  * <p>
@@ -73,11 +74,10 @@
  * see:
  * <code>lapr4.red.s1.core.n1150690.comments.CommentableCellWithMultipleUsersTest</code>
  * <p>
- * We will need to add a class named <oode>User</code> to save the system's
+ * We will need to add a class named <code>User</code> to save the system's
  * username, in order to associate the author to the comment. Following this, we
- * need a test to ensure that the user's name is not empty or with spaces only.
- * <p>
- * see: <code>lapr4.red.s1.core.n1150690.comments.UserTest</code>
+ * will not need to create a test class for ensure the name isn't null because
+ * the function presented in analysis section will always return a string.
  * <p>
  *
  * <h3>4.2. UC Realization</h3>

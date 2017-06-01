@@ -14,19 +14,24 @@ interface Expression {
 }
 interface Reference
 interface Operator
-class UnaryOperator
-class BinaryOperator
-class NaryOperator <<<b>analysis>>
-class SequenceOperator <<<b>analysis>>
-class AssignmentOperator <<<b>analysis>>
-class ForLoopOperator <<<b>analysis>>
-note bottom : <b>@override\napplyTo(Expression[] operands)
+interface UnaryOperator
+note right : <b>concrete classes:\nPercent, etc.
+interface BinaryOperator
+note left : <b>concrete classes:\nAdder, LessThan, etc.
+interface NaryOperator <<<b>analysis>>
+class SequenceBlock <<<b>analysis>>
+class Assignment <<<b>analysis>>
+class ForLoop <<<b>analysis>>
+note "<b>@override\napplyTo(Expression[] operands)" as n1
+SequenceBlock .. n1
+n1 .. ForLoop
+Assignment .. n1
 abstract class Operation <O extends Operator> {
     getOperator() 
 }
 class UnaryOperation
 class BinaryOperation
-class NaryOperation <<analysis>>
+class NaryOperation <<<b>analysis>>
 class FunctionCall
 class Literal
 interface ExpressionVisitor {
@@ -37,6 +42,7 @@ interface ExpressionVisitor {
 	+Object visitFunctionCall(FunctionCall call)
 	+Object <b>visitNaryOperation(NaryOperation operation)</b>
 }
+note right : <b>Vistior pattern to transverse\n<b>expressions and compile them
 Expression <|-- Formula
 Expression <|-- Reference
 Expression <|-- Operation
@@ -61,8 +67,8 @@ UnaryOperation *-- UnaryOperator
 BinaryOperation *-- BinaryOperator
 NaryOperation *-- NaryOperator
 
-NaryOperator <|-- ForLoopOperator
-NaryOperator <|-- SequenceOperator
+NaryOperator <|-- ForLoop
+NaryOperator <|-- SequenceBlock
 
-BinaryOperator <|-- AssignmentOperator
+BinaryOperator <|-- Assignment
 @enduml

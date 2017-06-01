@@ -1,0 +1,42 @@
+@startuml for_loop_sd.png
+
+'http://plantuml.com/skinparam.html'
+skinparam handwritten true
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+participant Expression
+participant "for : ForLoop" as for
+participant "first : operand" as init <<Expression>>
+participant "second : operand" as condition <<Expression>>
+collections operand <<Expression>>
+
+[-> Expression: evaluate()
+Expression->for: applyTo(operands)
+note over of for
+    <b>Infinite Loop</b>
+	should we verify if the left operand of the init
+	is the same of the boundary's and if one of
+	the other operands contains it too?
+end note
+alt first instanceof BinaryOperation && first.getOperator() instanceof Assignment
+for->init: i=evaluate()
+else
+for-->Expression:throw IllegalForLoopException
+end
+for->condition: boundary=evaluate().toBoolean()
+note right : throw exception if\nnot a boolean
+loop boundary = true
+loop forEach operand
+for->operand: evaluate()
+end
+for->condition: boundary=evaluate().toBoolean()
+note over of for
+    <b>Infinite Loop</b>
+	should we check if
+	the boundary left operand
+	value changes?
+end note
+end
+
+@enduml
