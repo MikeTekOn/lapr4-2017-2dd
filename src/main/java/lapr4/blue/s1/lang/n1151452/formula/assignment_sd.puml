@@ -1,0 +1,33 @@
+@startuml sequence_block_sd.png
+
+'http://plantuml.com/skinparam.html'
+skinparam handwritten true
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+participant Expression
+participant "assign : Assignment" as assign
+participant "left : operand" <<Expression>>
+participant "right : operand" <<Expression>>
+participant "v : value" as v
+
+[-> Expression: evaluate()
+Expression->assign: applyTo(left, right)
+alt left instanceof CellReference
+assign->"right : operand": v=evaluate()
+note over of "left : operand"
+	cast to CellReference
+end note
+assign->v:content=toString()
+assign->"left : operand": getCell()
+assign->Cell:setContent(content)
+assign-->Expression: returns the value\nfrom right operand
+else throw error
+assign-->Expression: throws IllegalAssignmentException
+note left of assign
+	IllegalAssignmentException extends
+	IllegalValueTypeException
+end note
+end
+
+@enduml
