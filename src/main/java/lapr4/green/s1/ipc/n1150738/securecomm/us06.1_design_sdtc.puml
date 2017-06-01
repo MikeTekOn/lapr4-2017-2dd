@@ -1,0 +1,36 @@
+@startuml us06.1_design_sdtc.png
+hide footbox
+participant SecureDataTransmissionContext
+
+create SecureDataTransmissionContext
+    [->SecureDataTransmissionContext: new SecureDataTransmissionContext()
+    create "key:SecretKeySpec" as SecretKeySpec
+    SecureDataTransmissionContext->SecretKeySpec
+
+||70||
+... ...
+||70||
+[-> SecureDataTransmissionContext : inputStream(sis:InputStream ) : ObjectInputStream
+create "cipher_in:Cipher" as Cipher
+    SecureDataTransmissionContext->"cipher_in:Cipher" as Cipher: Cipher.getInstace(key, <name_of_cipher>)
+    SecureDataTransmissionContext->"cipher_in:Cipher" as Cipher: init(ENCRYPT_MODE, key)
+create "cis: CypherInputStream" as CypherInputStream
+    SecureDataTransmissionContext -> CypherInputStream :new CypherInputStream(<b>sis</b>, cipher_in)
+create "o: ObjectInputStream" as ObjectInputStream
+    SecureDataTransmissionContext -> ObjectInputStream :new ObjectInputStream(cis)
+[<-- SecureDataTransmissionContext: return o
+||70||
+... ...
+||70||
+
+[-> SecureDataTransmissionContext : outputStream(sos:OutputStream ) : ObjectOutputStream
+create "cipher_out:Cipher" as Cipher
+    SecureDataTransmissionContext->"cipher_out:Cipher" as Cipher: Cipher.getInstace(key, <name_of_cipher>)
+    SecureDataTransmissionContext->"cipher_out:Cipher" as Cipher: init(DECRYPT_MODE, key)
+create "cos: CypherOutputStream" as CypherOutputStream
+    SecureDataTransmissionContext -> CypherOutputStream :new CypherOutputStream(<b>sos</b>, cipher_out)
+create "o: ObjectOutputStream" as ObjectOutputStream
+    SecureDataTransmissionContext -> ObjectOutputStream :new ObjectOutputStream(cos)
+[<-- SecureDataTransmissionContext: return o
+
+@enduml
