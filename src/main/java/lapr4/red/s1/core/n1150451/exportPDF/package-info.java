@@ -82,7 +82,10 @@
  * <p>
  * <h2>4. Design</h2>
  * <p>
- *
+ * Sequence Diagram
+ * <p>
+ * <img src="core08_01_design_sd.png" alt="image">
+ * <p>
  * <h3>4.1. Functional Tests</h3>
  * <p>
  *
@@ -103,10 +106,15 @@
  * good choice in this situation, since the data to be exported is the same in
  * both PDF and XML exportation funcionalities. To implement this pattern, the
  * following "base diagram" was used:
- *  * <p>
+ * <p>
  * <img src="core08_01_design_basePattern.png" alt="image">
  * <p>
  *
+ * Having this in consideration and applying this base diagram to the Use Case
+ * itself:
+ * <p>
+ * <img src="core08_01_design_pattern.png" alt="image">
+ * <p>
  *
  *
  * <p>

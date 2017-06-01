@@ -1,0 +1,62 @@
+@startuml lang02.1_cd.png
+
+class ExcelExpressionCompiler{
+    +char getStarter()
+    +Expression compile(Cell cell, String source)
+}
+
+class TemporaryVariableContentor{
+    +void addTemporaryVariable()
+}
+
+class Formula {
+	+Formula(Cell cell, Expression expression) 
+}
+interface Expression {
+	+Value evaluate()
+	+Object accept(ExpressionVisitor visitor)
+}
+
+interface Operator {
+}
+
+interface Variable{
+}
+
+class Operator {
+    + applyTo()
+}
+
+abstract class Operation <O extends Operator> {
+    + getOperator() 
+}
+
+interface FormulaEvalVisitor {
+        +Expression visitExpression(Expression expression)
+	+Object visitTemporaryVariable (TemporaryVariable tempVar)
+}
+
+Expression <|-- Formula
+Expression <|-- TemporaryVariable
+
+Operation <|-- UnaryOperation
+Operation <|-- BinaryOperation
+Operation <|-- NaryOperation
+
+UnaryOperation --> Expression : operand
+BinaryOperation --> Expression : leftOperand
+BinaryOperation --> Expression : rightOperand
+NaryOperation --> Expression : operands
+
+Operator <|-- UnaryOperator
+Operator <|-- BinaryOperator
+Operator <|-- NaryOperator
+
+Variable <|-- TemporaryVariable
+
+Operation <-- Operator
+
+FormulaEvalVisitor ..> TemporaryVariableContentor
+TemporaryVariableContentor ..> TemporaryVariable
+
+  @enduml

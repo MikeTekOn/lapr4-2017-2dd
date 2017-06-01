@@ -1,0 +1,19 @@
+@startuml sequence_block_sd.png
+
+'http://plantuml.com/skinparam.html'
+skinparam handwritten true
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+participant Expression
+participant "seq : SequenceBlock" as seq
+collections operand <<Expression>>
+
+[-> Expression: evaluate()
+Expression->seq: applyTo(operands)
+loop forEach operands
+seq->operand: value=evaluate()
+end
+seq-->Expression: returns the last value
+
+@enduml

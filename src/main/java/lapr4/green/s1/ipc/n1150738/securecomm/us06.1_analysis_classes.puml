@@ -1,4 +1,4 @@
-@startuml analysis_classes.png
+@startuml us06.1_analysis_classes.png
 
 interface DataTransmissionContext {
     inputStream(InputStream socketInStream) : ObjectInputStream

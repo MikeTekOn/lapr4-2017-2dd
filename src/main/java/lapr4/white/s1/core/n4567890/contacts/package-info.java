@@ -13,7 +13,7 @@
  *
  * <h2>2. Requirement</h2>
  * 
- * A sidebar window that provides functionalities for creating, editing and removing contacts. Each contact should have a first and last name and also a photograph. Each contact should also have one agenda in which events related to the contact should be displayed. For the moment, events have only a due date (i.e., timestamp) and a textual description. It should be possible to create, edit and remove events. The agenda may be displayed in a different sidebar. This sidebar should display a list of all events: past, present and future. <p>
+ * A sidebar window that provides functionalities for creating, editing and removing contacts. Each contacts should have a first and last name and also a photograph. Each contacts should also have one agenda in which events related to the contacts should be displayed. For the moment, events have only a due date (i.e., timestamp) and a textual description. It should be possible to create, edit and remove events. The agenda may be displayed in a different sidebar. This sidebar should display a list of all events: past, present and future. <p>
  * One of the contacts should be the user of the session in the computer where Cleansheets is running. If this user has events then, when their due date arrives, Cleansheets should display a popup window notifying the user about the events. This popup window should automatically disappear after a small time interval (e.g., 5 seconds).
  *
  * <h2>3. Analysis</h2>
@@ -21,7 +21,7 @@
  * <h3>3.1 User Stories</h3>
  * 
  * <b>US1.</b> As a CRM User I want to be able to manage Contacts.<br>
- *     Story Acceptance Criteria 1: No contact name duplicates<br>
+ *     Story Acceptance Criteria 1: No contacts name duplicates<br>
  *     Story Acceptance Criteria 2: No deletion of contacts with events<br>
  * <b>US2.</b> As a CRM User I want to add events to the agenda of Contacts.<br>
  * <b>US3.</b> As a CRM User I want to be notified when the due date of an event occurs.<br>

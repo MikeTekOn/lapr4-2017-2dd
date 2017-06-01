@@ -1,0 +1,43 @@
+@startuml
+
+actor User
+participant "UI"
+participant "FormulaEvalVisitor" as FEV
+participant "ExcelExpressionCompiler" as Compiler
+participant "TemporaryVariableContentor" as Contentor
+participant "TemporaryVariable" as Var
+participant "ExpressionVisitor"
+participant "Operation" 
+
+
+activate UI
+User -> UI : Introduces formula containing temporary variable(s)
+UI -> FEV : visitExpression (expression)
+deactivate UI
+activate FEV
+activate Compiler
+FEV -> Compiler : getStarter()
+FEV -> Compiler : compile(cell,source)
+deactivate Compiler
+activate Contentor
+FEV -> Contentor : add(tempVar)
+create Var
+Contentor --> Var : create
+deactivate Contentor
+activate Compiler
+FEV -> Compiler : visitTemporaryVariable(tempVar)
+create ExpressionVisitor
+Compiler->ExpressionVisitor : create
+deactivate Compiler
+activate ExpressionVisitor
+activate Operation
+ExpressionVisitor -> Operation : evaluate()
+ExpressionVisitor -> Operation : accept(ExpressionVisitor visitor)
+Operation --> Operator : applyTo()
+deactivate Operation
+deactivate ExpressionVisitor
+activate UI
+FEV -> UI
+deactivate FEV
+UI -> User : Displays the formula result
+@enduml
