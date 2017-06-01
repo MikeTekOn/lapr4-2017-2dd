@@ -97,8 +97,11 @@
  *
  * <h3>4.2. UC Realization</h3>
  * <p>
- *
+ * <img src="lang08_01_design_sd.png" alt="image">
+ * <p>
  * <h3>4.3. Classes</h3>
+ * <p>
+ * <img src="lang08_01_design_class_diagram.png" alt="image">
  * <p>
  *
  * <h3>4.4. Design Patterns and Best Practices</h3>
