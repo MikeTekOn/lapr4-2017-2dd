@@ -79,11 +79,11 @@
  * <ol>
  *   <li>addTemporaryVariableToContentorFirstTime()</li>
  *   <li>addTemporaryVariableToContentorAlreadyExists</li>
- *   <li>testBasicExpressionWithTemporary() -> example "_Var:=1+2"</li>
- *   <li>testAssignmentOperatorWithTemporary() -> example "_Var:=A1"</li>
- *   <li>testFunctionExpressionWithTemporary() -> example "_Var:= sum(A2:A4)"</li>
-*    <li>testFormulaBlocksWithTemporary() -> ex: "= {A=1+2; _Var:= 1+A ;"
-*   <li>testFormulaManyTemporaryVariables() -> ex: "={_Var1:=2; _Var2:=3; _Var3:=_Var1+_Var2; A= _Var+3]"
+ *   <li>testBasicExpressionWithTemporary() -&gt; example "_Var:=1+2"</li>
+ *   <li>testAssignmentOperatorWithTemporary() -&gt; example "_Var:=A1"</li>
+ *   <li>testFunctionExpressionWithTemporary() -&gt; example "_Var:= sum(A2:A4)"</li>
+*    <li>testFormulaBlocksWithTemporary() -&gt; ex: "= {A=1+2; _Var:= 1+A ;"
+*   <li>testFormulaManyTemporaryVariables() -&gt; ex: "={_Var1:=2; _Var2:=3; _Var3:=_Var1+_Var2; A= _Var+3]"
 *   <li>formulaWithTemporaryVariable()</li>
  * </ol> 
  * 

@@ -27,6 +27,7 @@ create ObjectOutputStream
 CommTCPServerWorker -> ObjectOutputStream : new( socket )
 create ObjectInputStream
 CommTCPServerWorker -> ObjectInputStream : new( socket )
+loop
 CommTCPServerWorker -> ObjectInputStream : dto = readObject()
 ObjectInputStream -> ConnectionRequestDTO : new
 CommTCPServerWorker -> CommTCPServer : getHandler( dto )
@@ -37,5 +38,6 @@ HandlerConnectionRequestDTO -> ObjectOutputStream : writeObject( reply )
 note right of CommTCPClientsManager : ClientsManager consumes the NewConnectionRequestedEvent
 CommTCPClientsManager -> CommTCPClientsManager : isConnectedTo( "client address" )
 CommTCPClientsManager -> CommTCPClientsManager : requestConnectionTo( "client address" , port number )
+end loop    
 
 @enduml

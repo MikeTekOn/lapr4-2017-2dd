@@ -75,6 +75,7 @@ public class FormatAction extends FocusOwnerAction implements SelectionListener 
 	 */
 	public void selectionChanged(SelectionEvent event) {
 		Cell c = event.getCell();
+		if(c.getExtension(StyleExtension.NAME) == null) return;
 		cell = c == null ? null : (StylableCell)c.getExtension(StyleExtension.NAME);
 		setEnabled(c == null ? false : cell.isFormattable());
 	}

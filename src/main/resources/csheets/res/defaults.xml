@@ -16,5 +16,6 @@
 <entry key="persistence.repositoryFactory">lapr4.white.s1.core.n4567890.contacts.persistence.jpa.JpaRepositoryFactory</entry>
 <!--#persistence.repositoryFactory=InMemoryRepositoryFactory-->
 <entry key="persistence.persistenceUnit">lapr4.csheets-crm-extension-PU</entry>
-
+<entry key="comm.udp.server.portNumber">15301</entry>
+<entry key="comm.tcp.server.portNumber">15302</entry>
 </properties>

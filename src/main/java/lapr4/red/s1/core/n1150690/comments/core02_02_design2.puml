@@ -4,12 +4,15 @@
     participant "User" as u
     participant "CommentableCellWithMultipleUsers" as cell
     participant "CommentPanel : JPanel" as cp
-    participant "CommentController" as ctrl
+    participant "AddCommentWithUserController" as ctrl
     participant "commentField: JTextArea" as commentField
     participant "applyAction: ApplyAction" as applyAction
     
+    create cp
+    UIExt -> cp :  create(uic) 
+
     create ctrl
-    UIExt -> ctrl : create()
+    cp -> ctrl : create(uic, cp)
 
     note right #aqua
         This is a refactor of 
@@ -17,8 +20,7 @@
         previous use case (Core02.1)
     end note
 
-    create cp
-    UIExt -> cp :  create(uic) 
+    
 
     cp -> uic : addSelectionListener(this)
     
@@ -58,7 +60,7 @@
         commentField -> applyAction : focusLost(FocusEvent e)
         activate applyAction
         applyAction -> commentField : comment=getText()
-        applyAction -> ctrl : setComment(cell, comment)
+        applyAction -> ctrl : addComment(cell, comment)
         deactivate applyAction
         activate ctrl
         create u

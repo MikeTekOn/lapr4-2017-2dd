@@ -15,6 +15,8 @@
  * 
  * For the application to communicate, it is needed to broadcast a request for other applications to provide their connection details, i.e. the port number in which to send the connection request.
  * This implies that the application will also need a server to respond to such requests.
+ * The client must then receive all the replies from the different server.
+ * Since it does not know how many to expect, a timeout can be set in order for it to terminate after a while without replies.
  * For this purpose, the User Datagram Protocol (UDP) seems to be adequate.
  * <p>
  * Afterwards, a reliable connection is required to transfer data between the applications.
@@ -43,7 +45,7 @@
  * <p>
  * <b>Server Worker</b> is responsible for interpreting a client's request and send the response.
  * <p>
- * <b>Client Worker</b> is responsible for sending the request to a server. There will be a UDP client and a TCP client.
+ * <b>Client Worker</b> is responsible for sending the request to a server and interpreting the response. There will be a UDP client and a TCP client.
  * <p>
  * <b>Data Transfer Object</b> is responsible for transmitting the data through the network connection (also known as DTO).
  * <p>
@@ -52,6 +54,8 @@
  * <img src="ipc_01_1_analysis2.png" alt="image"> 
  * 
  * <h2>Special Notes</h2>
+ * 
+ * This user story is related to all the other IPC use cases, since it provides the communication base for them.
  * 
  * The user story <b>IPC06</b> is strongly related to this one since that requires an encryption technique.
  * More information can be found there.
@@ -68,11 +72,13 @@
  * 
  * <h2>Other</h2>
  * 
- * <b>Connection Details Request</b>: A broadcast can be sent to the local network with another instance running. The client who broadcasted must receive the connection details from the other instance.
+ * <b>UDP Echo Request</b>: A broadcast can be sent to the local network. The instance's server must receive the echo request and the instance's client the server's response.
  * <p>
- * <b>Echo Request</b>: A simple echo request can be sent from one instance to another. The client shall connect to the server and request it an echo. The client must receive the echo response.
+ * <b>TCP Echo Request</b>: A simple echo request can be sent from one instance to another (simulated). The client shall connect to the server and request it an echo. The client must receive the echo response.
  * <p>
  * <b>Unit Testing</b>: The main methods involved must be tested individually to assure their result is as expected.
+ * <p>
+ * <b>Attention!</b> The port numbers used in the tests must be different since they may run in parallel.
  * 
  * <h1>Design</h1>
  * 
@@ -89,11 +95,12 @@
  * Although it could be implemented with the Strategy Pattern, since it is not suppose to change during runtime, it seems a little to excessive.
  * A suitable solution is to define the port number at the properties of the application.
  * This provides the versatility needed to change the value when needed at a low effort cost. 
+ * The port numbers for the UDP server and the TCP server must be different.
  * 
  * <h2>Handlers</h2>
  * 
  * The handlers are intended to deal with any DTO they might receive.
- * The workers must know which handler to use to each DTO.
+ * The workers must know which handler to use on each DTO.
  * Since the right handler to use is only known at runtime and it changes accordingly to the DTO received, a suitable solution seems to be the Strategy Pattern.
  * This pattern can be implemented by using a map of handlers, whose key would be the DTO class and the value the matching handler.
  * In case there is no matching handler, the received DTO will be ignored, i.e. no action will be performed.
@@ -140,10 +147,12 @@
  * 
  * <h2>Terminate TCP Connections</h2>
  * 
+ * The use case does not explicitly request the connection to be closed.
+ * However, it seems to be useful to find a way to do it, if the necessity arises.
  * The client will send a Close Connection Request DTO to the server.
  * The server will then check if its instance also has a client running.
  * If so, its client will also send a Close Connection Request DTO.
- * Afterwards, the server responds with a Connection Response DTO to the client and closes the connection.
+ * Afterwards, the server responds with a Close Connection Response DTO to the client and closes the connection.
  * The client receives the answer and closes its own connection.
  * 
  * <h2>Share Cells</h2>
