@@ -76,25 +76,30 @@
  * <p>
  * In terms of the interaction between the user and the software, it was
  * developed an System Sequence Siagram to aid in its better interpretation.
- *
+ * <p>
+ * Also, since there will be no new domain concepts, that will not be unit
+ * tests.
  * <p>
  * <img src="core08_01_analysis_ssd.png" alt="image">
  * <p>
  * <h2>4. Design</h2>
  * <p>
- * Sequence Diagram
- * <p>
- * <img src="core08_01_design_sd.png" alt="image">
- * <p>
  * <h3>4.1. Functional Tests</h3>
  * <p>
  *
  * <h3>4.2. UC Realization</h3>
+ * Sequence Diagram
+ * <p>
+ * <img src="core08_01_design_sd.png" alt="image">
  * <p>
  *
  * <h3>4.3. Classes</h3>
  * <p>
- *
+ * Analysing the proposed sequence diagram, the following class diagram was
+ * developed:
+ * <p>
+ * <img src="core08_01_design_cd.png" alt="image">
+ * <p>
  * <h3>4.4. Design Patterns and Best Practices</h3>
  * <p>
  * As mentioned in the Analysis section, a pattern should be used to avoid code
@@ -140,9 +145,9 @@
  * <p>
  * <b>Wednesday 31/05/2017</b>
  * <p>
- * Yesterday:
+ * Yesterday: Finished the analysis and started the design
  * <p>
- * Today:
+ * Today: Try to finish the design and start the test planning
  * <p>
  * Blocking:
  * <p>

@@ -22,4 +22,5 @@ User -> ExportPDFUI : Confirms the data
 ExportPDFUI -> ExportPDFController : export()
 
 ExportPDFController -> ExportContext : executeStrategy()
+ExportContext --> ExportPDF : export()
 @enduml
