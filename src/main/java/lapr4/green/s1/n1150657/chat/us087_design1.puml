@@ -1,0 +1,33 @@
+@startuml us087_design1.png
+    participant "RequestConnectionAction"
+    participant "CommExtension"
+    participant "CommTCPClientManager"
+    participant "CommTCPClientWorker"
+    participant "hr:HandlerResponseDTO" as HandlerResponseDTO
+    participant "outStream:ObjectOutputStream" as ObjectOutputStream
+    participant "inStream:ObjectInputStream" as ObjectInputStream
+    participant "mdto:MessageDTO" as MessageDTO 
+    participant "rdto:ConnectionResponseDTO" as ConnectionResponseDTO
+
+
+    RequestConnectionAction -> CommExtension : getCommTCPClient()
+    RequestConnectionAction -> CommTCPClientManager : requestConnectionTo("server adress",portNumber)
+create CommTCPClientWorker
+    CommTCPClientManager -> CommTCPClientWorker : c = new("server adress",portNumber)
+create ObjectOutputStream    
+    CommTCPClientWorker -> ObjectOutputStream : new(socket)
+create ObjectInputStream
+    CommTCPClientWorker -> ObjectInputStream : new(socket)
+create MessageDTO
+    CommTCPClientManager -> MessageDTO : request = new()
+    CommTCPClientManager -> ObjectOutputStream : writeObject()
+    CommTCPClientWorker -> ObjectInputStream : reply = readObject()
+create ConnectionResponseDTO
+    ObjectInputStream -> ConnectionResponseDTO : new()
+    CommTCPClientManager <-- CommTCPClientWorker : getHandler(reply)
+    CommTCPClientWorker -> HandlerResponseDTO : handlerDTO(reply)
+note right of HandlerResponseDTO : Handler publishes a NewConnectionMadeEvent
+note right of CommTCPClientManager : ClientsManager consumes the NewConnectionMadeEvent
+    CommTCPClientManager -> CommTCPClientManager : addClient( "server address", client )
+    
+@enduml
