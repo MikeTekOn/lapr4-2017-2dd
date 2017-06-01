@@ -1,0 +1,15 @@
+@startuml
+
+box "SSD"
+    participant "Client"
+    participant "System"
+end box
+
+    Client -> System : Chooses to extensions option to search workbook.
+    System --> Client : Shows available instances to search on.
+    Client -> System : Selects instance desired.
+    System --> Client : Requests the name of the workbook to be searched.
+    Client -> System : Introduces the name of the workbook (name of the .cls file).
+    System --> Client : Searches the workbook and informs if it was found or not. If it was found, presents a summary of it's contents.
+
+@enduml

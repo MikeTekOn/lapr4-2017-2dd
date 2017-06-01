@@ -44,7 +44,7 @@ public class CommentController {
 		// Stores the comment
 		cell.setUserComment(commentString);
 		uiController.setWorkbookModified(cell.getSpreadsheet().getWorkbook());
-
+                
 		return true;
 	}
         
@@ -60,4 +60,8 @@ public class CommentController {
 			uiPanel.setCommentText("");
 		}
 	}
+        
+        public UIController uiController(){
+            return this.uiController;
+        }
 }

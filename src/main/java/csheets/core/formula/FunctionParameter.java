@@ -97,6 +97,6 @@ public class FunctionParameter implements Serializable {
 	 * @return a string representation of the parameter
 	 */
 	public String toString() {
-		return name; // + " (" + valueType + ")";
+		return name + " (" + valueType + ")";
 	}
 }

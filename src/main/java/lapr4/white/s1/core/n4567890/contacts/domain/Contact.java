@@ -116,6 +116,11 @@ public class Contact implements AggregateRoot<Long>, Serializable {
         return !agenda.isEmpty();
     }
 
+    /**
+     * Implemented by João Cardoso - 1150943
+     * @param other
+     * @return
+     */
     @Override
     public boolean sameAs(Object other) {
         if(other instanceof Contact){

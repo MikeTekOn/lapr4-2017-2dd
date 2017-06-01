@@ -1,0 +1,35 @@
+@startuml 
+
+    actor User 
+    participant "<<analysis>>\nSearchWorkbookUI" as UI
+    participant "<<analysis>>\nSearchWorkbookCtrl" as ctrl
+    participant "<<analysis>>\nCommManager" as comm
+    participant "<<analysis>>\nCleansheet" as cleansheet
+    participant "<<analysis>>\nSpreadsheet" as sheet
+
+    User -> UI : Chooses the menu of the user story
+    activate UI 
+    UI -> ctrl : listOfInstances : getAllActiveInstances()
+    activate ctrl
+    ctrl -> comm : getInstances()
+    ctrl <-- comm
+    UI <-- ctrl
+    User <-- UI : Show available instances
+    deactivate ctrl
+    deactivate UI
+    User -> UI : Selects instance and name of workbook
+    activate UI
+    UI -> cleansheet : boolean b = isWorkbookStored(w)
+    activate cleansheet
+    alt b == true
+    ctrl -> sheet : getTitle()
+    ctrl <-- sheet
+    ctrl -> sheet : getCells()
+    ctrl <-- sheet
+    end
+    deactivate cleansheet
+    UI <-- ctrl
+    UI -> UI : showSummary()
+    User <-- UI : Presents the result and summary
+    
+@enduml

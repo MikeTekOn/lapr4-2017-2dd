@@ -27,13 +27,11 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Properties;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.*;
 
 import csheets.CleanSheets;
+import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionEvent;
+import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionStateListener;
 
 /**
  * The class that manages extensions to the CleanSheets application.
@@ -48,8 +46,12 @@ public class ExtensionManager {
 	private static final String PROPERTIES_FILENAME = "extensions.props";
 
 	/** The extensions that have been loaded */
-	private SortedMap<String, Extension> extensionMap
-		= new TreeMap<String, Extension>();
+	private SortedMap<String, Extension> extensionMap = new TreeMap<String, Extension>();
+
+	private SortedMap<String, Extension> disabledExtensionMap = new TreeMap<String, Extension>();
+
+	/** The extension state listeners registered to receive events */
+	private List<ExtensionStateListener> extensionStateListeners = new ArrayList<>();
 
 	/** The class loader used to load extensions */
 	private Loader loader = new Loader();
@@ -133,6 +135,33 @@ public class ExtensionManager {
 		return extensions.toArray(new Extension[extensions.size()]);
 	}
 
+	public Extension[] getDisabledExtensions() {
+		Collection<Extension> extensions = disabledExtensionMap.values();
+		return extensions.toArray(new Extension[extensions.size()]);
+	}
+
+	public boolean disableExtension(String extensionName) {
+		Extension extension = extensionMap.remove(extensionName);
+		if(extension != null){
+			disabledExtensionMap.put(extensionName, extension);
+			fireExtensionListChanged();
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public boolean enableExtension(String extensionName){
+		Extension extension = disabledExtensionMap.remove(extensionName);
+		if(extension != null){
+			extensionMap.put(extensionName, extension);
+			fireExtensionListChanged();
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	/**
 	 * Returns the extension with the given name.
          * @param name name
@@ -186,6 +215,7 @@ public class ExtensionManager {
 		try {
 			Extension extension = (Extension)extensionClass.newInstance();
 			extensionMap.put(extension.getName(), extension);
+			addExtensionListener(extension);
 			return extension;
 		} catch (IllegalAccessException iae) {
 			System.err.println("Could not access extension " + extensionClass.getName() + ".");
@@ -194,6 +224,32 @@ public class ExtensionManager {
 			System.err.println("Could not load extension from " + extensionClass.getName() + ".");
 			ie.printStackTrace();
 			return null;
+		}
+	}
+
+	/**
+	 * Registers the given listener on the user interface controller.
+	 * @param listener the listener to be added
+	 */
+	public void addExtensionListener(ExtensionStateListener listener) {
+		extensionStateListeners.add(listener);
+	}
+
+	/**
+	 * Removes the given listener from the user interface controller.
+	 * @param listener the listener to be removed
+	 */
+	public void removeExtensionListener(ExtensionStateListener listener) {
+		extensionStateListeners.remove(listener);
+	}
+
+	/**
+	 * Notifies all registered listeners that the list of extensions was modified
+	 */
+	private void fireExtensionListChanged(){
+		ExtensionEvent event = new ExtensionEvent(this);
+		for (ExtensionStateListener listener : extensionStateListeners){
+			listener.extensionStateChanged(event);
 		}
 	}
 

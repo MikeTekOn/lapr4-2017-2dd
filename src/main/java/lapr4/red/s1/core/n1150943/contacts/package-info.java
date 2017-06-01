@@ -19,6 +19,9 @@
  *
  * <h2>3. Analysis</h2>
  *
+ * Should Agenda Class be a value object?
+ * - In my opinion no, it should be an Entity just like Contact and Event because these are business objects that may suffer changes with time.
+ *
  * <h3>3.1 User Stories</h3>
  *
  * <b>US1.</b> del>As a CRM User I want to be able to manage Contacts.</del> - Done<br>

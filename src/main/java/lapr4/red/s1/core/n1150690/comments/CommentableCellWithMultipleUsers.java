@@ -58,16 +58,21 @@ public class CommentableCellWithMultipleUsers extends CommentableCell {
     /**
      * Modifies a comment on the list.
      *
-     * @param user the author of the comment
+     * @param oldAuthor the author of the comment
+     * @param newAuthor the author who made the changes
      * @param oldComment the old comment to be replaced
      * @param newComment the comment to replace
      */
-    public void changeUserComment(User user, String oldComment, String newComment) {
+    public void changeUserComment(User oldAuthor, User newAuthor, String oldComment, String newComment) {
         if (Strings.isNullOrEmpty(newComment) || Strings.isNullOrWhiteSpace(newComment)) {
             throw new IllegalArgumentException("The comment must contain something!");
         }
-        int indexComment = comments.get(user).indexOf(oldComment);
-        comments.get(user).set(indexComment, newComment);
+        comments.get(oldAuthor).remove(oldComment);
+        comments.get(newAuthor).add(newComment);
+    }
+    
+    public Map<User, List<String>> comments(){
+        return this.comments;
     }
 
 }
