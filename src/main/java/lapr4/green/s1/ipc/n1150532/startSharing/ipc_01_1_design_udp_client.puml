@@ -1,0 +1,34 @@
+@startuml
+
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+participant "SearchPeersAction"
+participant "CommUDPClient"
+participant "HandlerConnectionDetailsResponseDTO"
+participant "ObjectOutputStream"
+participant "ObjectInputStream"
+participant "ConnectionDetailsRequestDTO"
+participant "ConnectionDetailsResponseDTO"
+
+create CommUDPClient
+SearchPeersAction -> CommUDPClient : client = new( portNumber )
+create ObjectOutputStream
+CommUDPClient -> ObjectOutputStream : new( socket )
+create ObjectInputStream
+CommUDPClient -> ObjectInputStream : new( socket )
+create ConnectionDetailsRequestDTO
+CommUDPClient -> ConnectionDetailsRequestDTO : request = new()
+CommUDPClient -> ObjectOutputStream : writeObject( request )
+CommUDPClient -> ObjectInputStream : reply = readObject()
+create ConnectionDetailsResponseDTO
+ObjectInputStream -> ConnectionDetailsResponseDTO : new
+CommUDPClient -> CommUDPClient : getHandler( reply )
+CommUDPClient -> HandlerConnectionResponseDTO : handleDTO( reply )
+note right of HandlerConnectionResponseDTO : Handler publishes a NewConnectionAvailableEvent
+SearchPeersAction -> SearchPeersAction : wait()
+SearchPeersAction -> CommUDPClient : terminateExecution()
+@enduml
