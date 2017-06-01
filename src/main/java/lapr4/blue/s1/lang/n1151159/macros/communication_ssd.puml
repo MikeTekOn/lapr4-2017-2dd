@@ -1,0 +1,17 @@
+@startuml lang03_1_ssd.png
+
+'http://plantuml.com/skinparam.html'
+skinparam handwritten true
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor User as U
+participant "System" as S
+
+U -> S : selects the macro menu option
+S --> U : displays the macro window
+U -> S : inserts the macro in the macro body
+U -> S : presses execute button
+S --> U : executes the macro
+
+@enduml

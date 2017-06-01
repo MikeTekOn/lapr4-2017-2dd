@@ -19,8 +19,12 @@ import java.io.IOException;
 public class Directory {
 
     private File rootPath;
-    private enum searchExtensions{
-        cls,csv
+
+    /**
+     * Acceptable extensions
+     */
+    private enum searchExtensions {
+        cls
     };
 
     public Directory(File rootPath) {
@@ -30,16 +34,30 @@ public class Directory {
         this.rootPath = rootPath.getAbsoluteFile();
     }
 
+    /**
+     * valides if the given path is a directory
+     *
+     * @param rootPath
+     * @return
+     */
     public boolean validatePath(File rootPath) {
         return rootPath.isDirectory();
     }
-    
-    public void searchFiles() throws IOException, ClassNotFoundException{
+
+    /**
+     * public method to call a private and recursive one
+     */
+    public void searchFiles() {
         search(rootPath);
     }
 
-    private void search(File file) throws IOException, ClassNotFoundException {
-        
+    /**
+     * the algorithm to search for files
+     *
+     * @param file
+     */
+    private void search(File file) {
+
         //do you have permission to read this directory?
         if (file.canRead()) {
             for (File temp : file.listFiles()) {
@@ -47,7 +65,7 @@ public class Directory {
                     search(temp);
                 } else {
                     if (isExtensionFile(temp.getName())) {
-                        WorkbookDTO dto = new WorkbookDTO(load(temp),temp.getName());
+                        FileDTO dto = new FileDTO(temp.getName(), temp.getAbsolutePath());
                         FindWorkbooksPublisher.getInstance().notifyObservers(dto);
                     }
 
@@ -56,48 +74,57 @@ public class Directory {
 
         }
     }
-    
-    public boolean isExtensionFile(String fileName){
+
+    /**
+     * checks if the file has the acceptables extensions
+     *
+     * @param fileName
+     * @return
+     */
+    public boolean isExtensionFile(String fileName) {
         String tokens[] = fileName.split("\\.");
-        if(tokens.length==0 || tokens.length==1) return false;
-        String extension= tokens[tokens.length-1];
-        searchExtensions values[]=searchExtensions.values();
+        if (tokens.length == 0 || tokens.length == 1) {
+            return false;
+        }
+        String extension = tokens[tokens.length - 1];
+        searchExtensions values[] = searchExtensions.values();
         for (int i = 0; i < values.length; i++) {
-            if(values[i].toString().equals(extension)){
+            if (values[i].toString().equals(extension)) {
                 return true;
             }
         }
         return false;
     }
-    
-    	/**
-	 * Loads a workbook from the given file.
-	 * @param file the file in which the workbook is stored
-	 * @throws IOException if the file could not be loaded correctly
-         * @throws java.lang.ClassNotFoundException exception
-	 */
-	public Workbook load(File file) throws IOException, ClassNotFoundException {
-		Codec codec = new CodecFactory().getCodec(file);
-		if (codec != null) {
-			FileInputStream stream = null;
-			Workbook workbook;
-			try {
-				// Reads workbook data
-				stream = new FileInputStream(file);
-				workbook = codec.read(stream);
-			} finally {
-				try {
-					if (stream != null)
-						stream.close();
-				} catch (IOException e) {}
-			}
-                 return workbook;
-		} else
-			throw new IOException("Codec could not be found");
-                
-                
-	}
 
+    /**
+     * Loads a workbook from the given file.
+     *
+     * @param file the file in which the workbook is stored
+     * @throws IOException if the file could not be loaded correctly
+     * @throws java.lang.ClassNotFoundException exception
+     */
+    public Workbook load(File file) throws IOException, ClassNotFoundException {
+        Codec codec = new CodecFactory().getCodec(file);
+        if (codec != null) {
+            FileInputStream stream = null;
+            Workbook workbook;
+            try {
+                // Reads workbook data
+                stream = new FileInputStream(file);
+                workbook = codec.read(stream);
+            } finally {
+                try {
+                    if (stream != null) {
+                        stream.close();
+                    }
+                } catch (IOException e) {
+                }
+            }
+            return workbook;
+        } else {
+            throw new IOException("Codec could not be found");
+        }
 
+    }
 
 }

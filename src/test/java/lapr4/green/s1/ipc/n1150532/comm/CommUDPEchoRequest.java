@@ -96,7 +96,7 @@ public class CommUDPEchoRequest {
             assertTrue(answer.equals(dto.getMessage()));
             assertTrue(null==dto.getAnswer());
         } catch (InterruptedException ex) {
-            Logger.getLogger(CommTCPEchoRequest.class.getName()).log(Level.SEVERE, null, ex);
+//            Logger.getLogger(CommTCPEchoRequest.class.getName()).log(Level.SEVERE, null, ex);
             throw new IllegalArgumentException(ex.getMessage());
         }
     }
