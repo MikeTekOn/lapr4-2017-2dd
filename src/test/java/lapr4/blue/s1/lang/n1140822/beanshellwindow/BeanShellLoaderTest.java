@@ -16,6 +16,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Rule;
+import org.junit.rules.TemporaryFolder;
 
 /**
  *
@@ -23,6 +25,7 @@ import static org.junit.Assert.*;
  */
 public class BeanShellLoaderTest {
 
+   @Rule public TemporaryFolder folder= new TemporaryFolder();
     public BeanShellLoaderTest() {
     }
 
@@ -40,7 +43,8 @@ public class BeanShellLoaderTest {
 
     @After
     public void tearDown() {
-       
+      
+
     }
 
     /**
@@ -51,18 +55,21 @@ public class BeanShellLoaderTest {
         UIController controller = new UIController(new CleanSheets());
         System.out.println(" ensureBeanShellClassInstanceIsBuiltCorrectly");
         String code = "print(\"test\");";
-        File file = new File("fileTest.bsh");
+        
+        File file =  folder.newFile("fileTest.bsh");
+        file.deleteOnExit();
         FileOutputStream fileOut = new FileOutputStream(file);
         fileOut.write(code.getBytes());
+        fileOut.flush();
         fileOut.close();
+
         String scriptName = "fileTest.bsh";
         BeanShellLoader instance = new BeanShellLoader();
         LinkedList<String> list = new LinkedList<>();
         list.add("print(\"test\");");
-        BeanShellInstance expResult = new BeanShellInstance(list,controller);
-        BeanShellInstance result = instance.create(scriptName,controller);
-        file.delete();
-        file.deleteOnExit();
+        BeanShellInstance expResult = new BeanShellInstance(list, controller);
+        BeanShellInstance result = instance.create(folder.getRoot().getAbsolutePath()+"/"+scriptName, controller);
+
         assertEquals(expResult, result);
 
     }
@@ -72,21 +79,23 @@ public class BeanShellLoaderTest {
      */
     @Test(expected = IllegalStateException.class)
     public void ensureBeanShellClassInstanceIsNotBuiltIfNoCode() throws Exception {
-         UIController controller = new UIController(new CleanSheets());
+        UIController controller = new UIController(new CleanSheets());
         System.out.println(" ensureBeanShellClassInstanceIsBuiltCorrectly");
         String code = "";
-        File file2 = new File("fileTest2.bsh");
+        File file2 = folder.newFile("fileTest2.bsh");
+        
+        file2.deleteOnExit();
         FileOutputStream fileOut = new FileOutputStream(file2);
         fileOut.write(code.getBytes());
+        fileOut.flush();
         fileOut.close();
         String scriptName = "fileTest2.bsh";
         BeanShellLoader instance = new BeanShellLoader();
         LinkedList<String> list = new LinkedList<>();
         list.add("print(\"test\");");
-        BeanShellInstance expResult = new BeanShellInstance(list,controller);
-        BeanShellInstance result = instance.create(scriptName,controller);
-        file2.delete();
-        file2.deleteOnExit();
+        BeanShellInstance expResult = new BeanShellInstance(list, controller);
+        BeanShellInstance result = instance.create(folder.getRoot().getAbsolutePath()+"/"+scriptName, controller);
+
         assertEquals(expResult, result);
 
     }
