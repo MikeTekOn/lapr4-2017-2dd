@@ -1,0 +1,30 @@
+@startuml us087_design2
+    participant "CommExtension"
+    participant "CommTCPServer"
+    participant "comm:CommTCPServerWorker" as CommTCPServerWorker
+    participant "hm:HandlerMessageDTO" as HandlerMessageDTO
+    participant "outStream:ObjectOutputStream" as ObjectOutputStream
+    participant "inStream:ObjectInputStream" as ObjectInputStream
+    participant "mdto:MessageDTO" as MessageDTO 
+    participant "rdto:ConnectionResponseDTO" as ConnectionResponseDTO
+
+    CommExtension -> CommTCPServer : getServer()
+create HandlerMessageDTO
+    CommExtension -> HandlerMessageDTO : handler = new()
+    CommExtension -> CommTCPServer : addHandler(handler)
+create CommTCPServerWorker
+    CommTCPServer -> CommTCPServerWorker : new(socket, comm)
+create ObjectOutputStream
+    CommTCPServerWorker -> ObjectOutputStream : new(socket)
+create ObjectInputStream
+    CommTCPServerWorker -> ObjectInputStream : new(socket)
+    CommTCPServerWorker -> ObjectInputStream : mdto = readObject()
+create MessageDTO
+    ObjectInputStream -> MessageDTO : new()
+    CommTCPServer <-- CommTCPServerWorker : getHandler(mdto)
+    CommTCPServerWorker -> HandlerMessageDTO : handlerDTO(mdto)
+create ConnectionResponseDTO
+    HandlerMessageDTO -> ConnectionResponseDTO : reply = new()
+note right of HandlerMessageDTO : Handler publishes a NewConnectionMessageEvent
+    HandlerMessageDTO -> ObjectOutputStream : writeObject(reply)
+@enduml
