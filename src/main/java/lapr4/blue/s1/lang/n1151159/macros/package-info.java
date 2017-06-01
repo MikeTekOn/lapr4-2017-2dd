@@ -88,7 +88,7 @@
  *
  *
  * <h2>4. Tests</h2>
- * <p>Notes Tests related to the formulas can be found at <b>{@link lapr4.gray.s1.lang.n3456789.formula;}</b></p>
+ * <p>Notes Tests related to the formulas can be found at <b>{@link lapr4.gray.s1.lang.n3456789.formula}</b></p>
  * <p>Also, formulas can be tested interactively using <b>{@link csheets.core.formula.compiler.Console}</b></p>
  *
  * <h3>4.1. Unit Tests</h3>
