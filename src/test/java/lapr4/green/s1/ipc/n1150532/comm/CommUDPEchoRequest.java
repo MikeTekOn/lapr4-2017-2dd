@@ -55,7 +55,7 @@ public class CommUDPEchoRequest {
      */
     @Before
     public void setUp() {
-        portNumber = 15352;
+        portNumber = 15360;
         waitingTime = 1000;
         message = "Can you read me?";
         answer = "Yes.";
