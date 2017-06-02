@@ -5,6 +5,8 @@
  */
 package lapr4.green.s1.ipc.n1150838.findworkbooks.ui;
 
+import csheets.core.Spreadsheet;
+import csheets.core.Workbook;
 import csheets.ui.ctrl.UIController;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -94,8 +96,8 @@ public class FindWorkbooksSideBar extends JPanel implements Observer {
                     FileDTO dto = modeloWorkbook.getSelectedItem();
 
                     try {
-                        extension.setActiveWorkbook(controller.load(dto.getFilePath()));
-
+                        Workbook b =controller.load(dto.getFilePath());
+                        extension.setActiveWorkbook(b);
 //               
                     } catch (IOException ex) {
                         Logger.getLogger(FindWorkbooksSideBar.class.getName()).log(Level.SEVERE, null, ex);
