@@ -100,10 +100,8 @@ public class FindWorkbooksSideBar extends JPanel implements Observer {
                         extension.setActiveWorkbook(b);
 //               
                     } catch (IOException ex) {
-                        Logger.getLogger(FindWorkbooksSideBar.class.getName()).log(Level.SEVERE, null, ex);
                         JOptionPane.showMessageDialog(new JFrame(), "File is corrupted or failed to load!");
                     } catch (ClassNotFoundException ex) {
-                        Logger.getLogger(FindWorkbooksSideBar.class.getName()).log(Level.SEVERE, null, ex);
                         JOptionPane.showMessageDialog(new JFrame(), "File is corrupted or failed to load!");
                     }
 
@@ -149,6 +147,7 @@ public class FindWorkbooksSideBar extends JPanel implements Observer {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
+                    if(controller!=null)controller.stopSearch();
                     modeloWorkbook.removeAll();
                     controller = new ControllerFindWorkbooks(listField.getText());
                     controller.searchFiles();

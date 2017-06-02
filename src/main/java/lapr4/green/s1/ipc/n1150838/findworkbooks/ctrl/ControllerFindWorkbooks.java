@@ -20,6 +20,7 @@ public class ControllerFindWorkbooks implements Controller {
      * The path to search for cls,etc.. files 
      */
     private Directory rootPath;
+    private Thread files;
     
     public ControllerFindWorkbooks(String rootPath){
         this.rootPath = new Directory(new File(rootPath));
@@ -28,7 +29,12 @@ public class ControllerFindWorkbooks implements Controller {
      * The call to the method to search the files
      */
     public void searchFiles() {
-        this.rootPath.searchFiles();
+       files = new Thread(rootPath);
+       files.start();
+    }
+    
+    public void stopSearch(){
+        if(files!=null)files.stop();
     }
     /**
      * The method to load a workbook

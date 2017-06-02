@@ -20,6 +20,7 @@ public class BeanShellClassLoaderController {
     /**
      * Creates and executes a script using the various implemented bean shell classes.
      * @param scriptName the name of the script
+     * @param controller the UIcontroller - to persist changes in the visible workbook
      * @return the bean shell result class instance
      */
     public BeanShellResult createAndExecuteScript(String scriptName,UIController controller) {
@@ -28,9 +29,7 @@ public class BeanShellClassLoaderController {
         try {
             BeanShellInstance instance = loader.create(scriptName,controller);
             result = new BeanShellResult(instance.executeScript());
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(BeanShellClassLoaderController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (EvalError ex) {
+        } catch (FileNotFoundException | EvalError ex) {
             Logger.getLogger(BeanShellClassLoaderController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return result;
