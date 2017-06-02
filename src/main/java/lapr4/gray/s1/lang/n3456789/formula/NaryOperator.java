@@ -11,17 +11,17 @@ import csheets.core.formula.Expression;
 import csheets.core.formula.Operator;
 
 /**
- *
  * @author alexandrebraganca
  */
 public interface NaryOperator extends Operator {
- 
-    	/**
-	 * Applies the operator to the given operands and returns the result.
-         * @param operands operands
-	 * @return the result of the operation
-	 * @throws IllegalValueTypeException if the value of an operand is not of the expected type
-	 */
-	public Value applyTo(Expression[] operands) throws IllegalValueTypeException;
+
+    /**
+     * Applies the operator to the given operands and returns the result.
+     *
+     * @param operands operands
+     * @return the result of the operation
+     * @throws IllegalValueTypeException if the value of an operand is not of the expected type
+     */
+    Value applyTo(Expression[] operands) throws IllegalValueTypeException;
 
 }
