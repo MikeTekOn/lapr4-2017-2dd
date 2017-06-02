@@ -1,0 +1,21 @@
+  @startuml lang03_1_design1.png
+  participant "uic : UIController" as UIC
+  participant ExtensionManager as ExtM
+  participant "extension : ConditionalStyleExtension" as EExample
+  participant "uiExtension : ConditionalStyleUIExtension" as UIExt
+  participant "ConditionalStylePanel : JPanel" as cfp
+  UIC -> ExtM : extensions=getExtensions();
+  loop for Extension ext : extensions
+  	UIC -> EExample : uiExtension=getUIExtension(this);
+  	activate EExample
+  	create UIExt
+  	EExample -> UIExt : new(extension, uic)
+  	deactivate EExample
+  	UIExt -> UIExt : getSideBar();
+  	activate UIExt
+  	create cfp
+  	UIExt -> cfp :  new (uic)  	
+  	deactivate UIExt
+  	UIC -> UIC : uiExtensions.add(uiExtension);
+  end
+  @enduml
