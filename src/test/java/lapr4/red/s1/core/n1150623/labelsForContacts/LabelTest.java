@@ -36,15 +36,15 @@ public class LabelTest {
     public void tearDown() {
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void fillLabel(){
-        //label.
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void ensureCommentAddedCantBeWithSpacesOnly(){
-        //commentable.addUsersComment("   ", new User());
-    }
+//    @Test(expected = IllegalArgumentException.class)
+//    public void fillLabel(){
+//        //label.
+//    }
+//
+//    @Test(expected = IllegalArgumentException.class)
+//    public void ensureCommentAddedCantBeWithSpacesOnly(){
+//        //commentable.addUsersComment("   ", new User());
+//    }
 }
 
 
