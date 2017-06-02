@@ -1,7 +1,7 @@
 @startuml us06.1_design_bdtc.png
 
 title Basic Unsecured Connection
-
+hide footbox
 participant BasicDataTransmissionContext
 
 -> BasicDataTransmissionContext : inputStream(sis:InputStream ) : ObjectInputStream

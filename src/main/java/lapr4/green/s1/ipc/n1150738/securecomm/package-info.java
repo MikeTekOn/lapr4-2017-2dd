@@ -1,6 +1,8 @@
 /**
  * Technical documentation regarding the user story IPC06.1: Secure Communication.
  * <p>
+ * <b>JIRA UserStory id: LAPR4E17DD-90</b>
+ * <p>
  *
  * <b>Requirement</b><p>
  * Statement:<p>
@@ -52,14 +54,19 @@
  * First draft regarding the design.<p>
  * Will start by illustrating what the implementations of DataTransmissionContext are supposed to do.<p>
  *
- * <img src="us06.1_design_basicdatatransmission.png" alt="image">
+ * <img src="us06.1_design_bdtc.png" alt="Basic Data Transmission Context">
  * <p>
- * <img src="us06.1_design_securedatatransmission.png" alt="image">
+ * <img src="us06.1_design_sdtc.png" alt="Secure Data Transmission Context">
  * <p>
+ * <img src="us06.1_design_netflow.png" alt="TCP Handshake description">
+ * <p>
+ * Classes needed: UseTransmissionContextRequestDTO, UseTransmissionContextRequestHandler <p>
+ *                  UseTransmissionContextResponseDTO, UseTransmissionContextResponseHandler<p>
+ * Property: securecomm.datatransmissioncontext.secure <p>
  *
- *
- *
- * <img src="us064_design2.png" alt="image">
+ * <img src="us06.1_design_tcpcliworker.png" alt="image">
+ * <p>
+ * <img src="us06.1_design_tcpserworker.png" alt="image">
  * <p>
  * @author Henrique Oliveira [1150738@isep.ipp.pt]
  */

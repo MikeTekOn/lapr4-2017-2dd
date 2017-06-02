@@ -96,7 +96,7 @@ public class AddContactAcceptanceTest {
     
     // @Ignore
     @Test(expected = DataIntegrityViolationException.class)
-    public void ensureNoDeletionOfContactsWithEvents() throws DataConcurrencyException, DataIntegrityViolationException {
+    public void ensureNoDeletionOfContactsWithEvents() throws DataConcurrencyException, DataIntegrityViolationException, IllegalAccessException {
        
         controller.removeContact(aContact);
         //fail();

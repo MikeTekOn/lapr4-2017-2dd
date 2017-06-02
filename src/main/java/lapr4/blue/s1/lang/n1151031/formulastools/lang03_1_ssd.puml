@@ -5,10 +5,10 @@ skinparam shadowing false
 
 actor User 
 participant "System" as S
-User -> S : selects a cell and chooses the Conditional Formatting option
-S --> User : displays a sidebar window with a formula input and style options\nfor both condition outputs (true or false) 
-User -> S : chooses the desired options
-S --> User : saves the conditional formatting of the cell
+User -> S : selects a cell
+S --> User : displays a sidebar window with a condition input and style options\nfor both condition outputs (true or false) 
+User -> S : writes the condition and chooses the desired condition styles.
+S --> User : the cell will change the style according\nto the condition output and styles defined.
 
 @enduml
 @enduml

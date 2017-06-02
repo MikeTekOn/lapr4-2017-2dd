@@ -40,7 +40,7 @@
  *
  * <h3>Create and Persist Contact [Core-10.1]</h3>
  * <p>
- * <img src="../uc_create_contact.png" alt="image">
+ * <img src="uc_create_contact.png" alt="image">
  * <p>
  *
  * <h3>Create and Persist Event [Core-10.1]</h3>
@@ -72,21 +72,18 @@
  * 
  *
  * <h3>User Selects Contact Information Exportation</h3>
- * The following diagram illustrates what happens when the user selects, in the contact's page, the exportation button, witch sends de contact information without events (in this diagram) to a .pdf file. The idea is that when this happens the data will be retrieved from the repositories and is send to a parser to be converted into a pdf file.
+ *
+ * The following diagram illustrates what happens when the user selects, in the contact's page, the exportation button, witch send de contact information and the even list of each one of them to a PDF file. The idea is that when this happens the data will be retrieved from the repositories and is send to a parser to be converted into a pdf file.
+ * (The classes related to the application of a strategy pattern for exportation are omitted since there will be a diagram for only that.)
  * <p>
- *     --------------
- * <DIGRAM -> DIGRAM HOW IT WORKS>
- *  ----------------------
- * <h3>User Selects Contact Information Exportation With Event List</h3>
- * The following diagram illustrates what happens when the user selects, in the contact's page, the exportation button, witch send de contact information and the even list of each one of them to a .pdf file. The idea is that when this happens the data will be retrieved from the repositories and is send to a parser to be converted into a pdf file.
- * <p>
- *     ----------------
- * <DIGRAM -> DIGRAM HOW IT WORKS>
- * ----------------------------
+ *
+ * <img src="sd_uc_labels_for_contacts.png" alt="image">
  *
  * <h3>4.3. Classes</h3>
- * 
- * //////////////CLASS DIAGRAM//////////////-
+ *  <p>
+ *      These are the classes related to this use case:
+ *  <p>
+ *  <img src="class_diagram.png" alt="image">
  * 
  * <h3>4.4. Design Patterns and Best Practices</h3>
  * 
@@ -101,6 +98,8 @@
  * <p>
  * <img src="generic_strategy_implementation.png" alt="image">
  * <p>
+ *
+ *     In the sequence diagram of the use case was omitted the exportation part related to the use of this pattern since it was explained here. There was no need do complicate the diagram in order to expose the entire structure.
  * <p>
  *
  * <h2>5. Implementation</h2>
@@ -156,6 +155,20 @@
  * <p>
  * 1. None
  *
+ * <p>
+ * <b>Thursday</b>
+ * <p>
+ * Yesterday I worked on:
+ * <p>
+ * 1. The Design of this use case
+ * <p>
+ * Today
+ * <p>
+ * 1. I'll finish the design and do some functional tests.
+ * <p>
+ * Blocking:
+ * <p>
+ * 1. None
  *
  *
  *
