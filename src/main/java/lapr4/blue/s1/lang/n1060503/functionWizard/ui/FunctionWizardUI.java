@@ -52,6 +52,7 @@ public class FunctionWizardUI extends JDialog{
     private DefaultTableModel defaultTableModel;
     
     private static final int WIDTHW = 300, LENGTH = 200;
+    private static final int WIDTH_TABLE = 600, LENGTH_TABLE = 150;
     private static final int SIZE_TXT_FIELD = 40;
     private static final String IDENTIFIER = "Function:";
     private static final String SYNTAX = "Syntax:";
@@ -80,7 +81,7 @@ public class FunctionWizardUI extends JDialog{
             }
         });
         pack();
-        setResizable(true);
+        setResizable(false);
         setMinimumSize(new Dimension(WIDTHW, LENGTH));
         setLocationRelativeTo(null);
         setVisible(true);
@@ -177,16 +178,20 @@ public class FunctionWizardUI extends JDialog{
     private JScrollPane createTable() {
 
         DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();
-        dtcr.setHorizontalAlignment(JLabel.CENTER);
+        dtcr.setHorizontalAlignment(JLabel.LEFT);
         defaultTableModel = new DefaultTableModel();
         defaultTableModel.setColumnIdentifiers(header);
         tableHelpText = new JTable(defaultTableModel);
         tableHelpText.getColumnModel().getColumn(0).setCellRenderer(dtcr);
+        tableHelpText.getColumnModel().getColumn(0).setPreferredWidth(20);
         tableHelpText.getColumnModel().getColumn(1).setCellRenderer(dtcr);
+        tableHelpText.getColumnModel().getColumn(1).setPreferredWidth(300);
         tableHelpText.setEnabled(false);
-        //tableHelpText.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        tableHelpText.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
         JScrollPane scrPane = new JScrollPane(tableHelpText);
+        scrPane.setPreferredSize(new Dimension(WIDTH_TABLE,LENGTH_TABLE));
+        scrPane.setAutoscrolls(true);
 
         return scrPane;
     }
