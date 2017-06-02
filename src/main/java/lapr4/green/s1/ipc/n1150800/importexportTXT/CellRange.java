@@ -5,7 +5,9 @@
  */
 package lapr4.green.s1.ipc.n1150800.importexportTXT;
 
+import csheets.core.Address;
 import csheets.core.Cell;
+import csheets.ui.ctrl.UIController;
 
 /**
  *
@@ -30,13 +32,56 @@ public class CellRange {
      * @param lastCell - the last Cell defined
      */
     public CellRange(Cell firstCell, Cell lastCell) {
-        if (lastCell.getAddress().getColumn() < firstCell.getAddress().getColumn() 
+        if (lastCell.getAddress().getColumn() < firstCell.getAddress().getColumn()
                 || lastCell.getAddress().getRow() < firstCell.getAddress().getRow()) {
             throw new IllegalArgumentException("Invalid range of cells!");
         }
 
         this.firstCell = firstCell;
         this.lastCell = lastCell;
+    }
+
+    /**
+     * Builds a CellRange instance with
+     *
+     * @param strAddressFirstCell - the address in string format of the first
+     * cell
+     * @param strAddressLastCell - the address in string format of the last cell
+     * @param uiController - the user interface controller
+     */
+    public CellRange(String strAddressFirstCell, String strAddressLastCell, UIController uiController) {
+        Cell firstCell = buildCellFromStringAddress(strAddressFirstCell, uiController);
+        Cell lastCell = buildCellFromStringAddress(strAddressLastCell, uiController);
+
+        if (lastCell.getAddress().getColumn() < firstCell.getAddress().getColumn()
+                || lastCell.getAddress().getRow() < firstCell.getAddress().getRow()) {
+            throw new IllegalArgumentException("Invalid range of cells!");
+        }
+
+        this.firstCell = firstCell;
+        this.lastCell = lastCell;
+    }
+
+    /**
+     * This method builds a cell from a string formatted address
+     * @param strAddress - the cell address in string format
+     * @param uiController - the user interface controler
+     * @return 
+     */
+    private Cell buildCellFromStringAddress(String strAddress, UIController uiController) {
+        String columnStr = String.valueOf(strAddress.charAt(0)).toUpperCase();
+        int column = -1;
+        for (int i = columnStr.length() - 1; i >= 0; i--) {
+            column += (columnStr.charAt(i) - Address.LOWEST_CHAR + 1)
+                    * Math.pow(Address.HIGHEST_CHAR - Address.LOWEST_CHAR + 1,
+                            columnStr.length() - (i + 1));
+        }
+        int row = Integer.parseInt(String.valueOf(strAddress.charAt(1))) - 1;
+
+        Address address = new Address(column, row);
+        Cell cell = uiController.getActiveSpreadsheet().getCell(address);
+        
+        return cell;
     }
 
     /**
