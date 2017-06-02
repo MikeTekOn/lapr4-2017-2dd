@@ -61,10 +61,10 @@
  * </ul>
  * 
  * <h2>Analysis Diagram (Import):</h2><p>
- * <img src="us084_analysis_import.png" alt="image">
+ * <img src="./importTXT/us084_analysis_import.png" alt="image">
  * 
  * <h2>Analysis Diagram (Export):</h2><p>
- * <img src="us084_analysis_export.png" alt="image">
+ * <img src="./exportTXT/us084_analysis_export.png" alt="image">
  * 
  * <h2>Notes:</h2>
  * 
@@ -90,7 +90,7 @@
  * <h1><u>Design</u></h1>
  * 
  * <h2>Sequence Diagram (Import):</h2><p>
- * <img src="us084_design_import.png" alt="image">
+ * <img src="./importTXT/us084_design_import.png" alt="image">
  * 
  * <h2>Sequence Diagram (Export):</h2><p>
  * TODO
