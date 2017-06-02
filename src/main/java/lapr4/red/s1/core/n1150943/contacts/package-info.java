@@ -18,6 +18,11 @@
  * It will be needed to implement the feature to create, edit and remove events as well as add photograph to contact
  *
  * <h2>3. Analysis</h2>
+ * In this use case it is intended that the user may be able to add, edit and remove contacts, also he may add events to the agenda of any contact.
+ * <p>
+ * There is one special contact that exists by default that is the own user, this can be used to add events that will have reminders when the user starts the application if the event is in that day.
+ * <p>
+ * The user should also be able to filter events by Past/Present and Future events.
  *
  * Should Agenda Class be a value object?
  * - In my opinion no, it should be an Entity just like Contact and Event because these are business objects that may suffer changes with time.
@@ -47,7 +52,9 @@
  * The <a href="https://en.wikipedia.org/wiki/Single_responsibility_principle">Single Responsability Principle</a> is then used.
  * Because of this the functionalities should be separated, as I created a new Controller called AddEventController with all the specific information to perform this task.
  * <p>
-
+ *
+ *
+ *
  * <h3>3.4 Acceptance Tests</h3>
  *
  * <b>Exception 1</b><br>
@@ -86,6 +93,14 @@
  * <img src="core10_01_design1.png" alt="image">
  * <p>
  *
+ * <h3>Event Reminder Verification on boot</h3>
+ * <p>
+ * <img src="core10_01_design2.png" alt="image">
+ * <p>
+ * <h4>Ref - checkEvents()</h4>
+ * <p>
+ * <img src="core10_01_design3.png" alt="image">
+ * <p>
  * <b>Class Diagram</b>
  * <p>
  * <img src="contacts_class_diagram.png" alt="image">
@@ -116,6 +131,34 @@
  * Today
  * <p>
  * 1. UC analysis and design conclusion and start implementation and functional tests
+ * <p>
+ * Blocking:
+ * <p>
+ * 1. -nothing-
+ * <p>
+ * <b>Day 3 - 01/06/2017</b>
+ * <p>
+ * Yesterday I worked on:
+ * <p>
+ * 1. Functional Tests and finished design, also started UC implementation
+ * <p>
+ * Today
+ * <p>
+ * 1. Continue implementation of the UC
+ * <p>
+ * Blocking:
+ * <p>
+ * 1. -nothing-
+ *  <p>
+ * <b>Day 4 - 02/06/2017</b>
+ * <p>
+ * Yesterday I worked on:
+ * <p>
+ * 1. UC Implementation, several functionalities where implemented
+ * <p>
+ * Today
+ * <p>
+ * 1. Possibly conclude UC implementation and update documentation
  * <p>
  * Blocking:
  * <p>

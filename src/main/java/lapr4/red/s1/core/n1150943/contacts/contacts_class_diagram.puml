@@ -1,0 +1,26 @@
+@startuml contacts_class_diagram.png
+    skinparam handwritten true
+    skinparam monochrome true
+    skinparam packageStyle rect
+    skinparam defaultFontName FG Virgil
+    skinparam shadowing false
+
+    class Contact {
+        firstName
+        lastName
+        photo
+    }
+
+    class Agenda {
+    }
+
+    class Event {
+        description
+        dueDate
+    }
+
+    Contact *-> "1" Agenda : agenda
+
+    Agenda *-> "*" Event : events
+
+@enduml
