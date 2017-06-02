@@ -36,7 +36,7 @@
  * will generate a node for the L_CURLY_BRACKET and all other elements will be child nodes. The SEMI terminal will not be include in the child elements.
  * <p>
  * <b>Converting parser tree to Expressions</b><p>
- * Each ExpressionCompiler (ExcelExpressionCompiler or any other) will traverse the nodes of the parser tree and generate an Expression for each node. At the end the result is a tree of expressions.<p>
+ * Each ExpressionCompiler (MacroCompiler or any other) will traverse the nodes of the parser tree and generate an Expression for each node. At the end the result is a tree of expressions.<p>
  * The next diagram illustrates the Expression interface and its hierarchy.<p>
  * For the block the idea is to have a new class to support n-ary operations<p>
  * For the assignment the idea is to implement it as a binary operator<p>
