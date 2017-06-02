@@ -53,7 +53,7 @@
  * user can be represented by Patterns in Java. Using Matcher class we can find
  * Workbook contents through the expressions.
  *
- * <img src="core08_01_analysis_ssd.png" alt="image">
+ * <img src="core07_01_analysis_ssd.png" alt="image">
  *
  * <p>
  * <h2>4. Design</h2>
@@ -65,9 +65,15 @@
  * <p>
  *
  * <h3>4.2. UC Realization</h3>
+ * 
+ * <img src="core07_01_design_sd.png" alt="image">
+ * 
  * <p>
  *
  * <h3>4.3. Classes</h3>
+ * 
+ * <img src="core07_01_design_cd.png" alt="image">
+ * 
  * <p>
  *
  * <h3>4.4. Design Patterns and Best Practices</h3>
