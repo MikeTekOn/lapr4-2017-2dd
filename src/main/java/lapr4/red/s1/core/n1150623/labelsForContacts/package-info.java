@@ -1,24 +1,22 @@
 /**
- * Technical documentation regarding the user story Core02.1: Comments on Cells.
+ * Technical documentation regarding the user story Core10.7.1: Labels Fro Contacts.
  * 
- * <p>
- * <b>-Note: this is a template/example of the individual documentation that each team member must produce each sprint. Suggestions on how to build this documentation will appear between '-' like this one. You should remove these suggestions in your own technical documentation. You may also define a different template for your team to use with the agreement of your supervisor-</b>
  * <p>
  * <b>Scrum Master: -(yes/no)- no</b>
  *
  * <p>
- * <b>Area Leader: -(yes/no)- yes</b>
+ * <b>Area Leader: -(yes/no)- no</b>
  *
  * <h2>1. Notes</h2>
  *
  * -Notes about the week's work.-
  * <p>
- * -In this section you should register important notes regarding your work during the sprint.
- * For instance, if you spend significant time helping a colleague or if you work in more than a feature.-
+ *     Nothing remarkable to note...
+ *
  *
  * <h2>2. Requirement</h2>
  *
- * It should be able to generate labels for contacts by:
+ * This functionality should be able to generate labels for contacts by:
  * - Creating a PDF document which each page has a label of one contact.
  * - Labels must include at least the name, photograph, addresses, emails and telephone numbers of the contact.
  * - The user should also have the option to select if the events of the contacts should be included in the PDF , and in this case the user must enter the date interval that is used to select the events.
@@ -35,6 +33,13 @@
  *  
  * <h2>3. Analysis</h2>
  *
+ * This Use Case requires the creation of <i>Labels</i> and there isn't a direct explanation of the meaning of what is a label.
+ * So we start with and open question "<i>What is a Label for a contact?</i>".  As answered by the <i>Product Owner</i>, a label is a type of identification for a contact and has all it's information.
+ *
+ * Now that we now what a label is in this case, we noticed that it's required for the contact to have additional information (<i>"Labels must include at least the name, photograph, addresses, emails and telephone numbers of the contact"</i>).
+ * the contact already contain a <b>name</b>, a <b>photo</b> and an <b>agenda</b> (with the list of <b>events</b>), so we only have to add the address, phone number and email information.
+ * - Since address, phoneNumber and email are in plural ("addresses", "phone numbers", "emails"), there may be more than one. This will be taken into account.
+ *
  * To export the contact's information, there is a need to know how to access it, how it's persisted and where.
  * The sequence diagrams of the use case 10.1 that is responsible for contact information and related events persistence, tells us that:
  *
@@ -47,6 +52,7 @@
  * <p>
  * <img src="uc_create_event.png" alt="image">
  * <p>
+ *
  *
  *
  * All information can be found in the repositories and can easily be accessed.
@@ -94,7 +100,7 @@
  * Basically we will implement a pattern that will facilitate the implementation of new export options in the future, if needed - <i>Strategy</i> Pattern.
  * This a generalized way of implementing this pattern:
  *
- * <h4>Create and Persist Event [Core-10.1]</h3>
+ * <h3>Create and Persist Event [Core-10.1]</h3>
  * <p>
  * <img src="generic_strategy_implementation.png" alt="image">
  * <p>
