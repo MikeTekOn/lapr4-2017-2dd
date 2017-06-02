@@ -36,25 +36,25 @@
  * <ul>
  *  <li>Is the data written into the file from a spreadsheet or a whole workbook?
  *      <ul>   
- *          <li><b>Assumption:</b> <u>From a spreadsheet because the user chooses a cell range to manage the data.</u></li><p>
+ *          <li><b>Assumption:</b> <u>From a spreadsheet because the user chooses a cell range to manage the data.</u></li>
  *          <li><b>Answer:</b> <i>Check the assumption!</i></li>
  *      </ul>
  *  </li>
  *  <li>Is the data read from the file about a spreadsheet or a whole workbook?
  *      <ul>
- *          <li><b>Assumption: </b><u>From a spreadsheet because the user chooses a cell range to manage the data.</u></li><p>
+ *          <li><b>Assumption: </b><u>From a spreadsheet because the user chooses a cell range to manage the data.</u></li>
  *          <li><b>Answer:</b> <i>Check the assumption!</i></li>
  *      </ul>
  *  </li>
  *  <li>Are there any restrictions into the choice of the separator character?
  *      <ul>
- *          <li><b>Assumption:</b> <u>No.</u></li><p>
+ *          <li><b>Assumption:</b> <u>No.</u></li>
  *          <li><b>Answer:</b> <i>Check the assumption!</i></li>
  *      </ul>
  *  </li>
  *  <li> Is the range of cells defined by a width x height value or by the upper left cell and bottom right cell?
  *      <ul>
- *          <li><b>Assumption:</b> <u>Upper left cell and bottom right cell.</u></li><p>
+ *          <li><b>Assumption:</b> <u>Upper left cell and bottom right cell.</u></li>
  *          <li><b>Answer:</b> <i>Check the assumption!</i></li>
  *      </ul>
  *  </li>
