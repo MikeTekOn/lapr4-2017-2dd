@@ -4,17 +4,19 @@ import eapli.framework.persistence.DataConcurrencyException;
 import eapli.framework.persistence.DataIntegrityViolationException;
 import lapr4.red.s1.core.n1150943.contacts.application.EventController;
 import lapr4.white.s1.core.n4567890.contacts.domain.Contact;
+import lapr4.white.s1.core.n4567890.contacts.domain.Event;
 import ui.DatePicker;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Calendar;
 
 /**
- * Created by João Cardoso - 1150943
+ * Created by k4rd050 on 01-06-2017.
  */
-public class AddEventDialog extends JDialog {
+public class EditEventDialog extends JDialog{
 
     private EventController controller = null;
     private Contact selectedContact = null;
@@ -28,12 +30,13 @@ public class AddEventDialog extends JDialog {
 
     private Calendar pickedDueDate = null;
 
-    public AddEventDialog(EventController ctrl, Contact c) {
+    int indexToEdit;
 
+    public EditEventDialog(EventController ctrl, Contact c , int index) {
+        indexToEdit = index;
         initComponents();
-        selectedContact = c;
         controller = ctrl;
-
+        selectedContact = c;
 
         setContentPane(contentPane);
         setModal(true);
@@ -50,7 +53,7 @@ public class AddEventDialog extends JDialog {
             if(!textFieldDescription.getText().isEmpty()){
                 String descr = textFieldDescription.getText();
                 try {
-                    controller.addEvent(selectedContact, descr, pickedDueDate);
+                    controller.editEvent(selectedContact, indexToEdit, pickedDueDate,descr);
                 } catch (IllegalStateException e) {
                     JOptionPane.showMessageDialog(null,"The date you picked is in the past");
                 } catch (DataConcurrencyException e) {
@@ -91,7 +94,6 @@ public class AddEventDialog extends JDialog {
             }
         });
         textFieldDescription = new JTextField(50);
-
         buttonOK.setText("OK");
         panelButtons.add(buttonOK);
 

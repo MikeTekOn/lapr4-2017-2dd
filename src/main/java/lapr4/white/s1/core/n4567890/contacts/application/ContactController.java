@@ -19,6 +19,8 @@ import lapr4.white.s1.core.n4567890.contacts.persistence.PersistenceContext;
 
 import javax.swing.*;
 
+import static csheets.CleanSheets.OWN_NAME;
+
 
 /**
  *
@@ -42,14 +44,20 @@ public class ContactController implements Controller {
         return this.contactsRepository.save(new Contact(name, firstName, lastName, photo));
     }
 
-    public boolean removeContact(Contact contact) throws DataConcurrencyException, DataIntegrityViolationException {
+    public boolean removeContact(Contact contact) throws DataConcurrencyException, DataIntegrityViolationException, IllegalAccessException {
         if(contact.hasEvents()){
             throw new DataIntegrityViolationException();
+        }
+        if(contact.name().equals(OWN_NAME)){
+            throw new IllegalAccessException();
         }
         return this.contactsRepository.removeContact(contact);
     }
     
-    public Contact updateContact(Contact contact, String fullName, String firstName, String lastName) throws DataConcurrencyException, DataIntegrityViolationException {
+    public Contact updateContact(Contact contact, String fullName, String firstName, String lastName) throws DataConcurrencyException, DataIntegrityViolationException, IllegalAccessException {
+        if(contact.name().equals(OWN_NAME)){
+            throw new IllegalAccessException();
+        }
         contact.setName(fullName);
         contact.setFirstName(firstName);
         contact.setLastName(lastName);
