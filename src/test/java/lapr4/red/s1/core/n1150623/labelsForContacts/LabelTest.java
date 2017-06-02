@@ -2,14 +2,14 @@ package lapr4.red.s1.core.n1150623.labelsForContacts;
 
 import java.lang.IllegalArgumentException;
 import lapr4.red.s1.core.n1150623.labelsForContacts.domain.Label;
+import lapr4.white.s1.core.n4567890.contacts.domain.Event;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by guima on 02/06/2017.
@@ -23,6 +23,7 @@ public class LabelTest {
     private Set<String> phoneNumbers;
     private Set<String> emails;
     private Set<String> addresses;
+    private List<Event> events;
 
     public LabelTest() {
     }
@@ -43,12 +44,15 @@ public class LabelTest {
         phoneNumbers = new HashSet();
         addresses = new HashSet();
         emails = new HashSet();
+        events = new ArrayList();
 
         photo = "something";
         name = "something";
         phoneNumbers.add("something");
         addresses.add("something");
         emails.add("something");
+
+        events.add(new Event("something", Calendar.getInstance()));
     }
 
     @After
@@ -139,5 +143,17 @@ public class LabelTest {
     public void ensurePhoneNumbersCantHaveNullElements(){
         phoneNumbers .add(null);
         label.fillLabel(name, photo, addresses, emails, phoneNumbers);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void ensureEventsListCantBeNull(){
+        events = null;
+        label.addEvents(events);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void ensureEventsListCantHaveNullEvents(){
+        events.add(null);
+        label.addEvents(events);
     }
 }

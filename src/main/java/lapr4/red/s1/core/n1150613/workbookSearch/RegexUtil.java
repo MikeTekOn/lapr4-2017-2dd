@@ -11,7 +11,7 @@ import java.util.regex.PatternSyntaxException;
 
 /**
  *
- * @author Diogo
+ * @author Diogo Guedes
  */
 public class RegexUtil {
 
@@ -21,9 +21,6 @@ public class RegexUtil {
 
     public RegexUtil(String regex) {
         this.regExpression = regex;
-        if (isRegexValid()) {
-            p = Pattern.compile(regExpression);
-        }
     }
 
     public boolean isRegexValid() {
@@ -40,6 +37,7 @@ public class RegexUtil {
 
     public boolean checkIfMatches(String cellContent) {
 
+        p = Pattern.compile(regExpression);
         m = p.matcher(cellContent);
         return (m.matches());
     }

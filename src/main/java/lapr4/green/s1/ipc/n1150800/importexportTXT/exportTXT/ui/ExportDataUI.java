@@ -3,19 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr4.green.s1.ipc.n1150800.importexportTXT.importTXT.ui;
+package lapr4.green.s1.ipc.n1150800.importexportTXT.exportTXT.ui;
 
-import csheets.core.Address;
-import csheets.core.Cell;
 import csheets.core.formula.compiler.FormulaCompilationException;
-import csheets.ui.FileChooser;
 import csheets.ui.ctrl.UIController;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.Properties;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -25,47 +21,43 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import lapr4.green.s1.ipc.n1150800.importexportTXT.CellRange;
+import lapr4.green.s1.ipc.n1150800.importexportTXT.exportTXT.ctrl.ExportDataController;
 import lapr4.green.s1.ipc.n1150800.importexportTXT.importTXT.ctrl.ImportDataController;
 
 /**
  *
  * @author Pedro Chilro (1150800@isep.ipp.pt)
  */
-public class ImportDataUI extends JFrame {
-
+public class ExportDataUI extends JFrame {
+    
     /**
-     * The user interface controller
+     * 
      */
     private UIController uiController;
-
+    
     /**
-     * The file chooser panel
+     * 
      */
-    private FileChooser fileChooser;
-
+    private File fileToWrite;
+    
     /**
-     * The file to read the data from
+     * 
+     * @param uiController
+     * @param fileToWrite 
      */
-    private File fileToRead;
-
-    /**
-     * Creates an instance of ImportDataUI with the
-     *
-     * @param uiController - user interface controller
-     */
-    public ImportDataUI(UIController uiController, File fileToRead) {
+    public ExportDataUI(UIController uiController, File fileToWrite) {
         this.uiController = uiController;
-        this.fileToRead = fileToRead;
-
+        this.fileToWrite = fileToWrite;
+        
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         createComponents();
         setLocationRelativeTo(null);
         pack();
         setVisible(true);
     }
-
+    
     /**
-     * Creates the components of the frame
+     * 
      */
     private void createComponents() {
         JPanel panel = new JPanel();
@@ -121,11 +113,11 @@ public class ImportDataUI extends JFrame {
 
                 CellRange cellRange = new CellRange(addressStrFirstCell, addressStrLastCell, uiController);
 
-                ImportDataController controller = new ImportDataController(uiController, fileToRead, separatorCharacter, cellRange);
-                controller.readData();
+                ExportDataController controller = new ExportDataController(uiController, fileToWrite, separatorCharacter, cellRange);
+                controller.writeData();
 
                 dispose();
-            } catch (IllegalArgumentException | IOException | FormulaCompilationException ex) {
+            } catch (IllegalArgumentException | IOException ex) {
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
