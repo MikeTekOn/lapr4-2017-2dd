@@ -9,10 +9,7 @@ import csheets.core.Cell;
 import csheets.core.Spreadsheet;
 import csheets.core.Workbook;
 import csheets.core.formula.compiler.FormulaCompilationException;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -20,10 +17,10 @@ import static org.junit.Assert.*;
  *
  * @author Diogo
  */
-public class UtilitiesTest {
+public class RegexUtilTest {
 
-    String validRegex = "";
-    String invalidRegex = "";
+    String validRegex = "[A-Z]+";
+    String invalidRegex = "[A-++w2";
     String cellContent = "";
 
     @Before
@@ -32,46 +29,44 @@ public class UtilitiesTest {
         book.addSpreadsheet();
         Spreadsheet s = book.getSpreadsheet(0);
         Cell c = s.getCell(1, 1);
-        c.setContent("teste");
+        c.setContent("TESTE");
         cellContent = c.getContent();
 
     }
 
     /**
-     * Test of isRegexValid method, of class Utilities.
+     * Test of isRegexValid method, of class RegexUtil.
      */
     @Test
     public void testIsRegexValid() {
         System.out.println("isRegexValid");
-        String regex = "";
-        Utilities instance = new Utilities();
-        boolean expResult = false;
-        boolean result = instance.isRegexValid(regex);
+        RegexUtil instance = new RegexUtil(validRegex);
+        boolean expResult = true;
+        boolean result = instance.isRegexValid();
         assertEquals(expResult, result);
     }
 
     /**
-     * Test of isRegexValid method, of class Utilities.
+     * Test of isNotRegexValid method, of class RegexUtil.
      */
     @Test
     public void testIsNotRegexValid() {
-        System.out.println("isRegexValid");
-        String regex = "";
-        Utilities instance = new Utilities();
+        System.out.println("isNotRegexValid");
+        RegexUtil instance = new RegexUtil(invalidRegex);
         boolean expResult = false;
-        boolean result = instance.isRegexValid(regex);
+        boolean result = instance.isRegexValid();
         assertEquals(expResult, result);
     }
 
     /**
-     * Test of checkIfMatches method, of class Utilities.
+     * Test of checkIfMatches method, of class RegexUtil.
      */
     @Test
     public void testCheckIfMatches() {
         System.out.println("checkIfMatches");
 
-        Utilities instance = new Utilities();
-        boolean expResult = false;
+        RegexUtil instance = new RegexUtil(validRegex);
+        boolean expResult = true;
         boolean result = instance.checkIfMatches(cellContent);
         assertEquals(expResult, result);
 
