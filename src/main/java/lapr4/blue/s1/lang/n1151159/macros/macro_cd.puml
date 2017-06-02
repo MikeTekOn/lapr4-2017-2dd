@@ -1,0 +1,48 @@
+@startuml block_instructions_cd.png
+
+'http://plantuml.com/skinparam.html'
+skinparam handwritten true
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+interface Expression {
+	+Value evaluate()
+	+Object accept(ExpressionVisitor visitor)
+}
+class Macro {
+	+Macro(List<Expression> expressions)
+}
+interface Operator
+interface BinaryOperator
+interface NaryOperator <<<b>design>>
+class SequenceBlock <<<b>design>> {
+    +Value applyTo(Expression[] operands)
+}
+class Assignment <<<b>design>> {
+    +Value applyTo(Expression[] operands)
+}
+abstract class Operation <O extends Operator> {
+    getOperator()
+}
+class BinaryOperation
+class NaryOperation <<<b>design>>
+note right : <b>Vistior pattern to transverse\n<b>expressions and compile them
+Expression <|- Macro
+Expression <|- Operation
+Operation <|--- BinaryOperation
+Operation <|-- NaryOperation
+BinaryOperation --> Expression : leftOperand
+BinaryOperation --> Expression : rightOperand
+NaryOperation --> Expression : operands
+
+Operator <|- BinaryOperator
+Operator <|- NaryOperator
+
+BinaryOperation *--- BinaryOperator
+NaryOperation *--- NaryOperator
+
+NaryOperator <|-- SequenceBlock
+
+BinaryOperator <|-- Assignment
+
+@enduml

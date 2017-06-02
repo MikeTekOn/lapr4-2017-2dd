@@ -30,7 +30,7 @@ note right of ObjType_B
  }
 end note
 
-class GenericExport <<interface>>{
+interface GenericExport <<interface>>{
 +export(T obj);
 }
 

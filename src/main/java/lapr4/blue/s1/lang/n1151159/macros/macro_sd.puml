@@ -1,0 +1,30 @@
+@startuml sequence_block_sd.png
+
+'http://plantuml.com/skinparam.html'
+skinparam handwritten true
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+participant "macro : Macro" as M
+participant "exp : Expression" as E
+participant "lastExpressionValue : Value" as L
+participant "visitor : ExpressionVisitor" as V
+
+[-> M: evaluate()
+create L
+M -> L : create()
+loop foreach exp in expressions
+M -> E : lastExpressionValue = evaluate()
+end loop
+[<-- M : return lastExpressionValue
+
+note over M
+    Application of visitor pattern
+end note
+
+[-> M: visit(visitor : ExpressionVisitor)
+M -> V : visit(macro)
+[<-- M : return
+
+
+@enduml

@@ -71,4 +71,4 @@
  * <h2>5. Code</h2>
  * TODO
  */
-package lapr4.green.s1.n1150657.chat;
+package lapr4.green.s1.ipc.n1150657.chat;

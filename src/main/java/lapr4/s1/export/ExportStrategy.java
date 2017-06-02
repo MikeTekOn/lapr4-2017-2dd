@@ -2,7 +2,7 @@ package lapr4.s1.export;
 
 /**
  *
- * @author Eric & Diogo 1150451
+ * @author Eric and Diogo 1150451
  */
 public interface ExportStrategy {
 

@@ -6,7 +6,10 @@ import java.awt.event.*;
 import java.util.Calendar;
 import javax.swing.*;
 
-    public class DatePicker {
+/**
+ * This is an external open source tool
+ */
+public class DatePicker {
         int month = java.util.Calendar.getInstance().get(java.util.Calendar.MONTH);
         int year = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR);;
         JLabel l = new JLabel("", JLabel.CENTER);
@@ -102,19 +105,3 @@ import javax.swing.*;
 
     }
 
-    class Picker {
-        public static void main(String[] args) {
-            JLabel label = new JLabel("Selected Date:");
-            final JTextField text = new JTextField(20);
-            JButton b = new JButton("popup");
-            JPanel p = new JPanel();
-            p.add(label);
-            p.add(text);
-            p.add(b);
-            final JFrame f = new JFrame();
-            f.getContentPane().add(p);
-            f.pack();
-            f.setVisible(true);
-
-        }
-    }

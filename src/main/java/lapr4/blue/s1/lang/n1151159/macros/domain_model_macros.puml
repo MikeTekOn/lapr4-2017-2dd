@@ -1,49 +1,51 @@
-@startuml domain_model_formulas.png
+@startuml domain_model_macros.png
+
+'http://plantuml.com/skinparam.html'
+skinparam handwritten true
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
 class Formula {
-	+Formula(Cell cell, Expression expression) 
+	+Formula(Cell cell, Expression expression)
 }
 class Macro {
-	+Macro(LinkedList<Expression> expressions)
+	+Macro(List<Expression> expressions)
 }
 interface Expression {
 	+Value evaluate()
 	+Object accept(ExpressionVisitor visitor)
 }
-interface Reference {
+interface Reference
+interface Operator
+interface UnaryOperator
+note right : <b>concrete classes:\nPercent, etc.
+interface BinaryOperator
+note left : <b>concrete classes:\nAdder, LessThan, etc.
+interface NaryOperator <<<b>analysis>>
+class SequenceBlock <<<b>analysis>> {
+    +Value applyTo(Expression[] operands)
 }
-interface Operator {
-}
-class UnaryOperator {
-}
-class BinaryOperator {
-}
-class NaryOperator <<analysis>> {
-}
-class SequenceOperator <<analysis>> {
-}
-class AssignmentOperator <<analysis>> {
+class Assignment <<<b>analysis>> {
+    +Value applyTo(Expression[] operands)
 }
 abstract class Operation <O extends Operator> {
-    getOperator() 
+    getOperator()
 }
-class UnaryOperation {
-}
-class BinaryOperation {
-}
-class NaryOperation <<analysis>> {
-}
-class FunctionCall {
-}
-class Literal {
-}
+class UnaryOperation
+class BinaryOperation
+class NaryOperation <<<b>analysis>>
+class FunctionCall
+class Literal
 interface ExpressionVisitor {
 	+Object visitLiteral(Literal literal)
 	+Object visitUnaryOperation(UnaryOperation operation)
 	+Object visitBinaryOperation(BinaryOperation operation)
 	+Object visitReference(Reference reference)
 	+Object visitFunctionCall(FunctionCall call)
+	+Object visitNaryOperation(NaryOperation operation)
 	+<b>Object visitMacro(Expression)</b>
 }
+note right : <b>Vistior pattern to transverse\n<b>expressions and compile them
 Expression <|-- Macro
 Expression <|-- Formula
 Expression <|-- Reference
@@ -69,7 +71,7 @@ UnaryOperation *-- UnaryOperator
 BinaryOperation *-- BinaryOperator
 NaryOperation *-- NaryOperator
 
-NaryOperator <|-- SequenceOperator
+NaryOperator <|-- SequenceBlock
 
-BinaryOperator <|-- AssignmentOperator
-  @enduml
+BinaryOperator <|-- Assignment
+@enduml
