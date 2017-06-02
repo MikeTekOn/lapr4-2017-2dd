@@ -28,22 +28,14 @@ import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.TitledBorder;
-import javax.swing.plaf.basic.BasicArrowButton;
-import javax.swing.table.DefaultTableModel;
 import lapr4.red.s1.core.n1150690.comments.CommentableCellWithMultipleUsers;
 import lapr4.red.s1.core.n1150690.comments.application.AddCommentsWithUserController;
-import lapr4.red.s1.core.n1150690.comments.domain.User;
-import lapr4.white.s1.core.n1234567.comments.CommentableCell;
-import lapr4.white.s1.core.n1234567.comments.CommentableCellListener;
 import lapr4.white.s1.core.n1234567.comments.CommentsExtension;
 import lapr4.white.s1.core.n1234567.comments.ui.CommentPanel;
 
@@ -81,6 +73,8 @@ public class CommentsWithUserPanel extends JPanel implements SelectionListener,
      * The text field in which the comments of the cell are displayed.
      */
     private JTextField commentField;
+    
+    private UIController uiController;
 
     /**
      * Creates a new comment panel.
@@ -95,6 +89,7 @@ public class CommentsWithUserPanel extends JPanel implements SelectionListener,
         // Creates controller
         controller = new AddCommentsWithUserController(uiController);
         uiController.addSelectionListener(this);
+        this.uiController = uiController;
 
         // Creates comment components
         initComponents();
@@ -125,7 +120,7 @@ public class CommentsWithUserPanel extends JPanel implements SelectionListener,
         panel.add(buttonNewComment(), grid);
         super.add(panel);
     }
-
+    
     /**
      *
      * @return
@@ -184,20 +179,8 @@ public class CommentsWithUserPanel extends JPanel implements SelectionListener,
 
     @Override
     public void selectionChanged(SelectionEvent event) {
-        this.cell = new CommentableCellWithMultipleUsers(event.getCell());
-
-        if (cell.getExtension(CommentsExtension.NAME) == null) {
-            return;
-        }
-
-        if (cell != null) {
-            cell.addCommentableCellListener((CommentableCellListener) this);
-            commentChanged(cell);
-        }
-        // Stops listening to previous active cell
-        if (event.getPreviousCell() != null) {
-            ((CommentableCellWithMultipleUsers) event.getPreviousCell().getExtension(CommentsExtension.NAME)).removeCommentableCellListener((CommentableCellListener) this);
-        }
+        CommentPanel panel = new CommentPanel(uiController);
+        panel.selectionChanged(event);
     }
 
     @Override
