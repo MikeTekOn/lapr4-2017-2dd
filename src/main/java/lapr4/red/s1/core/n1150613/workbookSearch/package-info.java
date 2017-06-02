@@ -1,5 +1,5 @@
 /**
- * Technical documentation regarding the user story Core08.1: Basic PDF Export
+ * Technical documentation regarding the user story Core07.1: Workbook Search.
  *
  * <p>
  * <b>Scrum Master: -(yes/no)- no</b>
@@ -101,25 +101,25 @@
  * <p>
  * <b>Wednesday 31/05/2017</b>
  * <p>
- * Yesterday:
+ * Yesterday: Almost completed analysis process.
  * <p>
- * Today:
+ * Today: I will try to finish analysis and start design
  * <p>
  * Blocking:
  * <p>
  * <b>Thursday 1/06/2017 </b>
  * <p>
- * Yesterday:
+ * Yesterday: Finished analysis 
  * <p>
- * Today:
+ * Today: I started the design process
  * <p>
  * Blocking:
  * <p>
  * <b>Friday 2/06/2017</b>
  * <p>
- * Yesterday:
+ * Yesterday: Finished design process
  * <p>
- * Today:
+ * Today: Started unit tests and implementation
  * <p>
  * Blocking:
  * <p>
