@@ -1,4 +1,7 @@
 @startuml us06.1_design_sdtc.png
+
+title Secured Connection
+
 hide footbox
 participant SecureDataTransmissionContext
 
