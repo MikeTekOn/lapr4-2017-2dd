@@ -105,7 +105,7 @@ public class CommentPanel extends JPanel implements SelectionListener,
 	 */
 	public void selectionChanged(SelectionEvent event) {
 		Cell cell = event.getCell();
-
+                if(cell==null)return;
 		if(cell.getExtension(CommentsExtension.NAME) == null)
 			return;
 

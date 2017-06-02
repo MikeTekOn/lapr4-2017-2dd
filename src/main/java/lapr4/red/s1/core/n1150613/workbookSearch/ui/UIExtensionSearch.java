@@ -9,11 +9,10 @@ import csheets.ext.Extension;
 import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.UIExtension;
 import javax.swing.JComponent;
-import lapr4.white.s1.core.n4567890.contacts.ui.ContactPanel;
 
 /**
  *
- * @author Diogo
+ * @author Diogo Guedes
  */
 /**
  * This class implements the UI interface extension for the search extension.

@@ -26,21 +26,27 @@
  * alters the existing one) or adds a new comment. The system saves the comment
  * of the cell. When the user's mouse pointer is hovering above a cell and the
  * cell has comments then the system will display these comments in a form
- * similar to a "tooltip".
+ * similar to a "tooltip". Comments should be persisted with the workbook.
  *
  * <h2>3. Analysis</h2>
  * <p>
  * This use case it's an extended version of the <b>Core02.1: Comments on
  * Cells</b> use case. In this
- * <a href="../../../../../comments/package-info.java">page</a> you can find
- * all the necessary documentation about the Core02.1 use case.
+ * <a href="../../../../../comments/package-info.java">page</a> you can find all
+ * the necessary documentation about the Core02.1 use case.
  * <p>
  * For this functionality in specific, we only need to added to the previous use
  * case more features like: the possibility to insert several comments in a
  * cell, associate them to the author and persist the comments with the
- * workbook. To identify the user in the comment, the software should retrieve
- * automaticly the system's username by using this function:
- * <code>System.getProperty("user.name")</code>.
+ * workbook. As the workbook when it is generated, contains spreadsheets and
+ * spreadsheets containing cells, it is only necessary that they keep a list of
+ * comments to be able to be persisted in the workbook.. To identify the user in
+ * the comment, the software should retrieve automaticly the system's username
+ * by using this function: <code>System.getProperty("user.name")</code>.
+ * <p>
+ * Regarding the specification to display the comments in the form of a
+ * "tooltip", if they exist, it is a feature that concerns only the user
+ * interface.
  * <p>
  * <h3>Domain Concepts Description</h3>
  * <p>
