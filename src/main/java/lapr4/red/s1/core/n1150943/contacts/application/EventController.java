@@ -12,7 +12,10 @@ import lapr4.white.s1.core.n4567890.contacts.persistence.PersistenceContext;
 
 import javax.swing.*;
 import java.util.Calendar;
+import java.util.Optional;
 import java.util.Properties;
+
+import static csheets.CleanSheets.OWN_NAME;
 
 /**
  * Created by João Cardoso - 1150943 on 30-05-2017.
@@ -43,30 +46,26 @@ public class EventController implements Controller {
     public Event addEvent(Contact contact, String eventDescription, Calendar dueDate) throws DataConcurrencyException, DataIntegrityViolationException {
         Agenda a = contact.agenda();
         Event ev=null;
-        try{
-            ev=new Event(eventDescription, dueDate);
-            a.add(ev);
-            this.contactsRepository.save(contact);
-        }catch (IllegalStateException e){
-            JOptionPane.showMessageDialog(null,"The date you picked is in the past");
-        }
+        ev=new Event(eventDescription, dueDate);
+        a.add(ev);
+        this.contactsRepository.save(contact);
         return ev;
     }
 
     /**
      * Edits an existing event of a contact
      * @param c
-     * @param index
+     * @param ev
      * @param newDueDate
      * @param newDescription
      * @return
      * @throws DataConcurrencyException
      * @throws DataIntegrityViolationException
      */
-    public boolean editEvent(Contact c, int index, Calendar newDueDate, String newDescription) throws DataConcurrencyException, DataIntegrityViolationException {
+    public boolean editEvent(Contact c, int ev, Calendar newDueDate, String newDescription) throws DataConcurrencyException, DataIntegrityViolationException {
         boolean success=false;
         try{
-            success = c.agenda().edit(index,newDescription,newDueDate);
+            success = c.agenda().edit(ev,newDescription,newDueDate);
             this.contactsRepository.save(c);
         }catch (IllegalStateException e){
             JOptionPane.showMessageDialog(null,"The date you picked is in the past");
@@ -92,4 +91,5 @@ public class EventController implements Controller {
     public Iterable<Event> allEvents(Contact contact) {
         return contact.agenda().events();
     }
+
 }

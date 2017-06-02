@@ -1,0 +1,40 @@
+@startuml generic_strategy_implementation.png
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+title Use Case: Labels for Contacts
+
+actor "CRM User" as Actor
+participant CreateLabelsUI as UI <<presentation>>
+
+autonumber "<b>0"
+
+Actor -> UI : Create Labels
+activate UI
+
+    UI --> Actor : Shows contacts list and asks to choose contacts
+    UI <- Actor : Chooses contacts
+
+    UI --> Actor : Asks if wants to add contact's events
+
+    alt Accepts
+
+
+    UI --> Actor : Asks the initial and end date of the list of events to export with contacts
+
+    UI <- Actor : Chooses initial and end dates
+
+    UI --> Actor : generates file with labels including the events list and shows success message
+
+    else Refuses
+
+    UI --> Actor : generates file with labels and shows success message
+
+    end alt
+
+
+deactivate UI
+
+@enduml

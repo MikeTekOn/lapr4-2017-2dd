@@ -7,23 +7,34 @@ package lapr4.green.s1.ipc.n1150838.findworkbooks.ui;
 
 import java.util.ArrayList;
 import javax.swing.AbstractListModel;
-import lapr4.green.s1.ipc.n1150838.findworkbooks.WorkbookDTO;
+import lapr4.green.s1.ipc.n1150838.findworkbooks.FileDTO;
 
 /**
  *
  * @author nunopinto
  */
-public class WorkbookList extends AbstractListModel{
-    
-    private ArrayList<WorkbookDTO> workbookList;
-    private WorkbookDTO selected;
+public class WorkbookList extends AbstractListModel {
 
-    public WorkbookList(ArrayList<WorkbookDTO> workbookList) {
+    /**
+     * the current workbook list
+     */
+    private ArrayList<FileDTO> workbookList;
+    /**
+     * the selected file
+     */
+    private FileDTO selected;
+
+    public WorkbookList(ArrayList<FileDTO> workbookList) {
         this.workbookList = workbookList;
     }
 
+    /**
+     * search the file that counts the item parameter
+     *
+     * @param item
+     */
     public void setSelectedItem(String item) {
-        for (WorkbookDTO f : workbookList) {
+        for (FileDTO f : workbookList) {
 
             if (f.getFileName().equals(item)) {
 
@@ -32,45 +43,77 @@ public class WorkbookList extends AbstractListModel{
         }
     }
 
-    public WorkbookDTO getSelectedItem() {
+    /**
+     * returns the selected item
+     *
+     * @return
+     */
+    public FileDTO getSelectedItem() {
 
-       WorkbookDTO clone = selected.clone();
+        FileDTO clone = selected.clone();
 
         return clone;
     }
-    
+
+    /**
+     *
+     * @return the wokbooklist current size
+     */
     @Override
     public int getSize() {
         return workbookList.size();
     }
 
+    /**
+     *
+     * @param index
+     * @return the object contained on the given index
+     */
     @Override
     public Object getElementAt(int index) {
         return workbookList.get(index).getFileName();
     }
 
-    public ArrayList<WorkbookDTO> clone() {
+    /**
+     *
+     * @return a copy of this object
+     */
+    public ArrayList<FileDTO> clone() {
 
-        return (ArrayList<WorkbookDTO>) workbookList.clone();
+        return (ArrayList<FileDTO>) workbookList.clone();
     }
 
-    public void addElement(WorkbookDTO d) {
+    /**
+     * adds a new element to the list and fires a event.
+     *
+     * @param d
+     */
+    public void addElement(FileDTO d) {
         if (!workbookList.contains(d) && workbookList.add(d)) {
             fireIntervalAdded(d, workbookList.size() - 1, workbookList.size());
         }
     }
 
-    public void removeElement(WorkbookDTO d) {
+    /**
+     * removes a element from the list and fires a event.
+     *
+     * @param d
+     */
+    public void removeElement(FileDTO d) {
         int indice = workbookList.indexOf(d);
         workbookList.remove(d);
         if (!workbookList.contains(d) && workbookList.remove(d)) {
             fireIntervalRemoved(this, indice, indice);
         }
     }
-    public void removeAll(){
+
+    /**
+     * cleans all the list
+     */
+    public void removeAll() {
         int min = 0;
         int max = workbookList.size();
         workbookList.clear();
-        fireIntervalRemoved(this,min,max);
+        fireIntervalRemoved(this, min, max);
     }
 }

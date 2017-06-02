@@ -8,7 +8,7 @@ package lapr4.green.s1.ipc.n1150838.findworkbooks;
 import java.util.Observable;
 
 /**
- *
+ *Singleton to notify the observers that a new file was found !
  * @author nunopinto
  */
 public class FindWorkbooksPublisher extends Observable {
@@ -20,7 +20,10 @@ public class FindWorkbooksPublisher extends Observable {
         super.setChanged();
         super.notifyObservers(b); //To change body of generated methods, choose Tools | Templates.
     }
-    
+    /**
+     * this object
+     * @return 
+     */
     public static FindWorkbooksPublisher getInstance(){
         return instance;
     }

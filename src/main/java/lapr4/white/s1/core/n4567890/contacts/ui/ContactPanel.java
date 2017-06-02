@@ -7,8 +7,12 @@ package lapr4.white.s1.core.n4567890.contacts.ui;
 
 import csheets.CleanSheets;
 import csheets.ui.ctrl.UIController;
+import eapli.framework.persistence.DataConcurrencyException;
+import eapli.framework.persistence.DataIntegrityViolationException;
+import jdk.nashorn.internal.scripts.JO;
 import lapr4.red.s1.core.n1150943.contacts.application.EventController;
 import lapr4.red.s1.core.n1150943.contacts.ui.AddEventDialog;
+import lapr4.red.s1.core.n1150943.contacts.ui.EditEventDialog;
 import lapr4.white.s1.core.n4567890.contacts.ContactsExtension;
 import lapr4.white.s1.core.n4567890.contacts.application.ContactController;
 import lapr4.white.s1.core.n4567890.contacts.domain.*;
@@ -37,6 +41,8 @@ public class ContactPanel extends JPanel implements ActionListener {
 
 	//Controller for Events
     private EventController eventController =null;
+
+    Iterable<Event> events=null;
 
 	/** The text field in which the comment of the cell is displayed.*/
         private JTextArea commentField = new JTextArea();
@@ -96,25 +102,37 @@ public class ContactPanel extends JPanel implements ActionListener {
             contactsList = new JList(contactsModel);
 
             MouseListener mouseListener = new MouseAdapter() {
-                public void mouseShiftPressed(MouseEvent e) {
-                    JDialog dialog = new JDialog();
-                    dialog.setUndecorated(true);
-                    int index = contactsList.getSelectedIndex();
-                    String photoSrc = contactsModel.getElementAt(index).photo();
-                    File imageFile = new File(photoSrc);
-                    ImageIcon profilePhoto=null;
-                    try {
-                        profilePhoto = ImageUtils.getResizedPhoto(imageFile, 100, 100);
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-                    JLabel label = new JLabel(profilePhoto);
+                public void mousePressed(MouseEvent e) {
+                    if(SwingUtilities.isRightMouseButton(e)) {
+                        JDialog dialog = new JDialog();
+                        dialog.setUndecorated(true);
+                        int index = contactsList.getSelectedIndex();
+                        String photoSrc = contactsModel.getElementAt(index).photo();
+                        if(!photoSrc.isEmpty()){
+                            File imageFile = new File(photoSrc);
+                            ImageIcon profilePhoto = null;
+                            try {
+                                profilePhoto = ImageUtils.getResizedPhoto(imageFile, 100, 100);
+                            } catch (IOException e1) {
+                                e1.printStackTrace();
+                            }
+                            JLabel label = new JLabel(profilePhoto);
 
-                    dialog.add(label);
-                    dialog.pack();
-                    dialog.setVisible(true);
+                            dialog.add(label);
+                            dialog.pack();
+                            dialog.setLocationRelativeTo(contactsPane);
+                            dialog.setVisible(true);
+                        }
+                    }
                 }
             };
+
+            MouseListener contactSelectedListener = new MouseAdapter() {
+                public void mouseClicked(MouseEvent e) {
+                    updateEventModel();
+                }
+            };
+            contactsList.addMouseListener(contactSelectedListener);
             contactsList.addMouseListener(mouseListener);
 
             contactsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -143,7 +161,7 @@ public class ContactPanel extends JPanel implements ActionListener {
             contactsPane.add(contactsButtonPane, BorderLayout.PAGE_END);
 
             eventsModel = new DefaultListModel();
-            Iterable<Event> events= new ArrayList<>();
+            events= new ArrayList<>();
             eventsList = new JList(eventsModel);
 
             eventsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -170,7 +188,17 @@ public class ContactPanel extends JPanel implements ActionListener {
             agendaPane.add(eventsPane, BorderLayout.CENTER);
             agendaPane.add(agendaButtonPane, BorderLayout.PAGE_END);
         }
-        
+
+    private void updateEventModel(){
+        int index=contactsList.getSelectedIndex();
+        Contact c;
+        c = contactsModel.getElementAt(index);
+        eventsModel.clear();
+        for(Event ev: c.agenda().events()){
+            eventsModel.addElement(ev);
+        }
+    }
+
     /**
      * Creates a new comment panel.
      *
@@ -208,7 +236,7 @@ public class ContactPanel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         int index=-1;
-        
+
         switch (e.getActionCommand()) {
             case ContactPanel.addAction:
                 {
@@ -245,7 +273,7 @@ public class ContactPanel extends JPanel implements ActionListener {
                     Contact c;
                     //c = (Contact)(contactsList.getModel().getElementAt(index));
                     c = contactsModel.getElementAt(index);
-                    
+
                     ContactDialog.showDialog(this, contactsEditButton, this.controller,
                                         ContactDialog.ContactDialogMode.EDIT, "Edit Contact", c);
                     if (ContactDialog.successResult()) {
@@ -258,7 +286,7 @@ public class ContactPanel extends JPanel implements ActionListener {
                         // Update the model of the JList
                         contactsModel.set(index, updatedContact);
                     }
-                        
+
                 }
                 break;
 
@@ -278,7 +306,44 @@ public class ContactPanel extends JPanel implements ActionListener {
                     JOptionPane.showMessageDialog(null,CleanSheets.getString("status_please_choose_contact"));
                 }
                 break;
+            case ContactPanel.editEventAction:
+                int indexContact = contactsList.getSelectedIndex();
+                index=eventsList.getSelectedIndex();
+                Contact c = contactsModel.elementAt(indexContact);
+                if (index!=-1) {
+                    new EditEventDialog(eventController,c,index);
 
+                    if (ContactDialog.successResult()) {
+                        updateEventModel();
+                        eventsList.updateUI();
+                    }
+                }else{
+                    JOptionPane.showMessageDialog(null,CleanSheets.getString("status_please_choose_event"));
+                }
+                break;
+            case ContactPanel.removeEventAction:
+                indexContact = contactsList.getSelectedIndex();
+                index=eventsList.getSelectedIndex();
+                c = contactsModel.elementAt(indexContact);
+                if (index!=-1) {
+                    int op = JOptionPane.showConfirmDialog(getRootPane(),"Are you sure you want to remove this event?","Confirm Event Removal",JOptionPane.WARNING_MESSAGE);
+                    if(op== JOptionPane.YES_OPTION){
+                        try {
+                            eventController.removeEvent(c,index);
+                        } catch (DataConcurrencyException e1) {
+                            e1.printStackTrace();
+                        } catch (DataIntegrityViolationException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                    if (ContactDialog.successResult()) {
+                        updateEventModel();
+                        eventsList.updateUI();
+                    }
+                }else{
+                    JOptionPane.showMessageDialog(null,CleanSheets.getString("status_please_choose_event"));
+                }
+                break;
         }
     }
 }

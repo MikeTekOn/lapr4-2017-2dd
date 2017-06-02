@@ -28,7 +28,7 @@ public class AddCommentsWithUserController{
      * Creates a new comments controller.
      *
      * @param uiController the user interface controller
-     * @param uiPanel the user interface panel
+     * 
      */
     public AddCommentsWithUserController(UIController uiController) {
         this.uiController = uiController;

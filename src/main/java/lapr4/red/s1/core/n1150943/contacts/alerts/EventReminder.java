@@ -1,8 +1,6 @@
 package lapr4.red.s1.core.n1150943.contacts.alerts;
 
-import javax.swing.*;
 import java.awt.*;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
@@ -36,7 +34,6 @@ public class EventReminder {
             public void run() {
                 toolkit.beep();
                 ShowAlertAction.showAlert(eventDescription, date);
-                System.exit(0); //Stops the thread
             }
         }
 
