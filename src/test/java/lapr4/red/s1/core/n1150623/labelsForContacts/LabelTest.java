@@ -15,7 +15,6 @@ import java.util.Set;
  */
 public class LabelTest {
 
-
     public Label label;
 
     private String name;
@@ -23,7 +22,6 @@ public class LabelTest {
     private Set<String> phoneNumbers;
     private Set<String> emails;
     private Set<String> addresses;
-
 
     public LabelTest() {
     }
@@ -38,6 +36,7 @@ public class LabelTest {
 
     @Before
     public void setUp() {
+
         label = new Label();
 
         phoneNumbers = new HashSet();
@@ -54,7 +53,6 @@ public class LabelTest {
     @After
     public void tearDown() {
     }
-
 
 
     @Test(expected = IllegalArgumentException.class)
