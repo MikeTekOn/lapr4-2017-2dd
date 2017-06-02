@@ -9,12 +9,12 @@ import org.junit.Test;
 /**
  * Created by guima on 02/06/2017.
  */
-public class Label {
+public class LabelTest {
 
 
-    public Label label;
+    public LabelTest label;
 
-    public Label() {
+    public LabelTest() {
     }
 
     @BeforeClass
@@ -29,7 +29,7 @@ public class Label {
 
     @Before
     public void setUp() {
-        label = new Label();
+        label = new LabelTest();
     }
 
     @After
@@ -38,13 +38,13 @@ public class Label {
 
     @Test(expected = IllegalArgumentException.class)
     public void fillLabel(){
-        label.
+        //label.
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void ensureCommentAddedCantBeWithSpacesOnly(){
-        commentable.addUsersComment("   ", new User());
+        //commentable.addUsersComment("   ", new User());
     }
 }
 
-}
+
