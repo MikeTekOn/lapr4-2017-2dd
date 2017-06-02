@@ -1,6 +1,5 @@
 package lapr4.red.s1.core.n1150623.labelsForContacts;
 
-import java.lang.IllegalArgumentException;
 import lapr4.red.s1.core.n1150623.labelsForContacts.domain.Label;
 import lapr4.white.s1.core.n4567890.contacts.domain.Event;
 import org.junit.After;
@@ -12,7 +11,7 @@ import org.junit.Test;
 import java.util.*;
 
 /**
- * Created by guima on 02/06/2017.
+ * Created by Guilherme Ferreira 1150623 on 02/06/2017.
  */
 public class LabelTest {
 
