@@ -55,14 +55,15 @@ public class CommUDPEchoRequest {
      */
     @Before
     public void setUp() {
-        portNumber = 16000;
+        portNumber = 15360;
         waitingTime = 1000;
         message = "Can you read me?";
         answer = "Yes.";
-        udpServer = CommUDPServer.getServer(portNumber);
-        udpServer.addHandler(EchoDTO.class, new EchoServerHandler());
+        udpServer = CommUDPServer.getServer();
+        udpServer.addHandler(EchoDTO.class, new EchoUDPServerHandler());
+        udpServer.startServer(portNumber);
         udpClient = new CommUDPClient(new EchoDTO(message,answer), portNumber, waitingTime);
-        udpClient.addHandler(EchoDTO.class, new EchoClientHandler());
+        udpClient.addHandler(EchoDTO.class, new EchoUDPClientHandler());
     }
 
     /**

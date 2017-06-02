@@ -2,7 +2,6 @@ package lapr4.green.s1.ipc.n1150532.comm;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.After;
@@ -55,11 +54,12 @@ public class CommTCPEchoRequest {
      */
     @Before
     public void setUp() {
-        portNumber = 17000;
-        tcpServer = CommTCPServer.getServer(portNumber);
-        tcpServer.addHandler(EchoDTO.class, new EchoServerHandler());
-        tcpClientsManager = new CommTCPClientsManager();
-        tcpClientsManager.addHandler(EchoDTO.class, new EchoClientHandler());
+        portNumber = 15350;
+        tcpServer = CommTCPServer.getServer();
+        tcpServer.startServer(portNumber);
+        tcpServer.addHandler(EchoDTO.class, new EchoTCPServerHandler());
+        tcpClientsManager = CommTCPClientsManager.getManager();
+        tcpClientsManager.addHandler(EchoDTO.class, new EchoTCPClientHandler());
         message = "Can you read me?";
         answer = "Yes.";
     }
@@ -70,6 +70,7 @@ public class CommTCPEchoRequest {
     @After
     public void cleanUp() {
         tcpServer.terminateExecution();
+        tcpClientsManager.terminateExecution();
     }
 
     /**
@@ -78,8 +79,7 @@ public class CommTCPEchoRequest {
     @Test
     public void testEcho() {
         try {
-            Socket clientSocket = new Socket(InetAddress.getLocalHost(), portNumber);
-            CommTCPClientWorker client = new CommTCPClientWorker(tcpClientsManager, clientSocket);
+            CommTCPClientWorker client = new CommTCPClientWorker(tcpClientsManager, InetAddress.getLocalHost(), portNumber);
             client.start();
 
             // Send the echo
@@ -95,7 +95,6 @@ public class CommTCPEchoRequest {
             assertTrue(answer.equals(dto.getAnswer()));
 
             // Check the DTO received at Client side
-            dto = null;
             dto = (EchoDTO) tcpClientsManager.getHandler(EchoDTO.class).getLastReceivedDTO();
             assertTrue(dto != null);
             assertTrue(answer.equals(dto.getMessage()));
