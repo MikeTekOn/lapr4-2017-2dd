@@ -37,7 +37,20 @@ activate Language
 Language -> Function : getParameters()
 deactivate Language
 activate Function
-Function -> FunctionParameter : getDescription()
+Function -> FunctionParameter : getParameters()
+deactivate Function
+CRTL --> UI :
+deactivate CRTL
+UI -> CRTL : getSyntax(String identifier)
+activate CRTL
+CRTL -> Language : getFunction(String identifier)
+
+activate Language
+Language -> Function : getParameters()
+deactivate Language
+activate Function
+activate Function
+Function -> FunctionParameter : getName()
 deactivate Function
 CRTL --> UI :
 deactivate CRTL
@@ -46,7 +59,7 @@ deactivate UI
 
 User -> UI : choose apply option
 activate UI
-UI -> CRTL : insertSyntaxFormulaBar()
+UI -> CRTL : insertSyntaxFormulaBar(String syntax)
 
 activate CRTL
 deactivate CRTL
