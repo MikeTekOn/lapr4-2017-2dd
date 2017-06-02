@@ -144,7 +144,7 @@ public class LabelTest {
         phoneNumbers .add(null);
         label.fillLabel(name, photo, addresses, emails, phoneNumbers);
     }
-/*
+
     @Test(expected = IllegalArgumentException.class)
     public void ensureEventsListCantBeNull(){
         events = null;
@@ -155,5 +155,5 @@ public class LabelTest {
     public void ensureEventsListCantHaveNullEvents(){
         events.add(null);
         label.addEvents(events);
-    }*/
+    }
 }
