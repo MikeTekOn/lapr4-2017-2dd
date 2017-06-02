@@ -8,7 +8,7 @@ package lapr4.blue.s1.lang.n1140822.beanshellwindow;
 import bsh.EvalError;
 import bsh.Interpreter;
 import csheets.ui.ctrl.UIController;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Objects;
@@ -27,25 +27,30 @@ public class BeanShellInstance {
      * Lines of code in the script.
      */
     private LinkedList<String> code;
-    
-    Map<String,Object> results;
+
+    private Map<String, Object> results;
 
     UIController controller;
-    public BeanShellInstance(LinkedList<String> code,UIController controller) {
+
+    public BeanShellInstance(LinkedList<String> code, UIController controller) {
         this.bshInterpreter = new Interpreter();
         this.code = code;
-        results = new HashMap<>();
+        results = new LinkedHashMap<>();
         this.controller = controller;
     }
 
     /**
      * Executes a set of instructions.
+     * If the instructions evaluation returns a value it puts it on a map. Note that non mathematical operations will execute as domain code but object will still be null.
      * @throws EvalError if instruction is not valid piece of code
      */
-    public Map<String,Object> executeScript() throws EvalError {
-        bshInterpreter.set("uiController",controller);
+    public Map<String, Object> executeScript() throws EvalError {
+        bshInterpreter.set("uiController", controller);
         for (String codeLine : code) {
-            results.put(codeLine,this.bshInterpreter.eval(codeLine));
+            Object evaluation = this.bshInterpreter.eval(codeLine);
+            if (evaluation != null) {
+                results.put(codeLine, evaluation);
+            }
         }
         return results;
     }

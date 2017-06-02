@@ -5,6 +5,7 @@
  */
 package lapr4.red.s1.core.n1150690.comments;
 
+import lapr4.red.s1.core.n1150690.comments.domain.CommentableCellWithMultipleUsers;
 import csheets.core.Cell;
 import csheets.core.Spreadsheet;
 import csheets.core.Workbook;

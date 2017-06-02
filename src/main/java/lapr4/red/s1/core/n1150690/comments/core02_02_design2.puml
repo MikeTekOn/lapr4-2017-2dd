@@ -1,12 +1,9 @@
 @startuml core02_01_design3.png
-    participant "uic: UIController" as uic
     participant "uiExtension : UIExtensionComments" as UIExt
-    participant "User" as u
-    participant "CommentableCellWithMultipleUsers" as cell
-    participant "CommentPanel : JPanel" as cp
+    participant "CommentsWithUserUI : JPanel" as cp
     participant "AddCommentWithUserController" as ctrl
-    participant "commentField: JTextArea" as commentField
-    participant "applyAction: ApplyAction" as applyAction
+    participant "CommentableCellWithMultipleUsers" as cell
+    participant "User" as u
     
     create cp
     UIExt -> cp :  create(uic) 
@@ -14,60 +11,23 @@
     create ctrl
     cp -> ctrl : create(uic, cp)
 
-    note right #aqua
-        This is a refactor of 
-        the diagram of the 
-        previous use case (Core02.1)
-    end note
-
-    
-
-    cp -> uic : addSelectionListener(this)
-    
-    create commentField
-    cp -> commentField: new()
-
-    create applyAction
-    cp -> applyAction : new()
-
-    note right of applyAction
-        ApplyAction is a innerclass 
-        of CommentPanel.
-        As such, it can access the 
-        members of CommentPanel,
-        for instance, the
-        current cell.
-    end note
-
-    cp -> commentField : addFocusListener(applyAction)
 
     == meanwhile a cell is selected...the user enters text in "commentField" and the textbox loses the focus ==
 
     alt user changes a comment
-        commentField -> applyAction : focusLost(FocusEvent e)
-        activate applyAction
-        applyAction -> commentField : newComment=getText()
-        applyAction -> ctrl : changeComment(cell, oldComment, newComment)
-        deactivate applyAction
+        cp -> ctrl : commentsAuthor = changeComment(cell, oldComment, newComment)
 
         activate ctrl
         create u
         ctrl -> u : create()
-        ctrl -> cell : changeUserComment(oldComment, newComment, user)
-        ctrl -> uic : setWorkbookModified(...)
+        ctrl -> cell : commentsAuthor = changeUserComment(oldComment, newComment, user)
         deactivate ctrl
     else user adds a comment
-        commentField -> applyAction : focusLost(FocusEvent e)
-        activate applyAction
-        applyAction -> commentField : comment=getText()
-        applyAction -> ctrl : addComment(cell, comment)
-        deactivate applyAction
+        cp -> ctrl : commentsAuthor = addComment(cell, comment)
         activate ctrl
         create u
         ctrl -> u : create()
-        ctrl -> cell : addUserComment(comment, user)
-        
-        ctrl -> uic : setWorkbookModified(...)
+        ctrl -> cell : commentsAuthor = addUserComment(comment, user)
         deactivate ctrl
     end
 @enduml
