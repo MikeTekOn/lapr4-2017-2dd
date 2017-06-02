@@ -15,24 +15,34 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Map;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.TitledBorder;
 import javax.swing.plaf.basic.BasicArrowButton;
+import javax.swing.table.DefaultTableModel;
 import lapr4.red.s1.core.n1150690.comments.CommentableCellWithMultipleUsers;
 import lapr4.red.s1.core.n1150690.comments.application.AddCommentsWithUserController;
 import lapr4.red.s1.core.n1150690.comments.domain.User;
+import lapr4.white.s1.core.n1234567.comments.CommentableCell;
 import lapr4.white.s1.core.n1234567.comments.CommentableCellListener;
 import lapr4.white.s1.core.n1234567.comments.CommentsExtension;
 import lapr4.white.s1.core.n1234567.comments.ui.CommentPanel;
@@ -57,7 +67,10 @@ public class CommentsWithUserPanel extends JPanel implements SelectionListener,
     /**
      * Panel with gridbaglayout.
      */
-    private JPanel panelComments = new JPanel();
+    //private JPanel panelComments = new JPanel();
+    private JList panelComments;
+
+    private DefaultListModel model;
 
     /**
      * The commentable cell currently being displayed in the panel
@@ -91,79 +104,105 @@ public class CommentsWithUserPanel extends JPanel implements SelectionListener,
         border.setTitleJustification(TitledBorder.CENTER);
         panel.setBorder(border);
 
-        // Adds panels
+        /*// Adds panels
         JPanel northPanel = new JPanel(new BorderLayout());
         northPanel.add(panel, BorderLayout.NORTH);
-        add(northPanel, BorderLayout.NORTH);
+        add(northPanel, BorderLayout.NORTH);*/
     }
 
     private void initComponents() {
         panel.setLayout(new GridBagLayout());
 
         GridBagConstraints grid = new GridBagConstraints();
-        grid.gridy = 0;
-        grid.anchor = GridBagConstraints.EAST;
+        grid.gridy = grid.gridx = 0;
 
-        panelComments.setLayout(new GridBagLayout());
-        panel.add(panelComments, grid);
-        
-        
-        JPanel panelInsertComment = new JPanel();
-        panelInsertComment.setLayout(new GridBagLayout());
-        GridBagConstraints grid1 = new GridBagConstraints();
-        grid1.gridy = grid1.gridx = 0;
-        commentField();
-        panelInsertComment.add(commentField, grid1); 
-        grid1.gridx = 1;
-        panelInsertComment.add(buttonNewComment(), grid1);
-        
-        panel.add(panelInsertComment);
+        //creates the panel with the comments list
+        panel.add(commentsList(), grid);
+
+        grid.gridy = 3;
+        panel.add(commentField(), grid);
+        grid.gridy = 4;
+        panel.add(buttonNewComment(), grid);
         super.add(panel);
     }
 
-    private void commentField() {
-        commentField = new JTextField();
-        commentField.setPreferredSize(new Dimension(100, 20));
+    /**
+     *
+     * @return
+     */
+    private JScrollPane commentsList() {
+        model = new DefaultListModel();
+        panelComments = new JList();
+        panelComments.setModel(model);
+        panelComments.setBackground(this.getBackground());
+        panelComments.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        panelComments.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "User: Comment"));
+        panelComments.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                //TODO
+            }
+        });
+        return new JScrollPane(panelComments);
     }
 
+    /**
+     *
+     * @return
+     */
+    private JTextField commentField() {
+        commentField = new JTextField();
+        commentField.setPreferredSize(new Dimension(100, 20));
+        return commentField;
+    }
+
+    /**
+     *
+     * @return
+     */
     private JButton buttonNewComment() {
-        JButton b = new BasicArrowButton(BasicArrowButton.EAST);
-        b.addActionListener((ActionEvent e) -> {
-            controller.addComment(cell, commentField.getText());
-            updatesCommentsField();
-            commentField.setText("");
-        });
+        JButton b = new JButton("Add");
+        b.addActionListener((new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                controller.addComment(cell, commentField.getText());
+                model.addElement(commentField.getText());
+                commentField.setText("");
+            }
+        }));
+        return b;
+    }
+
+    private JButton buttonChangeComment() {
+        JButton b = new JButton("Change");
+        b.addActionListener((new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                //TODO
+            }
+        }));
         return b;
     }
 
     @Override
     public void selectionChanged(SelectionEvent event) {
-       this.cell = new CommentableCellWithMultipleUsers(event.getCell());
+        this.cell = new CommentableCellWithMultipleUsers(event.getCell());
 
+        if (cell.getExtension(CommentsExtension.NAME) == null) {
+            return;
+        }
+
+        if (cell != null) {
+            cell.addCommentableCellListener((CommentableCellListener) this);
+            commentChanged(cell);
+        }
+        // Stops listening to previous active cell
+        if (event.getPreviousCell() != null) {
+            ((CommentableCellWithMultipleUsers) event.getPreviousCell().getExtension(CommentsExtension.NAME)).removeCommentableCellListener((CommentableCellListener) this);
+        }
     }
 
     @Override
     public void commentChanged(CommentableCellWithMultipleUsers cell) {
         this.cell = cell;
-
-    }
-    
-    public void updatesCommentsField(){
-        panelComments.removeAll();
-        GridBagConstraints grid = new GridBagConstraints();
-        Map<User, List<String>> comments = controller.comments(cell);
-        for(Map.Entry<User, List<String>> entry : comments.entrySet()){
-            for(String c : entry.getValue()){
-                grid.gridy ++;
-                grid.gridx = 0;
-                JLabel l = new JLabel(entry.getKey().name() + ":");
-                panelComments.add(l, grid);
-                JTextField f = new JTextField(c);
-                grid.gridx = 1;
-                panelComments.add(f, grid);
-            }
-            
-        }
     }
 
 }
