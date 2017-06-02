@@ -50,7 +50,7 @@ public class BeanShellInstanceTest {
          UIController controller = new UIController(new CleanSheets());
         LinkedList<String> list = new LinkedList<>();
         list.add("print(\"test\")asd;");
-        BeanShellInstance instance = new BeanShellInstance(list,controller);
+        BeanShellInstance instance = new BeanShellInstance(list,list,controller);
         instance.executeScript();
     }
     
@@ -59,7 +59,7 @@ public class BeanShellInstanceTest {
          UIController controller = new UIController(new CleanSheets());
         LinkedList<String> list = new LinkedList<>();
         list.add("print(\"test\");");
-        BeanShellInstance instance = new BeanShellInstance(list,controller);
+        BeanShellInstance instance = new BeanShellInstance(list,list,controller);
         instance.executeScript();
         //if no exception then its sucessfull
     }

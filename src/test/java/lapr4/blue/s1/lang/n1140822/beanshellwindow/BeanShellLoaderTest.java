@@ -67,7 +67,7 @@ public class BeanShellLoaderTest {
         BeanShellLoader instance = new BeanShellLoader();
         LinkedList<String> list = new LinkedList<>();
         list.add("print(\"test\");");
-        BeanShellInstance expResult = new BeanShellInstance(list, controller);
+        BeanShellInstance expResult = new BeanShellInstance(list,list, controller);
         BeanShellInstance result = instance.create(folder.getRoot().getAbsolutePath()+"/"+scriptName, controller);
 
         assertEquals(expResult, result);
@@ -93,7 +93,7 @@ public class BeanShellLoaderTest {
         BeanShellLoader instance = new BeanShellLoader();
         LinkedList<String> list = new LinkedList<>();
         list.add("print(\"test\");");
-        BeanShellInstance expResult = new BeanShellInstance(list, controller);
+        BeanShellInstance expResult = new BeanShellInstance(list,list, controller);
         BeanShellInstance result = instance.create(folder.getRoot().getAbsolutePath()+"/"+scriptName, controller);
 
         assertEquals(expResult, result);

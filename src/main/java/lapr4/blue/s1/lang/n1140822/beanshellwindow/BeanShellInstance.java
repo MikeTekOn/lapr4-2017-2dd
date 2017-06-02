@@ -28,20 +28,31 @@ public class BeanShellInstance {
      */
     private LinkedList<String> code;
 
+    /**
+     * Macros in the script.
+     */
+    private LinkedList<String> macro;
+    /**
+     * Map with the results.
+     */
     private Map<String, Object> results;
 
     UIController controller;
 
-    public BeanShellInstance(LinkedList<String> code, UIController controller) {
+    public BeanShellInstance(LinkedList<String> code, LinkedList<String> macro, UIController controller) {
         this.bshInterpreter = new Interpreter();
         this.code = code;
+        this.macro = macro;
         results = new LinkedHashMap<>();
+
         this.controller = controller;
     }
 
     /**
-     * Executes a set of instructions.
-     * If the instructions evaluation returns a value it puts it on a map. Note that non mathematical operations will execute as domain code but object will still be null.
+     * Executes a set of instructions. If the instructions evaluation returns a
+     * value it puts it on a map. Note that non mathematical operations will
+     * execute as domain code but object will still be null.
+     *
      * @throws EvalError if instruction is not valid piece of code
      */
     public Map<String, Object> executeScript() throws EvalError {
@@ -51,6 +62,9 @@ public class BeanShellInstance {
             if (evaluation != null) {
                 results.put(codeLine, evaluation);
             }
+        }
+        for (String string : macro) {
+                //TODO: call ivo's controllers
         }
         return results;
     }
