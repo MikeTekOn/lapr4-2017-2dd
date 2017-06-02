@@ -94,7 +94,7 @@
  * Basically we will implement a pattern that will facilitate the implementation of new export options in the future, if needed - <i>Strategy</i> Pattern.
  * This a generalized way of implementing this pattern:
  *
- * <h4>Create and Persist Event [Core-10.1]</h3>
+ * <h3>Create and Persist Event [Core-10.1]</h3>
  * <p>
  * <img src="generic_strategy_implementation.png" alt="image">
  * <p>

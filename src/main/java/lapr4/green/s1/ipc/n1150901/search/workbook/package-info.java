@@ -55,7 +55,7 @@
  * <h2>4. Open Questions</h2>
  * <ol>
  * <li>Where should it be located the button of this functionally?</li>
- * <li>How many values of cells of each worksheet must be shown? (Columns &
+ * <li>How many values of cells of each worksheet must be shown? (Columns &amp;
  * Rows)</li>
  * <li>Is it possible to exist two workbooks with the same name? If so, should
  * the user be warned or both workbooks be opened?</li>
@@ -72,7 +72,7 @@
  * 3. It is not possible to have two workbooks with the same name.<p>
  * 4. If the workbook has no spreadsheets the user should be warned.<p>
  * 5. If the spreadsheet has no content the user should be warned.<p>
- * </ul>
+ *
  *
  * <h2>7. Tests</h2>
  *

@@ -5,7 +5,7 @@ import lapr4.white.s1.core.n4567890.contacts.domain.Agenda;
 /**
  * Created by guima on 01/06/2017.
  *
- * Has contact information -> for now, exists only to export it's information to pdf
+ * Has contact information -&gt; for now, exists only to export it's information to pdf
  */
 public class Label {
 
