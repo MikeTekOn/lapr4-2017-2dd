@@ -201,6 +201,7 @@ public class CommentsWithUserUI extends JPanel implements SelectionListener {
 
     @Override
     public void selectionChanged(SelectionEvent event) {
+        if(event.getCell()==null) return;
         this.cell = new CommentableCellWithMultipleUsers(event.getCell());
         CommentPanel panel = new CommentPanel(uiController);
         panel.selectionChanged(event);
