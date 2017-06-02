@@ -1,0 +1,23 @@
+@startuml
+class UIExtensionSearch{
+    showInfo()
+}
+class UIController{
+    getActiveWorkbook()
+}
+class WorkbookSearchCtrl{
+    checkIfRegexMatches()
+}
+class Cell{
+    getContent()
+}
+class Utilities {
+    checkIfMatches()
+    isRegexValid()
+}
+
+UIExtensionSearch ..> UIController
+UIExtensionSearch ..> WorkbookSearchCtrl
+WorkbookSearchCtrl ..> Cell
+WorkbookSearchCtrl ..> Utilities
+@enduml
