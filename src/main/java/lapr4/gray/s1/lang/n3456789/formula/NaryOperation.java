@@ -12,22 +12,26 @@ import csheets.core.formula.Operation;
 import csheets.core.formula.util.ExpressionVisitor;
 
 /**
- *
  * @author alexandrebraganca
  */
 
 public class NaryOperation extends Operation<NaryOperator> {
-    
-    /** operands */
+
+    /**
+     * operands
+     */
     private Expression[] operands;
-    
-    //private NaryOperator operator;
-        
+
+    /**
+     * Constructs a n-ary operation
+     *
+     * @param operator the operator
+     * @param operands the operands
+     */
     public NaryOperation(NaryOperator operator, Expression[] operands) {
         super(operator);
-        
-        this.operands=operands;
-        //this.operator=operator;
+
+        this.operands = operands;
     }
 
     @Override
@@ -38,11 +42,14 @@ public class NaryOperation extends Operation<NaryOperator> {
     @Override
     public Object accept(ExpressionVisitor visitor) {
         return visitor.visitNaryOperation(this);
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
- 
+
+    /**
+     * Obtain the n-ary operation operands
+     *
+     * @return n-ary operation operands
+     */
     public Expression[] getOperands() {
         return this.operands;
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

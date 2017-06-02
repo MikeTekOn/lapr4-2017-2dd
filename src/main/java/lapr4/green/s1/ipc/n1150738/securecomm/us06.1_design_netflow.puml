@@ -1,0 +1,23 @@
+@startuml us06.1_design_netflow.png
+
+title TCP Handshake - Simple Description
+hide footbox
+
+participant Client
+participant Server
+
+Client -> Server: connect [unsecure transmission context]
+Client -> Server: UseDataTransmissionContextRequestDTO
+note right
+ Server checks if has the requested
+ DataTransmissionContext and sends
+ a response and applys it.
+end note
+Server --> Client: UseDataTransmissionContextResponseDTO
+Server --> Server: set DataTransmissionContext accordingly
+Client --> Client: set DataTransmissionContext accordingly
+... ...
+Client -> Server: requests
+Server --> Client: responses
+
+@enduml

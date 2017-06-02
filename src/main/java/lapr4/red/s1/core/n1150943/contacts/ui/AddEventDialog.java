@@ -43,53 +43,26 @@ public class AddEventDialog extends JDialog {
         this.pack();
         this.setVisible(true);
 
-        buttonOK.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onOK();
-            }
-        });
-
-        buttonCancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        });
-
-        // call onCancel() when cross is clicked
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                onCancel();
-            }
-        });
-
-        // call onCancel() on ESCAPE
-        contentPane.registerKeyboardAction(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-
-        System.exit(0);
     }
 
     private void onOK() {
         if(pickedDueDate!=null){
-            String descr = textFieldDescription.getText();
-            try {
-                controller.addEvent(selectedContact, descr, pickedDueDate);
-            } catch (DataConcurrencyException e) {
-                e.printStackTrace();
-            } catch (DataIntegrityViolationException e) {
-                e.printStackTrace();
+            if(!textFieldDescription.getText().isEmpty()){
+                String descr = textFieldDescription.getText();
+                try {
+                    controller.addEvent(selectedContact, descr, pickedDueDate);
+                } catch (IllegalStateException e) {
+                    JOptionPane.showMessageDialog(null,"The date you picked is in the past");
+                } catch (DataConcurrencyException e) {
+                    e.printStackTrace();
+                } catch (DataIntegrityViolationException e) {
+                    e.printStackTrace();
+                }
+                dispose();
             }
-            dispose();
         }
     }
 
-    private void onCancel() {
-        dispose();
-    }
 
 
     private void initComponents() {
@@ -100,10 +73,23 @@ public class AddEventDialog extends JDialog {
         JLabel labelDescr = new JLabel();
         JLabel labelDate = new JLabel();
         buttonSelectDate = new JButton();
-        buttonSelectDate.addActionListener(ae -> pickedDueDate = new DatePicker(contentPane).getPickedDate());
+        buttonSelectDate.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                pickedDueDate = new DatePicker(contentPane).getPickedDate();
+            }
+        });
         buttonOK = new JButton();
+        buttonOK.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                onOK();
+            }
+        });
         buttonCancel = new JButton();
-        buttonSelectDate = new JButton();
+        buttonCancel.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
+        });
         textFieldDescription = new JTextField(50);
 
         buttonOK.setText("OK");
@@ -125,5 +111,6 @@ public class AddEventDialog extends JDialog {
         contentPane.add(panelDescription,BorderLayout.PAGE_START);
         contentPane.add(panelDate,BorderLayout.CENTER);
         contentPane.add(panelButtons,BorderLayout.PAGE_END);
+        setLocationRelativeTo(this.getParent());
     }
 }

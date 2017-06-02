@@ -124,13 +124,16 @@
  * <p>
  * <h2>4. Tests</h2>
  * <p>
- * <b>Note: </b>Formulas can be tested interactively using <b>{@link csheets.core.formula.compiler.Console}</b><p>
+ * <b>Note: </b>New formulas can be tested interactively using <b>{@link lapr4.blue.s1.lang.n1151452.formula.ConsoleV2}</b>,
+ * we update the core {@link csheets.core.formula.compiler.Console} class to parse our new features.<p>
  * <p>
  * <h3>4.1. Unit Tests</h3>
  * <p><ol>
+ * <li>ensureAssignmentsLeftOperandIsACellRef
+ * <li>ensureExpressionIsAssignedToCell
+ * <li>ensureBlockIsNotMalformed
  * <li>ensureBlockReturnsLastStatementResult
  * <li>ensureBlockExecutesAllStatements
- * <li>ensureExpressionIsAssignedToCell
  * <li>ensureForLoopsStatementExecutions
  * <li>ensureForLoopStopsWhenBoundaryConditionIsFalse
  * </ol><p>
@@ -214,6 +217,41 @@
  * <p><ol>
  * <li>Clarify requirments with product owner and update analysis.
  * <li>Elaborate tests.
+ * </ol><p>
+ * Blocking:
+ * <p>
+ * -nothing-
+ * <p>
+ * <p>
+ * <b>Thursday [01/06/2017]</b><p>
+ * I worked on:<p>
+ * Yesterday
+ * <p><ol>
+ * <li>Clarify requirements with product owner and update analysis.
+ * <li>Elaborate tests.
+ * </ol><p>
+ * Today
+ * <p><ol>
+ * <li>Elaborate the design of the FI.
+ * <li>Help colleagues that maybe delayed.
+ * </ol><p>
+ * Blocking:
+ * <p>
+ * -nothing-
+ * <p>
+ * <p>
+ * <b>Friday [02/06/2017]</b><p>
+ * I worked on:<p>
+ * Yesterday
+ * <p><ol>
+ * <li>Elaborated the design of the FI.
+ * <li>Helped colleagues that maybe delayed.
+ * <li>Started refactoring partially implemented code (FormulaCompiler, new operators &amp; Language class).
+ * </ol><p>
+ * Today
+ * <p><ol>
+ * <li>Implement the FI (TDD approach).
+ * <li>Help colleagues that maybe delayed.
  * </ol><p>
  * Blocking:
  * <p>
