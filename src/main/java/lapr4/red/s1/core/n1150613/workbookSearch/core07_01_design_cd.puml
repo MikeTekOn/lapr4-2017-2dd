@@ -13,6 +13,7 @@ class Cell{
 }
 class Utilities {
     checkIfMatches()
+    isRegexValid()
 }
 
 UIExtensionSearch ..> UIController
