@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr4.red.s1.core.n1150690.comments;
+package lapr4.red.s1.core.n1150690.comments.domain;
 
 import csheets.core.Cell;
 import eapli.util.Strings;
@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import lapr4.red.s1.core.n1150690.comments.domain.User;
 import lapr4.white.s1.core.n1234567.comments.CommentableCell;
 
 /**
@@ -27,6 +26,12 @@ public class CommentableCellWithMultipleUsers extends CommentableCell {
      */
     private Map<User, List<String>> comments;
 
+    /**
+     * Creates a comentable cell with the indentification of the user extension
+     * for the given cell.
+     *
+     * @param cell the cell to extend
+     */
     public CommentableCellWithMultipleUsers(Cell cell) {
         super(cell);
         comments = new HashMap<>();
@@ -63,15 +68,22 @@ public class CommentableCellWithMultipleUsers extends CommentableCell {
      * @param oldComment the old comment to be replaced
      * @param newComment the comment to replace
      */
-    public void changeUserComment(User oldAuthor, User newAuthor, String oldComment, String newComment) {
+    public void changeUserComment(String oldAuthor, User newAuthor, String oldComment, String newComment) {
         if (Strings.isNullOrEmpty(newComment) || Strings.isNullOrWhiteSpace(newComment)) {
             throw new IllegalArgumentException("The comment must contain something!");
         }
-        comments.get(oldAuthor).remove(oldComment);
-        comments.get(newAuthor).add(newComment);
+        for(Map.Entry<User, List<String>> entry : comments.entrySet()){
+            if(entry.getKey().name().equals(oldAuthor)) entry.getValue().remove(oldComment);
+            if(entry.getKey() == newAuthor) entry.getValue().add(newComment);
+        }
     }
-    
-    public Map<User, List<String>> comments(){
+
+    /**
+     * Returns the comments of this cell.
+     *
+     * @return the comments
+     */
+    public Map<User, List<String>> comments() {
         return this.comments;
     }
 
