@@ -44,6 +44,10 @@ import csheets.ext.ExtensionManager;
 import csheets.io.Codec;
 import csheets.io.CodecFactory;
 import csheets.io.NamedProperties;
+import eapli.framework.persistence.DataConcurrencyException;
+import eapli.framework.persistence.DataIntegrityViolationException;
+import lapr4.red.s1.core.n1150943.contacts.application.BootEventVerifier;
+
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -54,7 +58,9 @@ import java.util.ResourceBundle;
  * @author Einar Pehrson
  */
 public class CleanSheets {
-    
+
+	public static final String OWN_NAME = "ME";
+
         /** The filename for the localization resources */
     	private static final String DEFAULT_RESOURCE_FILENAME = "MessagesBundle";
     
@@ -123,6 +129,14 @@ public class CleanSheets {
 		// Loads user properties
 		File propsFile = new File(USER_PROPERTIES_FILENAME);
 		props = new NamedProperties(propsFile, defaultProps);
+		BootEventVerifier bev = new BootEventVerifier();
+		try {
+			bev.verify(props);
+		} catch (DataConcurrencyException e) {
+			e.printStackTrace();
+		} catch (DataIntegrityViolationException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -147,6 +161,7 @@ public class CleanSheets {
 		/* try {
 			javax.swing.UIManager.setLookAndFeel("className");
 		} catch (Exception e) {} */
+
 
 		// Creates user interface
 		new csheets.ui.Frame.Creator(app).createAndWait();

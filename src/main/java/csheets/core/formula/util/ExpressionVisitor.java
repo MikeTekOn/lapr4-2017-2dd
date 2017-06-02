@@ -20,58 +20,70 @@
  */
 package csheets.core.formula.util;
 
-import csheets.core.formula.BinaryOperation;
-import csheets.core.formula.FunctionCall;
-import csheets.core.formula.Literal;
-import csheets.core.formula.Reference;
-import csheets.core.formula.UnaryOperation;
+import csheets.core.formula.*;
+import lapr4.blue.s1.lang.n1151159.macros.Macro;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperation;
 
 /**
  * An interface for using the Visitor pattern for traversing expressions.
+ *
  * @author Einar Pehrson
  */
 public interface ExpressionVisitor {
 
-	/**
-	 * Visits the given literal.
-	 * @param literal the literal to visit
-	 * @return an arbitrary object
-	 */
-	public Object visitLiteral(Literal literal);
+    /**
+     * Visits the given literal.
+     *
+     * @param literal the literal to visit
+     * @return an arbitrary object
+     */
+    public Object visitLiteral(Literal literal);
 
-	/**
-	 * Visits the given unary expression.
-	 * @param operation the operation to visit
-	 * @return an arbitrary object
-	 */
-	public Object visitUnaryOperation(UnaryOperation operation);
+    /**
+     * Visits the given unary expression.
+     *
+     * @param operation the operation to visit
+     * @return an arbitrary object
+     */
+    public Object visitUnaryOperation(UnaryOperation operation);
 
-	/**
-	 * Visits the given binary expression.
-	 * @param operation the operation to visit
-	 * @return an arbitrary object
-	 */
-	public Object visitBinaryOperation(BinaryOperation operation);
-        
-      	/**
-	 * Visits the given n-ary expression.
-	 * @param operation the operation to visit
-	 * @return an arbitrary object
-	 */
-	public Object visitNaryOperation(NaryOperation operation);
+    /**
+     * Visits the given binary expression.
+     *
+     * @param operation the operation to visit
+     * @return an arbitrary object
+     */
+    public Object visitBinaryOperation(BinaryOperation operation);
 
-	/**
-	 * Visits the given cell reference.
-	 * @param reference the reference to visit
-	 * @return an arbitrary object
-	 */
-	public Object visitReference(Reference reference);
+    /**
+     * Visits the given n-ary expression.
+     *
+     * @param operation the operation to visit
+     * @return an arbitrary object
+     */
+    public Object visitNaryOperation(NaryOperation operation);
 
-	/**
-	 * Visits the given function call.
-	 * @param call the function call to visit
-	 * @return an arbitrary object
-	 */
-	public Object visitFunctionCall(FunctionCall call);
+    /**
+     * Visits the given cell reference.
+     *
+     * @param reference the reference to visit
+     * @return an arbitrary object
+     */
+    public Object visitReference(Reference reference);
+
+    /**
+     * Visits the given function call.
+     *
+     * @param call the function call to visit
+     * @return an arbitrary object
+     */
+    public Object visitFunctionCall(FunctionCall call);
+
+    /**
+     * Visits a given macro.
+     *
+     * @param macro macro to be visited
+     * @return an arbitrary object
+     */
+    public Object visitMacro(Macro macro);
 }

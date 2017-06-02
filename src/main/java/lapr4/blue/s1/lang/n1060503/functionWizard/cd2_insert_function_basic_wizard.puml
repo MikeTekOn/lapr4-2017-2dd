@@ -11,11 +11,12 @@ interface Function {
 class FunctionWizardAction{    
 }
 class FunctionWizardUI{
-    +insertSyntaxFormulaBar()
 }
 class FunctionWizardController {
     +getFunctions()
     +getDescription(String identifier)
+    +getSyntax(String identifier)
+    +insertSyntaxFormulaBar(String syntax)
 }
 class Language{
     +getFunctions()
@@ -25,12 +26,10 @@ class FunctionParameter{
     +getDescription()
 }
 FunctionWizardAction -> FunctionWizardUI 
-
 FunctionWizardUI --> FunctionWizardController 
+FunctionWizardController -> Language 
 
-FunctionWizardController --> Language 
-
-Language -> Function 
+Language --> Function 
 
 Function -> FunctionParameter
 @enduml

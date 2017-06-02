@@ -19,7 +19,7 @@ class ExportContext{
 }
 interface ExportStrategy{
     ExportStrategy s
-    export(List<Cell>)
+    export()
 }
 ExportPDFUI ..> ExportPDFController
 ExportPDFController ..> ExportPDF

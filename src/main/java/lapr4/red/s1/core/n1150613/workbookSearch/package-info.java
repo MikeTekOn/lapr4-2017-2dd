@@ -1,5 +1,5 @@
 /**
- * Technical documentation regarding the user story Core08.1: Basic PDF Export
+ * Technical documentation regarding the user story Core07.1: Workbook Search.
  *
  * <p>
  * <b>Scrum Master: -(yes/no)- no</b>
@@ -53,7 +53,7 @@
  * user can be represented by Patterns in Java. Using Matcher class we can find
  * Workbook contents through the expressions.
  *
- * <img src="core08_01_analysis_ssd.png" alt="image">
+ * <img src="core07_01_analysis_ssd.png" alt="image">
  *
  * <p>
  * <h2>4. Design</h2>
@@ -65,9 +65,15 @@
  * <p>
  *
  * <h3>4.2. UC Realization</h3>
+ * 
+ * <img src="core07_01_design_sd.png" alt="image">
+ * 
  * <p>
  *
  * <h3>4.3. Classes</h3>
+ * 
+ * <img src="core07_01_design_cd.png" alt="image">
+ * 
  * <p>
  *
  * <h3>4.4. Design Patterns and Best Practices</h3>
@@ -95,25 +101,25 @@
  * <p>
  * <b>Wednesday 31/05/2017</b>
  * <p>
- * Yesterday:
+ * Yesterday: Almost completed analysis process.
  * <p>
- * Today:
+ * Today: I will try to finish analysis and start design
  * <p>
  * Blocking:
  * <p>
  * <b>Thursday 1/06/2017 </b>
  * <p>
- * Yesterday:
+ * Yesterday: Finished analysis 
  * <p>
- * Today:
+ * Today: I started the design process
  * <p>
  * Blocking:
  * <p>
  * <b>Friday 2/06/2017</b>
  * <p>
- * Yesterday:
+ * Yesterday: Finished design process
  * <p>
- * Today:
+ * Today: Started unit tests and implementation
  * <p>
  * Blocking:
  * <p>

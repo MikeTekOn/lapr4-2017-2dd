@@ -1,0 +1,37 @@
+@startuml 
+
+    actor User 
+    participant "UIExtensionSearch" as UI
+    participant "UIController" as UIctrl
+    participant "WorkbookSearchCtrl" as ctrl
+    participant "Workbook" as WBOOK
+    participant "Spreadsheet" as sheet
+    participant "Cell" as cll
+    participant "RegexUtil" as util
+
+    User -> UI : begin
+    activate UI 
+    UI -> UIctrl : Workbook w : getActiveWorkbook()
+    User <-- UI : asks for regular expression
+    deactivate ctrl
+    deactivate UI
+    User -> UI : Inserts regular expression
+    activate UI
+    UI -> ctrl : checkIfRegexMatches(String regex)
+    activate ctrl
+    ctrl -> util : isRegexValid(regex)
+    loop for Spreadsheet s : listSpreadsheets
+    loop for Cells c : listCells
+    ctrl -> cll : getContent()
+    ctrl -> util : checkIfMatches(regex,String cellContent)
+    ctrl <-- util : return boolean
+    alt : if true
+    ctrl -> ctrl : searchResults.add()
+    end
+    end
+    end
+    UI <-- ctrl : return searchResults
+    UI -> UI : showInfo()
+    deactivate ctrl
+    
+@enduml

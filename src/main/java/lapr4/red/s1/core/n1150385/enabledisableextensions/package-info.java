@@ -15,7 +15,7 @@
  * It should exist a new window that allows to enable and disable extensions of Cleansheets. A disabled extension means that 'all' its functionalities are disabled.
  *
  * <p>
- * <b>Use Case "Enable/Disable Extension":</b> The user selects in the <b>Extensions->Enable/Disable Extensions</b> menu and a window appears that shows a table
+ * <b>Use Case "Enable/Disable Extension":</b> The user selects in the <b>Extensions-&gt;Enable/Disable Extensions</b> menu and a window appears that shows a table
  * with every extension available listed in one column, and in the other column, whether or not it is active. The user selects one or more extensions and clicks
  * the <b>activate</b> or the <b>deactivate</b> button. The selected extensions are then activated or deactivated, depending on which button was pressed. The user
  * may close the window or repeat the use-case.
@@ -68,7 +68,7 @@
  * By the previous analysis we know that <b>UIController</b> is one party that is interested in knowing whether or not an extension is enabled. Because this mechanism
  * is new, this class does not have any implementation of how to handle this. So the first thing to do is register this class as an <b>ExtensionStateListener</b> of
  * the <b>ExtensionManager</b>. This way, it will always be notified when the extension list changes.
- * <p/>
+ * <p>
  * Also, the <b>Frame</b> class also need to be notified of the extension list changes, however, this class gets it's extensions through the UIController, so it will
  * register itself as an <b>ExtensionStateListener</b> of the <b>UIController</b>. Since the <b>Frame</b> class controls what is shown to the user, whenever the
  * extension list changes, it has to redraw the entire window, loading the necessary components and the components provided by the new extensions list.

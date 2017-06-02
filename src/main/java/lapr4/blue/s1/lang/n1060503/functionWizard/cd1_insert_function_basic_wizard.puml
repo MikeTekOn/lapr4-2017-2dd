@@ -5,16 +5,12 @@ skinparam packageStyle rect
 skinparam defaultFontName FG Virgil
 skinparam shadowing false  
 
-  class FunctionWizardAction {
-   }
-  class FunctionWizardMenu
-  class ExtensionFunctionWizard {
-    -String NAME;
-  }
-  class UIExtensionFunctionWizard
-  class JMenuItem
-  ExtensionFunctionWizard -> UIExtensionFunctionWizard : getUIExtension(UIController)
-  UIExtensionFunctionWizard -> FunctionWizardMenu : getMenu()
-  FunctionWizardMenu -> JMenuItem : 'items'
-  JMenuItem o-> FunctionWizardAction : action
-  @enduml
+class FunctionWizardAction {
+}
+class FunctionWizard
+class FunctionWizardUI
+class Frame
+Frame o-> FunctionWizard : button
+FunctionWizard o-> FunctionWizardAction : action
+FunctionWizardAction -> FunctionWizardUI : create
+@enduml

@@ -15,18 +15,21 @@ public class User {
     /**
      * The name of the user.
      */
-    String usersName;
+    private String usersName;
 
+    /**
+     * Creates a user using the current name of the logged session.
+     */
     public User() {
         this.usersName = System.getProperty("user.name");
     }
-
+    
     /**
      * Returns the name of the user.
      *
      * @return the user's name
      */
     public String name() {
-        return this.name();
+        return this.usersName;
     }
 }

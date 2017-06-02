@@ -1,0 +1,29 @@
+@startuml lang03_01_design2.png
+    participant "uic: UIController" as uic
+    participant "uiExtension : ConditionalStyleUIExtension" as UIExt
+    participant "ConditionalStylePanel : JPanel" as crp
+    participant "ConditionalStyleController" as ctrl
+    participant "event: SelectionEvent" as event
+    participant "cell: Cell" as cell
+    participant "activeCell: ConditionStylableCell" as activeCell
+
+    create crp
+    UIExt -> crp :  new(uic) 
+    
+    create ctrl
+    crp -> ctrl : new(uic) 
+    crp -> uic : addSelectionListener(this)
+
+    note right of uic
+        The user selects a cell...
+    end note
+
+    uic -> crp : selectionChanged(SelectionEvent event)
+    crp -> event : cell=getCell()
+    crp -> cell : activeCell=getExtension(ConditionalStyleExtension.NAME)
+
+    crp -> ctrl : cellSelected(cell);
+    ctrl -> activeCell : txt = cell.getUserCondition()
+    ctrl -> crp : setConditionText(txt)
+
+@enduml

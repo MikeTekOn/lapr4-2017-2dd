@@ -5,6 +5,9 @@
  */
 package lapr4.white.s1.core.n4567890.contacts.domain;
 
+import eapli.util.DateTime;
+import org.jfree.date.DateUtilities;
+
 import javax.persistence.*;
 import java.util.Calendar;
 
@@ -20,7 +23,7 @@ public class Event {
     @GeneratedValue
     private Long pk;    
     
-    private String description;
+    private java.lang.String description;
     
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar dueDate;
@@ -29,8 +32,11 @@ public class Event {
         // for ORM
     }
 
+    //Validations made by João Cardoso - 1150943
     public Event(final String description, final Calendar dueDate) {
-        if(dueDate.compareTo(Calendar.getInstance())>0 | !description.isEmpty()){
+        Calendar currDate = Calendar.getInstance();
+        currDate.add(Calendar.HOUR,-1);
+        if(!dueDate.getTime().before(currDate.getTime()) && !description.isEmpty()){
             this.description = description;
             this.dueDate = dueDate;
         }else {
@@ -38,8 +44,38 @@ public class Event {
         }
     }
 
+    public Long id(){ return pk; }
 
     public String description() {
         return this.description;
+    }
+
+    public Calendar dueDate(){return dueDate;}
+
+    protected void update(String newDescription, Calendar newDueDate) {
+        if(dueDate.compareTo(Calendar.getInstance())>0 | !description.isEmpty()) {
+            this.description = newDescription;
+            this.dueDate = newDueDate;
+        }else {
+            throw new IllegalStateException();
+        }
+    }
+
+    /**
+     * Created by João Cardoso - 1150943
+     * @return
+     */
+    public boolean isToday() {
+        int year, month, day;
+        Calendar today = Calendar.getInstance();
+        year = today.get(Calendar.YEAR);
+        month = today.get(Calendar.MONTH);
+        day = today.get(Calendar.DAY_OF_MONTH);
+        return (dueDate.get(Calendar.YEAR)==year && dueDate.get(Calendar.MONTH)==month && dueDate.get(Calendar.DAY_OF_MONTH)==day);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Description: %s %n Due Date: %s",description,DateTime.format(dueDate));
     }
 }

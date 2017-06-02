@@ -7,14 +7,16 @@ package lapr4.white.s1.core.n4567890.contacts.ui;
 
 import csheets.CleanSheets;
 import csheets.ui.ctrl.UIController;
-import eapli.util.*;
-import lapr4.red.s1.core.n1150943.contacts.application.AddEventController;
+import eapli.framework.persistence.DataConcurrencyException;
+import eapli.framework.persistence.DataIntegrityViolationException;
+import lapr4.red.s1.core.n1150943.contacts.application.EventController;
 import lapr4.red.s1.core.n1150943.contacts.ui.AddEventDialog;
+import lapr4.red.s1.core.n1150943.contacts.ui.EditEventDialog;
 import lapr4.white.s1.core.n4567890.contacts.ContactsExtension;
 import lapr4.white.s1.core.n4567890.contacts.application.ContactController;
-import lapr4.white.s1.core.n4567890.contacts.domain.Contact;
+import lapr4.white.s1.core.n4567890.contacts.domain.*;
+import lapr4.white.s1.core.n4567890.contacts.domain.Event;
 import ui.ImageUtils;
-
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -22,116 +24,186 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
-
-
+import java.util.ArrayList;
 /**
  * A panel for adding or editing a comment for a cell
+ *
  * @author Alexandre Braganca
  */
 @SuppressWarnings("serial")
 public class ContactPanel extends JPanel implements ActionListener {
 
-        // Controller for Contacts
-	private ContactController controller=null;
+    // Controller for Contacts
+    private ContactController controller = null;
 
-	//Controller for Events
-    private AddEventController addEventController=null;
+    //Controller for Events
+    private EventController eventController = null;
 
-	/** The text field in which the comment of the cell is displayed.*/
-        private JTextArea commentField = new JTextArea();
+    Iterable<Event> events = null;
 
-        
-        // Controls for the contacts panel
-        private JLabel labelContacts=null;
-        private JTextField contactsFilterField=null;
-        private JList<Contact> contactsList=null;
-        private DefaultListModel<Contact> model=null;
-        private JButton contactsAddButton=null;
-        private JButton contactsRemoveButton=null;
-        private JButton contactsEditButton=null;
-        private JButton contactsaddEventButton=null;
+    /**
+     * The text field in which the comment of the cell is displayed.
+     */
+    private JTextArea commentField = new JTextArea();
 
-        private JPanel contactsPane= null;
-        private JPanel filterPane = null;
-        private JPanel buttonPane = null;
-        
-        // Action commands
-        private final static String addAction="add";
-        private final static String removeAction="remove";
-        private final static String editAction="edit";
-        private final static String addEventAction="add_event";
+    // Controls for the contacts panel
+    private JLabel labelContacts = null;
+    private JTextField contactsFilterField = null;
+    private JList<Contact> contactsList = null;
+    private JList<Contact> eventsList = null;
+    private DefaultListModel<Contact> contactsModel = null;
+    private DefaultListModel<Event> eventsModel = null;
+    private JButton contactsAddButton = null;
+    private JButton contactsRemoveButton = null;
+    private JButton contactsEditButton = null;
+    private JButton contactsAddEventButton = null;
+    private JButton contactsEditEventButton = null;
+    private JButton contactsRemoveEventButton = null;
+    private JButton contactsApplyFilterButton = null;
 
+    private JPanel contactsPane = null;
+    private JPanel agendaPane = null;
+    private JPanel filterPane = null;
+    private JPanel contactsButtonPane = null;
+    private JPanel eventsPane = null;
+    private JPanel agendaButtonPane = null;
 
+    // Action commands
+    private final static String addAction = "add";
+    private final static String removeAction = "remove";
+    private final static String editAction = "edit";
+    private final static String addEventAction = "add_event";
+    private final static String editEventAction = "edit_event";
+    private final static String removeEventAction = "remove_event";
+    private final static String applyFilterAction = "apply_filter";
+
+    /**
+     * Edited by João Cardoso - 1150943
+     */
     private void setupContactsWidgets() {
 
-            labelContacts=new JLabel("Filtro: ");
-            
-            // First Pane: The "filter", FlowLayout (from left to right)
-            filterPane = new JPanel(new FlowLayout(FlowLayout.LEADING));
-            contactsFilterField=new JTextField();
-            contactsFilterField.setColumns(10);
-            
-            filterPane.add(labelContacts);
-            filterPane.add(contactsFilterField); 
+        labelContacts = new JLabel("Filtro: ");
 
-            model = new DefaultListModel();
-            Iterable<Contact> contacts=controller.allContacts();
-            for(Contact c: contacts) {
-                model.addElement(c);
-            }
-            contactsList = new JList(model);
+        // First Pane: The "filter", FlowLayout (from left to right)
+        filterPane = new JPanel(new FlowLayout(FlowLayout.LEADING));
+        contactsFilterField = new JTextField();
+        contactsFilterField.setColumns(5);
 
-            MouseListener mouseListener = new MouseAdapter() {
-                public void mouseShiftPressed(MouseEvent e) {
+        contactsApplyFilterButton = new JButton();
+        contactsApplyFilterButton.setText("Apply");
+        contactsApplyFilterButton.setActionCommand(ContactPanel.applyFilterAction);
+        contactsApplyFilterButton.addActionListener(this);
+
+        filterPane.add(labelContacts);
+        filterPane.add(contactsFilterField);
+        filterPane.add(contactsApplyFilterButton);
+
+        contactsModel = new DefaultListModel();
+        Iterable<Contact> contacts = controller.allContacts();
+
+        for (Contact c : contacts) {
+            contactsModel.addElement(c);
+        }
+
+        contactsList = new JList(contactsModel);
+
+        MouseListener mouseListener = new MouseAdapter() {
+            public void mousePressed(MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e)) {
                     JDialog dialog = new JDialog();
                     dialog.setUndecorated(true);
                     int index = contactsList.getSelectedIndex();
-                    String photoSrc = model.getElementAt(index).photo();
-                    File imageFile = new File(photoSrc);
-                    ImageIcon profilePhoto=null;
-                    try {
-                        profilePhoto = ImageUtils.getResizedPhoto(imageFile, 100, 100);
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
+                    String photoSrc = contactsModel.getElementAt(index).photo();
+                    if (!photoSrc.isEmpty()) {
+                        File imageFile = new File(photoSrc);
+                        ImageIcon profilePhoto = null;
+                        try {
+                            profilePhoto = ImageUtils.getResizedPhoto(imageFile, 100, 100);
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+                        JLabel label = new JLabel(profilePhoto);
+
+                        dialog.add(label);
+                        dialog.pack();
+                        dialog.setLocationRelativeTo(contactsPane);
+                        dialog.setVisible(true);
                     }
-                    JLabel label = new JLabel(profilePhoto);
-
-                    dialog.add(label);
-                    dialog.pack();
-                    dialog.setVisible(true);
                 }
-            };
-            contactsList.addMouseListener(mouseListener);
+            }
+        };
 
-            contactsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            JScrollPane centerPane=new JScrollPane(contactsList);
+        MouseListener contactSelectedListener = new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                updateEventModel();
+            }
+        };
+        contactsList.addMouseListener(contactSelectedListener);
+        contactsList.addMouseListener(mouseListener);
 
-            // Last Pane: A row of buttons and the end
-            buttonPane = new JPanel(new FlowLayout(FlowLayout.LEADING));
-            contactsAddButton=new JButton("Add");
-            contactsAddButton.setActionCommand(ContactPanel.addAction);
-            contactsAddButton.addActionListener(this);
-            contactsRemoveButton=new JButton("Remove");
-            contactsRemoveButton.setActionCommand(ContactPanel.removeAction);
-            contactsRemoveButton.addActionListener(this);
-            contactsEditButton=new JButton("Edit");
-            contactsEditButton.setActionCommand(ContactPanel.editAction);
-            contactsEditButton.addActionListener(this);
-            contactsaddEventButton=new JButton("Add Event");
-            contactsaddEventButton.setActionCommand(ContactPanel.addEventAction);
-            contactsaddEventButton.addActionListener(this);
-            buttonPane.add(contactsAddButton);
-            buttonPane.add(contactsRemoveButton);
-            buttonPane.add(contactsEditButton);
-            buttonPane.add(contactsaddEventButton);
-            
-            // The parent Pane is of type BorderLayout so that the center list occupies all the "empty" canvas
-            contactsPane = new JPanel(new BorderLayout());
-            contactsPane.add(filterPane, BorderLayout.PAGE_START);
-            contactsPane.add(centerPane, BorderLayout.CENTER);
-            contactsPane.add(buttonPane, BorderLayout.PAGE_END);
+        contactsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane centerPane = new JScrollPane(contactsList);
+
+        // Last Pane: A row of buttons and the end
+        contactsButtonPane = new JPanel(new FlowLayout(FlowLayout.LEADING));
+        contactsAddButton = new JButton("Add");
+        contactsAddButton.setActionCommand(ContactPanel.addAction);
+        contactsAddButton.addActionListener(this);
+        contactsRemoveButton = new JButton("Remove");
+        contactsRemoveButton.setActionCommand(ContactPanel.removeAction);
+        contactsRemoveButton.addActionListener(this);
+        contactsEditButton = new JButton("Edit");
+        contactsEditButton.setActionCommand(ContactPanel.editAction);
+        contactsEditButton.addActionListener(this);
+
+        contactsButtonPane.add(contactsAddButton);
+        contactsButtonPane.add(contactsRemoveButton);
+        contactsButtonPane.add(contactsEditButton);
+
+        // The parent Pane is of type BorderLayout so that the center list occupies all the "empty" canvas
+        contactsPane = new JPanel(new BorderLayout());
+        contactsPane.add(filterPane, BorderLayout.PAGE_START);
+        contactsPane.add(centerPane, BorderLayout.CENTER);
+        contactsPane.add(contactsButtonPane, BorderLayout.PAGE_END);
+
+        eventsModel = new DefaultListModel();
+        events = new ArrayList<>();
+        eventsList = new JList(eventsModel);
+
+        eventsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane eventsPane = new JScrollPane(eventsList);
+
+        //Added by João Cardoso - 1150943
+        agendaButtonPane = new JPanel(new FlowLayout(FlowLayout.LEADING));
+        contactsAddEventButton = new JButton("Add Event");
+        contactsAddEventButton.setActionCommand(ContactPanel.addEventAction);
+        contactsAddEventButton.addActionListener(this);
+        contactsEditEventButton = new JButton("Edit Event");
+        contactsEditEventButton.setActionCommand(ContactPanel.editEventAction);
+        contactsEditEventButton.addActionListener(this);
+        contactsRemoveEventButton = new JButton("Remove Event");
+        contactsRemoveEventButton.setActionCommand(ContactPanel.removeEventAction);
+        contactsRemoveEventButton.addActionListener(this);
+
+        agendaButtonPane.add(contactsAddEventButton);
+        agendaButtonPane.add(contactsEditEventButton);
+        agendaButtonPane.add(contactsRemoveEventButton);
+
+        agendaPane = new JPanel(new BorderLayout());
+        agendaPane.add(eventsPane, BorderLayout.CENTER);
+        agendaPane.add(agendaButtonPane, BorderLayout.PAGE_END);
+    }
+
+    private void updateEventModel() {
+        int index = contactsList.getSelectedIndex();
+        Contact c;
+        c = contactsModel.getElementAt(index);
+        eventsModel.clear();
+        for (Event ev : c.agenda().events()) {
+            eventsModel.addElement(ev);
         }
-        
+    }
+
     /**
      * Creates a new comment panel.
      *
@@ -144,13 +216,11 @@ public class ContactPanel extends JPanel implements ActionListener {
 
         // Creates controllers
         this.controller = new ContactController(uiController.getUserProperties());
-        this.addEventController = new AddEventController(uiController.getUserProperties());
+        this.eventController = new EventController(uiController.getUserProperties());
 
         setupContactsWidgets();
 
         JPanel mainPanel = new JPanel(new GridLayout(2, 1));
-
-        JPanel agendaPane = new JPanel(new GridLayout(0, 1));
 
         // Adds borders
         TitledBorder border = BorderFactory.createTitledBorder("Contacts");
@@ -170,76 +240,146 @@ public class ContactPanel extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        int index=-1;
-        
+        int index = -1;
+
         switch (e.getActionCommand()) {
-            case ContactPanel.addAction:
-                {
-                    Contact c=null;
-                    ContactDialog.showDialog(this, contactsAddButton, this.controller,
-                                        ContactDialog.ContactDialogMode.ADD, "New Contact");
-                    if (ContactDialog.successResult()) {
-                        c=ContactDialog.contact();
-                        // Update the model of the JList
-                        model.addElement(c);
-                    }
+            case ContactPanel.addAction: {
+                Contact c = null;
+                ContactDialog.showDialog(this, contactsAddButton, this.controller,
+                        ContactDialog.ContactDialogMode.ADD, "New Contact");
+                if (ContactDialog.successResult()) {
+                    c = ContactDialog.contact();
+                    // Update the model of the JList
+                    contactsModel.addElement(c);
                 }
-                break;
+            }
+            break;
 
             case ContactPanel.removeAction:
-                index=contactsList.getSelectedIndex();
-                if (index!=-1) {
+                index = contactsList.getSelectedIndex();
+                if (index != -1) {
                     Contact c;
                     //c = (Contact)(contactsList.getModel().getElementAt(index));
-                    c = model.getElementAt(index);
+                    c = contactsModel.getElementAt(index);
 
                     ContactDialog.showDialog(this, contactsRemoveButton, this.controller,
-                                        ContactDialog.ContactDialogMode.DELETE, "Delete Contact", c);
+                            ContactDialog.ContactDialogMode.DELETE, "Delete Contact", c);
                     if (ContactDialog.successResult()) {
                         // Update the model of the JList
-                        model.remove(index);
+                        contactsModel.remove(index);
                     }
                 }
                 break;
 
             case ContactPanel.editAction:
-                index=contactsList.getSelectedIndex();
-                if (index!=-1) {
+                index = contactsList.getSelectedIndex();
+                if (index != -1) {
                     Contact c;
                     //c = (Contact)(contactsList.getModel().getElementAt(index));
-                    c = model.getElementAt(index);
-                    
+                    c = contactsModel.getElementAt(index);
+
                     ContactDialog.showDialog(this, contactsEditButton, this.controller,
-                                        ContactDialog.ContactDialogMode.EDIT, "Edit Contact", c);
+                            ContactDialog.ContactDialogMode.EDIT, "Edit Contact", c);
                     if (ContactDialog.successResult()) {
                         // Update the model of the JList
-                        model.set(index, c);
-                    }
-                    else {
+                        contactsModel.set(index, c);
+                    } else {
                         // Maybe the user tried to update but failed and canceled. We need to "refresh" the contacts object
-                        Contact updatedContact=this.controller.getContactById(c.id());
+                        Contact updatedContact = this.controller.getContactById(c.id());
                         // Update the model of the JList
-                        model.set(index, updatedContact);
+                        contactsModel.set(index, updatedContact);
                     }
-                        
+
                 }
                 break;
+
+            //Added by João Cardoso - 1150943
             case ContactPanel.addEventAction:
-                index=contactsList.getSelectedIndex();
-                if (index!=-1) {
+                index = contactsList.getSelectedIndex();
+                if (index != -1) {
                     Contact c;
-                    c = model.getElementAt(index);
-                    new AddEventDialog(addEventController,c);
+                    c = contactsModel.getElementAt(index);
+                    new AddEventDialog(eventController, c);
 
                     if (ContactDialog.successResult()) {
                         // Update the model of the JList
-                        model.set(index, c);
+                        contactsModel.set(index, c);
                     }
-                }else{
-                    JOptionPane.showMessageDialog(null,CleanSheets.getString("status_please_choose_contact"));
+                } else {
+                    JOptionPane.showMessageDialog(null, CleanSheets.getString("status_please_choose_contact"));
+                }
+                break;
+            case ContactPanel.editEventAction:
+                int indexContact = contactsList.getSelectedIndex();
+                index = eventsList.getSelectedIndex();
+                Contact c = contactsModel.elementAt(indexContact);
+                if (index != -1) {
+                    new EditEventDialog(eventController, c, index);
+
+                    if (ContactDialog.successResult()) {
+                        updateEventModel();
+                        eventsList.updateUI();
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, CleanSheets.getString("status_please_choose_event"));
+                }
+                break;
+            case ContactPanel.removeEventAction:
+                indexContact = contactsList.getSelectedIndex();
+                index = eventsList.getSelectedIndex();
+                c = contactsModel.elementAt(indexContact);
+                if (index != -1) {
+                    int op = JOptionPane.showConfirmDialog(getRootPane(), "Are you sure you want to remove this event?", "Confirm Event Removal", JOptionPane.WARNING_MESSAGE);
+                    if (op == JOptionPane.YES_OPTION) {
+                        try {
+                            eventController.removeEvent(c, index);
+                        } catch (DataConcurrencyException e1) {
+                            e1.printStackTrace();
+                        } catch (DataIntegrityViolationException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                    if (ContactDialog.successResult()) {
+                        updateEventModel();
+                        eventsList.updateUI();
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, CleanSheets.getString("status_please_choose_event"));
                 }
                 break;
 
+            case ContactPanel.applyFilterAction: {
+                
+                /**
+                 * Faciltated chossing contacts
+                 * 
+                 * @author Gulherme Ferreira 1150623 - Filter feature added.
+                 * 
+                 */
+                
+                String text = contactsFilterField.getText().trim().toLowerCase();
+                contactsModel.clear();
+                Iterable<Contact> contacts = controller.allContacts();
+
+                if (text.length() != 0) {
+                    for (Contact con : contacts) {
+                        if (con != null) {
+                            if (con.name().toLowerCase().contains(text) || con.firstName().toLowerCase().contains(text) || con.lastName().toLowerCase().contains(text)) {
+                                contactsModel.addElement(con);
+                            }
+                        }
+                    }
+                    System.out.println(contactsModel);
+                } else {
+                    
+                    for (Contact con : contacts) {
+                        contactsModel.addElement(con);
+                    }
+                }
+                contactsList.setModel(contactsModel);
+            }
+
+            break;
         }
     }
 }

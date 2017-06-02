@@ -1,0 +1,38 @@
+@startuml
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+
+interface GenericExport <<interface>>{
+    +export(Label label)
+}
+
+class Label{
+    - contact_Photo : String
+    - contact_Name : String
+    - contact_Addresses Set<String>
+    - contact_emails : Set<String>
+    - contact_phone_numbers :String
+    - contact_Events : Set<Events>
+}
+
+
+class LabelList{
+    - labelList : ArrayList<Label>
+    - GenericExport<LabelList>
+    + addLabel(Label label);
+    + exportPDF()
+}
+
+class LabelsToPDF{
+    +@Override export(LabelList labels)
+}
+
+GenericExport <|.. LabelsToPDF
+GenericExport <-- LabelList
+LabelList *- Label
+
+
+@enduml

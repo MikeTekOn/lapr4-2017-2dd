@@ -2,179 +2,115 @@ package lapr4.red.s1.core.n1150943.contacts.ui;
 
 import eapli.framework.persistence.DataConcurrencyException;
 import eapli.framework.persistence.DataIntegrityViolationException;
-import lapr4.red.s1.core.n1150943.contacts.application.AddEventController;
+import lapr4.red.s1.core.n1150943.contacts.application.EventController;
 import lapr4.white.s1.core.n4567890.contacts.domain.Contact;
+import ui.DatePicker;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+/**
+ * Created by João Cardoso - 1150943
+ */
 public class AddEventDialog extends JDialog {
 
-    private AddEventController controller = null;
+    private EventController controller = null;
     private Contact selectedContact = null;
 
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
-    private JTextArea textAreaDescription;
+    private JButton buttonSelectDate;
 
-    private JComboBox comboBoxDay;
-    private JComboBox comboBoxMonth;
-    private JComboBox comboBoxYear;
+    private JTextField textFieldDescription;
 
-    /**
-     * Creates a JComboBox filled with year values (1900-2100)
-     *
-     * @return JComboBox with Years
-     */
-    private JComboBox createYear() {
-        JComboBox year = new JComboBox();
-        int curr_year = Calendar.getInstance().get(Calendar.YEAR);
-        for (int i = curr_year; i <= curr_year + 100; i++) {
-            year.addItem("" + i); //$NON-NLS-1$
-        }
-        return year;
-    }
+    private Calendar pickedDueDate = null;
 
-    /**
-     * Creates a JComboBox with all months.
-     *
-     * @return JComboBox filled with months
-     */
-    private JComboBox createMonth() {
-        JComboBox month = new JComboBox();
+    public AddEventDialog(EventController ctrl, Contact c) {
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MMMMM");
-        Calendar currentCal = Calendar.getInstance();
-        currentCal.set(Calendar.DAY_OF_MONTH, 1);
-
-        for (int i = 0; i < 12; i++) {
-            currentCal.set(Calendar.MONTH, i);
-            String myString = dateFormat.format(currentCal.getTime());
-            month.addItem(myString);
-        }
-        return month;
-    }
-
-    /**
-     * Creates a JComboBox with all month days.
-     *
-     * @return JComboBox filled with month days
-     */
-    private JComboBox createDays() {
-        JComboBox days = new JComboBox();
-
-        for (int i = 1; i <= 31; i++) {
-            String myString = String.format("%d", i);
-            days.addItem(myString);
-        }
-        return days;
-    }
-
-    public AddEventDialog(AddEventController ctrl, Contact c) {
-
-        //initComponents();
+        initComponents();
         selectedContact = c;
         controller = ctrl;
 
-        comboBoxMonth = createMonth();
-        comboBoxYear = createYear();
 
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
 
+
         this.pack();
         this.setVisible(true);
 
-        comboBoxDay = createDays();
+    }
+
+    private void onOK() {
+        if(pickedDueDate!=null){
+            if(!textFieldDescription.getText().isEmpty()){
+                String descr = textFieldDescription.getText();
+                try {
+                    controller.addEvent(selectedContact, descr, pickedDueDate);
+                } catch (IllegalStateException e) {
+                    JOptionPane.showMessageDialog(null,"The date you picked is in the past");
+                } catch (DataConcurrencyException e) {
+                    e.printStackTrace();
+                } catch (DataIntegrityViolationException e) {
+                    e.printStackTrace();
+                }
+                dispose();
+            }
+        }
+    }
+
+
+
+    private void initComponents() {
+        contentPane = new JPanel(new BorderLayout());
+        JPanel panelDescription = new JPanel(new FlowLayout());
+        JPanel panelDate = new JPanel(new FlowLayout());
+        JPanel panelButtons = new JPanel(new FlowLayout());
+        JLabel labelDescr = new JLabel();
+        JLabel labelDate = new JLabel();
+        buttonSelectDate = new JButton();
+        buttonSelectDate.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                pickedDueDate = new DatePicker(contentPane).getPickedDate();
+            }
+        });
+        buttonOK = new JButton();
         buttonOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onOK();
             }
         });
-
+        buttonCancel = new JButton();
         buttonCancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                onCancel();
+                dispose();
             }
         });
+        textFieldDescription = new JTextField(50);
 
-        // call onCancel() when cross is clicked
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                onCancel();
-            }
-        });
+        buttonOK.setText("OK");
+        panelButtons.add(buttonOK);
 
-        // call onCancel() on ESCAPE
-        contentPane.registerKeyboardAction(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+        //---- buttonCancel ----
+        buttonCancel.setText("Cancel");
+        panelButtons.add(buttonCancel);
+        //----Description label ----
+        labelDescr.setText("Event Description");
+        panelDescription.add(labelDescr);
+        panelDescription.add(textFieldDescription);
+        //----Due Date label ----
+        labelDate.setText("Select due date for the event");
+        panelDate.add(labelDate);
+        buttonSelectDate.setText("Choose Date");
+        panelDate.add(buttonSelectDate);
 
-        System.exit(0);
+        contentPane.add(panelDescription,BorderLayout.PAGE_START);
+        contentPane.add(panelDate,BorderLayout.CENTER);
+        contentPane.add(panelButtons,BorderLayout.PAGE_END);
+        setLocationRelativeTo(this.getParent());
     }
-
-    private void onOK() {
-        int day, month, year;
-
-        if(comboBoxDay.getSelectedIndex()==-1|comboBoxMonth.getSelectedIndex()==-1|comboBoxYear.getSelectedIndex()==-1){
-
-        }
-
-        day = (int) comboBoxDay.getSelectedItem();
-        month = (int) comboBoxMonth.getSelectedItem();
-        year = (int) comboBoxYear.getSelectedItem();
-        Calendar cal = Calendar.getInstance();
-        cal.set(day, month, year);
-        String descr = textAreaDescription.getText();
-        try {
-            controller.addEvent(selectedContact, descr, cal);
-        } catch (DataConcurrencyException e) {
-            e.printStackTrace();
-        } catch (DataIntegrityViolationException e) {
-            e.printStackTrace();
-        }
-        dispose();
-    }
-
-    private void onCancel() {
-        dispose();
-    }
-
-
-//    private void initComponents() {
-//        contentPane = new JPanel();
-//        JPanel panelDescription = new JPanel();
-//        JPanel panelDate = new JPanel();
-//        buttonOK = new JButton();
-//        buttonCancel = new JButton();
-//        JPanel panelButtons = new JPanel();
-//        JPanel panel = new JPanel();
-//        JLabel label1 = new JLabel();
-//        textArea1 = new JTextArea();
-//        JPanel panel5 = new JPanel();
-//        JLabel label2 = new JLabel();
-//        comboBoxYear = new JComboBox();
-//        comboBoxMonth = new JComboBox();
-//        comboBoxDay = new JComboBox();
-//
-//        buttonOK.setText("OK");
-//        panel2.add(buttonOK);
-//
-//        //---- buttonCancel ----
-//        buttonCancel.setText("Cancel");
-//        panel2.add(buttonCancel);
-//        //---- label1 ----
-//        label1.setText("Event Description");
-//        panel4.add(label1);
-//        panel4.add(textArea1);
-//        //---- label2 ----
-//        label2.setText("Due Date");
-//    }
 }

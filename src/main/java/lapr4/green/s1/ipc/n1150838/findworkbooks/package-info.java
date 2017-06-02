@@ -54,7 +54,7 @@
  * <img src="design_01.png" alt="image"> 
  * <p>
  * 
- *Second SD illustrate the behavior off the UIFindWorkbooksExtension as observer.<p>
+ *Second SD illustrates the behavior of the UIFindWorkbooksExtension as observer.<p>
  * 
  * <img src="design_02.png" alt="image"> 
  * <p>

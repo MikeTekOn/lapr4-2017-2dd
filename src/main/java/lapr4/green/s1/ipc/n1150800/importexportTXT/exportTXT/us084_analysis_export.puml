@@ -1,0 +1,40 @@
+@startuml us084_analysis_export.png
+
+actor User
+participant "<<analysis>>\nExportDataUI" as UI
+participant "<<analysis>>\nExportDataController" as Controller
+participant "<<analysis>>\nUIController" as UIController
+participant "<<analysis>>\nSpreadsheet" as Spreadsheet
+participant "<<analysis>>\nFileChooser" as FileChooser
+participant "<<analysis>>\nCellDTO" as CellDTO
+
+User -> UI : Selects extension
+activate UI
+UI -> FileChooser : new()
+activate FileChooser
+UI <-- FileChooser : Requests file
+deactivate FileChooser
+User <-- UI : Requests file
+deactivate UI
+User -> UI : Selects file path
+activate UI
+UI -> FileChooser : getFileToSave()
+activate FileChooser
+UI <-- FileChooser : file
+deactivate FileChooser
+create Controller
+UI -> Controller : new(file)
+activate Controller
+Controller -> UIController : getActiveSpreadsheet()
+loop for (cell in range)
+    create CellDTO
+    Controller -> CellDTO : createFromCell(cell)
+end
+Controller -> Controller : setFileData(cellList)
+UI <-- Controller : success
+deactivate Controller
+User <-- UI : success
+deactivate UI
+
+
+@enduml us084_analysis_export.png
