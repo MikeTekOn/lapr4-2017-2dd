@@ -56,12 +56,13 @@ public class ExportXML implements ExportStrategy {
      * @param tagNamesList the received list of tag names.
      */
     public void configureTagNames(List<String> tagNamesList) {
-        if (tagNamesList.isEmpty()) {
+        if (!tagNamesList.isEmpty()) {
+            this.tagNamesList = tagNamesList;
+        } else {
             this.tagNamesList.add(ROOT_VALUE, this.tagWorkbookName);
             this.tagNamesList.add(ELEMENT1_VALUE, this.tagSpreadsheetName);
             this.tagNamesList.add(ELEMENT2_VALUE, this.tagCellName);
         }
-        this.tagNamesList = tagNamesList;
     }
 
     /**
@@ -83,6 +84,7 @@ public class ExportXML implements ExportStrategy {
 
         int i = 0;
         boolean success = true;
+        String currentSpreadSheetCellTitle;
 
         try {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -95,24 +97,28 @@ public class ExportXML implements ExportStrategy {
             Element rootElement = doc.createElement(tagNamesList.get(ROOT_VALUE)); //basically to give the proper name do the root tag
             doc.appendChild(rootElement);
 
-            while (i != cellsList.size()) {
+            while (i <= cellsList.size()) {
                 boolean flag = true;
                 //worksheet elements
                 Element spreadsheetElement = doc.createElement(tagNamesList.get(ELEMENT1_VALUE));
                 rootElement.appendChild(spreadsheetElement);
+
                 Cell tempCell = cellsList.get(i);
-                String currentSpreadSheetCellTitle = tempCell.getSpreadsheet().getTitle();
+                currentSpreadSheetCellTitle = tempCell.getSpreadsheet().getTitle();
 
                 while (flag) {
                     Cell currentCell = cellsList.get(i);
                     //cell element
                     Element cellElement = doc.createElement(tagNamesList.get(ELEMENT2_VALUE));
-                    spreadsheetElement.appendChild(cellElement);
+
                     try {
                         cellElement.appendChild(doc.createTextNode(currentCell.getValue().toText()));
                     } catch (IllegalValueTypeException ex) {
                         Logger.getLogger(ExportXML.class.getName()).log(Level.SEVERE, null, ex);
                     }
+
+                    spreadsheetElement.appendChild(cellElement);
+
                     if (!currentSpreadSheetCellTitle.equalsIgnoreCase(currentCell.getSpreadsheet().getTitle())) {
                         flag = false;
                     }
