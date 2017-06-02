@@ -7,7 +7,7 @@
     participant "Workbook" as WBOOK
     participant "Spreadsheet" as sheet
     participant "Cell" as cll
-    participant "Utilities" as util
+    participant "RegexUtil" as util
 
     User -> UI : begin
     activate UI 
@@ -19,6 +19,7 @@
     activate UI
     UI -> ctrl : checkIfRegexMatches(String regex)
     activate ctrl
+    ctrl -> util : isRegexValid(regex)
     loop for Spreadsheet s : listSpreadsheets
     loop for Cells c : listCells
     ctrl -> cll : getContent()

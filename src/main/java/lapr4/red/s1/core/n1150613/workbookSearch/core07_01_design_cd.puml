@@ -11,12 +11,13 @@ class WorkbookSearchCtrl{
 class Cell{
     getContent()
 }
-class Utilities {
+class RegexUtil {
     checkIfMatches()
+    isRegexValid()
 }
 
 UIExtensionSearch ..> UIController
 UIExtensionSearch ..> WorkbookSearchCtrl
 WorkbookSearchCtrl ..> Cell
-WorkbookSearchCtrl ..> Utilities
+WorkbookSearchCtrl ..> RegexUtil
 @enduml

@@ -5,9 +5,12 @@
  */
 package lapr4.green.s1.ipc.n1150800.importexportTXT.importTXT.ui;
 
+import csheets.ui.FileChooser;
 import csheets.ui.ctrl.BaseAction;
 import csheets.ui.ctrl.UIController;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.util.Properties;
 
 /**
  *
@@ -31,7 +34,14 @@ public class ImportDataAction extends BaseAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        ImportDataUI ui = new ImportDataUI(uiController);
+        //TODO: update properties so that the predefined files are of .txt extension
+        Properties properties = new Properties();
+        FileChooser fileChooser = new FileChooser(null, properties);
+        File fileToRead = fileChooser.getFileToOpen();
+        
+        if(fileToRead != null) {
+            ImportDataUI ui = new ImportDataUI(uiController, fileToRead);
+        }
     }
 
 }
