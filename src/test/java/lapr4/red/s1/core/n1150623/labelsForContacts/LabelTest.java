@@ -1,5 +1,6 @@
 package lapr4.red.s1.core.n1150623.labelsForContacts;
 
+import java.lang.IllegalArgumentException;
 import lapr4.red.s1.core.n1150623.labelsForContacts.domain.Label;
 import org.junit.After;
 import org.junit.AfterClass;

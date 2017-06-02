@@ -1,6 +1,6 @@
 package lapr4.red.s1.core.n1150623.labelsForContacts.domain;
 
-import com.sun.javaws.exceptions.InvalidArgumentException;
+import java.lang.IllegalArgumentException;
 import eapli.util.Strings;
 import lapr4.white.s1.core.n4567890.contacts.domain.Agenda;
 import lapr4.white.s1.core.n4567890.contacts.domain.Event;
