@@ -34,7 +34,7 @@ public class RegexUtil {
             Pattern.compile(regExpression);
             System.out.println("Valid");
         } catch (PatternSyntaxException exception) {
-            System.out.println("Invalid");
+            System.out.println("Invalid!");
             test = false;
         }
         return test;

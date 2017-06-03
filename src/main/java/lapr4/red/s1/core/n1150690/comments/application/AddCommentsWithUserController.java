@@ -23,7 +23,10 @@ public class AddCommentsWithUserController {
      * The user interface controller
      */
     private UIController uiController;
-    
+
+    /**
+     * The cell that will contain the comments
+     */
     private CommentableCellWithMultipleUsers cell;
 
     /**
@@ -34,8 +37,13 @@ public class AddCommentsWithUserController {
     public AddCommentsWithUserController(UIController uiController) {
         this.uiController = uiController;
     }
-    
-    public void changeActiveCell(CommentableCellWithMultipleUsers cell){
+
+    /**
+     * Changes to the cell that the user is adding comments
+     *
+     * @param cell the active cell
+     */
+    public void changeActiveCell(CommentableCellWithMultipleUsers cell) {
         this.cell = cell;
     }
 

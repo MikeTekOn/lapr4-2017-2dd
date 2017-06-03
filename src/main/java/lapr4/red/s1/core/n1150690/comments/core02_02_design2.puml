@@ -1,6 +1,6 @@
 @startuml core02_01_design3.png
     participant "uiExtension : UIExtensionComments" as UIExt
-    participant "CommentsWithUserUI : JPanel" as cp
+    participant "CommentsWithUserUI" as cp
     participant "AddCommentWithUserController" as ctrl
     participant "CommentableCellWithMultipleUsers" as cell
     participant "User" as u

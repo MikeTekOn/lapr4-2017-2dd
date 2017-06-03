@@ -82,7 +82,8 @@ public abstract class AbstractExpressionVisitor implements ExpressionVisitor {
 		return macro.accept(this);
 	}
 
-        public Object visitTemporaryVariabe(TemporaryVariable tempVar){
+        @Override
+        public Object visitTemporaryVariable(TemporaryVariable tempVar){
             return tempVar.accept(this);
         }
 }

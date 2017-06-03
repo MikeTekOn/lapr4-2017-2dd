@@ -36,6 +36,7 @@ import lapr4.white.s1.core.n1234567.comments.CommentableCellListener;
 import lapr4.white.s1.core.n1234567.comments.CommentsExtension;
 
 /**
+ * A panel for adding or editing comments for a cell.
  *
  * @author Sofia Silva [1150690@isep.ipp.pt]
  */
@@ -47,24 +48,19 @@ public class CommentsWithUserUI extends JPanel implements SelectionListener, Com
     private AddCommentsWithUserController controller;
 
     /**
-     * Panel with gridbaglayout.
+     * Panel with BorderLayout.
      */
     private final JPanel panel = new JPanel();
 
     /**
-     * Panel with gridbaglayout.
+     * The list that will contain the comments.
      */
     private JList panelComments;
 
     /**
-     *
+     * The list model to save the comments.
      */
     private DefaultListModel model;
-
-    /**
-     * The commentable cell currently being displayed in the panel
-     */
-    private CommentableCellWithMultipleUsers cell;
 
     /**
      * The text field in which the comments of the cell are displayed.
@@ -72,15 +68,13 @@ public class CommentsWithUserUI extends JPanel implements SelectionListener, Com
     private JTextField commentField;
 
     /**
-     *
-     */
-    private UIController uiController;
-
-    /**
-     *
+     * The comment that the user selected from the list.
      */
     private String selectedComment;
-    
+
+    /**
+     * The author of the comment that the user selected from the list.
+     */
     private String selectedUser;
 
     /**
@@ -96,7 +90,6 @@ public class CommentsWithUserUI extends JPanel implements SelectionListener, Com
         // Creates controller
         controller = new AddCommentsWithUserController(uiController);
         uiController.addSelectionListener(this);
-        this.uiController = uiController;
 
         // Creates comment components
         initComponents();
@@ -108,13 +101,16 @@ public class CommentsWithUserUI extends JPanel implements SelectionListener, Com
     }
 
     /**
-     *
+     * Initiates the components.
      */
     private void initComponents() {
         panel.setLayout(new BorderLayout());
-        //creates the panel with the comments list
+
+        //adds to the main panel, the comments list panel
         panel.add(commentsList(), BorderLayout.NORTH);
 
+        //adds to the main panel, the panel that contains the 
+        //field to add and change the comments and the buttons
         JPanel p = new JPanel();
         p.setLayout(new GridBagLayout());
         GridBagConstraints grid = new GridBagConstraints();
@@ -125,13 +121,14 @@ public class CommentsWithUserUI extends JPanel implements SelectionListener, Com
         grid.gridy = 2;
         p.add(buttonChangeComment(), grid);
         panel.add(p, BorderLayout.CENTER);
+
         super.add(panel);
     }
 
     /**
-     * Creates and returns
+     * Creates and returns the panel containing the comments list.
      *
-     * @return
+     * @return the panel containing the comments list
      */
     private JScrollPane commentsList() {
         model = new DefaultListModel();
@@ -181,40 +178,73 @@ public class CommentsWithUserUI extends JPanel implements SelectionListener, Com
         return b;
     }
 
+    /**
+     * Creates and returns a button to change a comment.
+     *
+     * @return a JButton
+     */
     private JButton buttonChangeComment() {
         JButton b = new JButton("Change");
         b.addActionListener((new ActionListener() {
-            public void actionPerformed(ActionEvent e) {  
+            public void actionPerformed(ActionEvent e) {
                 model.removeElement(selectedUser + ": " + selectedComment);
                 User author = controller.changeComment(selectedComment, commentField.getText().trim(), selectedUser);
                 model.addElement(author.name() + ": " + commentField.getText());
                 commentField.setText("");
             }
         }));
+        b.setToolTipText("<html>To change a comment:"
+                + "<br>1.Select the comment from the list to change."
+                + "<br>2.Change the comment in the box below the list."
+                + "<br>3.Click this button</html>");
         return b;
     }
 
+    /**
+     * Updates the comments list.
+     *
+     * @param event the selection event that was fired
+     */
     @Override
     public void selectionChanged(SelectionEvent event) {
         Cell c = event.getCell();
-        if(c==null)return;
-        if(c.getExtension(CommentsExtension.NAME) == null)return;
+        if (c == null) {
+            return;
+        }
+        if (c.getExtension(CommentsExtension.NAME) == null) {
+            return;
+        }
         if (c != null) {
             CommentableCellWithMultipleUsers cell
-				= (CommentableCellWithMultipleUsers)c.getExtension(CommentsExtension.NAME);
+                    = (CommentableCellWithMultipleUsers) c.getExtension(CommentsExtension.NAME);
             controller.changeActiveCell(cell);
-            cell.addCommentableCellListener(this);                 
-	}
+            cell.addCommentableCellListener(this);
+        }
 
-	// Stops listening to previous active cell
-	if (event.getPreviousCell() != null)
-	((CommentableCellWithMultipleUsers)event.getPreviousCell().getExtension(CommentsExtension.NAME))
-				.removeCommentableCellListener(this);
-        
+        // Stops listening to previous active cell
+        if (event.getPreviousCell() != null) {
+            ((CommentableCellWithMultipleUsers) event.getPreviousCell().getExtension(CommentsExtension.NAME))
+                    .removeCommentableCellListener(this);
+        }
+
         updateList();
     }
 
-    public void updateList() {
+    /**
+     * Updates the comments list when the comments of the active cell are
+     * changed.
+     *
+     * @param cell the cell whose comments changed
+     */
+    @Override
+    public void commentChanged(CommentableCell cell) {
+        updateList();
+    }
+
+    /**
+     * Updates the comments list.
+     */
+    private void updateList() {
         model.removeAllElements();
         Map<User, List<String>> comments = controller.comments();
         for (Map.Entry<User, List<String>> entry : comments.entrySet()) {
@@ -222,11 +252,6 @@ public class CommentsWithUserUI extends JPanel implements SelectionListener, Com
                 model.addElement(entry.getKey().name() + ": " + com);
             }
         }
-    }
-
-    @Override
-    public void commentChanged(CommentableCell cell) {
-        updateList();
     }
 
 }
