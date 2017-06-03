@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr4.red.s1.core.n1150451.exportPDF.application;
+package lapr4.red.s1.core.n1150451.exportPDF.domain;
 
 import lapr4.s1.export.ExportStrategy;
 import com.itextpdf.text.Document;

@@ -93,7 +93,7 @@ public class FunctionWizardController {
      * @throws csheets.core.formula.compiler.FormulaCompilationException
      */
     public void insertSyntaxFormulaBar(String syntax) throws FormulaCompilationException{
-        uiController.getActiveCell().setContent(syntax);
+            uiController.getActiveCell().setContent(syntax);
     }
     
 }

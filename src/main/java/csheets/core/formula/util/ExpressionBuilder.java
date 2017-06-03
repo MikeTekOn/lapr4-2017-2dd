@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 package csheets.core.formula.util;
-	
+
 import csheets.core.formula.BinaryOperation;
 import csheets.core.formula.Expression;
 import csheets.core.formula.FunctionCall;
@@ -29,6 +29,7 @@ import csheets.core.formula.UnaryOperation;
 import csheets.core.formula.compiler.IllegalFunctionCallException;
 import csheets.core.formula.lang.CellReference;
 import csheets.core.formula.lang.ReferenceOperation;
+import lapr4.blue.s1.lang.n1151159.macros.Macro;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperation;
 
 /**
@@ -94,8 +95,13 @@ public class ExpressionBuilder implements ExpressionVisitor {
 			return null;
 		}
 	}
-        
-        @Override
+
+	@Override
+	public Object visitMacro(Macro macro) {
+		throw new UnsupportedOperationException("Not supported.");
+	}
+
+	@Override
         public Object visitNaryOperation(NaryOperation operation) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }

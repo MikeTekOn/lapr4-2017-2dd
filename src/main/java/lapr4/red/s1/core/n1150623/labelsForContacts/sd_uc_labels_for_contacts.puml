@@ -1,7 +1,110 @@
 @startuml
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
 
-Alice -> Bob: Another authentication Request
-Alice <-- Bob: another authentication Response
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor "CRM User" as Actor
+participant ":labelsForContactsUI" as UI <<presentation>>
+participant ":labelsForContactsController" as ctrl
+participant "list: List<Contact>" as list
+participant "contactRepository : ContactRepository" as crep <<interface>>
+participant "JpaContactRepository" as jpacrep
+participant "labelFactory : LabelFactory" as lfac
+participant "labelList : LabelList" as llist
+
+
+activate UI
+
+    UI --> Actor : Shows contacts list and asks to choose contacts
+    create ctrl
+    UI -> ctrl: create()
+
+    create lfac
+    ctrl -> lfac : create()
+
+
+    create llist
+    ctrl -> llist : create()
+
+    activate ctrl
+
+    UI ->ctrl : allContacts(user)
+    deactivate ctrl
+
+    deactivate UI
+    loop "While the CRM user wants to add more contacts"
+
+        UI <- Actor : Writes contact name (or regex expression)
+    activate UI
+
+           activate ctrl
+                UI -> ctrl : getContactByRegex(regexPattern)
+
+    deactivate UI
+                create list
+                ctrl -> list : create()
+                activate crep
+                    ctrl -> crep : findByRegex(regexPattern)
+                    activate jpacrep
+                            crep -> jpacrep : findByRegex(regexPattern)
+                    deactivate jpacrep
+
+                deactivate crep
+
+            deactivate ctrl
+    activate UI
+        UI <- Actor : Selects contact
+
+            activate ctrl
+                UI -> ctrl : addLabel(name, photo, emails, addresses, phoneNumbers)
+
+                activate lfac
+                    ctrl -> lfac : construct(name, photo, emails, addresses, phoneNumbers)
+                    lfac --> ctrl : createdLabel
+                deactivate lfac
+                activate llist
+                    ctrl -> llist : addLabel(createdLabel)
+                deactivate llist
+            deactivate ctrl
+
+    end loop
+
+
+
+    UI --> Actor : Asks if wants to add contact's events
+    deactivate UI
+
+    alt Accepts
+        Actor -> UI : Wants to add events
+        activate UI
+        UI --> Actor : Asks the initial and end date of the list of events to export with contacts
+
+        UI <- Actor : Chooses initial and end dates
+
+        activate ctrl
+                UI -> ctrl : limitEvents(iniDate, endDate)
+                activate llist
+                ctrl -> llist : limitEvents(iniDate, endDate)
+                deactivate llist
+
+                UI -> ctrl : doExport()
+
+
+                activate llist
+                    ctrl -> llist : export()
+                deactivate llist
+
+        deactivate ctrl
+
+        UI --> Actor : generates file with labels including the events list and shows success message
+
+    else Refuses
+
+        UI --> Actor : generates file with labels and shows success message
+
+    end alt
+deactivate UI
+
 @enduml

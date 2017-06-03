@@ -19,7 +19,7 @@ public class FunctionWizard extends JButton{
     
     /**
      * Inicialize the Action of Function Wizard
-     * @param uIController 
+     * @param uIController interface controller
      */
     public FunctionWizard(UIController uIController){
         this.uiController = uiController;
