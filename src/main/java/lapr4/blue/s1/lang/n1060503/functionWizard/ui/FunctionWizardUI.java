@@ -61,13 +61,14 @@ public class FunctionWizardUI extends JDialog{
     private static final String[] HEADER ={"Parameter", "Description"};
     
     /**
-     * Build the Functio Wizard window
+     * Build the Function Wizard window
      * @param uIController interface controller
      * @throws UnknownElementException to be caught
      */
     public FunctionWizardUI(UIController uIController) throws UnknownElementException{
         setModal(true);
         setTitle("FUNCTION WIZARD");
+        
         this.uiController = uIController;
         
         controller = new FunctionWizardController(uIController);
@@ -91,7 +92,7 @@ public class FunctionWizardUI extends JDialog{
     /**
      * create all ui panels
      * @return all ui panels
-     * @throws UnknownElementException 
+     * @throws UnknownElementException to be caught
      */
     private JPanel createComponents() throws UnknownElementException {
         JPanel panel = new JPanel(new BorderLayout());

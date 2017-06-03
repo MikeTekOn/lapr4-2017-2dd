@@ -15,35 +15,38 @@ import javax.swing.JComponent;
  * @author Diogo Guedes
  */
 /**
- * This class implements the UI interface extension for the search extension.
- * A UI interface extension must extend the UIExtension abstract class.
+ * This class implements the UI interface extension for the search extension. A
+ * UI interface extension must extend the UIExtension abstract class.
+ *
  * @see UIExtension
  * @author Diogo Guedes
  */
 public class UIExtensionSearch extends UIExtension {
 
-	/** The icon to display with the extension's name */
+    /**
+     * The icon to display with the extension's name
+     */
 //	private Icon icon;
 
-	/** A side bar that provides search of regular expressions */
-	private JComponent sideBar;
 
-	/** The menu of the extension
-        * @param extension extension
-        * @param uiController ui controller 
-        */
-	public UIExtensionSearch(Extension extension, UIController uiController) {
-		super(extension, uiController);
-	}
-	
-	/**
-	 * Returns a side bar that provides search of regular expressions
-	 * @return a side bar
-	 */
-        @Override
-	public JComponent getSideBar() {
-            return null;
-	}	
-    
-    
+    /**
+     * The menu of the extension
+     *
+     * @param extension extension
+     * @param uiController ui controller
+     */
+    public UIExtensionSearch(Extension extension, UIController uiController) {
+        super(extension, uiController);
+    }
+
+    /**
+     * Returns a side bar that provides search of regular expressions
+     *
+     * @return a side bar
+     */
+    @Override
+    public JComponent getSideBar() {
+        return new WorkbookSearchSideBar(super.uiController);
+    }
+
 }

@@ -13,6 +13,7 @@
  * It should be possible for the user to open a workbook from this list by double clicking in it
  * The search can be based solely on the file name extension. For instance, find the files with .cls extension.
  * Notes:<p>
+ * After a discussion with the client he clarified that the file name must be a path
  * 
  *  
  * <b>Analysis</b><p>
@@ -22,9 +23,9 @@
  * <img src="us02.1_ssd.png" alt="image"> <p>
  * 
  * <b>Notes:</b><p>
- * Class Directory: This class is responsible for validate and save the directory entered by the user. This class also has implemented a search and load  method for cls files.<p>
+ * Class Directory: This class is responsible for validate and save the directory entered by the user. This class also has implemented a search and load  method for cls files that will execute on a diferent thread to no block the UI.<p>
  * Class UIFindWorkbooksExtension: This class is responsible to build the side bar that the user will be able to use and choose a workbook to open.This class will be also a observer to know when a file was found and update the main window <p>
- * Class ControllerFindWorkbooks: This class is responsible for controlling the flow of the use case.<p>
+ * Class ControllerFindWorkbooks: This class is responsible for controlling the flow of the use case.This controller also has methods to control the thread created by the search method<p>
  * Class FindWorkbooksPublisher: This class is a singleton that has the function to warn all the observers that a new cls file was found. <p>
  * 
  * <b>Rules:</b><p>
@@ -61,23 +62,21 @@
  *  
  * <b>Code</b><p>
  * The following classes and interfaces implement this use case.<p>
- * Package lapr4.black.s1.ipc.n2345678.comm:<p>
- * {@link lapr4.black.s1.ipc.n2345678.comm.CommClientWorker}
- * {@link lapr4.black.s1.ipc.n2345678.comm.CommExtension}
- * {@link lapr4.black.s1.ipc.n2345678.comm.CommHandler}
- * {@link lapr4.black.s1.ipc.n2345678.comm.CommServer}
- * {@link lapr4.black.s1.ipc.n2345678.comm.CommServerWorker}
+ * Package lapr4.green.s1.ipc.n1150838.findworkbooks:<p>
+ * {@link lapr4.green.s1.ipc.n1150838.findworkbooks.Directory}
+ * {@link lapr4.green.s1.ipc.n1150838.findworkbooks.FileDTO}
+ * {@link lapr4.green.s1.ipc.n1150838.findworkbooks.FindWorkbooksPublisher}
  * <p>
- * Package lapr4.black.s1.ipc.n2345678.comm.sharecells:<p>
- * {@link lapr4.black.s1.ipc.n2345678.comm.sharecells.CellDTO}
- * {@link lapr4.black.s1.ipc.n2345678.comm.sharecells.HandleReceiveCells}
- * {@link lapr4.black.s1.ipc.n2345678.comm.sharecells.RequestSharedCellsDTO}
- * {@link lapr4.black.s1.ipc.n2345678.comm.sharecells.ResponseSharedCellsDTO}
+ * Package lapr4.green.s1.ipc.n1150838.findworkbooks.ctrl:<p>
+ * {@link lapr4.green.s1.ipc.n1150838.findworkbooks.ctrl.ControllerFindWorkbooks}
  * <p>
- * Package lapr4.black.s1.ipc.n2345678.comm.ui:<p>
- * {@link lapr4.black.s1.ipc.n2345678.comm.ui.ClientTestAction}
- * {@link lapr4.black.s1.ipc.n2345678.comm.ui.CommMenu}
- * {@link lapr4.black.s1.ipc.n2345678.comm.ui.UICommExtension}
+ * Package lapr4.green.s1.ipc.n1150838.findworkbooks.ext:<p>
+ * {@link lapr4.green.s1.ipc.n1150838.findworkbooks.ext.ExtensionFindWorkbooks}
+ * <p>
+ *  * Package lapr4.green.s1.ipc.n1150838.findworkbooks.ui:<p>
+ * {@link lapr4.green.s1.ipc.n1150838.findworkbooks.ui.FindWorkbooksSideBar}
+ * {@link lapr4.green.s1.ipc.n1150838.findworkbooks.ui.UIFindWorkbooksExtension}
+ * {@link lapr4.green.s1.ipc.n1150838.findworkbooks.ui.WorkbookList}
  * <p>
  * 
  * 

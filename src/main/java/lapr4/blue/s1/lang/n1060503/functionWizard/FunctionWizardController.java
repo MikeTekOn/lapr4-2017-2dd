@@ -24,7 +24,7 @@ public class FunctionWizardController {
     
     /** The user interface controller */
     private final UIController uiController;
-
+    
     private static final String EQUAL = "=";
     private static final String LEFT_PAR = "(";
     private static final String RIGHT_PAR = ")";
@@ -51,12 +51,12 @@ public class FunctionWizardController {
     }
     
     /**
-     * gets the syntax and description of Function
+     * gets description of Function
      * key is the name
      * value the description
-     * @param identifier
-     * @return
-     * @throws UnknownElementException 
+     * @param identifier of function
+     * @return the description of Function
+     * @throws UnknownElementException to be caught
      */
     public Map<String,String> getDescription(String identifier) throws UnknownElementException{
         Map<String,String> function = new HashMap<>();
@@ -68,9 +68,9 @@ public class FunctionWizardController {
     
     /**
      * get syntax and build the expressation for function wizard
-     * @param identifier
+     * @param identifier of function
      * @return get syntax and build the expressation for function wizard
-     * @throws UnknownElementException 
+     * @throws UnknownElementException to be caught
      */
     public String getSyntax(String identifier) throws UnknownElementException{
         String aux = EQUAL + identifier + LEFT_PAR;
@@ -90,7 +90,7 @@ public class FunctionWizardController {
     /**
      * insert the syntax of the function in formula bar
      * @param syntax syntax of the function
-     * @throws csheets.core.formula.compiler.FormulaCompilationException
+     * @throws csheets.core.formula.compiler.FormulaCompilationException to be caught
      */
     public void insertSyntaxFormulaBar(String syntax) throws FormulaCompilationException{
             uiController.getActiveCell().setContent(syntax);

@@ -30,7 +30,6 @@ public class ShareFileRegister implements Serializable {
     /**
      * Fill the list with files
      *
-     * @param list
      * @return
      * @throws IOException
      */
@@ -60,7 +59,6 @@ public class ShareFileRegister implements Serializable {
     /**
      * Add a single file
      *
-     * @param f
      */
     public void addFileToList(ShareFile file) {
         if (!this.filesList.contains(file)) {
