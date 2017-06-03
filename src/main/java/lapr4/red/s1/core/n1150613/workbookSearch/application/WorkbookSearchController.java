@@ -52,6 +52,8 @@ public class WorkbookSearchController {
      * @return desired cells information in String array
      */
     public List<String> checkifRegexMatches(String regex) {
+        String content;
+        int cont = 0;
         util = new RegexUtil(regex);
         w = ctrl.getActiveWorkbook();
 
@@ -62,15 +64,16 @@ public class WorkbookSearchController {
         Iterator<Spreadsheet> it = w.iterator();
         Iterator<Cell> itCell;
 
-        //review algorithm
         while (it.hasNext()) {
             s = it.next();
+            cont++;
             itCell = s.iterator();
             while (itCell.hasNext()) {
                 c = itCell.next();
-
-                if (util.checkIfMatches(c.getContent())) {
-                    info.add(c.getContent() + " " + c.getAddress().toString());
+                content = c.getContent();
+                if (util.checkIfMatches(content)) {
+                    content = content.substring(0, Math.min(content.length(), 10));
+                    info.add(content + " Spreadsheet:" + cont + " Adress:" + c.getAddress().toString());
                 }
             }
         }

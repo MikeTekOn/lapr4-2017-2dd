@@ -7,7 +7,6 @@ package lapr4.red.s1.core.n1150613.workbookSearch.ui;
 
 import csheets.ui.ctrl.UIController;
 import java.awt.BorderLayout;
-
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -15,20 +14,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
-
 import javax.swing.JButton;
-
+import javax.swing.JLabel;
 import javax.swing.JList;
-
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
 import lapr4.red.s1.core.n1150613.workbookSearch.SearchExtension;
 import lapr4.red.s1.core.n1150613.workbookSearch.application.WorkbookSearchController;
@@ -88,8 +84,11 @@ public class WorkbookSearchSideBar extends JPanel {
         p.setLayout(new GridBagLayout());
         GridBagConstraints grid = new GridBagConstraints();
         grid.gridy = grid.gridx = 0;
+        p.add(new JLabel("Enter Regex here"));
+
         p.add(searchField(), grid);
         grid.gridy = 1;
+
         p.add(buttonSearch(), grid);
         panel.add(p, BorderLayout.CENTER);
         super.add(panel);
@@ -106,7 +105,7 @@ public class WorkbookSearchSideBar extends JPanel {
         searchPanel.setModel(model);
         searchPanel.setBackground(this.getBackground());
         searchPanel.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        searchPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Results:"));
+        searchPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Results: "));
         searchPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
