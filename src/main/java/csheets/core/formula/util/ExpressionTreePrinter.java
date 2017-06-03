@@ -25,6 +25,7 @@ import csheets.core.formula.FunctionCall;
 import csheets.core.formula.Literal;
 import csheets.core.formula.Reference;
 import csheets.core.formula.UnaryOperation;
+import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVariable;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperation;
 
 /**
@@ -73,7 +74,7 @@ public class ExpressionTreePrinter extends AbstractExpressionVisitor {
 	public Object visitFunctionCall(FunctionCall call) {
 		print(call.getFunction());
 		indentCount++;
-		super.visitFunctionCall(call);
+		super.visitFunctionCall(call); 
 		indentCount--;
 		return call;
 	}
@@ -89,4 +90,10 @@ public class ExpressionTreePrinter extends AbstractExpressionVisitor {
         public Object visitNaryOperation(NaryOperation operation) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
+
+        @Override
+    public Object visitTemporaryVariable(TemporaryVariable tempVar) {
+        print(tempVar);	
+        return tempVar;
+    }
 }

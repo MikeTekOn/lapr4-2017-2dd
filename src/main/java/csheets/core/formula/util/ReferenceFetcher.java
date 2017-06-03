@@ -25,6 +25,7 @@ import java.util.TreeSet;
 
 import csheets.core.formula.Expression;
 import csheets.core.formula.Reference;
+import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVariable;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperation;
 
 /**
@@ -70,4 +71,9 @@ public class ReferenceFetcher extends AbstractExpressionVisitor {
             }
             return operation;
         }
-}
+
+    @Override
+    public Object visitTemporaryVariable(TemporaryVariable tempVar) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    }

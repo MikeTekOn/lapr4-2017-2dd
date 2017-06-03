@@ -18,10 +18,9 @@
  * along with CleanSheets; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package csheets.core.formula.util;
+package lapr4.blue.s1.lang.n1151088;
 
 import csheets.core.formula.*;
-import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVariable;
 import lapr4.blue.s1.lang.n1151159.macros.Macro;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperation;
 
@@ -29,6 +28,7 @@ import lapr4.gray.s1.lang.n3456789.formula.NaryOperation;
  * An interface for using the Visitor pattern for traversing expressions.
  *
  * @author Einar Pehrson
+ * @author Diana Silva
  */
 public interface ExpressionVisitor {
 
@@ -87,13 +87,4 @@ public interface ExpressionVisitor {
      * @return an arbitrary object
      */
     public Object visitMacro(Macro macro);
-    
-     /**
-     * Visits a given temporary variable.
-     *
-     * @param tempVar temporary variable to be visited
-     * @return an arbitrary object
-     */
-    public Object visitTemporaryVariable(TemporaryVariable tempVar);
-    
 }

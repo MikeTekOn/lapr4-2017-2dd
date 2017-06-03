@@ -18,11 +18,14 @@
  * along with CleanSheets; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package csheets.core.formula.util;
+package lapr4.blue.s1.lang.n1151088;
 
 import csheets.core.Cell;
-import csheets.core.formula.Formula;
 import csheets.core.formula.Reference;
+import csheets.core.formula.util.AbstractExpressionVisitor;
+import csheets.core.formula.util.ExpressionVisitorException;
+import java.util.SortedSet;
+import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVarContentor;
 import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVariable;
 
 /**
@@ -60,8 +63,10 @@ public class CircularReferenceFinder extends AbstractExpressionVisitor {
 	/**
 	 * Checks if the given reference causes a circular reference.
 	 * @param reference the reference to visit
+     * @return 
 	 * @throws CircularReferenceException if the given reference causes a circular reference
 	 */
+        @Override
 	public Object visitReference(Reference reference) throws CircularReferenceException, ExpressionVisitorException {
 		for (Cell precedent : reference.getCells()) {
 			// Checks for circularity
@@ -69,16 +74,15 @@ public class CircularReferenceFinder extends AbstractExpressionVisitor {
 				throw new CircularReferenceException(formula);
 
 			// Looks further
-			Formula precedentFormula = precedent.getFormula();
+			csheets.core.formula.Formula precedentFormula = precedent.getFormula();
 			if (precedentFormula != null)
 				precedentFormula.accept(this);
 		}
 		return reference;
-	}
+        }
 
     @Override
     public Object visitTemporaryVariable(TemporaryVariable tempVar) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
 }
