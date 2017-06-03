@@ -1,5 +1,8 @@
 package lapr4.green.s1.ipc.n1150532.comm;
 
+import lapr4.green.s1.ipc.n1150738.securecomm.BasicDataTransmissionContext;
+import lapr4.green.s1.ipc.n1150738.securecomm.DataTransmissionContext;
+
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -19,19 +22,21 @@ public class CommTCPServerWorker extends Thread {
     private CommTCPServer server;
     private ObjectInputStream inStream;
     private ObjectOutputStream outStream;
+    private DataTransmissionContext transmissionContext;
 
     public CommTCPServerWorker(Socket theSocket, CommTCPServer theServer) {
         socket = theSocket;
         server = theServer;
         inStream = null;
         outStream = null;
+        transmissionContext = new BasicDataTransmissionContext();
     }
 
     @Override
     public void run() {
         try {
-            outStream = new ObjectOutputStream(socket.getOutputStream());
-            inStream = new ObjectInputStream(socket.getInputStream());
+            outStream = transmissionContext.outputStream(socket.getOutputStream());
+            inStream = transmissionContext.inputStream(socket.getInputStream());
             while (true) {
                 processIncommingDTO(inStream.readObject());
             }

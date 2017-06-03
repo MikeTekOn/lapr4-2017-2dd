@@ -1,5 +1,8 @@
 package lapr4.green.s1.ipc.n1150532.comm;
 
+import lapr4.green.s1.ipc.n1150738.securecomm.BasicDataTransmissionContext;
+import lapr4.green.s1.ipc.n1150738.securecomm.DataTransmissionContext;
+
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -19,19 +22,21 @@ public class CommTCPClientWorker extends Thread {
     private Socket socket;
     private ObjectInputStream inStream;
     private ObjectOutputStream outStream;
+    private DataTransmissionContext transmissionContext;
 
     public CommTCPClientWorker(CommTCPClientsManager theManager, Socket theSocket) {
         manager = theManager;
         socket = theSocket;
         inStream = null;
         outStream = null;
+        transmissionContext = new BasicDataTransmissionContext();
     }
 
     public synchronized ObjectOutputStream getObjectOutputStream() throws IOException {
         if (outStream != null) {
             return outStream;
         } else {
-            outStream = new ObjectOutputStream(socket.getOutputStream());
+            outStream = transmissionContext.outputStream(socket.getOutputStream());
             return outStream;
         }
     }
@@ -40,7 +45,7 @@ public class CommTCPClientWorker extends Thread {
         if (inStream != null) {
             return inStream;
         } else {
-            inStream = new ObjectInputStream(socket.getInputStream());
+            inStream = transmissionContext.inputStream(socket.getInputStream());
             return inStream;
         }
     }
