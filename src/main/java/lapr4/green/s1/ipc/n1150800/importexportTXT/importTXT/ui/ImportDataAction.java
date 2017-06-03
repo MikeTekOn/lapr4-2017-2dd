@@ -11,6 +11,9 @@ import csheets.ui.ctrl.UIController;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.Properties;
+import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import lapr4.green.s1.ipc.n1150800.importexportTXT.FileData;
 
 /**
  *
@@ -34,13 +37,18 @@ public class ImportDataAction extends BaseAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        //TODO: update properties so that the predefined files are of .txt extension
         Properties properties = new Properties();
         FileChooser fileChooser = new FileChooser(null, properties);
-        File fileToRead = fileChooser.getFileToOpen();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt");
+        fileChooser.setFileFilter(filter);
         
+        File fileToRead = fileChooser.getFileToOpen();
         if(fileToRead != null) {
-            ImportDataUI ui = new ImportDataUI(uiController, fileToRead);
+            if(FileData.validateFileExtension(fileToRead)) {
+                ImportDataUI ui = new ImportDataUI(uiController, fileToRead);
+            } else {
+                JOptionPane.showMessageDialog(fileChooser, "Chosen file is not valid!", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 

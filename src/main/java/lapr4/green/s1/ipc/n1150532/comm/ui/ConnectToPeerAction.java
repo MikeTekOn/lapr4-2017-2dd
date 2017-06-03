@@ -4,6 +4,7 @@ import csheets.ui.ctrl.BaseAction;
 import java.awt.event.ActionEvent;
 import java.net.InetAddress;
 import lapr4.green.s1.ipc.n1150532.comm.CommTCPClientsManager;
+import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
 
 /**
  * An action to perform a TCP connection with a peer.
@@ -18,24 +19,18 @@ public class ConnectToPeerAction extends BaseAction {
     private static final String NAME = "Connect to Peer";
 
     /**
-     * The server's port number to connect.
+     * The connection information.
      */
-    private final int portNumber;
-
-    /**
-     * The server's address to connect.
-     */
-    private final InetAddress ipAddress;
+    private final ConnectionID connection;
 
     /**
      * The full constructor of the action.
      *
-     * @param theIPAddress The server's address to connect.
-     * @param thePortNumber The server's port number to connect.
+     * @param theConnection The connection information in which to send the
+     * request
      */
-    public ConnectToPeerAction(InetAddress theIPAddress, int thePortNumber) {
-        ipAddress = theIPAddress;
-        portNumber = thePortNumber;
+    public ConnectToPeerAction(ConnectionID theConnection) {
+        connection = theConnection;
     }
 
     /**
@@ -55,7 +50,7 @@ public class ConnectToPeerAction extends BaseAction {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        CommTCPClientsManager.getManager().requestConnectionTo(ipAddress, portNumber);
+        CommTCPClientsManager.getManager().requestConnectionTo(connection);
     }
 
 }
