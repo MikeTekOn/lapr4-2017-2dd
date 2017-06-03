@@ -23,7 +23,10 @@ public class AddCommentsWithUserController {
      * The user interface controller
      */
     private UIController uiController;
-    
+
+    /**
+     * The cell that will contain the comments
+     */
     private CommentableCellWithMultipleUsers cell;
 
     /**
@@ -34,15 +37,19 @@ public class AddCommentsWithUserController {
     public AddCommentsWithUserController(UIController uiController) {
         this.uiController = uiController;
     }
-    
-    public void changeActiveCell(CommentableCellWithMultipleUsers cell){
+
+    /**
+     * Changes to the cell that the user is adding comments
+     *
+     * @param cell the active cell
+     */
+    public void changeActiveCell(CommentableCellWithMultipleUsers cell) {
         this.cell = cell;
     }
 
     /**
      * Adds a comment to the selected cell.
      *
-     * @param cell the cell whose comments changed
      * @param comment the comment to add
      * @return true if the comment was properly added
      */
@@ -56,7 +63,6 @@ public class AddCommentsWithUserController {
     /**
      * Changes a comment of an author.
      *
-     * @param cell the cell whose comments changed
      * @param oldComment the old comment of the cell
      * @param newComment the new comment of the cell
      * @param oldAuthor the previous author of the comment
@@ -72,7 +78,6 @@ public class AddCommentsWithUserController {
     /**
      * Returns the comments of a cell.
      *
-     * @param cell the cell who has the comments.
      * @return the comments of the cell passed as a parameter
      */
     public Map<User, List<String>> comments() {
