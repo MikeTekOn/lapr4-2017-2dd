@@ -18,7 +18,7 @@ import lapr4.white.s1.core.n4567890.contacts.ui.UIExtensionContacts;
 public class SearchExtension extends Extension {
 
 	/** The name of the extension */
-	public static final String NAME = "Search";
+	public static final String NAME = "Workbook Search";
 
 	/**
 	 * Creates a new Example extension.
