@@ -62,20 +62,20 @@ public class HandlerConnectionDetailsResponseDTO extends Observable implements C
      * outside source or false otherwise.
      */
     private boolean isOutsiderAnnouncement(InetAddress senderIP) {
-        Enumeration<NetworkInterface> interfaces;
-        try {
-            interfaces = NetworkInterface.getNetworkInterfaces();
-            while (interfaces.hasMoreElements()) {
-                List<InterfaceAddress> list = interfaces.nextElement().getInterfaceAddresses();
-                for (InterfaceAddress address : list) {
-                    if (address.getAddress().equals(senderIP)) {
-                        return false;
-                    }
-                }
-            }
-        } catch (SocketException ex) {
-            Logger.getLogger(HandlerConnectionDetailsResponseDTO.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        Enumeration<NetworkInterface> interfaces;
+//        try {
+//            interfaces = NetworkInterface.getNetworkInterfaces();
+//            while (interfaces.hasMoreElements()) {
+//                List<InterfaceAddress> list = interfaces.nextElement().getInterfaceAddresses();
+//                for (InterfaceAddress address : list) {
+//                    if (address.getAddress().equals(senderIP)) {
+//                        return false;
+//                    }
+//                }
+//            }
+//        } catch (SocketException ex) {
+//            Logger.getLogger(HandlerConnectionDetailsResponseDTO.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         return true;
     }
 
