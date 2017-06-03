@@ -52,13 +52,13 @@ public class WorkbookSearchSideBar extends JPanel {
     /**
      * Panel with gridbaglayout.
      */
-    private final JPanel panel = new JPanel();
+    private final JPanel panel;
 
     private DefaultListModel model;
 
     public WorkbookSearchSideBar(UIController extension) {
         // Configures panel
-        super(new BorderLayout());
+        panel = new JPanel(new BorderLayout());
         setName(SearchExtension.NAME);
 
         // Creates controller
@@ -72,7 +72,7 @@ public class WorkbookSearchSideBar extends JPanel {
         TitledBorder border = BorderFactory.createTitledBorder("Workbook Search");
         border.setTitleJustification(TitledBorder.CENTER);
         panel.setBorder(border);
-        setVisible(true);
+        panel.setVisible(true);
 
     }
 
@@ -106,7 +106,7 @@ public class WorkbookSearchSideBar extends JPanel {
         searchPanel.setModel(model);
         searchPanel.setBackground(this.getBackground());
         searchPanel.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        searchPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Results: Search"));
+        searchPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Results:"));
         searchPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
@@ -139,11 +139,17 @@ public class WorkbookSearchSideBar extends JPanel {
         JButton b = new JButton("Search");
         b.addActionListener((new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                info = controller.checkifRegexMatches(searchField.getText().trim());
-                for (String s : info) {
+                try {
+                    model.clear();
+                    info = controller.checkifRegexMatches(searchField.getText().trim());
+                    for (String s : info) {
 
-                    model.addElement(s);
+                        model.addElement(s);
+                    }
+                } catch (NullPointerException nll) {
+                    System.out.print("Caught the NullPointerException");
                 }
+
                 searchField.setText("");
             }
         }));

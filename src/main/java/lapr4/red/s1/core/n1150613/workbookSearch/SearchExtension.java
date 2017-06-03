@@ -8,7 +8,8 @@ package lapr4.red.s1.core.n1150613.workbookSearch;
 import csheets.ext.Extension;
 import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.UIExtension;
-import lapr4.white.s1.core.n4567890.contacts.ui.UIExtensionContacts;
+import lapr4.red.s1.core.n1150613.workbookSearch.ui.UIExtensionSearch;
+
 
 /**
  * An extension to support search.
@@ -34,6 +35,6 @@ public class SearchExtension extends Extension {
 	 */
         @Override
 	public UIExtension getUIExtension(UIController uiController) {
-		return new UIExtensionContacts(this, uiController);
+		return new UIExtensionSearch(this, uiController);
 	}
 }
