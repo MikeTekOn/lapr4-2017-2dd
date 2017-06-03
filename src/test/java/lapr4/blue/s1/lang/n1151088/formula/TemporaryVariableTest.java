@@ -39,8 +39,8 @@ public class TemporaryVariableTest {
 
         // Introducing expression
         Cell cellTest = app.getWorkbooks()[0].getSpreadsheet(0).getCell(new Address(0, 0));
-        String content= "=_Var:=2";
-    //    String content = "=1+2";
+    //    String content= "=_Var:=2";
+        String content = "=1+2";
         cellTest.setContent(content);
         
         //Test temporary variable
