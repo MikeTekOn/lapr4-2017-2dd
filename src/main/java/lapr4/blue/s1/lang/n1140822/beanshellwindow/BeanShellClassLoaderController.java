@@ -6,10 +6,12 @@
 package lapr4.blue.s1.lang.n1140822.beanshellwindow;
 
 import bsh.EvalError;
+import csheets.core.IllegalValueTypeException;
 import csheets.ui.ctrl.UIController;
 import java.io.FileNotFoundException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import lapr4.blue.s1.lang.n1151159.macros.compiler.MacroCompilationException;
 
 /**
  *
@@ -29,9 +31,10 @@ public class BeanShellClassLoaderController {
         try {
             BeanShellInstance instance = loader.create(scriptName,controller);
             result = new BeanShellResult(instance.executeScript());
-        } catch (FileNotFoundException | EvalError ex) {
+        } catch (FileNotFoundException | EvalError | MacroCompilationException | IllegalValueTypeException ex) {
             Logger.getLogger(BeanShellClassLoaderController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        } 
+       
         return result;
     }
 }

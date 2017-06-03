@@ -5,12 +5,14 @@
  */
 package lapr4.red.s1.core.n1150690.comments.domain;
 
+import java.io.Serializable;
+
 /**
  * This class represents the system user.
  *
  * @author Sofia Silva [1150690@isep.ipp.pt]
  */
-public class User {
+public class User implements Serializable {
 
     /**
      * The name of the user.

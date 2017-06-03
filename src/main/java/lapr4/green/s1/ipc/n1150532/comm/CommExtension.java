@@ -220,7 +220,7 @@ public class CommExtension extends Extension implements Observer {
             }
             if (arg instanceof NewConnectionMadeEvent) {
                 NewConnectionMadeEvent event = (NewConnectionMadeEvent) arg;
-                tcpClientsManager.requestConnectionTo(event.getServerIPAddress(), event.getServerPortNumber());
+                tcpClientsManager.requestConnectionTo(event.getConnectionID());
             }
         }
     }

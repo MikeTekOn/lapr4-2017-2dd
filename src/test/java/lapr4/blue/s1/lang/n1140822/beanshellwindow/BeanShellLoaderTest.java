@@ -56,19 +56,12 @@ public class BeanShellLoaderTest {
         System.out.println(" ensureBeanShellClassInstanceIsBuiltCorrectly");
         String code = "print(\"test\");";
         
-        File file =  folder.newFile("fileTest.bsh");
-        file.deleteOnExit();
-        FileOutputStream fileOut = new FileOutputStream(file);
-        fileOut.write(code.getBytes());
-        fileOut.flush();
-        fileOut.close();
-
-        String scriptName = "fileTest.bsh";
+      
         BeanShellLoader instance = new BeanShellLoader();
         LinkedList<String> list = new LinkedList<>();
         list.add("print(\"test\");");
-        BeanShellInstance expResult = new BeanShellInstance(list, controller);
-        BeanShellInstance result = instance.create(folder.getRoot().getAbsolutePath()+"/"+scriptName, controller);
+        BeanShellInstance expResult = new BeanShellInstance(list,list, controller);
+        BeanShellInstance result = instance.create(code, controller);
 
         assertEquals(expResult, result);
 
@@ -82,20 +75,12 @@ public class BeanShellLoaderTest {
         UIController controller = new UIController(new CleanSheets());
         System.out.println(" ensureBeanShellClassInstanceIsBuiltCorrectly");
         String code = "";
-        File file2 = folder.newFile("fileTest2.bsh");
-        
-        file2.deleteOnExit();
-        FileOutputStream fileOut = new FileOutputStream(file2);
-        fileOut.write(code.getBytes());
-        fileOut.flush();
-        fileOut.close();
-        String scriptName = "fileTest2.bsh";
+     
         BeanShellLoader instance = new BeanShellLoader();
         LinkedList<String> list = new LinkedList<>();
         list.add("print(\"test\");");
-        BeanShellInstance expResult = new BeanShellInstance(list, controller);
-        BeanShellInstance result = instance.create(folder.getRoot().getAbsolutePath()+"/"+scriptName, controller);
-
+        BeanShellInstance expResult = new BeanShellInstance(list,list, controller);
+        BeanShellInstance result = instance.create(code, controller);
         assertEquals(expResult, result);
 
     }
