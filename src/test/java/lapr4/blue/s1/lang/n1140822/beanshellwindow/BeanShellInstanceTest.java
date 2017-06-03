@@ -7,8 +7,10 @@ package lapr4.blue.s1.lang.n1140822.beanshellwindow;
 
 import bsh.EvalError;
 import csheets.CleanSheets;
+import csheets.core.IllegalValueTypeException;
 import csheets.ui.ctrl.UIController;
 import java.util.LinkedList;
+import lapr4.blue.s1.lang.n1151159.macros.compiler.MacroCompilationException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -45,7 +47,7 @@ public class BeanShellInstanceTest {
      * Test of executeScript method, of class BeanShellInstance.
      */
     @Test(expected = EvalError.class)
-    public void  ensureBeanShellScriptFailsIfBadCode() throws EvalError {
+    public void  ensureBeanShellScriptFailsIfBadCode() throws EvalError, MacroCompilationException, IllegalValueTypeException {
         System.out.println("ensureBeanShellScriptFailsIfBadCode");
          UIController controller = new UIController(new CleanSheets());
         LinkedList<String> list = new LinkedList<>();
@@ -54,7 +56,7 @@ public class BeanShellInstanceTest {
         instance.executeScript();
     }
     
-     public void  ensureBeanShellScriptExecutes() throws EvalError {
+     public void  ensureBeanShellScriptExecutes() throws EvalError, MacroCompilationException, IllegalValueTypeException {
         System.out.println("ensureBeanShellScriptExecutes");
          UIController controller = new UIController(new CleanSheets());
         LinkedList<String> list = new LinkedList<>();

@@ -39,15 +39,17 @@ public class BeanShellLoader {
         this.scriptName = scriptName;
         LinkedList<String> code = new LinkedList<>();
         LinkedList<String> macro = new LinkedList<>();
-        Scanner scan = new Scanner(new File(scriptName));
+        Scanner scan = new Scanner(scriptName);
         boolean macroFlag = false;
         while (scan.hasNextLine()) {
             String codeLine = scan.nextLine();
             if (codeLine.equals("macro_start")) {
                 macroFlag = true;
+                continue;
             }
             if (codeLine.equals("macro_end")) {
                 macroFlag = false;
+                continue;
             }
             if (!macroFlag) {
                 code.add(codeLine);

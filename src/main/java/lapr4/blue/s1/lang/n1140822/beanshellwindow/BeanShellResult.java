@@ -25,7 +25,9 @@ public class BeanShellResult {
     public BeanShellResult(Map<String, Object> results) {
         this.results = results;
     }
-    
-   //TODO:GET RESULTS
-
+   
+    public String lastResult()
+    {
+        return results.values().toArray()[results.values().size()-1].toString();
+    }
 }

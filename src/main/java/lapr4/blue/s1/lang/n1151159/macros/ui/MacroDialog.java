@@ -11,6 +11,14 @@ import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import lapr4.blue.s1.lang.n1140822.beanshellwindow.BeanShellClassLoaderController;
+import lapr4.blue.s1.lang.n1140822.beanshellwindow.BeanShellResult;
+import lapr4.blue.s1.lang.n1151159.macros.MacroExtension;
 
 /**
  * Represents a dialog to execute macros.
@@ -76,7 +84,26 @@ public class MacroDialog extends JDialog {
         JPanel macroLanguagePanel = new JPanel();
 
         macroLanguageRadioButton = new JRadioButton("Macro");
+           macroLanguageRadioButton .addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                    macroTextArea.setText("");
+            }
+        });
         beanShellLanguageRadioButton = new JRadioButton("Bean Shell");
+        beanShellLanguageRadioButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    //@1140822 Renato
+                    //ONLY FOR THE DEFAULT SCRIPT - TO BE REMOVED IN SECOND ITERATION
+                    Scanner scan = new Scanner(new File(MacroExtension.class.getResource("res/script/default_script.bsh").getFile()));
+                    while (scan.hasNextLine()) {
+                        macroTextArea.append(scan.nextLine()+"\n");
+                    }
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(MacroDialog.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
 
         ButtonGroup buttonGroup = new ButtonGroup();
         buttonGroup.add(macroLanguageRadioButton);
@@ -172,7 +199,10 @@ public class MacroDialog extends JDialog {
                                     JOptionPane.ERROR_MESSAGE);
                         }
                     } else if (beanShellLanguageRadioButton.isSelected()) {
-                        // TODO handle beanshell language
+
+                        BeanShellClassLoaderController beanShellController = new BeanShellClassLoaderController();
+                        BeanShellResult result = beanShellController.createAndExecuteScript(macroText, uiController);
+                        macroOutputTextField.setText(result.lastResult());
                     }
                 }
             }
