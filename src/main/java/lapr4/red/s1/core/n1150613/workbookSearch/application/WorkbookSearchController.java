@@ -29,6 +29,7 @@ public class WorkbookSearchController {
      * Utilities from Regex
      */
     private RegexUtil util;
+    private UIController ctrl;
 
     /**
      * Active workbook at the moment
@@ -39,7 +40,8 @@ public class WorkbookSearchController {
 
     public WorkbookSearchController(UIController ctrl) {
         info = new ArrayList<>();
-        w = ctrl.getActiveWorkbook();
+        this.ctrl = ctrl;
+
     }
 
     /**
@@ -51,6 +53,7 @@ public class WorkbookSearchController {
      */
     public List<String> checkifRegexMatches(String regex) {
         util = new RegexUtil(regex);
+        w = ctrl.getActiveWorkbook();
 
         if (!util.isRegexValid()) {
             return null;
@@ -67,7 +70,7 @@ public class WorkbookSearchController {
                 c = itCell.next();
 
                 if (util.checkIfMatches(c.getContent())) {
-                    info.add(c.getContent() + " " + c.getAddress().getColumn() + " " + c.getAddress().getRow());
+                    info.add(c.getContent() + " " + c.getAddress().toString());
                 }
             }
         }

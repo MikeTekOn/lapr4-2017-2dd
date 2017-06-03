@@ -18,7 +18,7 @@ import javax.swing.JMenu;
 public class ImportExportMenu extends JMenu {
     
     public ImportExportMenu(UIController uiController) {
-		super("Import/Export");
+		super("Import/Export TXT");
 		setMnemonic(KeyEvent.VK_I);
 
 		// Adds font actions
