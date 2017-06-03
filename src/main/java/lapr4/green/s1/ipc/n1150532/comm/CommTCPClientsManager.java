@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import lapr4.black.s1.ipc.n2345678.comm.sharecells.RequestSharedCellsDTO;
+import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionRequestDTO;
 
 /**
@@ -24,10 +26,9 @@ public class CommTCPClientsManager implements Serializable {
     private static CommTCPClientsManager manager;
 
     /**
-     * The existing TCP client workers identified by the InetAddress of their
-     * connection.
+     * The existing TCP client workers identified by the ConnectionID.
      */
-    private final Map<InetAddress, CommTCPClientWorker> clients;
+    private final Map<ConnectionID, CommTCPClientWorker> clients;
 
     /**
      * The handlers available to its clients.
@@ -78,20 +79,19 @@ public class CommTCPClientsManager implements Serializable {
      * It builds a TCP connection with a server. Afterwards it adds the created
      * worker to the manager's clients.
      *
-     * @param serverAddress The server InetAddress.
-     * @param portNumber The server port number.
+     * @param theConnection The connection information.
      */
-    public void requestConnectionTo(InetAddress serverAddress, int portNumber) {
-        if (clients.get(serverAddress) == null) {
-            CommTCPClientWorker worker = new CommTCPClientWorker(this, serverAddress, portNumber);
-            ConnectionRequestDTO request = new ConnectionRequestDTO(CommTCPServer.getServer().provideConnectionPort(), serverAddress, portNumber);
+    public void requestConnectionTo(ConnectionID theConnection) {
+        if (clients.get(theConnection) == null) {
+            CommTCPClientWorker worker = new CommTCPClientWorker(this, theConnection.getAddress(), theConnection.getPortNumber());
+            ConnectionRequestDTO request = new ConnectionRequestDTO(CommTCPServer.getServer().provideConnectionPort(), theConnection.getAddress(), theConnection.getPortNumber());
             worker.start();
             try {
                 worker.getObjectOutputStream().writeObject(request);
             } catch (IOException ex) {
                 Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, ex);
             }
-            addClient(serverAddress, worker);
+            addClient(theConnection, worker);
         }
     }
 
@@ -99,15 +99,24 @@ public class CommTCPClientsManager implements Serializable {
      * It sends a range of cells to the server. if a client does not exist, it
      * does nothing.
      *
-     * @param serverAddress The server InetAddress to identify the client to
-     * use.
+     * @param connection The connection id.
      * @param spreadsheet The spreadsheet from which to extract the cells.
      * @param firstAddress The first address of the range.
-     * @param secondAddress The second address of the range.
+     * @param lastAddress The last address of the range.
      */
-    public void shareCellsWith(InetAddress serverAddress, Spreadsheet spreadsheet, Address firstAddress, Address secondAddress) {
-        if (clients.get(serverAddress) != null) {
-
+    public void shareCellsWith(ConnectionID connection, Spreadsheet spreadsheet, Address firstAddress, Address lastAddress) {
+        CommTCPClientWorker worker = clients.get(connection);
+        if (worker!=null) {
+            RequestSharedCellsDTO request = new RequestSharedCellsDTO(spreadsheet.getTitle(), spreadsheet,firstAddress,lastAddress);
+            //@TODO
+            //@author Manuel Meireles (1150532)
+            // The handlers are not yet implemented.
+            // When the handlers are implemented, the following code can be used.
+//            try {
+//                worker.getObjectOutputStream().writeObject(request);
+//            } catch (IOException ex) {
+//                Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, ex);
+//            }
         }
     }
 
@@ -125,11 +134,11 @@ public class CommTCPClientsManager implements Serializable {
     /**
      * It adds a client to the manager's clients.
      *
-     * @param serverIPAddress The client identifier.
+     * @param connection The client identifier.
      * @param worker The client itself.
      */
-    private void addClient(InetAddress serverIPAddress, CommTCPClientWorker worker) {
-        clients.put(serverIPAddress, worker);
+    private void addClient(ConnectionID connection, CommTCPClientWorker worker) {
+        clients.put(connection, worker);
     }
 
 }

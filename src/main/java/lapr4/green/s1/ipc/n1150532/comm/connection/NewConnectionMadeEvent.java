@@ -52,4 +52,12 @@ public class NewConnectionMadeEvent {
         return serverPortNumber;
     }
 
+    /**
+     * It provides a ConnectionID from the data.
+     *
+     * @return It returns a new ConnectionID with this data.
+     */
+    public ConnectionID getConnectionID(){
+        return new ConnectionIDImpl(serverIPAddress,serverPortNumber);
+    }
 }

@@ -8,6 +8,7 @@ package lapr4.red.s1.core.n1150613.workbookSearch.application;
 import csheets.core.Cell;
 import csheets.core.Spreadsheet;
 import csheets.core.Workbook;
+import csheets.ui.ctrl.UIController;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -19,23 +20,46 @@ import lapr4.red.s1.core.n1150613.workbookSearch.RegexUtil;
  */
 public class WorkbookSearchController {
 
+    /**
+     * Contentor to return desired cells information
+     */
     private List<String> info;
+
+    /**
+     * Utilities from Regex
+     */
     private RegexUtil util;
+
+    /**
+     * Active workbook at the moment
+     */
     private Workbook w;
     private Spreadsheet s;
     private Cell c;
 
-    public WorkbookSearchController(Workbook w) {
-        this.w = w;
+    public WorkbookSearchController(UIController ctrl) {
         info = new ArrayList<>();
+        w = ctrl.getActiveWorkbook();
     }
 
+    /**
+     * The call to the method to search through the whole woorkbook and match
+     * it's contents with the inserted regular expression.
+     *
+     * @param regex regular expression inserted by user
+     * @return desired cells information in String array
+     */
     public List<String> checkifRegexMatches(String regex) {
         util = new RegexUtil(regex);
+
+        if (!util.isRegexValid()) {
+            return null;
+        }
 
         Iterator<Spreadsheet> it = w.iterator();
         Iterator<Cell> itCell;
 
+        //review algorithm
         while (it.hasNext()) {
             s = it.next();
             itCell = s.iterator();
