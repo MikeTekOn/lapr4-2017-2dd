@@ -21,6 +21,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.Border;
@@ -29,6 +30,8 @@ import lapr4.blue.s1.lang.n1151031.formulastools.ConditionStylableCell;
 import lapr4.blue.s1.lang.n1151031.formulastools.ConditionStylableCellListener;
 import lapr4.blue.s1.lang.n1151031.formulastools.ConditionalStyleExtension;
 import lapr4.blue.s1.lang.n1151031.formulastools.UserStyle;
+import lapr4.white.s1.core.n1234567.comments.CommentableCell;
+import lapr4.white.s1.core.n1234567.comments.CommentsExtension;
 
 /**
  *
@@ -368,6 +371,10 @@ public class ConditionalStylePanel extends JPanel implements SelectionListener, 
     public void selectionChanged(SelectionEvent event) {
         Cell cell = event.getCell();
 
+        if (cell == null) {
+            return;
+        }
+
         if (cell.getExtension(ConditionalStyleExtension.NAME) == null) {
             return;
         }
@@ -420,7 +427,11 @@ public class ConditionalStylePanel extends JPanel implements SelectionListener, 
         public void focusLost(FocusEvent e) {
             // TODO Auto-generated method stub
             if (cell != null) {
-                controller.setCondition(cell, conditionField.getText().trim());
+                try {
+                    controller.setCondition(cell, conditionField.getText().trim());
+                } catch (RuntimeException ex) {
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
+                }
             }
         }
     }
