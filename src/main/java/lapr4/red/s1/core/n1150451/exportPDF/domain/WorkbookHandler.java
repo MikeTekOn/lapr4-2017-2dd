@@ -9,10 +9,12 @@ import csheets.core.Address;
 import csheets.core.Cell;
 import csheets.core.Spreadsheet;
 import csheets.core.Workbook;
+import csheets.ui.ctrl.UIController;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import lapr4.green.s1.ipc.n1150800.importexportTXT.CellRange;
 
 /**
  *
@@ -30,18 +32,36 @@ public class WorkbookHandler {
         List<Cell> list = new ArrayList<>();
         Iterator<Spreadsheet> it = w.iterator();
         while (it.hasNext()) {
-            list.addAll(getListCellsSpreadSheet(it.next()));
+            list.addAll(getListCellsSpreadsheet(it.next()));
         }
         return list;
     }
 
-    public List<Cell> getListCellsSpreadSheet(Spreadsheet s) {
+    public List<Cell> getListCellsSpreadsheet(Spreadsheet s) {
         List<Cell> list = new ArrayList<>();
-        for (int i = 0; i < 127; i++) {
-            for (int j = 0; j < 52; j++) {
-                list.add(s.getCell(i,j));
+        list.addAll(getListCellsBetweenRange(s, 0, 127, 0, 52));
+        return list;
+    }
+    
+    private List<Cell> getListCellsBetweenRange(Spreadsheet s, int topLeftRow, int bottomRightRow, int topLeftColumn, int topRightColumn) {
+        List<Cell> list = new ArrayList<>();
+        for (int i = topLeftRow; i <= bottomRightRow; i++) {
+            for (int j = topLeftColumn; j <= topRightColumn; j++) {
+                list.add(s.getCell(i, j));
             }
         }
         return list;
+    }
+
+    public List<Cell> getListCellsSpreadSheetWithinRange(Spreadsheet ws, String text, UIController uiC, ExportPDF ePDF) {
+        String[] range = text.split(":");
+        CellRange cellRange = new CellRange(range[0], range[1], uiC);
+        List<Cell> cells = new ArrayList<>();
+        Address leftCell = cellRange.getFirstCell().getAddress();
+        Address rightCell = cellRange.getLastCell().getAddress();
+        ePDF.setLimits(leftCell.getRow(), rightCell.getRow(), leftCell.getColumn(), rightCell.getColumn());
+        cells.addAll(ws.getCells(leftCell, rightCell));
+        return cells;
+    
     }
 }

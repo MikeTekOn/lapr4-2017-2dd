@@ -90,8 +90,6 @@ public class UserStyle {
 
     /**
      * Creates an instance of UserStyle with the default options.
-     *
-     * @param cell
      */
     public UserStyle() {
         this.trueStyleFont = DEFAULT_FONT;
