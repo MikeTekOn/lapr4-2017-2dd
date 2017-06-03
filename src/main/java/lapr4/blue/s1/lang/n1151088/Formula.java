@@ -30,6 +30,8 @@ import csheets.core.formula.util.ExpressionVisitorException;
 import csheets.core.formula.util.ReferenceFetcher;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import lapr4.blue.s1.lang.n1151088.temporaryVariables.CircularReferenceException;
+import lapr4.blue.s1.lang.n1151088.temporaryVariables.CircularReferenceFinder;
 import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVarContentor;
 import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVariable;
 

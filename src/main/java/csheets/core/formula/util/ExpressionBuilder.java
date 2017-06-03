@@ -107,8 +107,10 @@ public class ExpressionBuilder implements ExpressionVisitor {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
-        @Override
-        public Object visitTemporaryVariable(TemporaryVariable tempVar) {
-            throw new UnsupportedOperationException("Not supported.");
-        }
+    @Override
+    public Object visitTemporaryVariable(TemporaryVariable tempVar) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+     
 }

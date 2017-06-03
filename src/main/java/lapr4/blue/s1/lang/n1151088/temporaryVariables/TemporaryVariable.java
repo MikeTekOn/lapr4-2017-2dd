@@ -22,7 +22,7 @@ public class TemporaryVariable implements Expression {
 
     
     /** The name of the temporary variable     */
-    private String name;
+    private final String name;
     
     /** The value of the temporary variable */
     private Value value;

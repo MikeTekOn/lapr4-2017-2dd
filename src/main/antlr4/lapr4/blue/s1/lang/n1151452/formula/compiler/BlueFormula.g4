@@ -46,7 +46,7 @@ function_call
 
 	
 temporary_variable
-          : TEMPORARY_VARIABLE comparison RPAR
+          : TEMPORARY_VARIABLE ASSIGN ATOM
           ;
 
 reference

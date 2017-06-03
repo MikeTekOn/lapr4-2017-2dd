@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
  * @author Diana Silva [1151088@isep.ipp.pt]
  *         on 02/06/17
  */
-public class FormulaTest {
+public class TemporaryVariableTest {
 
     private CleanSheets app;
     Cell cellA1;
@@ -39,8 +39,8 @@ public class FormulaTest {
 
         // Introducing expression
         Cell cellTest = app.getWorkbooks()[0].getSpreadsheet(0).getCell(new Address(0, 0));
-     //   String content= "=_Var:=2";
-        String content = "=1+2";
+        String content= "=_Var:=2";
+    //    String content = "=1+2";
         cellTest.setContent(content);
         
         //Test temporary variable
