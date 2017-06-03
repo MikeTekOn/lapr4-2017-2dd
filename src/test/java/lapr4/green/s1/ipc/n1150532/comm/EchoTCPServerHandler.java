@@ -4,13 +4,14 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import lapr4.green.s1.ipc.n1150532.comm.connection.SocketEncapsulatorDTO;
 
 /**
- * A handler for the server to deal with EchoDTO.
+ * A handler for the server TCP to deal with EchoDTO.
  *
  * @author Manuel Meireles (1150532@isep.ipp.pt)
  */
-public class EchoServerHandler implements CommHandler {
+public class EchoTCPServerHandler implements CommHandler {
 
     /**
      * The last DTO received.
@@ -25,12 +26,14 @@ public class EchoServerHandler implements CommHandler {
      */
     @Override
     public void handleDTO(Object dto, ObjectOutputStream outStream) {
-        lastReceivedDTO=dto;
-        EchoDTO reply=new EchoDTO(((EchoDTO)dto).getAnswer(),null);
+        SocketEncapsulatorDTO receivedDTO = (SocketEncapsulatorDTO) dto;
+        EchoDTO request = (EchoDTO) receivedDTO.getDTO();
+        lastReceivedDTO=request;
+        EchoDTO reply=new EchoDTO(request.getAnswer(),null);
         try {
             outStream.writeObject(reply);
         } catch (IOException ex) {
-            Logger.getLogger(EchoServerHandler.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EchoTCPServerHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

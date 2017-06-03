@@ -46,7 +46,7 @@ public class BaseEchoCommunicationTest {
         
         ObjectOutputStream outStream = null;
         try {
-            Socket clientSocket = new Socket(InetAddress.getLocalHost(), 15399);
+            Socket clientSocket = new Socket(InetAddress.getLocalHost(), 15370);
             Logger.getLogger(BaseEchoCommunicationTest.class.getName()).log(Level.INFO, "Porta Local="+clientSocket.getLocalPort());
             
             CommClientWorker client=new CommClientWorker(clientSocket);
