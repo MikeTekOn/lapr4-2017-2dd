@@ -72,9 +72,10 @@
  * <ol>
  * <li>  Selects Function Wizard option ("fx" button).</li> 
  * <li>  A new window will appear. Choose the function: FACT.</li> 
- * <li>  On the label it will be possible see the description of the function and on edit box the syntax: =FACT()</li> 
+ * <li>  On the label it will be possible see the description of the function and on edit box the syntax: =FACT(Number)</li>
+ * <li>  Change parameter Number to 3.
  * <li>  Then click "Apply" button.</li> 
- * <li>  The system close the window and write the syntax function in the formula bar.</li> 
+ * <li>  The system close the window and write the function in the formula bar and show the result: 6.</li> 
  * </ol>
  * 
  * <h3>4.2. UC Realization</h3>
@@ -138,12 +139,12 @@
  *                  "Function Wizard",
  *                  JOptionPane.ERROR_MESSAGE);
  *          }  
- *      } catch (FormulaCompilationException f){
+ *      } catch (FormulaCompilationException | java.lang.IllegalArgumentException i){
  *          JOptionPane.showMessageDialog(
  *                  null,
  *                  "Invalid Formula!\n"
  *                  + "Check if all parameters has valid values!\n\n"
- *                  + "(e.g. =FACT(3))",
+ *                  + "e.g.  = IF( A1 > 2; \"abc\"; \"xpto\") ",
  *                  "Function Wizard",
  *                  JOptionPane.ERROR_MESSAGE);
  *      }
