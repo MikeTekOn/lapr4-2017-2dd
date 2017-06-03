@@ -8,7 +8,6 @@ package lapr4.green.s1.ipc.n1150800.importexportTXT.ui;
 import csheets.ext.Extension;
 import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.UIExtension;
-import lapr4.green.s1.ipc.n1150800.importexportTXT.ui.UIExtensionImportExportData;
 
 /**
  *
@@ -33,6 +32,7 @@ public class ImportExportExtension extends Extension {
      * @param uiController the user interface controller
      * @return a user interface extension, or null if none is provided
      */
+    @Override
     public UIExtension getUIExtension(UIController uiController) {
         return new UIExtensionImportExportData(this, uiController);
     }

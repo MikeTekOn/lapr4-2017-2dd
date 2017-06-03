@@ -1,5 +1,6 @@
 package lapr4.blue.s1.lang.n1151159.macros.ui;
 
+import bsh.EvalError;
 import csheets.core.IllegalValueTypeException;
 import csheets.core.Value;
 import csheets.ui.ctrl.UIController;
@@ -203,9 +204,13 @@ public class MacroDialog extends JDialog {
                         }
                     } else if (beanShellLanguageRadioButton.isSelected()) {
 
-                        BeanShellClassLoaderController beanShellController = new BeanShellClassLoaderController();
-                        BeanShellResult result = beanShellController.createAndExecuteScript(macroText, uiController);
-                        macroOutputTextField.setText(result.lastResult());
+                        try {
+                            BeanShellClassLoaderController beanShellController = new BeanShellClassLoaderController();
+                            BeanShellResult result = beanShellController.createAndExecuteScript(macroText, uiController);
+                            macroOutputTextField.setText(result.lastResult());
+                        } catch (FileNotFoundException | EvalError | MacroCompilationException | IllegalValueTypeException ex) {
+                            Logger.getLogger(MacroDialog.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                 }
             }

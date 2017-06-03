@@ -20,6 +20,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -109,9 +110,10 @@ public class WorkbookSearchSideBar extends JPanel {
         searchPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent evt) {
-                String regExp = (String) searchPanel.getSelectedValue();
+                // String regExp = (String) searchPanel.getSelectedValue();
+                searchPanel.removeAll();
+                searchPanel.updateUI();
 
-                searchField.setText(regExp);
             }
         });
         return new JScrollPane(searchPanel);
@@ -139,14 +141,20 @@ public class WorkbookSearchSideBar extends JPanel {
         b.addActionListener((new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
+
                     model.clear();
                     info = controller.checkifRegexMatches(searchField.getText().trim());
+
                     for (String s : info) {
 
                         model.addElement(s);
+
                     }
                 } catch (NullPointerException nll) {
-                    System.out.print("Caught the NullPointerException");
+                    JOptionPane.showMessageDialog(null,
+                            "The inserted regular expression is not valid.",
+                            "Invalid regex",
+                            JOptionPane.ERROR_MESSAGE);
                 }
 
                 searchField.setText("");
