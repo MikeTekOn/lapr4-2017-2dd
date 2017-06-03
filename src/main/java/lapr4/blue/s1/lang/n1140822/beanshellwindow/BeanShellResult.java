@@ -20,14 +20,15 @@ public class BeanShellResult {
 
     /**
      * Constructor for this class.
-     * @param results a map with line of code and object of the evaluation of that line.
+     *
+     * @param results a map with line of code and object of the evaluation of
+     * that line.
      */
     public BeanShellResult(Map<String, Object> results) {
         this.results = results;
     }
-   
-    public String lastResult()
-    {
-        return results.values().toArray()[results.values().size()-1].toString();
+
+    public String lastResult() {
+        return results.values().isEmpty() ? "" : results.values().toArray()[results.values().size() - 1].toString();
     }
 }
