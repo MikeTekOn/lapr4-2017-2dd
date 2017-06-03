@@ -80,11 +80,13 @@ public class Label {
      * @param events - list of events to add
      */
     public void addEvents(List<Event> events){
+
+        if(events == null || events.contains(null)){
+            throw new IllegalArgumentException("Invalid Event");
+        }
+
         this.events = new HashSet();
         for(Event e : events){
-            if(e == null){
-                throw new IllegalArgumentException("Invalid Event");
-            }
             events.add(e);
         }
     }

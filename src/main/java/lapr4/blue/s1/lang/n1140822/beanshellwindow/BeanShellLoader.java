@@ -35,19 +35,32 @@ public class BeanShellLoader {
      * @return the class instance
      * @throws java.io.FileNotFoundException if script file is not found
      */
-    public BeanShellInstance create(String scriptName,UIController controller) throws FileNotFoundException {
+    public BeanShellInstance create(String scriptName, UIController controller) throws FileNotFoundException {
         this.scriptName = scriptName;
         LinkedList<String> code = new LinkedList<>();
-        Scanner scan = new Scanner(new File(scriptName));
-        while(scan.hasNextLine())
-        {
-            code.add(scan.nextLine());
+        LinkedList<String> macro = new LinkedList<>();
+        Scanner scan = new Scanner(scriptName);
+        boolean macroFlag = false;
+        while (scan.hasNextLine()) {
+            String codeLine = scan.nextLine();
+            if (codeLine.equals("macro_start")) {
+                macroFlag = true;
+                continue;
+            }
+            if (codeLine.equals("macro_end")) {
+                macroFlag = false;
+                continue;
+            }
+            if (!macroFlag) {
+                code.add(codeLine);
+            } else {
+                macro.add(codeLine);
+            }
         }
-        if(code.isEmpty())
-        {
+        if (code.isEmpty()) {
             throw new IllegalStateException("Cannot create script without any code.");
         }
-        instance = new BeanShellInstance(code,controller);
+        instance = new BeanShellInstance(code, macro,controller);
         return instance;
     }
 

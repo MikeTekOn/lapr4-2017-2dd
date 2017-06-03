@@ -72,9 +72,10 @@
  * <ol>
  * <li>  Selects Function Wizard option ("fx" button).</li> 
  * <li>  A new window will appear. Choose the function: FACT.</li> 
- * <li>  On the label it will be possible see the description of the function and on edit box the syntax: =FACT()</li> 
+ * <li>  On the label it will be possible see the description of the function and on edit box the syntax: =FACT(Number)</li>
+ * <li>  Change parameter Number to 3.
  * <li>  Then click "Apply" button.</li> 
- * <li>  The system close the window and write the syntax function in the formula bar.</li> 
+ * <li>  The system close the window and write the function in the formula bar and show the result: 6.</li> 
  * </ol>
  * 
  * <h3>4.2. UC Realization</h3>
@@ -91,15 +92,68 @@
  * 
  * <h2>5. Implementation</h2>
  * 
+ * <p>
+ * It was necessary concatenate the syntax of each Function.
+ * The code below shows the method of construction:
  * 
- * <h2>6. Integration/Demonstration</h2>
+ * <pre>
+ * {@code 
+ *  public class FunctionWizardController {
+ *      ...
+ *  public String getSyntax(String identifier) throws UnknownElementException{
+ *      String aux = EQUAL + identifier + LEFT_PAR;
+ *      int count = 0;
+ *      for (FunctionParameter fs : Language.getInstance().getFunction(identifier).getParameters()){
+ *          if(count == 0){
+ *              aux += fs.getName();
+ *          }else{
+ *              aux += SEMICOLON + fs.getName();
+ *          } 
+ *          count++;
+ *      }
+ *      aux += RIGHT_PAR;
+ *      return aux;
+ *  }
+ * }
+ * }
+ * </pre>
+ * <p>
+ * It was assumed that it would only be possible to submit a valid formula by clicking on the apply button.
+ * Therefore, JoptionPane was implemented to alert the user
+ * <pre>
+ * {@code 
+ *  public class FunctionWizardUI {
+ *      ...
  * 
+ *  //execute when Apply Button is cliked
+ *   private void apply() throws FormulaCompilationException{
+ *      try {
+ *          String aux = txtSyntax.getText();
+ *          if (!aux.isEmpty()){
+ *              controller.insertSyntaxFormulaBar(aux);
+ *              dispose();
+ *          }else{
+ *              JOptionPane.showMessageDialog(
+ *                  null,
+ *                  "Edit box is empty!",
+ *                  "Function Wizard",
+ *                  JOptionPane.ERROR_MESSAGE);
+ *          }  
+ *      } catch (FormulaCompilationException | java.lang.IllegalArgumentException i){
+ *          JOptionPane.showMessageDialog(
+ *                  null,
+ *                  "Invalid Formula!\n"
+ *                  + "Check if all parameters has valid values!\n\n"
+ *                  + "e.g.  = IF( A1 > 2; \"abc\"; \"xpto\") ",
+ *                  "Function Wizard",
+ *                  JOptionPane.ERROR_MESSAGE);
+ *      }
+ *   }
+ * }
+ * }
+ * </pre>
  * 
- * 
- * <h2>7. Final Remarks</h2>
- * 
- * 
- * <h2>8. Work Log</h2> 
+ * <h2>6. Work Log</h2> 
  * 
  * <b>Tuesday</b>
  * <p>
@@ -108,11 +162,17 @@
  * <p>
  * <b>Wednesday</b>
  * <p>
- * Update analysis and started design
+ * Update analysis and started design + functional test
  * 
- * <h2>9. Self Assessment</h2> 
+ * <p>
+ * <b>Thursday</b>
+ * <p>
+ * Implemented almost all code and update design
  * 
- * 
+ * <p>
+ * <b>Friday</b>
+ * <p>
+ * Finish implementation 
  * 
  * @author Pedro Fernandes 1060503 - 2DD - 2016/17
  */

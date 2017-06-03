@@ -9,7 +9,7 @@ expression
 block
 	: L_CURLY_BRACKET comparison ( SEMI comparison )* R_CURLY_BRACKET 
 	;
-	
+
 comparison
 	: concatenation
 		( ( EQ | NEQ | GT | LT | LTEQ | GTEQ ) concatenation )?
@@ -31,6 +31,7 @@ atom
 	|	LPAR comparison RPAR
 	|	block
 	|	assignment
+        |       temporary_variable
 	;
 
 assignment
@@ -42,6 +43,11 @@ function_call
 		( comparison ( SEMI comparison )* )?
 		RPAR
 	;
+
+	
+temporary_variable
+          : TEMPORARY_VARIABLE ASSIGN ATOM
+          ;
 
 reference
 	:	CELL_REF
@@ -66,6 +72,10 @@ CELL_REF
 		( ABS )? LETTER ( LETTER )?
 		( ABS )? ( DIGIT )+
 	;
+
+TEMPORARY_VARIABLE :
+        UNDERSCORE LETTER ((DIGIT)?(LETTER)?)+
+        ;
 
 /* String literals, i.e. anything inside the delimiters */
 
@@ -112,12 +122,10 @@ LPAR	: '(' ;
 RPAR	: ')' ; 
 L_CURLY_BRACKET	: '{' ;
 R_CURLY_BRACKET	: '}' ;
+UNDERSCORE : '_';
 
 /* assignment operator */
 ASSIGN  : ':=' ;
 
 /* White-space (ignored) */
 WS: ( ' ' | '\r' '\n' | '\n' | '\t' ) -> skip ;
-	
-	
- 

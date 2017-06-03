@@ -16,9 +16,10 @@ import java.io.IOException;
  *
  * @author nunopinto
  */
-public class Directory {
+public class Directory implements Runnable{
 
     private File rootPath;
+
 
     /**
      * Acceptable extensions
@@ -59,7 +60,8 @@ public class Directory {
     private void search(File file) {
 
         //do you have permission to read this directory?
-        if (file.canRead()) {
+        if (file.canRead()){
+            try{
             for (File temp : file.listFiles()) {
                 if (temp.isDirectory()) {
                     search(temp);
@@ -70,6 +72,10 @@ public class Directory {
                     }
 
                 }
+            }
+            }catch(NullPointerException ex){
+                //THIS SHOULD NOT HAPPEN
+                //File.listFiles() returns null when a path is not acessible
             }
 
         }
@@ -126,5 +132,11 @@ public class Directory {
         }
 
     }
+    
+        @Override
+    public void run() {
+        searchFiles();
+    }
+
 
 }

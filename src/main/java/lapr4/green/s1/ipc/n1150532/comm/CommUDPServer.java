@@ -12,49 +12,111 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import lapr4.green.s1.ipc.n1150532.comm.connection.PacketEncapsulatorDTO;
 
 /**
- *
+ * The UDP server. It is a singleton. It replies to the UDP clients.
  *
  * @author Manuel Meireles (1150532@isep.ipp.pt)
  */
-class CommUDPServer extends Thread {
+public class CommUDPServer extends Thread {
 
+    /**
+     * The UDP server. It is a singleton.
+     */
     private static CommUDPServer theServer;
+
+    /**
+     * The server socket.
+     */
     private DatagramSocket socket = null;
+
+    /**
+     * An output stream to write bytes to a byte array.
+     */
     private ByteArrayOutputStream bos = null;
+
+    /**
+     * An output stream to write objects to a byte array output stream.
+     */
     private ObjectOutputStream out = null;
+
+    /**
+     * An input stream to read bytes from a byte array.
+     */
     private ByteArrayInputStream bis = null;
+
+    /**
+     * An input stream to read objects from a byte array input stream.
+     */
     private ObjectInputStream in = null;
-    private final int portNumber;
+
+    /**
+     * The port number used in the server socket.
+     */
+    private int portNumber;
+
+    /**
+     * The UDP server handlers.
+     */
     private static Map<Class, CommHandler> handlers;
 
-    private CommUDPServer(int thePortNumber) {
+    /**
+     * Private constructor to ensure the singleton.
+     */
+    private CommUDPServer() {
         handlers = new HashMap<>();
-        portNumber = thePortNumber;
     }
 
-    public static CommUDPServer getServer(int portNumber) {
+    /**
+     * A getter of the singleton. It builds it if not yet performed.
+     *
+     * @return It returns the singleton manager.
+     */
+    public static CommUDPServer getServer() {
         if (theServer == null) {
-            theServer = new CommUDPServer(portNumber);
-            theServer.start();
+            theServer = new CommUDPServer();
         }
         return theServer;
     }
 
+    /**
+     * It orders the server to run, i.e. it starts the server's thread. It
+     * builds the server if not yet done.
+     *
+     * @param thePortNumber The port number to use in the server.
+     */
+    public void startServer(int thePortNumber) {
+        getServer();
+        portNumber = thePortNumber;
+        theServer.start();
+    }
+
+    /**
+     * It adds a new handler to the server. These handlers are used by the
+     * server's workers.
+     *
+     * @param dto The class to be handled.
+     * @param handler The handler itself.
+     */
     public void addHandler(Class dto, CommHandler handler) {
         handlers.put(dto, handler);
     }
 
+    /**
+     * It provides the handler capable of dealing with the matching class.
+     *
+     * @param dto The class to handle.
+     * @return It returns the handler or null if no capable handler is found.
+     */
     public CommHandler getHandler(Class dto) {
         return handlers.get(dto);
     }
 
-    public synchronized void terminateExecution() {
-        socket.close();
-        socket = null;
-    }
-
+    /**
+     * It keeps receiving DatagramPackets and replies to them through the use of
+     * handlers.
+     */
     @Override
     public void run() {
         byte[] data;
@@ -69,7 +131,7 @@ class CommUDPServer extends Thread {
                 in = new ObjectInputStream(bis);
                 bos = new ByteArrayOutputStream();
                 out = new ObjectOutputStream(bos);
-                processIncommingDTO(in.readObject());
+                processIncommingDTO(in.readObject(), udpPacket);
                 data = bos.toByteArray();
                 udpPacket.setData(data);
                 udpPacket.setLength(data.length);
@@ -79,17 +141,53 @@ class CommUDPServer extends Thread {
             Logger.getLogger(CommUDPServer.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(CommUDPServer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        finally {
-            if(socket!=null)
-                socket.close();
+        } finally {
+            terminateExecution();
         }
     }
 
-    private void processIncommingDTO(Object inDTO) {
+    /**
+     * It closes the inputs and outputs streams, as well as the socket.
+     */
+    public synchronized void terminateExecution() {
+        try {
+            if (out != null) {
+                out.close();
+                out = null;
+            }
+            if (in != null) {
+                in.close();
+                in = null;
+            }
+            if (bos != null) {
+                bos.close();
+                bos = null;
+            }
+            if (bis != null) {
+                bis.close();
+                bis = null;
+            }
+            if (socket != null) {
+                socket.close();
+                socket = null;
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(CommUDPServer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    /**
+     * It handles the received DTO. It gets the right handler. It encapsulates
+     * the DTO in a PacketEncapsulationDTO in order to provide the
+     * DatagramPacket to the handler.
+     *
+     * @param inDTO The object to handler.
+     */
+    private void processIncommingDTO(Object inDTO, DatagramPacket inPacket) {
         CommHandler handler = getHandler(inDTO.getClass());
         if (handler != null) {
-            handler.handleDTO(inDTO, out);
+            PacketEncapsulatorDTO dto = new PacketEncapsulatorDTO(inPacket, handler, inDTO);
+            handler.handleDTO(dto, out);
         }
     }
 

@@ -7,7 +7,7 @@
     participant "Workbook" as WBOOK
     participant "Spreadsheet" as sheet
     participant "Cell" as cll
-    participant "Utilities" as util
+    participant "RegexUtil" as util
 
     User -> UI : begin
     activate UI 

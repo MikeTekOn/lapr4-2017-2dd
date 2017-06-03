@@ -15,7 +15,8 @@ class FunctionWizardUI{
 class FunctionWizardController {
     +getFunctions()
     +getDescription(String identifier)
-    +insertSyntaxFormulaBar()
+    +getSyntax(String identifier)
+    +insertSyntaxFormulaBar(String syntax)
 }
 class Language{
     +getFunctions()
@@ -25,12 +26,10 @@ class FunctionParameter{
     +getDescription()
 }
 FunctionWizardAction -> FunctionWizardUI 
-
 FunctionWizardUI --> FunctionWizardController 
+FunctionWizardController -> Language 
 
-FunctionWizardController --> Language 
-
-Language -> Function 
+Language --> Function 
 
 Function -> FunctionParameter
 @enduml

@@ -77,6 +77,7 @@ import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionEvent;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionStateListener;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ManageExtensionsAction;
 import lapr4.blue.s1.lang.n1060503.functionWizard.ui.FunctionWizard;
+import lapr4.red.s1.core.n1150451.exportPDF.presentation.ExportToPDFAction;
 
 /**
  * The main frame of the GUI.
@@ -122,6 +123,7 @@ public class Frame extends JFrame implements SelectionListener, ExtensionStateLi
 		actionManager.registerAction("closeall", new CloseAllAction(app, uiController, chooser));
 		actionManager.registerAction("save", new SaveAction(app, uiController, chooser));
 		actionManager.registerAction("saveas", new SaveAsAction(app, uiController, chooser));
+		actionManager.registerAction("PDF", new ExportToPDFAction(app, uiController, chooser));
 		actionManager.registerAction("exit", new ExitAction(app, uiController, chooser));
 		actionManager.registerAction("print", new PrintAction());
 

@@ -93,7 +93,7 @@
  * <img src="./importTXT/us084_design_import.png" alt="image">
  * 
  * <h2>Sequence Diagram (Export):</h2><p>
- * TODO
+ * <img src="./exportTXT/us084_design_export.png" alt="image">
  *  
  * 
  * 
@@ -108,6 +108,14 @@
  * Package lapr4.green.s1.ipc.n1150800.importexportTXT.importTXT.ui:<p>
  * {@link lapr4.green.s1.ipc.n1150800.importexportTXT.importTXT.ui.ImportDataAction}
  * {@link lapr4.green.s1.ipc.n1150800.importexportTXT.importTXT.ui.ImportDataUI}
+ * <p>
+ * Package lapr4.green.s1.ipc.n1150800.importexportTXT.exportTXT.ui:<p>
+ * {@link lapr4.green.s1.ipc.n1150800.importexportTXT.exportTXT.ui.ExportDataAction}
+ * {@link lapr4.green.s1.ipc.n1150800.importexportTXT.exportTXT.ui.ExportDataUI}
+ * <p>
+ * Package lapr4.green.s1.ipc.n1150800.importexportTXT.exportTXT.ctrl:<p>
+ * {@link lapr4.green.s1.ipc.n1150800.importexportTXT.exportTXT.ctrl.ExportDataController}
+ * <p>
  * 
  * @author Pedro Chilro (1150800)
  */
