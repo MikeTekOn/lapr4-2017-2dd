@@ -5,8 +5,6 @@
  */
 package lapr4.green.s1.ipc.n1150800.importexportTXT.importTXT.ui;
 
-import csheets.core.Address;
-import csheets.core.Cell;
 import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.ui.FileChooser;
 import csheets.ui.ctrl.UIController;
@@ -15,7 +13,6 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.Properties;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -49,9 +46,10 @@ public class ImportDataUI extends JFrame {
     private File fileToRead;
 
     /**
-     * Creates an instance of ImportDataUI with the
+     * Creates an instance of ImportDataUI with
      *
-     * @param uiController - user interface controller
+     * @param uiController - the user interface controller
+     * @param fileToRead - the file to read
      */
     public ImportDataUI(UIController uiController, File fileToRead) {
         this.uiController = uiController;
@@ -59,8 +57,9 @@ public class ImportDataUI extends JFrame {
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         createComponents();
-        setLocationRelativeTo(null);
         pack();
+        setLocationRelativeTo(null);
+        setResizable(false);
         setVisible(true);
     }
 
@@ -113,7 +112,23 @@ public class ImportDataUI extends JFrame {
         buttonConfirm.addActionListener((ActionEvent e) -> {
             try {
                 /* SEPARATOR CHARACTER */
+                if(txtFieldCharacter.getText().length() > 1) {
+                    throw new IllegalArgumentException("The separator character must have ONLY one character!");
+                }
+                
+                if(txtFieldCharacter.getText().isEmpty()) {
+                    throw new IllegalArgumentException("Choose a separator character!");
+                }
+
                 char separatorCharacter = txtFieldCharacter.getText().charAt(0);
+
+                /* FIRST LINE */
+                boolean firstLineRepresentsHeaders = false;
+                if(!radioButtonColumnHeader.isSelected() && !radioButtonNormalRow.isSelected()) {
+                    throw new IllegalArgumentException("Choose a format option for the first line of the file!");
+                } else if(radioButtonColumnHeader.isSelected()) {
+                    firstLineRepresentsHeaders = true;
+                }
 
                 /* CELL RANGE */
                 String addressStrFirstCell = txtFieldFirstCell.getText();
@@ -121,7 +136,7 @@ public class ImportDataUI extends JFrame {
 
                 CellRange cellRange = new CellRange(addressStrFirstCell, addressStrLastCell, uiController);
 
-                ImportDataController controller = new ImportDataController(uiController, fileToRead, separatorCharacter, cellRange);
+                ImportDataController controller = new ImportDataController(uiController, fileToRead, separatorCharacter, cellRange, firstLineRepresentsHeaders);
                 controller.readData();
 
                 dispose();

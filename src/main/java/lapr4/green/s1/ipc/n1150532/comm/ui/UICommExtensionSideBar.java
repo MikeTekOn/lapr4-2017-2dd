@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import lapr4.green.s1.ipc.n1150532.comm.CommExtension;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
+import lapr4.green.s1.ipc.n1150532.startSharing.ShareCellsAction;
 
 /**
  * The UI for the CommExtension's side bar.
@@ -304,7 +305,7 @@ public class UICommExtensionSideBar extends JPanel {
         public void actionPerformed(ActionEvent e) {
             ConnectionID connection = networkTable.getSelectedRowFile();
             if (connection != null) {
-                (new ConnectToPeerAction(connection.getAddress(), connection.getPortNumber())).actionPerformed(e);
+                (new ConnectToPeerAction(connection)).actionPerformed(e);
             }
         }
 
@@ -319,7 +320,7 @@ public class UICommExtensionSideBar extends JPanel {
         public void actionPerformed(ActionEvent e) {
             ConnectionID connection = peersTable.getSelectedRowFile();
             if (connection != null) {
-                //@TODO
+                (new ShareCellsAction(connection, theController)).actionPerformed(e);
             }
 
         }

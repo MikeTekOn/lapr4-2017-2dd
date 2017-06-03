@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr4.red.s1.core.n1150690.comments.domain;
+package lapr4.red.s1.core.n1150690.comments;
 
 import csheets.core.Cell;
 import eapli.util.Strings;
@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lapr4.red.s1.core.n1150690.comments.domain.User;
 import lapr4.white.s1.core.n1234567.comments.CommentableCell;
 
 /**
@@ -45,19 +46,22 @@ public class CommentableCellWithMultipleUsers extends CommentableCell {
      */
     public void addUsersComment(String comment, User user) {
         if (Strings.isNullOrEmpty(comment) || Strings.isNullOrWhiteSpace(comment)) {
-            throw new IllegalArgumentException("The comment must contain something!");
+            throw new IllegalArgumentException("The comment should not be empty!");
         }
         //changes the user comment calling the method in the parent class
         super.setUserComment(comment);
 
-        if (comments.containsKey(user)) {
-            comments.get(user).add(comment);
-        } else {
-            //if the user does not exists, it puts a new field on the list
-            List<String> newList = new ArrayList<>();
-            newList.add(comment);
-            comments.put(user, newList);
+        for (Map.Entry<User, List<String>> entry : comments.entrySet()) {
+            if (entry.getKey().name().equals(user.name())) {
+                entry.getValue().add(super.getUserComment());
+                return;
+            }
         }
+
+        //if the user does not exists, it puts a new field on the list
+        List<String> newList = new ArrayList<>();
+        newList.add(super.getUserComment());
+        comments.put(user, newList);
     }
 
     /**
@@ -70,11 +74,15 @@ public class CommentableCellWithMultipleUsers extends CommentableCell {
      */
     public void changeUserComment(String oldAuthor, User newAuthor, String oldComment, String newComment) {
         if (Strings.isNullOrEmpty(newComment) || Strings.isNullOrWhiteSpace(newComment)) {
-            throw new IllegalArgumentException("The comment must contain something!");
+            throw new IllegalArgumentException("The comment should not be empty!");
         }
-        for(Map.Entry<User, List<String>> entry : comments.entrySet()){
-            if(entry.getKey().name().equals(oldAuthor)) entry.getValue().remove(oldComment);
-            if(entry.getKey() == newAuthor) entry.getValue().add(newComment);
+        for (Map.Entry<User, List<String>> entry : comments.entrySet()) {
+            if (entry.getKey().name().equals(oldAuthor)) {
+                entry.getValue().remove(oldComment);
+            }
+            if (entry.getKey().name().equals(newAuthor.name())) {
+                entry.getValue().add(newComment);
+            }
         }
     }
 
@@ -85,6 +93,15 @@ public class CommentableCellWithMultipleUsers extends CommentableCell {
      */
     public Map<User, List<String>> comments() {
         return this.comments;
+    }
+
+    /**
+     * Verifies if this cell has comments.
+     *
+     * @return true if the cell has comments. Otherwise returns false
+     */
+    public boolean hasComments() {
+        return !this.comments.isEmpty();
     }
 
 }

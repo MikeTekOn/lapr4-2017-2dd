@@ -20,6 +20,7 @@
  */
 package csheets.core;
 
+import eapli.util.Strings;
 import java.io.Serializable;
 
 /**
@@ -55,6 +56,58 @@ public class Address implements Comparable<Address>, Serializable {
 		this.column = column;
 		this.row = row;
 	}
+
+    /**
+     * Creates a new address from the given column and row indices.
+     *
+     * @param column The string representation of the column index of the
+     * address.
+     * @param row The string representation of the row index of the address.
+     */
+    public Address(String column, String row) {
+        this.column = translateColumn(column);
+        this.row = translateRow(row);
+    }
+
+    /**
+     * It translates the string representation shown in the UI to the matching column index.
+     * 
+     * @param column The column String representation.
+     * @return It returns the index or throws an IllegalArgumentException if the data is not valid.
+     */
+    private int translateColumn(String column) {
+        if (Strings.isNullOrWhiteSpace(column)) {
+            throw new IllegalArgumentException("Missing data.");
+        }
+        int columnIndex = 0;
+        if (!column.matches("^[A-Z]+$")) {
+            throw new IllegalArgumentException("The column must contain only uppercase letters.");
+        }
+        final char[] columnArray = column.toCharArray();
+        int arrayIndex = 0;
+        while (arrayIndex < columnArray.length) {
+            columnIndex += (columnArray[arrayIndex] - LOWEST_CHAR) + (arrayIndex * (HIGHEST_CHAR - LOWEST_CHAR));
+            arrayIndex++;
+        }
+        return columnIndex;
+    }
+
+    /**
+     * It translates the string representation shown in the UI to the matching row index.
+     * 
+     * @param row The row String representation.
+     * @return It returns the index or throws an IllegalArgumentException if the data is not valid.
+     */
+    private int translateRow(String row) {
+        if (Strings.isNullOrWhiteSpace(row)) {
+            throw new IllegalArgumentException("Missing data.");
+        }
+        try {
+            return Integer.parseInt(row) - 1;
+        } catch (NumberFormatException ex) {
+            throw new IllegalArgumentException("The row must be an integer number.");
+        }
+    }
 
 	/**
 	 * Returns the column of the address.

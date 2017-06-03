@@ -24,7 +24,7 @@
 
     cp -> ctrl : commentsList = cellSelected(cell);
     ctrl -> activeCell : commentsList = cell.getComments()
-    cp -> cp : changeCommentsTest(commentsList)
+    cp -> cp : updatesCommentsList()
 
     note right of cp
         ... the CommentPanel displays the comments of the current cell.
