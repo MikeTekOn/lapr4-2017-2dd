@@ -10,17 +10,11 @@ import csheets.ui.ctrl.SelectionEvent;
 import csheets.ui.ctrl.SelectionListener;
 import csheets.ui.ctrl.UIController;
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -34,17 +28,18 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.TitledBorder;
-import lapr4.red.s1.core.n1150690.comments.domain.CommentableCellWithMultipleUsers;
+import lapr4.red.s1.core.n1150690.comments.CommentableCellWithMultipleUsers;
 import lapr4.red.s1.core.n1150690.comments.application.AddCommentsWithUserController;
 import lapr4.red.s1.core.n1150690.comments.domain.User;
+import lapr4.white.s1.core.n1234567.comments.CommentableCell;
+import lapr4.white.s1.core.n1234567.comments.CommentableCellListener;
 import lapr4.white.s1.core.n1234567.comments.CommentsExtension;
-import lapr4.white.s1.core.n1234567.comments.ui.CommentPanel;
 
 /**
  *
  * @author Sofia Silva [1150690@isep.ipp.pt]
  */
-public class CommentsWithUserUI extends JPanel implements SelectionListener {
+public class CommentsWithUserUI extends JPanel implements SelectionListener, CommentableCellListener {
 
     /**
      * The assertion controller
@@ -178,7 +173,7 @@ public class CommentsWithUserUI extends JPanel implements SelectionListener {
         JButton b = new JButton("Add");
         b.addActionListener((new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                User author = controller.addComment(cell, commentField.getText().trim());
+                User author = controller.addComment(commentField.getText().trim());
                 model.addElement(author.name() + ": " + commentField.getText());
                 commentField.setText("");
             }
@@ -191,7 +186,7 @@ public class CommentsWithUserUI extends JPanel implements SelectionListener {
         b.addActionListener((new ActionListener() {
             public void actionPerformed(ActionEvent e) {  
                 model.removeElement(selectedUser + ": " + selectedComment);
-                User author = controller.changeComment(cell, selectedComment, commentField.getText().trim(), selectedUser);
+                User author = controller.changeComment(selectedComment, commentField.getText().trim(), selectedUser);
                 model.addElement(author.name() + ": " + commentField.getText());
                 commentField.setText("");
             }
@@ -201,21 +196,37 @@ public class CommentsWithUserUI extends JPanel implements SelectionListener {
 
     @Override
     public void selectionChanged(SelectionEvent event) {
-        if(event.getCell()==null) return;
-        this.cell = new CommentableCellWithMultipleUsers(event.getCell());
-        CommentPanel panel = new CommentPanel(uiController);
-        panel.selectionChanged(event);
+        Cell c = event.getCell();
+        if(c==null)return;
+        if(c.getExtension(CommentsExtension.NAME) == null)return;
+        if (c != null) {
+            CommentableCellWithMultipleUsers cell
+				= (CommentableCellWithMultipleUsers)c.getExtension(CommentsExtension.NAME);
+            controller.changeActiveCell(cell);
+            cell.addCommentableCellListener(this);                 
+	}
+
+	// Stops listening to previous active cell
+	if (event.getPreviousCell() != null)
+	((CommentableCellWithMultipleUsers)event.getPreviousCell().getExtension(CommentsExtension.NAME))
+				.removeCommentableCellListener(this);
+        
         updateList();
     }
 
     public void updateList() {
         model.removeAllElements();
-        Map<User, List<String>> comments = controller.comments(cell);
+        Map<User, List<String>> comments = controller.comments();
         for (Map.Entry<User, List<String>> entry : comments.entrySet()) {
             for (String com : entry.getValue()) {
                 model.addElement(entry.getKey().name() + ": " + com);
             }
         }
+    }
+
+    @Override
+    public void commentChanged(CommentableCell cell) {
+        updateList();
     }
 
 }
