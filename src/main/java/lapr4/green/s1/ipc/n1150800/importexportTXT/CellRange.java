@@ -92,7 +92,7 @@ public class CellRange {
      * @return 
      */
     private Cell buildCellFromStringAddress(String strAddress, UIController uiController) {
-        //String columnStr = String.valueOf(strAddress.charAt(0)).toUpperCase();
+
         String columnStr = strAddress.split(PATTERN_RETURNS_LETTER)[0].toUpperCase();
         int column = -1;
         for (int i = columnStr.length() - 1; i >= 0; i--) {
@@ -100,7 +100,7 @@ public class CellRange {
                     * Math.pow(Address.HIGHEST_CHAR - Address.LOWEST_CHAR + 1,
                             columnStr.length() - (i + 1));
         }
-//        int row = Integer.parseInt(String.valueOf(strAddress.charAt(1))) - 1;
+
         int row = Integer.parseInt(String.valueOf(strAddress.split(PATTERN_RETURNS_NUMBER)[1])) - 1;
 
         Address address = new Address(column, row);
