@@ -122,6 +122,10 @@ public class ExportToPDFUI extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 ExportPDFController c = new ExportPDFController();
                 c.initiateExport(uiController);
+                if (sheetList.getSelectedValue()==null){
+                    JOptionPane.showMessageDialog(rootPane, "You didn't select any item from the list.");
+                    return;
+                }
                 if (sheetList.getSelectedValue().equals("all")) {
                     c.selectRange(uiController.getActiveWorkbook());
                 } else {
@@ -136,7 +140,12 @@ public class ExportToPDFUI extends JDialog {
                     if (rangeField.getText().trim().equals("")) {
                         c.selectRange(s);
                     } else {
-                        c.selectRange(s, rangeField.getText());
+                       try{
+                           c.selectRange(s, rangeField.getText());
+                       } catch (IllegalArgumentException ex){
+                           JOptionPane.showMessageDialog(rootPane, "Inserted Range is invalid.");
+                    return;
+                       }
                     }
                 }
                 c.selectPath(pathField.getText());

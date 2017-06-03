@@ -11,6 +11,7 @@ import csheets.core.Spreadsheet;
 import csheets.core.Workbook;
 import csheets.ui.ctrl.UIController;
 import java.util.List;
+import java.util.regex.Pattern;
 import lapr4.red.s1.core.n1150451.exportPDF.domain.WorkbookHandler;
 import lapr4.s1.export.ExportContext;
 
@@ -39,6 +40,10 @@ public class ExportPDFController {
     }
 
     public void selectRange(Spreadsheet ws, String text) {
+    final Pattern pattern = Pattern.compile("[A-Z]+[0-9]+:[A-Z]+[0-9]+");
+    if (!pattern.matcher(text).matches()) {
+        throw new IllegalArgumentException();
+    }
        ePDF.selectRange(new WorkbookHandler(ws.getWorkbook()).getListCellsSpreadSheetWithinRange(ws, text, c, ePDF));
     }
 
