@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Objects;
 import lapr4.blue.s1.lang.n1151159.macros.MacroController;
 import lapr4.blue.s1.lang.n1151159.macros.compiler.MacroCompilationException;
+import org.bouncycastle.util.Strings;
 
 /**
  *
@@ -42,12 +43,11 @@ public class BeanShellInstance {
     private Map<String, Object> results;
 
     private UIController controller;
-    
+
     /**
      * The macro controller.
      */
     private MacroController macroController = new MacroController();
-
 
     public BeanShellInstance(LinkedList<String> code, LinkedList<String> macro, UIController controller) {
         this.bshInterpreter = new Interpreter();
@@ -66,6 +66,7 @@ public class BeanShellInstance {
      * @throws EvalError if instruction is not valid piece of code
      */
     public Map<String, Object> executeScript() throws EvalError, MacroCompilationException, IllegalValueTypeException {
+        String appendedMacro = "";
         bshInterpreter.set("uiController", controller);
         for (String codeLine : code) {
             Object evaluation = this.bshInterpreter.eval(codeLine);
@@ -74,8 +75,12 @@ public class BeanShellInstance {
             }
         }
         for (String macro : macro) {
-                  Value value = macroController.executeMacro(controller.getActiveSpreadsheet(), macro);
-                           results.put(macro, value.toString());
+            appendedMacro+=macro+Strings.lineSeparator();
+
+        }
+        if (!appendedMacro.equals("")) {
+            Value value = macroController.executeMacro(controller.getActiveSpreadsheet(), appendedMacro);
+            results.put(appendedMacro, value.toString());
         }
         return results;
     }
