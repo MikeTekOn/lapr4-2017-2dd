@@ -47,9 +47,15 @@ public class Contact implements AggregateRoot<Long>, Serializable {
     private String firstName=null;
     
     private String lastName=null;
-    
+
     private String photo=null;
-    
+
+    private String phoneNumber = null;
+
+    private String email = null;
+
+    private String address = null;
+
     @OneToOne(cascade = CascadeType.ALL) //(cascade = CascadeType.MERGE)
     private Agenda agenda=null;
 
@@ -57,17 +63,43 @@ public class Contact implements AggregateRoot<Long>, Serializable {
         // for ORM
     }
 
-    public Contact(final String name, final String firstName, final String lastName, String photo) {
-        if (name.isEmpty()|firstName.isEmpty()|lastName.isEmpty()){
+    public Contact(final String name, final String firstName, final String lastName, final String photo){
+        if (name.trim().length()==0
+                ||firstName.trim().length()==0
+                ||lastName.trim().length()==0
+                ||photo.trim().length()==0){
             throw new IllegalStateException();
         }
         this.name = name;
         this.firstName = firstName;
         this.lastName = lastName;
         this.photo = photo;
+        this.agenda = new Agenda();
+        this.address = "";
+        this.phoneNumber = "";
+        this.email = "";
+    }
+
+    public Contact(final String name, final String firstName, final String lastName, final String photo, final String address, final String email, final String phoneNumber) {
+        if (name.trim().length()==0
+                ||firstName.trim().length()==0
+                ||lastName.trim().length()==0
+                ||photo.trim().length()==0
+                ||address.length()==0
+                ||email.length()==0
+                ||phoneNumber.length()==0){
+            throw new IllegalStateException();
+        }
+        this.name = name;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.photo = photo;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.email = email;
         this.agenda=new Agenda();
     }
-    
+
     @Override
     public String toString() {
         if (this.name==null)
@@ -75,11 +107,11 @@ public class Contact implements AggregateRoot<Long>, Serializable {
         else
             return this.name()+" ("+this.lastName+", "+this.firstName+")";
     }
-    
+
     public String name() {
         return this.name;
     }
-    
+
     public String setName(String name) {
         return this.name=name;
     }
@@ -91,21 +123,33 @@ public class Contact implements AggregateRoot<Long>, Serializable {
     public String setFirstName(String firstName) {
         return this.firstName=firstName;
     }
-    
+
     public String lastName() {
         return this.lastName;
     }
-    
+
     public String setLastName(String lastName) {
         return this.lastName=lastName;
     }
-    
+
     public Agenda agenda() {
         return this.agenda;
     }
 
     public String photo() {
         return photo;
+    }
+
+    public String email(){
+        return email;
+    }
+
+    public String address(){
+        return this.address;
+    }
+
+    public String phoneNumber(){
+        return this.phoneNumber;
     }
 
     /**
