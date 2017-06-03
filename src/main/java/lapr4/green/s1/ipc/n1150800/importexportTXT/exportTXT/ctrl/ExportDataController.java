@@ -49,8 +49,8 @@ public class ExportDataController implements Controller {
      * @param cellRange - the range of cells from which the data will be read
      * and saved in the file
      */
-    public ExportDataController(UIController uiController, File fileToWrite, char separatorCharacter, CellRange cellRange) {
-        FileData fileData = new FileData(fileToWrite, separatorCharacter, cellRange);
+    public ExportDataController(UIController uiController, File fileToWrite, char separatorCharacter, CellRange cellRange, boolean firstLineRepresentsHeaders) {
+        FileData fileData = new FileData(fileToWrite, separatorCharacter, cellRange, firstLineRepresentsHeaders);
 
         this.uiController = uiController;
         this.fileToWrite = fileData;

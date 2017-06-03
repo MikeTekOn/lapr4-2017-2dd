@@ -46,8 +46,8 @@ public class ImportDataController implements Controller {
      * @param cellRange - the range of cells that will be filled with the data
      *
      */
-    public ImportDataController(UIController uiController, File fileToRead, char separatorCharacter, CellRange cellRange) {
-        FileData fileData = new FileData(fileToRead, separatorCharacter, cellRange);
+    public ImportDataController(UIController uiController, File fileToRead, char separatorCharacter, CellRange cellRange, boolean firstLineRepresentsHeaders) {
+        FileData fileData = new FileData(fileToRead, separatorCharacter, cellRange, firstLineRepresentsHeaders);
   
         this.uiController = uiController;
         this.fileToRead = fileData;
