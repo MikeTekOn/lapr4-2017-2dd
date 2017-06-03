@@ -6,6 +6,7 @@
 package lapr4.red.s1.core.n1150613.workbookSearch.application;
 
 import csheets.core.Cell;
+import csheets.core.IllegalValueTypeException;
 import csheets.core.Spreadsheet;
 import csheets.core.Workbook;
 import csheets.ui.ctrl.UIController;
@@ -35,8 +36,6 @@ public class WorkbookSearchController {
      * Active workbook at the moment
      */
     private Workbook w;
-    private Spreadsheet s;
-    private Cell c;
 
     public WorkbookSearchController(UIController ctrl) {
         info = new ArrayList<>();
@@ -50,32 +49,14 @@ public class WorkbookSearchController {
      *
      * @param regex regular expression inserted by user
      * @return desired cells information in String array
+     *
      */
     public List<String> checkifRegexMatches(String regex) {
+
         util = new RegexUtil(regex);
         w = ctrl.getActiveWorkbook();
 
-        if (!util.isRegexValid()) {
-            return null;
-        }
-
-        Iterator<Spreadsheet> it = w.iterator();
-        Iterator<Cell> itCell;
-
-        //review algorithm
-        while (it.hasNext()) {
-            s = it.next();
-            itCell = s.iterator();
-            while (itCell.hasNext()) {
-                c = itCell.next();
-
-                if (util.checkIfMatches(c.getContent())) {
-                    info.add(c.getContent() + " " + c.getAddress().toString());
-                }
-            }
-        }
-
-        return info;
+        return util.checkifRegexMatches(w);
     }
 
 }

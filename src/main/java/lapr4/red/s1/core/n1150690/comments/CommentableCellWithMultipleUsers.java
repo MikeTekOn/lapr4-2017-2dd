@@ -95,4 +95,13 @@ public class CommentableCellWithMultipleUsers extends CommentableCell {
         return this.comments;
     }
 
+    /**
+     * Verifies if this cell has comments.
+     *
+     * @return true if the cell has comments. Otherwise returns false
+     */
+    public boolean hasComments() {
+        return !this.comments.isEmpty();
+    }
+
 }
