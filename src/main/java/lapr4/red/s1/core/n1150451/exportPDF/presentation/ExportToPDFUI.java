@@ -14,12 +14,14 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import lapr4.red.s1.core.n1150451.exportPDF.application.ExportPDFController;
 
 /**
  *
@@ -27,8 +29,8 @@ import javax.swing.event.ListSelectionListener;
  */
 public class ExportToPDFUI extends JDialog {
 
-    private static final int WIDTH = 500;
-    private static final int HEIGHT = 300;
+    private static final int WIDTH = 600;
+    private static final int HEIGHT = 400;
     private JList sheetList;
 
     /**
@@ -57,7 +59,7 @@ public class ExportToPDFUI extends JDialog {
         JPanel panel = new JPanel(new GridBagLayout());
 
         GridBagConstraints grid = new GridBagConstraints();
-        grid.fill = GridBagConstraints.HORIZONTAL;
+        grid.fill = GridBagConstraints.VERTICAL;
 
         grid.gridx = 0;
         grid.gridy = 0;
@@ -102,22 +104,54 @@ public class ExportToPDFUI extends JDialog {
         for (Spreadsheet s : uiController.getActiveWorkbook()) {
             model.addElement(s.getTitle());
         }
+
+        JScrollPane pane = new JScrollPane(sheetList);
+        pane.setSize(300, 300);
         grid.gridx = 0;
         grid.gridy = 0;
-        panel.add(sheetList, grid);
+        panel.add(pane, grid);
 
-        rangeField = new TextField();
+        rangeField = new TextField(25);
         grid.gridx = 0;
         grid.gridy = 1;
         panel.add(rangeField, grid);
+
+        JButton exportButton = new JButton("Export");
+        exportButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ExportPDFController c = new ExportPDFController();
+                c.initiateExport();
+                if (sheetList.getSelectedValue().equals("all")) {
+                    c.selectRange(uiController.getActiveWorkbook());
+                } else {
+                    Iterator<Spreadsheet> it = uiController.getActiveWorkbook().iterator();
+                    while (it.hasNext()) {
+                        Spreadsheet s = it.next();
+                        if(s.getTitle().equals(sheetList.getSelectedValue())){
+                            c.selectRange(s);
+                            break;
+                        }
+                    }
+                }
+                c.selectPath(pathField.getText());
+                c.toggleSections();
+                c.export();
+            }
+        });
+        grid.gridx = 0;
+        grid.gridy = 2;
+        panel.add(exportButton, grid);
         return panel;
     }
 
     private Component createPathPanel() {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        pathField = new JTextField();
+        pathField = new JTextField(25);
         panel.add(pathField);
-        JButton button = createButtonFolder();
+
+        //JButton button = createButtonFolder();
+        JButton button = new JButton("test");
         JFileChooser chooser = new JFileChooser(".");
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         button.addActionListener(new ActionListener() {
@@ -138,7 +172,7 @@ public class ExportToPDFUI extends JDialog {
         JButton button = new JButton();
         try {
             Image img;
-            img = ImageIO.read(getClass().getResource("/graphics/searchFolder.png"));
+            img = ImageIO.read(getClass().getResource("res/img/reopen.gif"));
             Image newimg = img.getScaledInstance(25, 25, Image.SCALE_SMOOTH);
             ImageIcon icon = new ImageIcon(newimg);
             button.setIcon(icon);

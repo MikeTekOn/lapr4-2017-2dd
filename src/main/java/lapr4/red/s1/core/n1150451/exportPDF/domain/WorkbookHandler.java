@@ -19,28 +19,28 @@ import java.util.List;
  * @author Diogo Santos
  */
 public class WorkbookHandler {
-    
+
     private final Workbook w;
-    
+
     public WorkbookHandler(Workbook w) {
         this.w = w;
     }
-    
+
     public List<Cell> getListCellsWorkBook() {
         List<Cell> list = new ArrayList<>();
         Iterator<Spreadsheet> it = w.iterator();
         while (it.hasNext()) {
             list.addAll(getListCellsSpreadSheet(it.next()));
-            
         }
         return list;
     }
-    
+
     public List<Cell> getListCellsSpreadSheet(Spreadsheet s) {
         List<Cell> list = new ArrayList<>();
-        int maxColumn = Address.HIGHEST_CHAR - Address.HIGHEST_CHAR;
-        for (int i = 0; i < maxColumn; i++) {
-            list.addAll(Arrays.asList(s.getColumn(i)));
+        for (int i = 0; i < 127; i++) {
+            for (int j = 0; j < 52; j++) {
+                list.add(s.getCell(i,j));
+            }
         }
         return list;
     }
