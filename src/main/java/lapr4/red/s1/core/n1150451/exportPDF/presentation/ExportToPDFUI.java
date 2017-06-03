@@ -44,7 +44,7 @@ public class ExportToPDFUI extends JDialog {
     protected FileChooser chooser;
     private DefaultListModel<Object> model;
     private TextField rangeField;
-    private Checkbox boxSections;
+    private JCheckBox boxSections;
     private JTextField pathField;
 
     public ExportToPDFUI(UIController uiController, FileChooser chooser) {
@@ -68,7 +68,7 @@ public class ExportToPDFUI extends JDialog {
         grid.insets = new Insets(10, 0, 10, 0);
         grid.gridx = 0;
         grid.gridy = 1;
-        boxSections = new Checkbox("Sections");
+        boxSections = new JCheckBox("Sections");
         panel.add(boxSections, grid);
 
         grid.gridx = 0;
@@ -121,21 +121,28 @@ public class ExportToPDFUI extends JDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ExportPDFController c = new ExportPDFController();
-                c.initiateExport();
+                c.initiateExport(uiController);
                 if (sheetList.getSelectedValue().equals("all")) {
                     c.selectRange(uiController.getActiveWorkbook());
                 } else {
                     Iterator<Spreadsheet> it = uiController.getActiveWorkbook().iterator();
+                    Spreadsheet s = null;
                     while (it.hasNext()) {
-                        Spreadsheet s = it.next();
-                        if(s.getTitle().equals(sheetList.getSelectedValue())){
-                            c.selectRange(s);
+                        s = it.next();
+                        if (s.getTitle().equals(sheetList.getSelectedValue())) {
                             break;
                         }
                     }
+                    if (rangeField.getText().trim().equals("")) {
+                        c.selectRange(s);
+                    } else {
+                        c.selectRange(s, rangeField.getText());
+                    }
                 }
                 c.selectPath(pathField.getText());
-                c.toggleSections();
+                if (boxSections.isSelected()) {
+                    c.toggleSections();
+                }
                 c.export();
             }
         });
