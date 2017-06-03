@@ -214,8 +214,7 @@ public class UICommExtensionSideBar extends JPanel {
      * It adds the action listeners.
      */
     private void createInteractions() {
-        //@TODO
-//        btConfigure.addActionListener(new ConfigurePortsAction());
+        btConfigure.addActionListener(new ConfigurePortAction(theController.getUserProperties()));
         btActivate.addActionListener(new StartServersAction());
         //@FIXME The deactivating is launching exceptions.
 //        btDeactivate.addActionListener(new StopServersAction());
