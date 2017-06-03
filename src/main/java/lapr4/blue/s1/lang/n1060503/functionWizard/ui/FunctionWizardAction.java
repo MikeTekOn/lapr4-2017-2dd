@@ -14,7 +14,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 /**
- *
+ * represent the action for Function Wizard
  * @author Pedro Fernandes
  */
 public class FunctionWizardAction extends FocusOwnerAction {

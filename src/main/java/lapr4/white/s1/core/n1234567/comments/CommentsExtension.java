@@ -10,6 +10,7 @@ import csheets.ext.Extension;
 import lapr4.white.s1.core.n1234567.comments.ui.UIExtensionComments;
 import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.UIExtension;
+import lapr4.red.s1.core.n1150690.comments.CommentableCellWithMultipleUsers;
 
 /**
  * An extension to support comments on cells.
@@ -36,9 +37,18 @@ public class CommentsExtension extends Extension {
 	 * @param cell the cell to comment
 	 * @return a commentable cell
 	 */
-	public CommentableCell extend(Cell cell) {
+	/*public CommentableCell extend(Cell cell) {
 		return new CommentableCell(cell);
-	}
+	}*/
+        
+        /**
+         * Makes the given cell commentable.
+         * @param cell the cell to comment
+         * @return a commentable cell with multiple users
+         */
+        public CommentableCellWithMultipleUsers extend(Cell cell){
+            return new CommentableCellWithMultipleUsers(cell);
+        }
 	
 	/**
 	 * Returns the user interface extension of this extension 

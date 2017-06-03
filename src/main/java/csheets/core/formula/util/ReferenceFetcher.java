@@ -70,4 +70,4 @@ public class ReferenceFetcher extends AbstractExpressionVisitor {
             }
             return operation;
         }
-}
+    }

@@ -39,10 +39,10 @@ import lapr4.blue.s1.lang.n1060503.functionWizard.FunctionWizardController;
 public class FunctionWizardUI extends JDialog{
     
     /** The user interface controller */
-    private UIController uiController;
+    private final UIController uiController;
     
     /** The function wizard controller */
-    private FunctionWizardController controller;
+    private final FunctionWizardController controller;
     
     private JButton applyBtn;
     private JButton cancelBtn;
@@ -58,16 +58,17 @@ public class FunctionWizardUI extends JDialog{
     private static final String SYNTAX = "Syntax:";
     private static final String HELPTEXT = "Help Test:";
     private static final String OPTIONS = "Options:";
-    private static final String[] header={"Parameter", "Description"};
+    private static final String[] HEADER ={"Parameter", "Description"};
     
     /**
-     * Build the Functio Wizard window
-     * @param uIController
-     * @throws UnknownElementException 
+     * Build the Function Wizard window
+     * @param uIController interface controller
+     * @throws UnknownElementException to be caught
      */
     public FunctionWizardUI(UIController uIController) throws UnknownElementException{
         setModal(true);
         setTitle("FUNCTION WIZARD");
+        
         this.uiController = uIController;
         
         controller = new FunctionWizardController(uIController);
@@ -91,7 +92,7 @@ public class FunctionWizardUI extends JDialog{
     /**
      * create all ui panels
      * @return all ui panels
-     * @throws UnknownElementException 
+     * @throws UnknownElementException to be caught
      */
     private JPanel createComponents() throws UnknownElementException {
         JPanel panel = new JPanel(new BorderLayout());
@@ -180,7 +181,7 @@ public class FunctionWizardUI extends JDialog{
         DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();
         dtcr.setHorizontalAlignment(JLabel.LEFT);
         defaultTableModel = new DefaultTableModel();
-        defaultTableModel.setColumnIdentifiers(header);
+        defaultTableModel.setColumnIdentifiers(HEADER);
         tableHelpText = new JTable(defaultTableModel);
         tableHelpText.getColumnModel().getColumn(0).setCellRenderer(dtcr);
         tableHelpText.getColumnModel().getColumn(0).setPreferredWidth(20);
@@ -278,8 +279,8 @@ public class FunctionWizardUI extends JDialog{
         try {
             String aux = txtSyntax.getText();
             if (!aux.isEmpty()){
-                controller.insertSyntaxFormulaBar(aux);
-                dispose();
+                    controller.insertSyntaxFormulaBar(aux);
+                    dispose();                
             }else{
                 JOptionPane.showMessageDialog(
                         null,
@@ -287,12 +288,12 @@ public class FunctionWizardUI extends JDialog{
                         "Function Wizard",
                         JOptionPane.ERROR_MESSAGE);
             }  
-        } catch (FormulaCompilationException f){
+        } catch (FormulaCompilationException | java.lang.IllegalArgumentException i){
             JOptionPane.showMessageDialog(
                         null,
                         "Invalid Formula!\n"
                         + "Check if all parameters has valid values!\n\n"
-                        + "(e.g. =FACT(3))",
+                        + "e.g.  = IF( A1 > 2; \"abc\"; \"xpto\") ",
                         "Function Wizard",
                         JOptionPane.ERROR_MESSAGE);
         }
