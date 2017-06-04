@@ -1,0 +1,29 @@
+@startuml lang03_1_design_valueChanged.png
+
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+participant "ConditionStylableCell" as cscell
+participant "ConditionStyleCompiler" as cscompiler
+participant "ReferenceFetcher" as refFetcher
+participant "StylableCell" as scell
+participant "CellImpl" as cellimp
+participant "Value" as value
+
+-> cscell : valueChanged()
+
+cscell -> cscompiler : compiler = getInstance()
+cscell -> cscompiler : expression = compiler.getInstance()
+cscell -> refFetcher : references = getReferences()
+
+loop forEach Reference reference : references
+    loop Cell dependent : reference.getCells()
+        cscell -> cscell : dependents.add(dependent)
+        cscell -> cellimp : dependent.addCellListeners()   
+    end
+end
+
+cscell -> value : boolean b = expression.evaluate().toBoolean()
+cscell -> scell : stylableCell.setStyle(userStyle / default)
+
+@enduml

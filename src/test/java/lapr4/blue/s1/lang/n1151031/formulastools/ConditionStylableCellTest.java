@@ -64,11 +64,11 @@ public class ConditionStylableCellTest {
     @Test
     public void ensureCellHasCondition() throws FormulaCompilationException {
         Cell cellA1 = app.getWorkbooks()[0].getSpreadsheet(0).getCell(new Address(0, 0));
+        String assignment = "10";
+        cellA1.setContent(assignment);
         conditionStylableCell = new ConditionStylableCell(cellA1);
         UserStyle userStyle = new UserStyle();
         conditionStylableCell.setStyle(userStyle);
-        String assignment = "10";
-        cellA1.setContent(assignment);
         boolean hasCondition = conditionStylableCell.hasCondition();
         assertTrue(hasCondition == false);
         conditionStylableCell.setUserCondition("=A1>0");

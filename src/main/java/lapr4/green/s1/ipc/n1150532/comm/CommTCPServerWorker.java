@@ -1,5 +1,8 @@
 package lapr4.green.s1.ipc.n1150532.comm;
 
+import lapr4.green.s1.ipc.n1150738.securecomm.BasicDataTransmissionContext;
+import lapr4.green.s1.ipc.n1150738.securecomm.DataTransmissionContext;
+
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -36,6 +39,7 @@ public class CommTCPServerWorker extends Thread {
      * The worker output stream. It is attached to the socket output stream.
      */
     private ObjectOutputStream outStream;
+    private DataTransmissionContext transmissionContext;
 
     /**
      * The TCP server worker constructor.
@@ -48,6 +52,7 @@ public class CommTCPServerWorker extends Thread {
         server = theServer;
         inStream = null;
         outStream = null;
+        transmissionContext = new BasicDataTransmissionContext();
     }
 
     /**
@@ -58,8 +63,8 @@ public class CommTCPServerWorker extends Thread {
     @Override
     public void run() {
         try {
-            outStream = new ObjectOutputStream(socket.getOutputStream());
-            inStream = new ObjectInputStream(socket.getInputStream());
+            outStream = transmissionContext.outputStream(socket.getOutputStream());
+            inStream = transmissionContext.inputStream(socket.getInputStream());
             while (true) {
                 processIncommingDTO(inStream.readObject());
             }
@@ -127,6 +132,26 @@ public class CommTCPServerWorker extends Thread {
             SocketEncapsulatorDTO dto = new SocketEncapsulatorDTO(socket, handler, inDTO);
             handler.handleDTO(dto, outStream);
         }
+    }
+
+    /**
+     * Henrique Oliveira [1150738@isep.ipp.pt]
+     * @param s
+     * @return
+     */
+    public boolean hasSocket(Socket s){
+        return socket == s;
+    }
+
+    /**
+     * @author Henrique Oliveira [1150738@isep.ipp.pt]
+     *
+     * @param ctx
+     */
+    public void switchDataTransmissionContext(DataTransmissionContext ctx) {
+        this.transmissionContext.wiretapInput().transferTappers(ctx.wiretapInput());
+        this.transmissionContext.wiretapOutput().transferTappers(ctx.wiretapOutput());
+        this.transmissionContext = ctx;
     }
 
 }

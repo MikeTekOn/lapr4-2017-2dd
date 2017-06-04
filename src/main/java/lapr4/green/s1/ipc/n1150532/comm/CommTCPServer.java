@@ -147,4 +147,13 @@ public class CommTCPServer extends Thread {
         }
     }
 
+    public CommTCPServerWorker workerBySocket(Socket s){
+        for(CommTCPServerWorker worker : workers){
+            if(worker.hasSocket(s)){
+                return worker;
+            }
+        }
+        return null;
+    }
+
 }
