@@ -17,9 +17,12 @@
     deactivate UI
     User -> UI : Inserts regular expression
     activate UI
-    UI -> ctrl : checkIfRegexMatches(String regex)
+    UI -> ctrl : checkIfValid(String regex)
     activate ctrl
     ctrl -> util : isRegexValid(regex)
+    UI -> ctrl : checkIfRegexMatches(String regex)
+    
+    
     loop for Spreadsheet s : listSpreadsheets
     loop for Cells c : listCells
     ctrl -> cll : getContent()

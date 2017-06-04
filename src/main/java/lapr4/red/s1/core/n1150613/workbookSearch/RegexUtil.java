@@ -8,17 +8,14 @@ package lapr4.red.s1.core.n1150613.workbookSearch;
 import csheets.core.Cell;
 import csheets.core.Spreadsheet;
 import csheets.core.Workbook;
-
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-/**
- *
- * @author Diogo Guedes
- */
+// @author Diogo Guedes
 public class RegexUtil {
 
     private List<String> info;
@@ -28,18 +25,18 @@ public class RegexUtil {
 
     public RegexUtil(String regex) {
         this.regex = regex;
+        info = new ArrayList();
     }
 
-    /**
-     * The call to the method to check if the regular expression is valid
-     *
-     * @return true if valid or false if not
+    /*
+      The call to the method to check if the regular expression is valid
+     
+      @return true if valid or false if not
      */
     public boolean isRegexValid() {
         boolean test = true;
         try {
             Pattern.compile(regex);
-            System.out.println("Valid");
         } catch (PatternSyntaxException exception) {
             System.out.println("Invalid!");
             test = false;
@@ -47,12 +44,12 @@ public class RegexUtil {
         return test;
     }
 
-    /**
-     * The call to the method to check if the cellContent matches with the
-     * regular expression
-     *
-     * @param cellContent content of the cell
-     * @return true if it matches or false if it doesn't
+    /*
+      The call to the method to check if the cellContent matches with the
+      regular expression
+     
+      @param cellContent content of the cell
+      @return true if it matches or false if it doesn't
      */
     public boolean checkIfMatches(String cellContent) {
 
@@ -61,12 +58,13 @@ public class RegexUtil {
         return (m.matches());
     }
 
-    /**
-     * The call to the method to search through the whole woorkbook and match
-     * it's contents with the inserted regular expression.
-     *
-     * @param w
-     * @return desired cells information in String array
+    /*
+      The call to the method to search through the whole woorkbook and match
+      it's contents with the inserted regular expression.
+     
+      @param w
+     
+      @return desired cells information in String array
      */
     public List<String> checkifRegexMatches(Workbook w) {
         Spreadsheet s;

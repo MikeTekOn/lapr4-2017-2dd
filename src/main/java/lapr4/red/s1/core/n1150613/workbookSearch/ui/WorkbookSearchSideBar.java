@@ -6,19 +6,32 @@
 package lapr4.red.s1.core.n1150613.workbookSearch.ui;
 
 import csheets.ui.ctrl.UIController;
-import lapr4.red.s1.core.n1150613.workbookSearch.SearchExtension;
-import lapr4.red.s1.core.n1150613.workbookSearch.application.WorkbookSearchController;
-
-import javax.swing.*;
-import javax.swing.border.TitledBorder;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
+import javax.swing.border.TitledBorder;
+import lapr4.red.s1.core.n1150613.workbookSearch.SearchExtension;
+import lapr4.red.s1.core.n1150613.workbookSearch.application.WorkbookSearchController;
 
 /**
+ *
  * @author Diogo
  */
 public class WorkbookSearchSideBar extends JPanel {
@@ -127,23 +140,27 @@ public class WorkbookSearchSideBar extends JPanel {
         JButton b = new JButton("Search");
         b.addActionListener((new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                try {
 
-                    model.clear();
-                    info = controller.checkifRegexMatches(searchField.getText().trim());
+                model.clear();
+
+                if (!controller.checkIfValid(searchField.getText().trim())) {
+
+                    JOptionPane.showMessageDialog(null,
+                            "The inserted regular expression is not valid.",
+                            "Invalid regex",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+                try {
+                    info = controller.checkifRegexMatches();
 
                     for (String s : info) {
 
                         model.addElement(s);
 
                     }
-                } catch (NullPointerException nll) {
-                    JOptionPane.showMessageDialog(null,
-                            "The inserted regular expression is not valid.",
-                            "Invalid regex",
-                            JOptionPane.ERROR_MESSAGE);
+                } catch (NullPointerException ne) {
+                    model.addElement("There are no results");
                 }
-
                 searchField.setText("");
             }
         }));
