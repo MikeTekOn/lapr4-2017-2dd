@@ -39,10 +39,6 @@ public class ExportPDFController {
     }
 
     public void selectRange(Spreadsheet ws, String text) {
-        final Pattern pattern = Pattern.compile("[A-Z]+[0-9]+:[A-Z]+[0-9]+");
-        if (!pattern.matcher(text).matches()) {
-            throw new IllegalArgumentException();
-        }
         ePDF.selectRange(new WorkbookHandler(ws.getWorkbook()).getListCellsSpreadSheetWithinRange(ws, text, c, ePDF));
     }
 

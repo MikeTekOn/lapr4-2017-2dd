@@ -18,6 +18,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.*;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -49,6 +50,11 @@ public class ExportPDF implements ExportStrategy {
     }
 
     public void selectPath(String path) {
+                
+        final Pattern pattern = Pattern.compile(".+\\.pdf");
+        if (!pattern.matcher(path).matches()) {
+            throw new IllegalArgumentException();
+        }
         this.path = path;
     }
 

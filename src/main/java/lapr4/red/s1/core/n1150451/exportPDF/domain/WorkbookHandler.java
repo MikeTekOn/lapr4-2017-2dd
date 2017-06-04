@@ -15,6 +15,7 @@ import lapr4.green.s1.ipc.n1150800.importexportTXT.CellRange;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -54,6 +55,11 @@ public class WorkbookHandler {
     }
 
     public List<Cell> getListCellsSpreadSheetWithinRange(Spreadsheet ws, String text, UIController uiC, ExportPDF ePDF) {
+        
+        final Pattern pattern = Pattern.compile("[A-Z]+[0-9]+:[A-Z]+[0-9]+");
+        if (!pattern.matcher(text).matches()) {
+            throw new IllegalArgumentException();
+        }
         String[] range = text.split(":");
         CellRange cellRange = new CellRange(range[0], range[1], uiC);
         List<Cell> cells = new ArrayList<>();

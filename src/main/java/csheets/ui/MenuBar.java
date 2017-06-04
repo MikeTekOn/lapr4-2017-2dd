@@ -55,7 +55,7 @@ public class MenuBar extends JMenuBar {
         fileMenu.add(actionManager.getAction("print"));
         fileMenu.addSeparator();
 
-        fileMenu.add(actionManager.getAction("PDF"));
+        fileMenu.add(new ExportToMenu(app, uiController, actionManager));
 
         fileMenu.add(actionManager.getAction("close"));
         fileMenu.add(actionManager.getAction("closeall"));
