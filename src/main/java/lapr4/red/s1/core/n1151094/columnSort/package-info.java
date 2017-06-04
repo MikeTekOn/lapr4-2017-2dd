@@ -12,10 +12,9 @@
  *
  * <h2>2. Requirement</h2>
  *
- * - Sort the contents of a column of cells. It should be possible to select the
- * order: ascending or descending. - The interaction with the user can be based
- * solely on menu options. - It should be possible to sort columns with numeric
- * and/or text contents.
+ * - Sort the contents of a column of cells. It should be possible to select the order: ascending or descending.
+ * - The interaction with the user can be based solely on menu options. 
+ * - It should be possible to sort columns with numeric and/or text contents.
  *
  * <p>
  * <b>Use Case "Column Sort":</b>
