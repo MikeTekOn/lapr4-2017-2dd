@@ -7,7 +7,7 @@ BeanShellClassLoaderController -> BeanShellClassLoader :create(aScript,uiControl
 BeanShellClassLoaderController -> BeanShellClassInstance : beanShellResult = executeScript()
  BeanShellClassInstance ->  BeanShellClassInstance : new Workbook();
 BeanShellClassInstance ->  BeanShellClassInstance : new Macro(expression);
-BeanShellClassInstance ->  BeanShellClassInstance : executeMarco();
+BeanShellClassInstance -> MacroController : executeMacro(macro);
 BeanShellClassInstance -> BeanShellClassLoaderController : return new BeanShellResult()
 BeanShellClassLoaderController ->MacroExtensionUI : return beanShellResult
 MacroExtensionUI -> User : shows result
