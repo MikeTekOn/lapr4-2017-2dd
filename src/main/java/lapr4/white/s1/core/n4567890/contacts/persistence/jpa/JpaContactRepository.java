@@ -45,10 +45,11 @@ class JpaContactRepository extends CrmJpaRepositoryBase<Contact, Long> implement
 
     @Override
     public List<Contact> findByRegex(String regexPattern){
-        Iterable<Contact> it = findAll();
+        Iterator<Contact> it = findAll().iterator();
         List<Contact> foundContacts = new ArrayList<>();
         Pattern p = Pattern.compile(regexPattern);
-        for(Contact c : it){
+        Contact c = null;
+        for(; it.hasNext(); c = it.next()){
             Matcher m = p.matcher(c.name());
             if(m.matches()){
                 foundContacts.add(c);

@@ -11,16 +11,17 @@ import org.junit.Test;
 public class AgendaTest {
 
     Contact contact=null;
+    Agenda agenda=null;
 
     @Before
     public void setUp() {
-        contact=new Contact("João Cardoso","João","Cardoso","dads", "cassad", "email" , "124456789");
-
+        contact=new Contact("João Cardoso","João","Cardoso","");
+        agenda=contact.agenda();
     }
 
     @Test(expected = IllegalStateException.class)
     public void testAgendaCantAddNullEvent() {
-        contact.agenda().add(null);
+        agenda.add(null);
     }
 
 }

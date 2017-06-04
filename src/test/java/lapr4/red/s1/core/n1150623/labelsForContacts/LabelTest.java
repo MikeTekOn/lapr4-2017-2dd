@@ -15,13 +15,13 @@ import java.util.*;
  */
 public class LabelTest {
 
-    private Label label;
+    public Label label;
 
     private String name;
     private String photo;
-    private String phoneNumber;
-    private String email;
-    private String address;
+    private Set<String> phoneNumbers;
+    private Set<String> emails;
+    private Set<String> addresses;
     private List<Event> events;
 
     public LabelTest() {
@@ -40,13 +40,17 @@ public class LabelTest {
 
         label = new Label();
 
+        phoneNumbers = new HashSet();
+        addresses = new HashSet();
+        emails = new HashSet();
+        events = new ArrayList();
+
         photo = "something";
         name = "something";
-        phoneNumber = "something";
-        address = "something";
-        email = "something";
+        phoneNumbers.add("something");
+        addresses.add("something");
+        emails.add("something");
 
-        events = new ArrayList<>();
         events.add(new Event("something", Calendar.getInstance()));
     }
 
@@ -54,44 +58,96 @@ public class LabelTest {
     public void tearDown() {
     }
 
+
     @Test(expected = IllegalArgumentException.class)
     public void ensureNameCantBeNull(){
-        label.fillLabel(null, photo, address, email, phoneNumber);
+        name = null;
+        label.fillLabel(name, photo, addresses, emails, phoneNumbers);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void ensureNameCantBeEmpty(){
-        label.fillLabel("", photo, address, email, phoneNumber);
+        name = "";
+        label.fillLabel(name, photo, addresses, emails, phoneNumbers);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void ensurePhotoCantBeNull(){
-        label.fillLabel(name, null, address, email, phoneNumber);
+        photo = null;
+        label.fillLabel(name, photo, addresses, emails, phoneNumbers);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void ensurePhotoCantBeEmpty(){
-        label.fillLabel(name, "", address, email, phoneNumber);
+        photo = "";
+        label.fillLabel(name, photo, addresses, emails, phoneNumbers);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void ensureAddressesCantBeNull(){
-        label.fillLabel(name, photo, null, email, phoneNumber);
+        addresses = null;
+        label.fillLabel(name, photo, addresses, emails, phoneNumbers);
     }
+
 
     @Test(expected = IllegalArgumentException.class)
     public void ensureEmailsCantBeNull(){
-        label.fillLabel(name, photo,address, null, phoneNumber);
+        emails = null;
+        label.fillLabel(name, photo, addresses, emails, phoneNumbers);
     }
+
 
     @Test(expected = IllegalArgumentException.class)
     public void ensurePhoneNumbersCantBeNull(){
-        label.fillLabel(name, photo, address, email, null);
+        phoneNumbers = null;
+        label.fillLabel(name, photo, addresses, emails, phoneNumbers);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void ensureAddressesHaveEmptyElements(){
+        addresses.add("");
+        label.fillLabel(name, photo, addresses, emails, phoneNumbers);
+    }
+
+
+    @Test(expected = IllegalArgumentException.class)
+    public void ensureEmailsCantHaveEmptyElements(){
+        emails.add("");
+        label.fillLabel(name, photo, addresses, emails, phoneNumbers);
+    }
+
+
+    @Test(expected = IllegalArgumentException.class)
+    public void ensurePhoneNumbersCantHaveEmptyElements(){
+        phoneNumbers .add("");
+        label.fillLabel(name, photo, addresses, emails, phoneNumbers);
+    }
+
+
+    @Test(expected = IllegalArgumentException.class)
+    public void ensureAddressesHaveNullElements(){
+        addresses.add(null);
+        label.fillLabel(name, photo, addresses, emails, phoneNumbers);
+    }
+
+
+    @Test(expected = IllegalArgumentException.class)
+    public void ensureEmailsCantHaveNullElements(){
+        emails.add(null);
+        label.fillLabel(name, photo, addresses, emails, phoneNumbers);
+    }
+
+
+    @Test(expected = IllegalArgumentException.class)
+    public void ensurePhoneNumbersCantHaveNullElements(){
+        phoneNumbers .add(null);
+        label.fillLabel(name, photo, addresses, emails, phoneNumbers);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void ensureEventsListCantBeNull(){
-        label.addEvents(null);
+        events = null;
+        label.addEvents(events);
     }
 
     @Test(expected = IllegalArgumentException.class)
