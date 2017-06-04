@@ -1,7 +1,8 @@
 package lapr4.green.s1.ipc.n1150532.startSharing;
 
-import java.io.ObjectOutputStream;
 import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
+
+import java.io.ObjectOutputStream;
 
 /**
  * An handler to deal with the sharing cells response.
@@ -18,7 +19,7 @@ public class HandlerResponseSharedCellsDTO implements CommHandler {
     /**
      * It stores the response of the shared cells request.
      *
-     * @param dto The response received.
+     * @param dto       The response received.
      * @param outStream Not used.
      */
     @Override

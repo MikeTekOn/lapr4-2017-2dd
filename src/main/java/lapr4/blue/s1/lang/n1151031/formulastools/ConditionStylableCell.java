@@ -9,15 +9,14 @@ import csheets.core.formula.util.ReferenceFetcher;
 import csheets.ext.CellExtension;
 import csheets.ext.style.StylableCell;
 import csheets.ext.style.StyleExtension;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import javax.swing.JOptionPane;
 
 /**
- *
  * @author Tiago Correia - 1151031@isep.ipp.pt
  */
 public class ConditionStylableCell extends CellExtension {
@@ -73,14 +72,14 @@ public class ConditionStylableCell extends CellExtension {
      *
      * @param condition the user-specified condition
      */
-    public void setUserCondition(String condition) {
+    public void setUserCondition(String condition) throws RuntimeException {
         this.userCondition = condition;
         // Notifies listeners
         fireConditionChanged();
     }
 
     @Override
-    public void valueChanged(Cell cell) {
+    public void valueChanged(Cell cell) throws RuntimeException {
         assert getDelegate() != null;
 
         Expression expression = null;
@@ -102,7 +101,7 @@ public class ConditionStylableCell extends CellExtension {
                 }
             } catch (FormulaCompilationException e) {
                 e.printStackTrace();
-                JOptionPane.showMessageDialog(null, "The entered condition is not valid!", "Invalid Condition", JOptionPane.WARNING_MESSAGE);
+                throw new IllegalConditionException("The entered condition is not valid!");
             }
             try {
                 StylableCell stylableCell = (StylableCell) getDelegate().getExtension(StyleExtension.NAME);
@@ -120,7 +119,7 @@ public class ConditionStylableCell extends CellExtension {
                 }
             } catch (IllegalValueTypeException e) {
                 e.printStackTrace();
-                JOptionPane.showMessageDialog(null, "Invalid cell value: " + e.toString(), "Invalid Value", JOptionPane.WARNING_MESSAGE);
+                throw new IllegalConditionException("Invalid cell value: " + e.toString());
             }
         }
     }
@@ -128,7 +127,7 @@ public class ConditionStylableCell extends CellExtension {
     /**
      * Sets the user defined style options.
      *
-     * @param userStyle
+     * @param userStyle the user defined style
      */
     public void setStyle(UserStyle userStyle) {
         this.userStyle = userStyle;
@@ -155,7 +154,7 @@ public class ConditionStylableCell extends CellExtension {
     /**
      * Notifies all registered listeners that the cell's condition changed.
      */
-    protected void fireConditionChanged() {
+    protected void fireConditionChanged() throws RuntimeException {
         for (ConditionStylableCellListener listener : listeners) {
             listener.conditionChanged(this);
         }
@@ -171,10 +170,10 @@ public class ConditionStylableCell extends CellExtension {
      * Customizes serialization, by recreating the listener list.
      *
      * @param stream the object input stream from which the object is to be read
-     * @throws IOException If any of the usual Input/Output related exceptions
-     * occur
+     * @throws IOException            If any of the usual Input/Output related exceptions
+     *                                occur
      * @throws ClassNotFoundException If the class of a serialized object cannot
-     * be found.
+     *                                be found.
      */
     private void readObject(java.io.ObjectInputStream stream)
             throws java.io.IOException, ClassNotFoundException {

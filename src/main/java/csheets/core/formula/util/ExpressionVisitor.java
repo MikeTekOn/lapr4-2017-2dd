@@ -87,8 +87,8 @@ public interface ExpressionVisitor {
      * @return an arbitrary object
      */
     public Object visitMacro(Macro macro);
-    
-     /**
+
+    /**
      * Visits a given temporary variable.
      *
      * @param tempVar temporary variable to be visited

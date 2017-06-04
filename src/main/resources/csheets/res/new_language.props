@@ -1,6 +1,6 @@
 # N-ary operators
 SequenceBlock
-#ForLoop
+ForLoop
 
 # Miscellaneous binary operators
 Assigner

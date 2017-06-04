@@ -6,11 +6,10 @@ import csheets.ui.ext.UIExtension;
 import lapr4.blue.s1.lang.n1141570.XML.ui.UIExportXMLExtension;
 
 /**
- *
  * @author Eric
  */
 public class ExportXMLExtension extends Extension {
-    
+
     /**
      * The name of the extension
      */

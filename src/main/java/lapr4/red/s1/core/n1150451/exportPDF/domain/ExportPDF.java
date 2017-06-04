@@ -5,30 +5,20 @@
  */
 package lapr4.red.s1.core.n1150451.exportPDF.domain;
 
-import lapr4.s1.export.ExportStrategy;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.*;
 import com.itextpdf.text.Font.FontFamily;
-import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import csheets.core.Cell;
-import csheets.core.IllegalValueTypeException;
 import csheets.core.Spreadsheet;
+import lapr4.s1.export.ExportStrategy;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -40,6 +30,13 @@ public class ExportPDF implements ExportStrategy {
     private List<Cell> list;
     private boolean sections;
 
+    //Table limits
+    private int minRow = 0;
+    private int maxRow = 127;
+    private int minColumn = 0;
+    private int maxColumn = 52;
+
+    private HashMap<String, Anchor> mapAnchor = new HashMap<>();
     public ExportPDF() {
 
     }
@@ -53,6 +50,11 @@ public class ExportPDF implements ExportStrategy {
     }
 
     public void selectPath(String path) {
+                
+        final Pattern pattern = Pattern.compile(".+\\.pdf");
+        if (!pattern.matcher(path).matches()) {
+            throw new IllegalArgumentException();
+        }
         this.path = path;
     }
 
@@ -63,21 +65,33 @@ public class ExportPDF implements ExportStrategy {
             doc = initiatePrinter();
 
             Map<Spreadsheet, Set<Cell>> map = getMapBySpreadSheet();
+
+            if (sections) {
+
+                createFrontPage(doc, map);
+                doc.newPage();
+            }
             Font font = new Font(FontFamily.COURIER, 6, Font.NORMAL);
             Font fontSpecial = new Font(FontFamily.COURIER, 6, Font.BOLD); //Used in the first line and first column
             for (Spreadsheet s : map.keySet()) {
-                int[][] dataRowColumn = getMinMaxColumnRow(map.get(s));
-                PdfPTable table = new PdfPTable(53);
+                removeHiddenCells(map.get(s));
+                PdfPTable table = new PdfPTable(maxColumn - minColumn + 1);
 
                 table.setWidthPercentage(100);
                 String[][] lines = getLinesSheet(map.get(s));
-                for (int i = 0; i < 128; i++) {
-                    for (int j = 0; j < 53; j++) {
-                        if (lines[i][j] == null) {
-                            table.addCell(" ");
+                for (int i = minRow; i < maxRow + 1; i++) {
+                    for (int j = minColumn; j < maxColumn + 1; j++) {
+                        if (j == minColumn) {
+                            if (i == minRow) {
+                                table.addCell(new PdfPCell(new Phrase(lines[0][0], fontSpecial)));
+                            }
+                            table.addCell(new PdfPCell(new Phrase(lines[i][0], fontSpecial)));
+                        } else if (i == minRow) {
+                            table.addCell(new PdfPCell(new Phrase(lines[0][j], fontSpecial)));
+
                         } else {
-                            if (i == 0 || j == 0) {
-                                table.addCell(new PdfPCell(new Phrase(lines[i][j], fontSpecial)));
+                            if (lines[i][j] == null) {
+                                table.addCell(" ");
                             } else {
                                 table.addCell(new PdfPCell(new Phrase(lines[i][j], font)));
                             }
@@ -86,7 +100,11 @@ public class ExportPDF implements ExportStrategy {
                 }
 
                 if (sections) {
-                    Paragraph p = new Paragraph(s.getTitle());
+                    Anchor anchorTarget
+                            = new Anchor(s.getTitle());
+                    anchorTarget.setName(s.getTitle());
+                    Paragraph p = new Paragraph();
+                    p.add(anchorTarget);
                     doc.add(p);
                 }
                 doc.add(table);
@@ -130,41 +148,15 @@ public class ExportPDF implements ExportStrategy {
         return map;
     }
 
-    private int[][] getMinMaxColumnRow(Set<Cell> cells) {
-        int auxColumnMax = 0;
-        int auxColumnMin = Integer.MAX_VALUE;
-        int auxRowMax = 0;
-        int auxRowMin = Integer.MAX_VALUE;
+    private void removeHiddenCells(Set<Cell> cells) {
         Set<Cell> toBeRemoved = new HashSet<>();
         for (Cell c : cells) {
-            if (c.getAddress().getColumn() >= 52) {
+            if (c.getAddress().getColumn() >= 52 || c.getAddress().getRow() > 127) {
                 toBeRemoved.add(c);
-            } else {
-                if (c.getAddress().getColumn() > auxColumnMax) {
-                    auxColumnMax = c.getAddress().getColumn();
-                }
-                if (c.getAddress().getColumn() < auxColumnMin) {
-                    auxColumnMin = c.getAddress().getColumn();
-                }
-                if (c.getAddress().getRow() > auxRowMax) {
-                    auxRowMax = c.getAddress().getRow();
-                }
-                if (c.getAddress().getRow() < auxRowMin) {
-                    auxRowMin = c.getAddress().getRow();
-                }
             }
-
         }
+
         cells.removeAll(toBeRemoved);
-        int[][] vec = new int[2][2];
-        vec[0][0] = auxRowMin;
-        vec[0][1] = auxRowMax;
-        System.out.println("row max: " + auxRowMax);
-        vec[1][0] = auxColumnMin;
-        System.out.println("aux min: " + auxColumnMin);
-        vec[1][1] = auxColumnMax;
-        System.out.println("aux max: " + auxColumnMax);
-        return vec;
     }
 
     private String[][] getLinesSheet(Set<Cell> cells) {
@@ -186,12 +178,41 @@ public class ExportPDF implements ExportStrategy {
         }
         return alCells;
     }
+
     private void fillFirstRow(String[] lines) {
         for (int i = 1; i < 27; i++) {
-            lines[i]=""+(char)('A'+(i-1));
+            lines[i] = "" + (char) ('A' + (i - 1));
         }
         for (int i = 1; i < 27; i++) {
-            lines[i+26]="A"+(char)('A'+(i-1));
+            lines[i + 26] = "A" + (char) ('A' + (i - 1));
+        }
+    }
+
+    void setLimits(int minRow, int maxRow, int minColumn, int maxColumn) {
+        this.minRow = minRow;
+        this.maxRow = maxRow + 1;
+        this.minColumn = minColumn;
+        this.maxColumn = maxColumn + 1;
+    }
+
+    private void createFrontPage(Document doc, Map<Spreadsheet, Set<Cell>> map) {
+        PdfPTable table = new PdfPTable(1);
+        table.setWidthPercentage(50);
+        for (Spreadsheet s : map.keySet()) {
+            Anchor anchor
+                    = new Anchor(s.getTitle());
+            anchor.setReference("#" + s.getTitle());
+            Paragraph p = new Paragraph();
+            p.add(anchor);
+
+            mapAnchor.put(s.getTitle(), anchor);
+            table.addCell(new PdfPCell(new Phrase(p)));
+
+        }
+        try {
+            doc.add(table);
+        } catch (DocumentException ex) {
+            //Logger.getLogger(ExportPDF.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

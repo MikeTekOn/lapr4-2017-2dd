@@ -1,0 +1,29 @@
+@startuml dependents_refactor_sd.png
+
+'http://plantuml.com/skinparam.html'
+skinparam handwritten true
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+participant Formula
+participant "af : AssignableFetcher" as Af <<extends AbstractExpressionVisitor>>
+participant "exp : Expression" as Exp
+
+
+[-> Formula: getReferences()
+create Af
+Formula -> Af : create()
+Formula -> Af : getNonAssignableRefs(exp)
+Af -> Exp : accept()
+note right : this will parse through the expression tree\nand when a binary operation is found it will\nvisit the AssignableFetcher method\n{ visitBinaryOperation(op) }
+Exp -> Af : visitBinaryOperation(op)
+Af -> Af : catch references
+note over of Af
+Catch all references from binary operations
+with a assigner operator.
+end note
+Af --> Formula : Returns a filtered list of references\nexcluding assignable references
+
+@enduml
+
+collections operand <<Expression>>

@@ -8,7 +8,8 @@ package lapr4.red.s1.core.n1150613.workbookSearch.ui;
 import csheets.ext.Extension;
 import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.UIExtension;
-import javax.swing.JComponent;
+
+import javax.swing.*;
 
 /**
  *
@@ -18,8 +19,8 @@ import javax.swing.JComponent;
  * This class implements the UI interface extension for the search extension. A
  * UI interface extension must extend the UIExtension abstract class.
  *
- * @see UIExtension
  * @author Diogo Guedes
+ * @see UIExtension
  */
 public class UIExtensionSearch extends UIExtension {
 
@@ -32,7 +33,7 @@ public class UIExtensionSearch extends UIExtension {
     /**
      * The menu of the extension
      *
-     * @param extension extension
+     * @param extension    extension
      * @param uiController ui controller
      */
     public UIExtensionSearch(Extension extension, UIController uiController) {

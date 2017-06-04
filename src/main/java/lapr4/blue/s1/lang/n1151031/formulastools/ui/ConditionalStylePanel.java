@@ -7,31 +7,21 @@ import csheets.ext.style.ui.FontChooser;
 import csheets.ui.ctrl.SelectionEvent;
 import csheets.ui.ctrl.SelectionListener;
 import csheets.ui.ctrl.UIController;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JColorChooser;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.border.Border;
-import javax.swing.border.TitledBorder;
 import lapr4.blue.s1.lang.n1151031.formulastools.ConditionStylableCell;
 import lapr4.blue.s1.lang.n1151031.formulastools.ConditionStylableCellListener;
 import lapr4.blue.s1.lang.n1151031.formulastools.ConditionalStyleExtension;
 import lapr4.blue.s1.lang.n1151031.formulastools.UserStyle;
 
+import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+
 /**
- *
  * @author Tiago Correia - 1151031@isep.ipp.pt
  */
 public class ConditionalStylePanel extends JPanel implements SelectionListener, ConditionStylableCellListener {
@@ -58,6 +48,7 @@ public class ConditionalStylePanel extends JPanel implements SelectionListener, 
     private JTextField conditionField = new JTextField();
 
     //dois atributos userStyle (true e para false)
+
     /**
      * Creates a new condition style panel.
      *
@@ -368,6 +359,10 @@ public class ConditionalStylePanel extends JPanel implements SelectionListener, 
     public void selectionChanged(SelectionEvent event) {
         Cell cell = event.getCell();
 
+        if (cell == null) {
+            return;
+        }
+
         if (cell.getExtension(ConditionalStyleExtension.NAME) == null) {
             return;
         }
@@ -420,7 +415,11 @@ public class ConditionalStylePanel extends JPanel implements SelectionListener, 
         public void focusLost(FocusEvent e) {
             // TODO Auto-generated method stub
             if (cell != null) {
-                controller.setCondition(cell, conditionField.getText().trim());
+                try {
+                    controller.setCondition(cell, conditionField.getText().trim());
+                } catch (RuntimeException ex) {
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
+                }
             }
         }
     }

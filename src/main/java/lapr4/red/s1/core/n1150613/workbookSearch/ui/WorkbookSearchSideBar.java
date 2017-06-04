@@ -6,32 +6,19 @@
 package lapr4.red.s1.core.n1150613.workbookSearch.ui;
 
 import csheets.ui.ctrl.UIController;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import lapr4.red.s1.core.n1150613.workbookSearch.SearchExtension;
+import lapr4.red.s1.core.n1150613.workbookSearch.application.WorkbookSearchController;
+
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
-import javax.swing.border.TitledBorder;
-import lapr4.red.s1.core.n1150613.workbookSearch.SearchExtension;
-import lapr4.red.s1.core.n1150613.workbookSearch.application.WorkbookSearchController;
 
 /**
- *
  * @author Diogo
  */
 public class WorkbookSearchSideBar extends JPanel {

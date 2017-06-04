@@ -8,10 +8,9 @@ package lapr4.blue.s1.lang.n1140822.beanshellwindow;
 import bsh.EvalError;
 import csheets.core.IllegalValueTypeException;
 import csheets.ui.ctrl.UIController;
-import java.io.FileNotFoundException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import lapr4.blue.s1.lang.n1151159.macros.compiler.MacroCompilationException;
+
+import java.io.FileNotFoundException;
 
 /**
  *

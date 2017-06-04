@@ -1,5 +1,7 @@
 package lapr4.green.s1.ipc.n1150532.comm.connection;
 
+import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
+
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
@@ -10,7 +12,6 @@ import java.util.List;
 import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
 
 /**
  * An handler to deal with UDP connection details response. It is supposed to be

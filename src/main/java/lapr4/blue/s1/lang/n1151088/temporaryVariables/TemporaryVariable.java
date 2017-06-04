@@ -15,42 +15,48 @@ import csheets.core.formula.util.ExpressionVisitor;
  * @author Diana Silva - 1151088@isep.ipp.pt
  */
 public class TemporaryVariable implements Expression {
-    
+
     //FIXME
-    /** The unique version identifier used for serialization */
+    /**
+     * The unique version identifier used for serialization
+     */
     private static final long serialVersionUID = 7854180857828149859L;
 
-    
-    /** The name of the temporary variable     */
+
+    /**
+     * The name of the temporary variable
+     */
     private final String name;
-    
-    /** The value of the temporary variable */
+
+    /**
+     * The value of the temporary variable
+     */
     private Value value;
-    
-    public TemporaryVariable(String name){
-        this.name=name;
+
+    public TemporaryVariable(String name) {
+        this.name = name;
     }
 
     @Override
     public Value evaluate() throws IllegalValueTypeException {
         return this.value;
     }
-    
-    public String getName(){
+
+    public String getName() {
         return this.name;
-    }
-    
-    @Override
-    public String toString() {
-            if (value.getType() == Value.Type.TEXT
-             || value.getType() == Value.Type.DATE)
-                    return "\"" + value.toString() + "\"";
-            else
-                    return value.toString();
     }
 
     @Override
-    public Object accept(ExpressionVisitor  visitor) {
-         return visitor.visitTemporaryVariable(this);
+    public String toString() {
+        if (value.getType() == Value.Type.TEXT
+                || value.getType() == Value.Type.DATE)
+            return "\"" + value.toString() + "\"";
+        else
+            return value.toString();
+    }
+
+    @Override
+    public Object accept(ExpressionVisitor visitor) {
+        return visitor.visitTemporaryVariable(this);
     }
 }

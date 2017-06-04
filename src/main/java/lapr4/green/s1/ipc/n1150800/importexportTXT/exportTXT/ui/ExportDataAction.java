@@ -8,12 +8,13 @@ package lapr4.green.s1.ipc.n1150800.importexportTXT.exportTXT.ui;
 import csheets.ui.FileChooser;
 import csheets.ui.ctrl.BaseAction;
 import csheets.ui.ctrl.UIController;
+import lapr4.green.s1.ipc.n1150800.importexportTXT.FileData;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.Properties;
-import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import lapr4.green.s1.ipc.n1150800.importexportTXT.FileData;
 
 /**
  *
@@ -44,7 +45,7 @@ public class ExportDataAction extends BaseAction {
         
         File fileToWrite = fileChooser.getFileToSave();
         if (fileToWrite != null) {
-            if(FileData.validateFileExtension(fileToWrite)) {
+            if (FileData.validateFileExtension(fileToWrite)) {
                 ExportDataUI ui = new ExportDataUI(uiController, fileToWrite);
             } else {
                 JOptionPane.showMessageDialog(fileChooser, "Chosen file is not valid!", "Error", JOptionPane.ERROR_MESSAGE);

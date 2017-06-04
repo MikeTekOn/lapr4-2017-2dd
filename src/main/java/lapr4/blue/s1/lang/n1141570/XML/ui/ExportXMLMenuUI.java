@@ -6,15 +6,15 @@
 package lapr4.blue.s1.lang.n1141570.XML.ui;
 
 import csheets.ui.ctrl.UIController;
+
+import javax.swing.*;
 import java.awt.event.KeyEvent;
-import javax.swing.JMenu;
 
 /**
- *
  * @author Eric
  */
 public class ExportXMLMenuUI extends JMenu {
-     /**
+    /**
      * Creates an instance of the macro menu.
      * Adds the associated macro action.
      */
