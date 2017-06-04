@@ -28,7 +28,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author Pedro
+ * @author Pedro Chilro (1150800@isep.ipp.pt)
  */
 public class FileDataTest {
     
