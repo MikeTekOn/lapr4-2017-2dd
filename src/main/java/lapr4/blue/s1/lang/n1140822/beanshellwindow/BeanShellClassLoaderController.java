@@ -6,10 +6,11 @@
 package lapr4.blue.s1.lang.n1140822.beanshellwindow;
 
 import bsh.EvalError;
+import csheets.core.IllegalValueTypeException;
 import csheets.ui.ctrl.UIController;
+import lapr4.blue.s1.lang.n1151159.macros.compiler.MacroCompilationException;
+
 import java.io.FileNotFoundException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -18,21 +19,19 @@ import java.util.logging.Logger;
 public class BeanShellClassLoaderController {
 
     /**
-     * Creates and executes a script using the various implemented bean shell classes.
+     * Creates and executes a script using the various implemented bean shell
+     * classes.
+     *
      * @param scriptName the name of the script
+     * @param controller the UIcontroller - to persist changes in the visible
+     * workbook
      * @return the bean shell result class instance
      */
-    public BeanShellResult createAndExecuteScript(String scriptName,UIController controller) {
+    public BeanShellResult createAndExecuteScript(String scriptName, UIController controller) throws FileNotFoundException, EvalError, MacroCompilationException, IllegalValueTypeException {
         BeanShellLoader loader = new BeanShellLoader();
         BeanShellResult result = null;
-        try {
-            BeanShellInstance instance = loader.create(scriptName,controller);
-            result = new BeanShellResult(instance.executeScript());
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(BeanShellClassLoaderController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (EvalError ex) {
-            Logger.getLogger(BeanShellClassLoaderController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        BeanShellInstance instance = loader.create(scriptName, controller);
+        result = new BeanShellResult(instance.executeScript());
         return result;
     }
 }

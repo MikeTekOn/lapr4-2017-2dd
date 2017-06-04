@@ -5,19 +5,15 @@
  */
 package lapr4.green.s1.ipc.n1150800.importexportTXT.exportTXT.ctrl;
 
-import csheets.core.Cell;
 import csheets.core.Spreadsheet;
 import csheets.ui.ctrl.UIController;
 import eapli.framework.application.Controller;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.CellDTO;
 import lapr4.green.s1.ipc.n1150800.importexportTXT.CellRange;
 import lapr4.green.s1.ipc.n1150800.importexportTXT.FileData;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  *
@@ -48,9 +44,11 @@ public class ExportDataController implements Controller {
      * columns in the file
      * @param cellRange - the range of cells from which the data will be read
      * and saved in the file
+     * @param firstLineRepresentsHeaders - a boolean variable that determines if
+     * the first line of the file is a line of headers
      */
-    public ExportDataController(UIController uiController, File fileToWrite, char separatorCharacter, CellRange cellRange) {
-        FileData fileData = new FileData(fileToWrite, separatorCharacter, cellRange);
+    public ExportDataController(UIController uiController, File fileToWrite, char separatorCharacter, CellRange cellRange, boolean firstLineRepresentsHeaders) {
+        FileData fileData = new FileData(fileToWrite, separatorCharacter, cellRange, firstLineRepresentsHeaders);
 
         this.uiController = uiController;
         this.fileToWrite = fileData;

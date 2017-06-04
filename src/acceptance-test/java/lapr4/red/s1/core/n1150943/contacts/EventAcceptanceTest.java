@@ -57,7 +57,7 @@ public class EventAcceptanceTest {
         controller2=new ContactController(appProps);
 
         // Populate the repository
-        aContact=controller2.addContact("Jane Doe", "Jane", "Doe","");
+        aContact = controller2.addContact("Jane Doe", "Jane", "Doe", "");
 
         Calendar tomorrow=Calendar.getInstance();
         tomorrow.add(Calendar.DAY_OF_WEEK, 1);

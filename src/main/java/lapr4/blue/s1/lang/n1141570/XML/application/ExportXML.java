@@ -1,23 +1,26 @@
 package lapr4.blue.s1.lang.n1141570.XML.application;
 
 import csheets.core.Cell;
-import csheets.core.IllegalValueTypeException;
-import java.io.File;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import csheets.core.Spreadsheet;
+import lapr4.s1.export.ExportStrategy;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import lapr4.s1.export.ExportStrategy;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import java.io.File;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -28,14 +31,14 @@ public class ExportXML implements ExportStrategy {
     private static final int ROOT_VALUE = 0;
     private static final int ELEMENT1_VALUE = 1;
     private static final int ELEMENT2_VALUE = 2;
+    private static final String TAG_WORKBOOK_NAME = "workbook";
+    private static final String TAG_SPREADSHEET_NAME = "spreadsheet";
+    private static final String TAG_CELL_NAME = "cell";
 
     private String path;
     private List<Cell> cellsList;
     private List<String> tagNamesList;
-
-    String tagWorkbookName = "workbook";
-    String tagSpreadsheetName = "spreadsheet";
-    String tagCellName = "cell";
+    private Map<Spreadsheet, List<Cell>> cellMap;
 
     public ExportXML() {
     }
@@ -43,10 +46,9 @@ public class ExportXML implements ExportStrategy {
     /**
      * Defines the selected range of cells.
      *
-     * @param cellsList the selected list of cells.
      */
-    public void selectRange(List<Cell> cellsList) {
-        this.cellsList = cellsList;
+    public void selectRange(Map<Spreadsheet, List<Cell>> cellMap) {
+        this.cellMap = cellMap;
     }
 
     /**
@@ -59,9 +61,9 @@ public class ExportXML implements ExportStrategy {
         if (!tagNamesList.isEmpty()) {
             this.tagNamesList = tagNamesList;
         } else {
-            this.tagNamesList.add(ROOT_VALUE, this.tagWorkbookName);
-            this.tagNamesList.add(ELEMENT1_VALUE, this.tagSpreadsheetName);
-            this.tagNamesList.add(ELEMENT2_VALUE, this.tagCellName);
+            this.tagNamesList.add(ROOT_VALUE, TAG_WORKBOOK_NAME);
+            this.tagNamesList.add(ELEMENT1_VALUE, TAG_SPREADSHEET_NAME);
+            this.tagNamesList.add(ELEMENT2_VALUE, TAG_CELL_NAME);
         }
     }
 
@@ -81,15 +83,11 @@ public class ExportXML implements ExportStrategy {
      */
     @Override
     public boolean export() {
-
-        int i = 0;
-        boolean success = true;
-        String currentSpreadSheetCellTitle;
+        boolean exported = false;
 
         try {
             DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder docBuilder = null;
-
             docBuilder = docFactory.newDocumentBuilder();
 
             //root element
@@ -97,51 +95,45 @@ public class ExportXML implements ExportStrategy {
             Element rootElement = doc.createElement(tagNamesList.get(ROOT_VALUE)); //basically to give the proper name do the root tag
             doc.appendChild(rootElement);
 
-            while (i <= cellsList.size()) {
-                boolean flag = true;
+            for (Spreadsheet spreadsheet : cellMap.keySet()) {
                 //worksheet elements
                 Element spreadsheetElement = doc.createElement(tagNamesList.get(ELEMENT1_VALUE));
                 rootElement.appendChild(spreadsheetElement);
 
-                Cell tempCell = cellsList.get(i);
-                currentSpreadSheetCellTitle = tempCell.getSpreadsheet().getTitle();
+                // set attribute to spreadsheet element
+                Attr attr = doc.createAttribute("title");
+                attr.setValue(spreadsheet.getTitle());
+                spreadsheetElement.setAttributeNode(attr);
 
-                while (flag) {
-                    Cell currentCell = cellsList.get(i);
-                    //cell element
+                for (Cell currentCell : cellMap.get(spreadsheet)) {
+                    //cell elements
                     Element cellElement = doc.createElement(tagNamesList.get(ELEMENT2_VALUE));
-
-                    try {
-                        cellElement.appendChild(doc.createTextNode(currentCell.getValue().toText()));
-                    } catch (IllegalValueTypeException ex) {
-                        Logger.getLogger(ExportXML.class.getName()).log(Level.SEVERE, null, ex);
+                    if (!currentCell.getValue().toString().equalsIgnoreCase("")) {
+                        cellElement.appendChild(doc.createTextNode((currentCell.getValue()).toString()));
+                        spreadsheetElement.appendChild(cellElement);
                     }
-
-                    spreadsheetElement.appendChild(cellElement);
-
-                    if (!currentSpreadSheetCellTitle.equalsIgnoreCase(currentCell.getSpreadsheet().getTitle())) {
-                        flag = false;
-                    }
-                    i++;
                 }
             }
 
             // write the content into xml file
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            transformerFactory.setAttribute("indent-number", "3");
+
             Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "3");
+
             DOMSource source = new DOMSource(doc);
             StreamResult result = new StreamResult(new File(this.path));
-
             transformer.transform(source, result);
-        } catch (ParserConfigurationException pCexp) {
-            pCexp.printStackTrace();
-            success = false;
-        } catch (TransformerException tfExp) {
-            tfExp.printStackTrace();
-            success = false;
-        }
 
-        return success;
+            exported = true;
+
+        } catch (TransformerException | ParserConfigurationException ex) {
+            Logger.getLogger(ExportXML.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return exported;
     }
 
 }

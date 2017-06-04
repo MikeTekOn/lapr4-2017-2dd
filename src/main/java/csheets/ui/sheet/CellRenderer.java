@@ -20,15 +20,6 @@
  */
 package csheets.ui.sheet;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics;
-import java.text.Format;
-import java.util.LinkedList;
-
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
-
 import csheets.core.Cell;
 import csheets.core.IllegalValueTypeException;
 import csheets.core.Value;
@@ -40,6 +31,12 @@ import csheets.ui.ext.CellDecorator;
 import csheets.ui.ext.UIExtension;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionEvent;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionStateListener;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.*;
+import java.text.Format;
+import java.util.LinkedList;
 
 /**
  * The renderer used for cells in a spreadsheet.
@@ -110,15 +107,20 @@ public class CellRenderer extends DefaultTableCellRenderer implements ExtensionS
 					setForeground(stylableCell.getForegroundColor());
 			}
 
-			// Applies tool tip
-			if (value.getType() == Value.Type.ERROR)
+            // Applies tool tip
+            if (value.getType() == Value.Type.ERROR)
 				try {
 					setToolTipText(value.toError().getMessage());
 				} catch (IllegalValueTypeException e) {}
 			else
-				setToolTipText(null);
-		}
-		return this;
+                //setToolTipText(null);
+                for (CellDecorator decores : decorators) {
+                    if (decores.hasTooltip(cell)) {
+                        decores.applyTooltip(this, cell);
+                    }
+                }
+        }
+        return this;
 	}
 
 	/**

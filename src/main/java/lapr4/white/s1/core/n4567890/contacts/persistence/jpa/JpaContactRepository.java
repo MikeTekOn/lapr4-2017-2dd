@@ -11,9 +11,16 @@ package lapr4.white.s1.core.n4567890.contacts.persistence.jpa;
  */
 
 import eapli.framework.persistence.DataIntegrityViolationException;
+import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 import lapr4.white.s1.core.n4567890.contacts.ExtensionSettings;
 import lapr4.white.s1.core.n4567890.contacts.domain.Contact;
 import lapr4.white.s1.core.n4567890.contacts.persistence.ContactRepository;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -34,5 +41,21 @@ class JpaContactRepository extends CrmJpaRepositoryBase<Contact, Long> implement
             throw new DataIntegrityViolationException(ex);
         }
         return true;
+    }
+
+    @Override
+    public List<Contact> findByRegex(String regexPattern){
+        Iterator<Contact> it = findAll().iterator();
+        List<Contact> foundContacts = new ArrayList<>();
+        Pattern p = Pattern.compile(regexPattern);
+        Contact c = null;
+        for(; it.hasNext(); c = it.next()){
+            Matcher m = p.matcher(c.name());
+            if(m.matches()){
+                foundContacts.add(c);
+            }
+        }
+
+        return foundContacts;
     }
 }

@@ -43,9 +43,10 @@ public class Literal implements Expression {
 		this.value = value;
 	}
 
-	public Value evaluate() {
-		return value;
-	}
+    @Override
+    public Value evaluate() {
+        return value;
+    }
 
 	/**
 	 * Returns the value of the literal.
@@ -55,15 +56,17 @@ public class Literal implements Expression {
 		return value;
 	}
 
-	public Object accept(ExpressionVisitor visitor) {
-		return visitor.visitLiteral(this);
-	}
+    @Override
+    public Object accept(ExpressionVisitor visitor) {
+        return visitor.visitLiteral(this);
+    }
 
-	public String toString() {
-		if (value.getType() == Value.Type.TEXT
-		 || value.getType() == Value.Type.DATE)
-			return "\"" + value.toString() + "\"";
-		else
-			return value.toString();
-	}
+    @Override
+    public String toString() {
+        if (value.getType() == Value.Type.TEXT
+                || value.getType() == Value.Type.DATE)
+            return "\"" + value.toString() + "\"";
+        else
+            return value.toString();
+    }
 }

@@ -20,11 +20,11 @@
  */
 package csheets.ui.ext;
 
-import java.awt.Graphics;
-
-import javax.swing.JComponent;
-
 import csheets.core.Cell;
+import csheets.ui.sheet.CellRenderer;
+
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * A cell decorator visualizes extension-specific data by drawing on top of
@@ -69,4 +69,11 @@ public abstract class CellDecorator {
 	public final void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
+
+    public boolean hasTooltip(Cell cell) {
+        return true;
+    }
+
+    public void applyTooltip(CellRenderer c, Cell cell) {
+    }
 }

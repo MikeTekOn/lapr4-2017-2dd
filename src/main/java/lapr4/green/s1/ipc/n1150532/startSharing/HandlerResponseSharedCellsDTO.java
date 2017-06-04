@@ -1,13 +1,15 @@
-package lapr4.green.s1.ipc.n1150532.comm;
+package lapr4.green.s1.ipc.n1150532.startSharing;
+
+import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
 
 import java.io.ObjectOutputStream;
 
 /**
- * A handler for the client to deal with EchoDTO.
+ * An handler to deal with the sharing cells response.
  *
  * @author Manuel Meireles (1150532@isep.ipp.pt)
  */
-public class EchoClientHandler implements CommHandler {
+public class HandlerResponseSharedCellsDTO implements CommHandler {
 
     /**
      * The last DTO received.
@@ -15,19 +17,19 @@ public class EchoClientHandler implements CommHandler {
     private Object lastReceivedDTO;
 
     /**
-     * It stored the received DTO as the last received DTO.
-     * 
-     * @param dto The received DTO. It is suppose to be an EchoDTO.
+     * It stores the response of the shared cells request.
+     *
+     * @param dto       The response received.
      * @param outStream Not used.
      */
     @Override
     public void handleDTO(Object dto, ObjectOutputStream outStream) {
-        lastReceivedDTO=(EchoDTO)dto;
+        lastReceivedDTO = dto;
     }
 
     /**
      * A getter of the last received DTO.
-     * 
+     *
      * @return It returns the last received DTO.
      */
     @Override

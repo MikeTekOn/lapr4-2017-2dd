@@ -11,10 +11,8 @@ import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.CellDecorator;
 import csheets.ui.ext.TableDecorator;
 import csheets.ui.ext.UIExtension;
-import javax.swing.Icon;
-import javax.swing.JComponent;
-import javax.swing.JMenu;
-import javax.swing.JToolBar;
+
+import javax.swing.*;
 
 /**
  *
@@ -41,6 +39,7 @@ public class UIExtensionImportExportData extends UIExtension {
      *
      * @return an icon with style
      */
+    @Override
     public Icon getIcon() {
         return null;
     }
@@ -52,6 +51,7 @@ public class UIExtensionImportExportData extends UIExtension {
      * @see ExampleMenu
      * @return a JMenu component
      */
+    @Override
     public JMenu getMenu() {
         if (menu == null) {
             menu = new ImportExportMenu(uiController);
@@ -64,6 +64,7 @@ public class UIExtensionImportExportData extends UIExtension {
      *
      * @return a cell decorator, or null if the extension does not provide one
      */
+    @Override
     public CellDecorator getCellDecorator() {
         return null;
     }
@@ -74,6 +75,7 @@ public class UIExtensionImportExportData extends UIExtension {
      *
      * @return a table decorator, or null if the extension does not provide one
      */
+    @Override
     public TableDecorator getTableDecorator() {
         return null;
     }
@@ -84,6 +86,7 @@ public class UIExtensionImportExportData extends UIExtension {
      * @return a JToolBar component, or null if the extension does not provide
      * one
      */
+    @Override
     public JToolBar getToolBar() {
         return null;
     }
@@ -93,6 +96,7 @@ public class UIExtensionImportExportData extends UIExtension {
      *
      * @return a component, or null if the extension does not provide one
      */
+    @Override
     public JComponent getSideBar() {
         return null;
     }

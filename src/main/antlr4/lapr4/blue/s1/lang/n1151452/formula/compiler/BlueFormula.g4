@@ -1,18 +1,16 @@
 grammar BlueFormula;
 @header {
     package lapr4.blue.s1.lang.n1151452.formula.compiler;
-}	         
+}
+
 expression
 	: EQ comparison EOF
 	;
 
-block
-	: L_CURLY_BRACKET comparison ( SEMI comparison )* R_CURLY_BRACKET 
-	;
-	
 comparison
 	: concatenation
-		( ( EQ | NEQ | GT | LT | LTEQ | GTEQ ) concatenation )?
+		(  ( EQ | NEQ | LTEQ | GTEQ | GT | LT ) concatenation )?
+	| for_loop
 	;
 
 concatenation
@@ -31,6 +29,15 @@ atom
 	|	LPAR comparison RPAR
 	|	block
 	|	assignment
+        |       temporary_variable
+	;
+
+for_loop
+    : FOR L_CURLY_BRACKET assignment SEMI  comparison ( SEMI comparison )+ R_CURLY_BRACKET
+    ;
+
+block
+	: L_CURLY_BRACKET comparison ( SEMI comparison )* R_CURLY_BRACKET
 	;
 
 assignment
@@ -43,9 +50,13 @@ function_call
 		RPAR
 	;
 
+	
+temporary_variable
+          : TEMPORARY_VARIABLE ASSIGN
+          ;
+
 reference
-	:	CELL_REF
-		( ( COLON ) CELL_REF )?
+	:	CELL_REF ( ( COLON ) CELL_REF )?
 	;
 
 literal
@@ -55,17 +66,22 @@ literal
 	
 
 fragment LETTER: ('a'..'z'|'A'..'Z') ;
-  
-FUNCTION : 
+
+FOR : 'FOR' | 'for' | 'For';
+
+FUNCTION :
 	  ( LETTER )+ 
-	;	
-	 
+	;
  
 CELL_REF
 	:
 		( ABS )? LETTER ( LETTER )?
 		( ABS )? ( DIGIT )+
 	;
+
+TEMPORARY_VARIABLE :
+        UNDERSCORE LETTER ((DIGIT)?(LETTER)?)+
+        ;
 
 /* String literals, i.e. anything inside the delimiters */
 
@@ -112,12 +128,10 @@ LPAR	: '(' ;
 RPAR	: ')' ; 
 L_CURLY_BRACKET	: '{' ;
 R_CURLY_BRACKET	: '}' ;
+UNDERSCORE : '_';
 
 /* assignment operator */
 ASSIGN  : ':=' ;
 
 /* White-space (ignored) */
 WS: ( ' ' | '\r' '\n' | '\n' | '\t' ) -> skip ;
-	
-	
- 

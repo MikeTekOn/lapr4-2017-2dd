@@ -22,7 +22,7 @@ public class SequenceBlock implements NaryOperator {
     @Override
     public Value applyTo(Expression[] operands) throws IllegalValueTypeException {
 
-        Value value = new Value();
+        Value value = null;
         // evaluate each expression and return the last value
         for (Expression expr : operands) {
             value = expr.evaluate();
