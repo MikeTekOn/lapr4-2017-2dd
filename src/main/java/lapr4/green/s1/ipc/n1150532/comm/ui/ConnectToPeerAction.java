@@ -6,6 +6,8 @@ import java.net.InetAddress;
 import lapr4.green.s1.ipc.n1150532.comm.CommTCPClientsManager;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
 
+import javax.swing.*;
+
 /**
  * An action to perform a TCP connection with a peer.
  *
@@ -50,7 +52,8 @@ public class ConnectToPeerAction extends BaseAction {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        CommTCPClientsManager.getManager().requestConnectionTo(connection);
+        int res = JOptionPane.showConfirmDialog(null, "Do you wish to establish a secure connection?", "Establish Connection", JOptionPane.YES_NO_OPTION);
+        CommTCPClientsManager.getManager().requestConnectionTo(connection, res == JOptionPane.YES_OPTION ? true : false);
     }
 
 }

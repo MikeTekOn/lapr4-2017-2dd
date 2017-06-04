@@ -235,7 +235,7 @@ public class CommExtension extends Extension implements Observer {
             }
             if (arg instanceof NewConnectionMadeEvent) {
                 NewConnectionMadeEvent event = (NewConnectionMadeEvent) arg;
-                tcpClientsManager.requestConnectionTo(event.getConnectionID());
+                tcpClientsManager.requestConnectionTo(event.getConnectionID(), event.isSecure());
             }
             if (arg instanceof SharedCellsEvent) {
                 SharedCellsEvent event = (SharedCellsEvent) arg;

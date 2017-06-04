@@ -5,6 +5,8 @@ import csheets.core.Spreadsheet;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.RequestSharedCellsDTO;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionRequestDTO;
+import lapr4.green.s1.ipc.n1150738.securecomm.SecureAESDataTransmissionContext;
+import lapr4.green.s1.ipc.n1150738.securecomm.TransmissionContextRequestDTO;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -82,12 +84,15 @@ public class CommTCPClientsManager implements Serializable {
      *
      * @param theConnection The connection information.
      */
-    public void requestConnectionTo(ConnectionID theConnection) {
+    public void requestConnectionTo(ConnectionID theConnection, boolean secure) {
         if (clients.get(theConnection) == null) {
             CommTCPClientWorker worker = new CommTCPClientWorker(this, theConnection.getAddress(), theConnection.getPortNumber());
-            ConnectionRequestDTO request = new ConnectionRequestDTO(CommTCPServer.getServer().provideConnectionPort(), theConnection.getAddress(), theConnection.getPortNumber());
+            ConnectionRequestDTO request = new ConnectionRequestDTO(CommTCPServer.getServer().provideConnectionPort(), theConnection.getAddress(), theConnection.getPortNumber(), secure);
             worker.start();
             try {
+                if(secure){
+                    worker.getObjectOutputStream().writeObject(new TransmissionContextRequestDTO(SecureAESDataTransmissionContext.class.getName()));
+                }
                 worker.getObjectOutputStream().writeObject(request);
             } catch (IOException ex) {
                 Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, ex);

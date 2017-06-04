@@ -27,6 +27,9 @@ public class ConnectionRequestDTO implements DTO, Serializable {
      */
     private final int serverPortNumber;
 
+
+    private final boolean secure;
+
     /**
      * The full constructor of the request.
      *
@@ -34,10 +37,11 @@ public class ConnectionRequestDTO implements DTO, Serializable {
      * @param theServerIPAddress The server's address.
      * @param theServerPortNumber The server's port number.
      */
-    public ConnectionRequestDTO(int myServerPortNumber, InetAddress theServerIPAddress, int theServerPortNumber) {
+    public ConnectionRequestDTO(int myServerPortNumber, InetAddress theServerIPAddress, int theServerPortNumber, boolean secure) {
         this.myServerPortNumber = myServerPortNumber;
         serverIPAddress = theServerIPAddress;
         serverPortNumber = theServerPortNumber;
+        this.secure = secure;
     }
 
     /**
@@ -68,6 +72,10 @@ public class ConnectionRequestDTO implements DTO, Serializable {
      */
     public int getServerPortNumber() {
         return serverPortNumber;
+    }
+
+    public boolean isSecure() {
+        return secure;
     }
 
 }
