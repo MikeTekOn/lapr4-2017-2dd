@@ -86,7 +86,7 @@ public class ContactPanel extends JPanel implements ActionListener {
         private final static String viewTodayEventsAction="view_today_events";
         private final static String viewFutureEventsAction="view_future_events";
         private final static String applyFilterAction = "apply_filter";
-    
+
     /**
      * Edited by João Cardoso - 1150943
      */
