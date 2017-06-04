@@ -184,7 +184,7 @@ public class SpreadsheetImpl implements Spreadsheet {
 
 	public Cell[] getColumn(int index) {
 		Cell[] column = new Cell[rows];
-		for (int row = 0; row < row; row++)
+		for (int row = 0; row < rows; row++)
 			column[row] = getCell(new Address(index, row));
 		return column;
 	}
