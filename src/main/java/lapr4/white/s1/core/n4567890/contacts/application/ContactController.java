@@ -40,8 +40,8 @@ public class ContactController implements Controller {
         this.contactsRepository=this.persistenceContext.repositories().contacts();
     }
 
-    public Contact addContact(String name, String firstName, String lastName, String photo) throws DataConcurrencyException, DataIntegrityViolationException {
-        return this.contactsRepository.save(new Contact(name, firstName, lastName, photo));
+    public Contact addContact(String name, String firstName, String lastName, String photo, String address, String email, String phone) throws DataConcurrencyException, DataIntegrityViolationException {
+        return this.contactsRepository.save(new Contact(name, firstName, lastName, photo, address, email, phone));
     }
 
     public boolean removeContact(Contact contact) throws DataConcurrencyException, DataIntegrityViolationException, IllegalAccessException {
@@ -54,13 +54,17 @@ public class ContactController implements Controller {
         return this.contactsRepository.removeContact(contact);
     }
     
-    public Contact updateContact(Contact contact, String fullName, String firstName, String lastName) throws DataConcurrencyException, DataIntegrityViolationException, IllegalAccessException {
+    public Contact updateContact(Contact contact, String fullName, String firstName, String lastName, String photo, String address, String email, String phone) throws DataConcurrencyException, DataIntegrityViolationException, IllegalAccessException {
         if(contact.name().equals(OWN_NAME)){
             throw new IllegalAccessException();
         }
         contact.setName(fullName);
         contact.setFirstName(firstName);
         contact.setLastName(lastName);
+        contact.setAddress(address);
+        contact.setPhoto(photo);
+        contact.setEmail(email);
+        contact.setPhone(phone);
         return this.contactsRepository.save(contact);
     }    
 

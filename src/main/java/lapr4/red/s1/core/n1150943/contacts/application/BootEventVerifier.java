@@ -44,7 +44,7 @@ public class BootEventVerifier {
                 return;
             }
         }
-        Contact ownContact = new Contact(OWN_NAME,OWN_NAME,OWN_NAME,"");
+        Contact ownContact = new Contact(OWN_NAME,OWN_NAME,OWN_NAME,"","address","email","987515234");
         contactsRepository.save(ownContact);
     }
 
