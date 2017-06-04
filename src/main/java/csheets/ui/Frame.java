@@ -20,64 +20,21 @@
  */
 package csheets.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.Toolkit;
-
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JToolBar;
-
 import csheets.CleanSheets;
 import csheets.core.Workbook;
-import csheets.ui.ctrl.AboutAction;
-import csheets.ui.ctrl.ActionManager;
-import csheets.ui.ctrl.AddSpreadsheetAction;
-import csheets.ui.ctrl.ClearAction;
-import csheets.ui.ctrl.CloseAction;
-import csheets.ui.ctrl.CloseAllAction;
-import csheets.ui.ctrl.CopyAction;
-import csheets.ui.ctrl.CutAction;
-import csheets.ui.ctrl.ExitAction;
-import csheets.ui.ctrl.HelpAction;
-import csheets.ui.ctrl.InsertColumnAction;
-import csheets.ui.ctrl.InsertRowAction;
-import csheets.ui.ctrl.LicenseAction;
-import csheets.ui.ctrl.NewAction;
-import csheets.ui.ctrl.OpenAction;
-import csheets.ui.ctrl.PasteAction;
-import csheets.ui.ctrl.PreferencesAction;
-import csheets.ui.ctrl.PrintAction;
-import csheets.ui.ctrl.RedoAction;
-import csheets.ui.ctrl.RemoveColumnAction;
-import csheets.ui.ctrl.RemoveRowAction;
-import csheets.ui.ctrl.RemoveSpreadsheetAction;
-import csheets.ui.ctrl.RenameSpreadsheetAction;
-import csheets.ui.ctrl.SaveAction;
-import csheets.ui.ctrl.SaveAsAction;
-import csheets.ui.ctrl.SearchAction;
-import csheets.ui.ctrl.SelectAllAction;
-import csheets.ui.ctrl.SelectionEvent;
-import csheets.ui.ctrl.SelectionListener;
-import csheets.ui.ctrl.SortAction;
-import csheets.ui.ctrl.UIController;
-import csheets.ui.ctrl.UndoAction;
+import csheets.ui.ctrl.*;
 import csheets.ui.ext.UIExtension;
 import csheets.ui.sheet.AddressBox;
 import csheets.ui.sheet.CellEditor;
 import csheets.ui.sheet.WorkbookPane;
+import lapr4.blue.s1.lang.n1060503.functionWizard.ui.FunctionWizard;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionEvent;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionStateListener;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ManageExtensionsAction;
-import lapr4.blue.s1.lang.n1060503.functionWizard.ui.FunctionWizard;
 import lapr4.red.s1.core.n1150451.exportPDF.presentation.ExportToPDFAction;
+
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * The main frame of the GUI.
@@ -123,9 +80,9 @@ public class Frame extends JFrame implements SelectionListener, ExtensionStateLi
 		actionManager.registerAction("closeall", new CloseAllAction(app, uiController, chooser));
 		actionManager.registerAction("save", new SaveAction(app, uiController, chooser));
 		actionManager.registerAction("saveas", new SaveAsAction(app, uiController, chooser));
-		actionManager.registerAction("PDF", new ExportToPDFAction(app, uiController, chooser));
-		actionManager.registerAction("exit", new ExitAction(app, uiController, chooser));
-		actionManager.registerAction("print", new PrintAction());
+        actionManager.registerAction("PDF", new ExportToPDFAction(app, uiController, chooser));
+        actionManager.registerAction("exit", new ExitAction(app, uiController, chooser));
+        actionManager.registerAction("print", new PrintAction());
 
 		// Registers edit actions
 		actionManager.registerAction("undo", new UndoAction());

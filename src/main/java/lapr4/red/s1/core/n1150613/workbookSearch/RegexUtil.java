@@ -8,6 +8,7 @@ package lapr4.red.s1.core.n1150613.workbookSearch;
 import csheets.core.Cell;
 import csheets.core.Spreadsheet;
 import csheets.core.Workbook;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -65,9 +66,7 @@ public class RegexUtil {
      * it's contents with the inserted regular expression.
      *
      * @param w
-     *
      * @return desired cells information in String array
-     *
      */
     public List<String> checkifRegexMatches(Workbook w) {
         Spreadsheet s;

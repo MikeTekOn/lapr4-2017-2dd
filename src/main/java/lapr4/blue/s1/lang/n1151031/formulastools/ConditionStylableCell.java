@@ -9,15 +9,14 @@ import csheets.core.formula.util.ReferenceFetcher;
 import csheets.ext.CellExtension;
 import csheets.ext.style.StylableCell;
 import csheets.ext.style.StyleExtension;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import javax.swing.JOptionPane;
 
 /**
- *
  * @author Tiago Correia - 1151031@isep.ipp.pt
  */
 public class ConditionStylableCell extends CellExtension {
@@ -171,10 +170,10 @@ public class ConditionStylableCell extends CellExtension {
      * Customizes serialization, by recreating the listener list.
      *
      * @param stream the object input stream from which the object is to be read
-     * @throws IOException If any of the usual Input/Output related exceptions
-     * occur
+     * @throws IOException            If any of the usual Input/Output related exceptions
+     *                                occur
      * @throws ClassNotFoundException If the class of a serialized object cannot
-     * be found.
+     *                                be found.
      */
     private void readObject(java.io.ObjectInputStream stream)
             throws java.io.IOException, ClassNotFoundException {

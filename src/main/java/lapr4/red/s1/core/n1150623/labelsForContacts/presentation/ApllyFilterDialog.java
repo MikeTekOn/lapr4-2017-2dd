@@ -1,7 +1,5 @@
 package lapr4.red.s1.core.n1150623.labelsForContacts.presentation;
 
-import lapr4.white.s1.core.n4567890.contacts.domain.Contact;
-
 import javax.swing.*;
 import java.awt.event.*;
 
@@ -76,18 +74,18 @@ public class ApllyFilterDialog extends JDialog {
     private void onOK(String regexFinal) {
 
         String regex;
-        if(radioButton1.isSelected()){
+        if (radioButton1.isSelected()) {
             regex = regexExpressionInsertionTextField.getText().trim();
-            if(regex.length() == 0){
+            if (regex.length() == 0) {
                 regexFinal = ".*";
-            }else{
+            } else {
                 regexFinal = regex;
             }
-        }else if(radioButton2.isSelected()){
+        } else if (radioButton2.isSelected()) {
             regex = regexExpressionInsertionTextField.getText().trim();
-            if(regex.length() == 0){
+            if (regex.length() == 0) {
                 regexFinal = ".*"; //anything
-            }else{
+            } else {
                 regexFinal = regex; //anything that contains "regex" content
             }
         }

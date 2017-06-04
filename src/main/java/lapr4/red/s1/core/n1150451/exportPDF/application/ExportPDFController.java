@@ -5,15 +5,14 @@
  */
 package lapr4.red.s1.core.n1150451.exportPDF.application;
 
-import lapr4.red.s1.core.n1150451.exportPDF.domain.ExportPDF;
-import csheets.core.Cell;
 import csheets.core.Spreadsheet;
 import csheets.core.Workbook;
 import csheets.ui.ctrl.UIController;
-import java.util.List;
-import java.util.regex.Pattern;
+import lapr4.red.s1.core.n1150451.exportPDF.domain.ExportPDF;
 import lapr4.red.s1.core.n1150451.exportPDF.domain.WorkbookHandler;
 import lapr4.s1.export.ExportContext;
+
+import java.util.regex.Pattern;
 
 /**
  *
@@ -28,7 +27,7 @@ public class ExportPDFController {
     public void initiateExport(UIController c) {
         ePDF = new ExportPDF();
         exportContext = new ExportContext(ePDF);
-        this.c=c;
+        this.c = c;
     }
 
     public void selectRange(Workbook wb) {
@@ -40,11 +39,11 @@ public class ExportPDFController {
     }
 
     public void selectRange(Spreadsheet ws, String text) {
-    final Pattern pattern = Pattern.compile("[A-Z]+[0-9]+:[A-Z]+[0-9]+");
-    if (!pattern.matcher(text).matches()) {
-        throw new IllegalArgumentException();
-    }
-       ePDF.selectRange(new WorkbookHandler(ws.getWorkbook()).getListCellsSpreadSheetWithinRange(ws, text, c, ePDF));
+        final Pattern pattern = Pattern.compile("[A-Z]+[0-9]+:[A-Z]+[0-9]+");
+        if (!pattern.matcher(text).matches()) {
+            throw new IllegalArgumentException();
+        }
+        ePDF.selectRange(new WorkbookHandler(ws.getWorkbook()).getListCellsSpreadSheetWithinRange(ws, text, c, ePDF));
     }
 
     public void toggleSections() {

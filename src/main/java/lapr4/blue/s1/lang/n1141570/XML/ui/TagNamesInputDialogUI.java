@@ -1,14 +1,13 @@
 package lapr4.blue.s1.lang.n1141570.XML.ui;
 
 import csheets.ui.ctrl.UIController;
-import lapr4.blue.s1.lang.n1151159.macros.MacroController;
+import lapr4.blue.s1.lang.n1141570.XML.application.ExportXMLController;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
-import lapr4.blue.s1.lang.n1141570.XML.application.ExportXMLController;
 
 /**
  * Represents a dialog to execute macros.
@@ -23,11 +22,11 @@ public class TagNamesInputDialogUI extends JDialog {
      */
     private UIController uiController;
 
-     /**
+    /**
      * The macro controller.
      */
     private ExportXMLController exportXMLController = new ExportXMLController(uiController);
-    
+
     /* UI Components */
     private JTextField workbookTagTextField;
     private JTextField spreadsheetTagTextField;
@@ -35,22 +34,21 @@ public class TagNamesInputDialogUI extends JDialog {
 
     private Dimension BUTTON_SIZE = new Dimension(115, 30);
     private LinkedList<String> tagNames = new LinkedList<>();
-    
-    
+
 
     /**
      * Creates an instance of export xml dialog.
      *
      * @param uiController the user interface controller
      */
-    public  TagNamesInputDialogUI(UIController uiController) {
+    public TagNamesInputDialogUI(UIController uiController) {
         setLocationRelativeTo(null);
         this.uiController = uiController;
         createComponents();
         pack();
     }
-    
-    public LinkedList<String> tagNamesDefinedByUser(){
+
+    public LinkedList<String> tagNamesDefinedByUser() {
         return tagNames;
     }
 
@@ -77,7 +75,7 @@ public class TagNamesInputDialogUI extends JDialog {
         JPanel southPanel = new JPanel(new FlowLayout());
 
         this.workbookTagTextField = new JTextField();
-       // this.workbookTextField.enableInputMethods(true);
+        // this.workbookTextField.enableInputMethods(true);
         this.workbookTagTextField.setPreferredSize(BUTTON_SIZE);
 
         this.spreadsheetTagTextField = new JTextField();
@@ -85,7 +83,7 @@ public class TagNamesInputDialogUI extends JDialog {
         this.spreadsheetTagTextField.setPreferredSize(BUTTON_SIZE);
 
         this.cellTagTextField = new JTextField();
-       // this.cellTextField.enableInputMethods(true);
+        // this.cellTextField.enableInputMethods(true);
         this.cellTagTextField.setPreferredSize(BUTTON_SIZE);
 
         JLabel workbookLabel = new JLabel("workbook tag");

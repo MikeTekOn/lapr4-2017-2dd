@@ -4,7 +4,6 @@ import csheets.ui.ctrl.UIController;
 import lapr4.blue.s1.lang.n1151031.formulastools.ConditionStylableCell;
 
 /**
- *
  * @author Tiago Correia - 1151031@isep.ipp.pt
  */
 class ConditionalStyleController {
@@ -23,7 +22,7 @@ class ConditionalStyleController {
      * Creates a new conditional style controller.
      *
      * @param uiController the user interface controller
-     * @param uiPanel the user interface panel
+     * @param uiPanel      the user interface panel
      */
     public ConditionalStyleController(UIController uiController, ConditionalStylePanel uiPanel) {
         this.uiController = uiController;
@@ -35,7 +34,7 @@ class ConditionalStyleController {
      * adds the condition to the given cell. If the input string is empty or
      * null, the condition is set to null.
      *
-     * @param cell the cell for which the condition should be set
+     * @param cell            the cell for which the condition should be set
      * @param conditionString the condition, as entered by the user
      * @return true if the cell's condition was changed
      */

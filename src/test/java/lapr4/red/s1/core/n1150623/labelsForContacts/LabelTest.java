@@ -2,13 +2,11 @@ package lapr4.red.s1.core.n1150623.labelsForContacts;
 
 import lapr4.red.s1.core.n1150623.labelsForContacts.domain.Label;
 import lapr4.white.s1.core.n4567890.contacts.domain.Event;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
 
 /**
  * Created by Guilherme Ferreira 1150623 on 02/06/2017.
@@ -81,7 +79,7 @@ public class LabelTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void ensureEmailsCantBeNull(){
-        label.fillLabel(name, photo,address, null, phoneNumber);
+        label.fillLabel(name, photo, address, null, phoneNumber);
     }
 
     @Test(expected = IllegalArgumentException.class)

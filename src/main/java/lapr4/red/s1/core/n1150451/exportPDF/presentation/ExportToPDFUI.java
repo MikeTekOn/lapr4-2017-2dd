@@ -5,26 +5,24 @@
  */
 package lapr4.red.s1.core.n1150451.exportPDF.presentation;
 
-import csheets.CleanSheets;
 import csheets.core.Spreadsheet;
 import csheets.ui.FileChooser;
 import csheets.ui.ctrl.UIController;
-import java.awt.Dimension;
+import lapr4.red.s1.core.n1150451.exportPDF.application.ExportPDFController;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import lapr4.red.s1.core.n1150451.exportPDF.application.ExportPDFController;
 
 /**
- *
  * @author Sofia Silva [1150690@isep.ipp.pt]
  */
 public class ExportToPDFUI extends JDialog {
@@ -122,7 +120,7 @@ public class ExportToPDFUI extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 ExportPDFController c = new ExportPDFController();
                 c.initiateExport(uiController);
-                if (sheetList.getSelectedValue()==null){
+                if (sheetList.getSelectedValue() == null) {
                     JOptionPane.showMessageDialog(rootPane, "You didn't select any item from the list.");
                     return;
                 }
@@ -140,12 +138,12 @@ public class ExportToPDFUI extends JDialog {
                     if (rangeField.getText().trim().equals("")) {
                         c.selectRange(s);
                     } else {
-                       try{
-                           c.selectRange(s, rangeField.getText());
-                       } catch (IllegalArgumentException ex){
-                           JOptionPane.showMessageDialog(rootPane, "Inserted Range is invalid.");
-                    return;
-                       }
+                        try {
+                            c.selectRange(s, rangeField.getText());
+                        } catch (IllegalArgumentException ex) {
+                            JOptionPane.showMessageDialog(rootPane, "Inserted Range is invalid.");
+                            return;
+                        }
                     }
                 }
                 c.selectPath(pathField.getText());

@@ -117,7 +117,7 @@
  * <li>Change cell value to 0
  * <li>Cells' background becomes red
  * </ol>
- * 
+ *
  * <h2>8. Work Log</h2>
  * <p>
  * <b>Tuesday</b>

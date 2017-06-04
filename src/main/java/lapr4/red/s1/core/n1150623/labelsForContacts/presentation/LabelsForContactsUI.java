@@ -42,7 +42,7 @@ public class LabelsForContactsUI extends JDialog {
         selected = new DefaultListModel<>();
         contacts = new DefaultListModel<>();
         Iterable<Contact> it = controller.allContacts();
-        for(Contact c: it){
+        for (Contact c : it) {
             contacts.addElement(c);
         }
         selectedContactsList.setModel(selected);
@@ -107,7 +107,7 @@ public class LabelsForContactsUI extends JDialog {
     private void addSelected() {
         int index[] = contactList.getSelectedIndices();
         List<Contact> list = new ArrayList<>();
-        for(int i : index){
+        for (int i : index) {
             list.add(contacts.get(i));
         }
         addToSelectedContacts(list);
@@ -119,7 +119,7 @@ public class LabelsForContactsUI extends JDialog {
     private void removeSelected() {
         int index[] = selectedContactsList.getSelectedIndices();
         List<Contact> list = new ArrayList<>();
-        for(int i : index){
+        for (int i : index) {
             list.add(contacts.get(i));
         }
         removeFromSelectedContacts(list);
@@ -135,10 +135,10 @@ public class LabelsForContactsUI extends JDialog {
         List<Contact> foundContacts = new ArrayList<>();
         Pattern p = Pattern.compile(regex);
         Contact c = null;
-        for(int i = 0; i < contacts.size(); i++){
+        for (int i = 0; i < contacts.size(); i++) {
             c = contacts.getElementAt(i);
             Matcher m = p.matcher(c.name());
-            if(m.matches()){
+            if (m.matches()) {
                 foundContacts.add(c);
             }
         }
@@ -149,7 +149,7 @@ public class LabelsForContactsUI extends JDialog {
 
     private void onOK() {
 
-        if(JOptionPane.showConfirmDialog(null, "Label Exportation", "Label Exportation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION){
+        if (JOptionPane.showConfirmDialog(null, "Label Exportation", "Label Exportation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
             /**
              * Add events
              * */
@@ -161,13 +161,13 @@ public class LabelsForContactsUI extends JDialog {
              * Limit Events
              */
             controller.limitEvents(endDate);
-        }else{
+        } else {
             controller.removeEvents();
         }
 
 
         String export = "Success";
-        if(!controller.doExport()){
+        if (!controller.doExport()) {
             export = "Failed";
         }
         JOptionPane.showConfirmDialog(null, "Exportation: " + export, "Information", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
@@ -185,32 +185,32 @@ public class LabelsForContactsUI extends JDialog {
         System.exit(0);
     }
 
-    private void updateAllContactsList(){
+    private void updateAllContactsList() {
         contactList.setModel(contacts);
     }
 
-    private void updateSelectedContactsList(){
+    private void updateSelectedContactsList() {
         selectedContactsList.setModel(selected);
     }
 
-    private void removeFromContacts(List<Contact> toRemove){
-        for(Contact c: toRemove){
+    private void removeFromContacts(List<Contact> toRemove) {
+        for (Contact c : toRemove) {
             contacts.removeElement(c);
         }
-     }
+    }
 
-    private void addToContacts(List<Contact> toAdd){
-        for(Contact c: toAdd){
-            if(!contacts.contains(c))
+    private void addToContacts(List<Contact> toAdd) {
+        for (Contact c : toAdd) {
+            if (!contacts.contains(c))
                 contacts.addElement(c);
         }
     }
 
-    private void addAllContacts(){
+    private void addAllContacts() {
         Contact c = null;
-        for(int i = 0; i < contacts.size();i++){
+        for (int i = 0; i < contacts.size(); i++) {
             c = contacts.getElementAt(i);
-            if(!selected.contains(c)){
+            if (!selected.contains(c)) {
                 selected.addElement(c);
             }
         }
@@ -220,15 +220,15 @@ public class LabelsForContactsUI extends JDialog {
     }
 
 
-    private void addToSelectedContacts(List<Contact> toAdd){
-        for(Contact c: toAdd){
-            if(!selected.contains(c))
+    private void addToSelectedContacts(List<Contact> toAdd) {
+        for (Contact c : toAdd) {
+            if (!selected.contains(c))
                 selected.addElement(c);
         }
     }
 
-    private void removeFromSelectedContacts(List<Contact> toRemove){
-        for(Contact c: toRemove){
+    private void removeFromSelectedContacts(List<Contact> toRemove) {
+        for (Contact c : toRemove) {
             selected.removeElement(c);
         }
     }

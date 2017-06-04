@@ -1,10 +1,8 @@
 package lapr4.blue.s1.lang.n1151031.formulastools;
 
-import java.awt.Color;
-import java.awt.Font;
-import javax.swing.BorderFactory;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.border.Border;
+import java.awt.*;
 
 /**
  * A class that has the user selected styling options to be applied when using

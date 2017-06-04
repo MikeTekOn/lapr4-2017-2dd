@@ -6,10 +6,10 @@ import csheets.core.Cell;
 import csheets.core.formula.compiler.FormulaCompilationException;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertTrue;
 
 /**
- *
  * @author Tiago Correia - 1151031@isep.ipp.pt
  */
 public class ConditionStylableCellTest {

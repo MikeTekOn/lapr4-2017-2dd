@@ -72,7 +72,7 @@ public class LabelsToPDFTest {
     }
 
     @Test
-    public void ensurePDFIsPrinted(){
+    public void ensurePDFIsPrinted() {
         assertTrue(lista.exportPDF());
     }
 

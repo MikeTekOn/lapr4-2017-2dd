@@ -5,17 +5,13 @@ import csheets.core.Spreadsheet;
 import csheets.ui.FileChooser;
 import csheets.ui.ctrl.BaseAction;
 import csheets.ui.ctrl.UIController;
-import java.awt.event.ActionEvent;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import javax.swing.JOptionPane;
 import lapr4.blue.s1.lang.n1141570.XML.application.ExportXMLController;
 
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.util.*;
+
 /**
- *
  * @author Eric
  */
 public class ExportSelectedCellActionUI extends BaseAction {

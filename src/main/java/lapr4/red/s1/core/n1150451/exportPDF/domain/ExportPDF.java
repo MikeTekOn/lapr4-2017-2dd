@@ -5,31 +5,19 @@
  */
 package lapr4.red.s1.core.n1150451.exportPDF.domain;
 
-import com.itextpdf.text.Anchor;
-import lapr4.s1.export.ExportStrategy;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.*;
 import com.itextpdf.text.Font.FontFamily;
-import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import csheets.core.Cell;
-import csheets.core.IllegalValueTypeException;
 import csheets.core.Spreadsheet;
+import lapr4.s1.export.ExportStrategy;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -73,7 +61,7 @@ public class ExportPDF implements ExportStrategy {
             Map<Spreadsheet, Set<Cell>> map = getMapBySpreadSheet();
 
             if (sections) {
-                
+
                 createFrontPage(doc, map);
                 doc.newPage();
             }
@@ -204,21 +192,21 @@ public class ExportPDF implements ExportStrategy {
     private void createFrontPage(Document doc, Map<Spreadsheet, Set<Cell>> map) {
         PdfPTable table = new PdfPTable(1);
         table.setWidthPercentage(50);
-       for (Spreadsheet s : map.keySet()) {
+        for (Spreadsheet s : map.keySet()) {
             Anchor anchor
                     = new Anchor(s.getTitle());
-            anchor.setReference("#"+s.getTitle());
+            anchor.setReference("#" + s.getTitle());
             Paragraph p = new Paragraph();
             p.add(anchor);
-            
+
             mapAnchor.put(s.getTitle(), anchor);
             table.addCell(new PdfPCell(new Phrase(p)));
-            
+
         }
         try {
-                doc.add(table);
-            } catch (DocumentException ex) {
-                //Logger.getLogger(ExportPDF.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            doc.add(table);
+        } catch (DocumentException ex) {
+            //Logger.getLogger(ExportPDF.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

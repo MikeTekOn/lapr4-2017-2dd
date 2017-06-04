@@ -20,25 +20,13 @@
  */
 package csheets.ui;
 
-import java.awt.event.KeyEvent;
-
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JComponent;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-
 import csheets.CleanSheets;
 import csheets.ui.ctrl.ActionManager;
 import csheets.ui.ctrl.UIController;
-import csheets.ui.ext.CellDecorator;
-import csheets.ui.ext.CellDecoratorAction;
-import csheets.ui.ext.ComponentAction;
-import csheets.ui.ext.SideBarAction;
-import csheets.ui.ext.TableDecorator;
-import csheets.ui.ext.TableDecoratorAction;
-import csheets.ui.ext.UIExtension;
+import csheets.ui.ext.*;
+
+import javax.swing.*;
+import java.awt.event.KeyEvent;
 
 /**
  * The menu bar.
@@ -51,9 +39,9 @@ public class MenuBar extends JMenuBar {
     /**
      * Creates the menu bar.
      *
-     * @param app the CleanSheets application
+     * @param app           the CleanSheets application
      * @param actionManager a manager for actions
-     * @param uiController the user interface controller
+     * @param uiController  the user interface controller
      */
     public MenuBar(CleanSheets app, ActionManager actionManager, UIController uiController) {
         // Creates the file menu
@@ -66,9 +54,9 @@ public class MenuBar extends JMenuBar {
         fileMenu.addSeparator();
         fileMenu.add(actionManager.getAction("print"));
         fileMenu.addSeparator();
-        
+
         fileMenu.add(actionManager.getAction("PDF"));
-        
+
         fileMenu.add(actionManager.getAction("close"));
         fileMenu.add(actionManager.getAction("closeall"));
         fileMenu.add(actionManager.getAction("exit"));
@@ -181,9 +169,9 @@ public class MenuBar extends JMenuBar {
     /**
      * Creates a menu and adds it to the menu bar.
      *
-     * @param name	The name of the menu.
-     * @param mnemonic	The shortcut-key to access the menu.
-     * @return	The menu created.
+     * @param name     The name of the menu.
+     * @param mnemonic The shortcut-key to access the menu.
+     * @return The menu created.
      */
     private JMenu addMenu(String name, int mnemonic) {
         JMenu menu = new JMenu(name);

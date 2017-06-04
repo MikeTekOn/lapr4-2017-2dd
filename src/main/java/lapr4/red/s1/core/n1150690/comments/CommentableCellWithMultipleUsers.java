@@ -7,12 +7,13 @@ package lapr4.red.s1.core.n1150690.comments;
 
 import csheets.core.Cell;
 import eapli.util.Strings;
+import lapr4.red.s1.core.n1150690.comments.domain.User;
+import lapr4.white.s1.core.n1234567.comments.CommentableCell;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import lapr4.red.s1.core.n1150690.comments.domain.User;
-import lapr4.white.s1.core.n1234567.comments.CommentableCell;
 
 /**
  * An extension of a cell in a spreadsheet, with support for comments and their

@@ -12,7 +12,6 @@ import lapr4.white.s1.core.n4567890.contacts.persistence.PersistenceContext;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 
 /**
  * Created by Guilherme Ferreira 1150623 on 01/06/2017.
@@ -47,8 +46,8 @@ public class LabelsForContactsController {
      * @throws DataConcurrencyException
      * @throws DataIntegrityViolationException
      */
-    private boolean addLabel(String name, String photo, String email, String address,  String phoneNumber) throws DataConcurrencyException, DataIntegrityViolationException {
-        Label createdLabel = labelFactory.construct(name,photo,email, address, phoneNumber);
+    private boolean addLabel(String name, String photo, String email, String address, String phoneNumber) throws DataConcurrencyException, DataIntegrityViolationException {
+        Label createdLabel = labelFactory.construct(name, photo, email, address, phoneNumber);
         return labelList.addLabel(createdLabel);
     }
 
@@ -70,18 +69,18 @@ public class LabelsForContactsController {
         return list;
     }
 
-    public boolean toExportContacts(List<Contact> toExport){
-        for(Contact c: toExport){
-            try{
+    public boolean toExportContacts(List<Contact> toExport) {
+        for (Contact c : toExport) {
+            try {
                 //addLabel(c.name(), c.photo(), c.email(), c.address(), c.phoneNumber());
-            }catch(Exception e){
+            } catch (Exception e) {
                 return false;
             }
         }
         return true;
     }
 
-    public void limitEvents(Calendar endDate){
+    public void limitEvents(Calendar endDate) {
         labelList.limitEvents(endDate);
     }
 

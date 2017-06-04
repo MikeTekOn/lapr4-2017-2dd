@@ -26,50 +26,59 @@ import lapr4.blue.s1.lang.n1151088.Formula;
 /**
  * An exception that is thrown if a formula contains a reference (directly or
  * indirectly) to the cell in which it is contained.
+ *
  * @author Einar Pehrson
  */
 public class CircularReferenceException extends ExpressionVisitorException {
 
-	/** The serialVersionUID of the CircularReferenceException.java */
-	private static final long serialVersionUID = 4204972508404909370L;
+    /**
+     * The serialVersionUID of the CircularReferenceException.java
+     */
+    private static final long serialVersionUID = 4204972508404909370L;
 
-	/** The formula in which the circularity exists */
-	private Formula formula;
+    /**
+     * The formula in which the circularity exists
+     */
+    private Formula formula;
 
-	/**
-	 * Creates a new circular reference exception.
-	 * @param formula the formula that caused the exception
-	 */
-	public CircularReferenceException(Formula formula) {
-		super("A circular reference was encountered in the formula " + formula + ".");
-		this.formula = formula;
-	}
+    /**
+     * Creates a new circular reference exception.
+     *
+     * @param formula the formula that caused the exception
+     */
+    public CircularReferenceException(Formula formula) {
+        super("A circular reference was encountered in the formula " + formula + ".");
+        this.formula = formula;
+    }
 
-	/**
-	 * Returns the formula in which the circularity exists.
-	 * @return the formula in which the circularity exists
-	 */
-	public Formula getFormula() {
-		return formula;
-	}
+    /**
+     * Returns the formula in which the circularity exists.
+     *
+     * @return the formula in which the circularity exists
+     */
+    public Formula getFormula() {
+        return formula;
+    }
 
-	/**
-	 * Returns a string representation of the exception.
-	 * @return a string representation of the exception
-	 */
-	public String toString() {
-		return "#CIRCLE!";
-	}
+    /**
+     * Returns a string representation of the exception.
+     *
+     * @return a string representation of the exception
+     */
+    public String toString() {
+        return "#CIRCLE!";
+    }
 
-	/**
-	 * Returns whether the other object is an identical value .
-	 * @param other the object to check for equality
-	 * @return true if the objects are equal
-	 */
-	public boolean equals(Object other) {
-		if (!(other instanceof CircularReferenceException) || other == null)
-			return false;
-		CircularReferenceException e = (CircularReferenceException)other;
-		return formula.getCell().equals(e.formula.getCell());
-	}
+    /**
+     * Returns whether the other object is an identical value .
+     *
+     * @param other the object to check for equality
+     * @return true if the objects are equal
+     */
+    public boolean equals(Object other) {
+        if (!(other instanceof CircularReferenceException) || other == null)
+            return false;
+        CircularReferenceException e = (CircularReferenceException) other;
+        return formula.getCell().equals(e.formula.getCell());
+    }
 }

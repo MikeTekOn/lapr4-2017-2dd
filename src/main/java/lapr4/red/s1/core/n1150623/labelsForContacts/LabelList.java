@@ -1,6 +1,5 @@
 package lapr4.red.s1.core.n1150623.labelsForContacts;
 
-import eapli.util.DateTime;
 import lapr4.red.s1.core.n1150623.labelsForContacts.domain.Label;
 
 import java.util.ArrayList;
@@ -65,14 +64,14 @@ public class LabelList {
 
     public void limitEvents(Calendar endDate) {
 
-        for(Label lab : wantedLabels){
+        for (Label lab : wantedLabels) {
             lab.deleteEventsOutsideBoundaries(endDate);
         }
     }
 
     public void removeEvents() {
 
-        for(Label l : wantedLabels){
+        for (Label l : wantedLabels) {
             l.removeEvents();
         }
     }

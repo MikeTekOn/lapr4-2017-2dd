@@ -10,11 +10,11 @@ import csheets.core.Cell;
 import csheets.core.Spreadsheet;
 import csheets.core.Workbook;
 import csheets.ui.ctrl.UIController;
+import lapr4.green.s1.ipc.n1150800.importexportTXT.CellRange;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import lapr4.green.s1.ipc.n1150800.importexportTXT.CellRange;
 
 /**
  *
@@ -42,7 +42,7 @@ public class WorkbookHandler {
         list.addAll(getListCellsBetweenRange(s, 0, 127, 0, 52));
         return list;
     }
-    
+
     private List<Cell> getListCellsBetweenRange(Spreadsheet s, int topLeftRow, int bottomRightRow, int topLeftColumn, int topRightColumn) {
         List<Cell> list = new ArrayList<>();
         for (int i = topLeftRow; i <= bottomRightRow; i++) {
@@ -62,6 +62,6 @@ public class WorkbookHandler {
         ePDF.setLimits(leftCell.getRow(), rightCell.getRow(), leftCell.getColumn(), rightCell.getColumn());
         cells.addAll(ws.getCells(leftCell, rightCell));
         return cells;
-    
+
     }
 }

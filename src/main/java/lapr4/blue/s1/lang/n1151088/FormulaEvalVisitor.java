@@ -5,7 +5,6 @@
  */
 package lapr4.blue.s1.lang.n1151088;
 
-import lapr4.blue.s1.lang.n1151452.formula.compiler.*;
 import csheets.core.Cell;
 import csheets.core.Value;
 import csheets.core.formula.*;
@@ -15,6 +14,8 @@ import csheets.core.formula.lang.CellReference;
 import csheets.core.formula.lang.RangeReference;
 import csheets.core.formula.lang.ReferenceOperation;
 import csheets.core.formula.lang.UnknownElementException;
+import lapr4.blue.s1.lang.n1151452.formula.compiler.BlueFormulaBaseVisitor;
+import lapr4.blue.s1.lang.n1151452.formula.compiler.BlueFormulaParser;
 import lapr4.blue.s1.lang.n1151452.formula.lang.Language;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperation;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperator;
@@ -38,7 +39,7 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
     private Cell cell = null;
     private int numberOfErrors;
     private final StringBuilder errorBuffer;
-    
+
     public FormulaEvalVisitor(Cell cell) {
         this.cell = cell;
         numberOfErrors = 0;
@@ -118,8 +119,8 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
 
         return visitChildren(ctx);
     }
-    
-   // public Expression visitTemporaryVariable(BlueFormulaParser.)
+
+    // public Expression visitTemporaryVariable(BlueFormulaParser.)
 
     @Override
     public Expression visitFunction_call(BlueFormulaParser.Function_callContext ctx) {

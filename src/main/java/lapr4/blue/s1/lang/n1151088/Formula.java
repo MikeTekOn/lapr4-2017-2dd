@@ -28,116 +28,134 @@ import csheets.core.formula.Reference;
 import csheets.core.formula.util.ExpressionVisitor;
 import csheets.core.formula.util.ExpressionVisitorException;
 import csheets.core.formula.util.ReferenceFetcher;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import lapr4.blue.s1.lang.n1151088.temporaryVariables.CircularReferenceException;
 import lapr4.blue.s1.lang.n1151088.temporaryVariables.CircularReferenceFinder;
 import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVarContentor;
-import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVariable;
+
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * A formula in a cell.
+ *
  * @author Diana Silva on 03/06/2017
  * @author Einar Pehrson
  */
 public class Formula implements Expression {
 
-	/** The unique version identifier used for serialization */
-	private static final long serialVersionUID = 7127589370042533160L;
+    /**
+     * The unique version identifier used for serialization
+     */
+    private static final long serialVersionUID = 7127589370042533160L;
 
-	/** The cell to which the formula belongs */
-	private Cell cell;
+    /**
+     * The cell to which the formula belongs
+     */
+    private Cell cell;
 
-	/** The expression of the formula */
-	private Expression expression;
+    /**
+     * The expression of the formula
+     */
+    private Expression expression;
 
-	/** Returns the references in the expression */
-	private SortedSet<Reference> references;
-        
-        /** The temporary variables in the expression */
-        private TemporaryVarContentor contentor;
+    /**
+     * Returns the references in the expression
+     */
+    private SortedSet<Reference> references;
+
+    /**
+     * The temporary variables in the expression
+     */
+    private TemporaryVarContentor contentor;
 
 
-	/**
-	 * Creates a new formula.
-	 * @param cell the cell to which the formula belongs
-	 * @param expression the expression in the formula
-	 */
-	public Formula(Cell cell, Expression expression) {
-		// Stores members
-		this.cell = cell;
-		this.expression = expression;
-	}
+    /**
+     * Creates a new formula.
+     *
+     * @param cell       the cell to which the formula belongs
+     * @param expression the expression in the formula
+     */
+    public Formula(Cell cell, Expression expression) {
+        // Stores members
+        this.cell = cell;
+        this.expression = expression;
+    }
 
-        @Override
-	public Value evaluate() throws IllegalValueTypeException {
-		if (!hasCircularReference())
-			return expression.evaluate();
-		else
-			return new Value(new CircularReferenceException(this));
-	}
+    @Override
+    public Value evaluate() throws IllegalValueTypeException {
+        if (!hasCircularReference())
+            return expression.evaluate();
+        else
+            return new Value(new CircularReferenceException(this));
+    }
 
-        @Override
-	public Object accept(ExpressionVisitor visitor) {
-		return expression.accept(visitor);
-	}
+    @Override
+    public Object accept(ExpressionVisitor visitor) {
+        return expression.accept(visitor);
+    }
 
-	/**
-	 * Returns the cell to which the formula belongs.
-	 * @return the cell to which the formula belongs
-	 */
-	public Cell getCell() {
-		return cell;
-	}
+    /**
+     * Returns the cell to which the formula belongs.
+     *
+     * @return the cell to which the formula belongs
+     */
+    public Cell getCell() {
+        return cell;
+    }
 
-	/**
-	 * Returns the expression in the formula.
-	 * @return the expression in the formula
-	 */
-	public Expression getExpression() {
-		return expression;
-	}
+    /**
+     * Returns the expression in the formula.
+     *
+     * @return the expression in the formula
+     */
+    public Expression getExpression() {
+        return expression;
+    }
 
-	/**
-	 * Returns the references in the expression.
-	 * @return the references in the expression
-	 */
-	public SortedSet<Reference> getReferences() {
-		if (references == null)
-			references = new ReferenceFetcher().getReferences(expression);
-		return new TreeSet<Reference>(references);
-	}
-        
-        /**
-         * Returns the temporary variables contentor
-         * @return the temporary variables in the expression
-         */
-         public TemporaryVarContentor getTemporaryVarContentor(){
-            if(contentor==null)
-                contentor=new TemporaryVarContentor();
-            return contentor;
+    /**
+     * Returns the references in the expression.
+     *
+     * @return the references in the expression
+     */
+    public SortedSet<Reference> getReferences() {
+        if (references == null)
+            references = new ReferenceFetcher().getReferences(expression);
+        return new TreeSet<Reference>(references);
+    }
+
+    /**
+     * Returns the temporary variables contentor
+     *
+     * @return the temporary variables in the expression
+     */
+    public TemporaryVarContentor getTemporaryVarContentor() {
+        if (contentor == null)
+            contentor = new TemporaryVarContentor();
+        return contentor;
+    }
+
+    /**
+     * Checks if the given formula has any circular references.
+     *
+     * @return return
+     * @throws CircularReferenceException if the formula contains any circular references
+     */
+    public boolean hasCircularReference() {
+        try {
+            new CircularReferenceFinder().check(this);
+        } catch (ExpressionVisitorException e) {
+            return true;
         }
+        return false;
+    }
 
-	/**
-	 * Checks if the given formula has any circular references.
-         * @return return  
-	 * @throws CircularReferenceException if the formula contains any circular references
-	 */
-	public boolean hasCircularReference() {
-		try {
-			new CircularReferenceFinder().check(this);
-		} catch (ExpressionVisitorException e) {
-			return true;
-		}
-		return false;
-	}
-
-	/**
-	 * Returns a string representation of the formula.
-	 * @return a string representation of the formula
-	 */
-        @Override
-	public String toString() {
-		return expression.toString();
-	}
+    /**
+     * Returns a string representation of the formula.
+     *
+     * @return a string representation of the formula
+     */
+    @Override
+    public String toString() {
+        return expression.toString();
+    }
 }

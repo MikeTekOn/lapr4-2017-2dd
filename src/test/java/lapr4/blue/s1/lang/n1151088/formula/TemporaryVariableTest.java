@@ -39,28 +39,28 @@ public class TemporaryVariableTest {
 
         // Introducing expression
         Cell cellTest = app.getWorkbooks()[0].getSpreadsheet(0).getCell(new Address(0, 0));
-    //    String content= "=_Var:=2";
+        //    String content= "=_Var:=2";
         String content = "=1+2";
         cellTest.setContent(content);
-        
+
         //Test temporary variable
         Double result = cellTest.getValue().toDouble();
         Double expResult = 3d;
         assertEquals(result, expResult);
     }
-    
+
     /**
      *  <li>startWithUnderscore()</li>
- *   <li>haveLetterAfterUnderscore()</li>
- *   <li>rejectNumberAfterUnderscore()</li>
- *   <li>acceptDigitsAndLettersName()</li>
- *   <li>addTemporaryVariableToContentorFirstTime()</li>
- *   <li>addTemporaryVariableToContentorAlreadyExists</li>
- *   <li>testBasicExpressionWithTemporary() -&gt; example "_Var:=1+2"</li>
- *   <li>testAssignmentOperatorWithTemporary() -&gt; example "_Var:=A1"</li>
- *   <li>testFunctionExpressionWithTemporary() -&gt; example "_Var:= sum(A2:A4)"</li>
-*    <li>testFormulaBlocksWithTemporary() -&gt; ex: "= {A=1+2; _Var:= 1+A ;"
-*   <li>testFormulaManyTemporaryVariables() -&gt; ex: "={_Var1:=2; _Var2:=3; _Var3:=_Var1+_Var2; A= _Var+3]"
-*   <li>formulaWithTemporaryVariable()</li>
+     *   <li>haveLetterAfterUnderscore()</li>
+     *   <li>rejectNumberAfterUnderscore()</li>
+     *   <li>acceptDigitsAndLettersName()</li>
+     *   <li>addTemporaryVariableToContentorFirstTime()</li>
+     *   <li>addTemporaryVariableToContentorAlreadyExists</li>
+     *   <li>testBasicExpressionWithTemporary() -&gt; example "_Var:=1+2"</li>
+     *   <li>testAssignmentOperatorWithTemporary() -&gt; example "_Var:=A1"</li>
+     *   <li>testFunctionExpressionWithTemporary() -&gt; example "_Var:= sum(A2:A4)"</li>
+     *    <li>testFormulaBlocksWithTemporary() -&gt; ex: "= {A=1+2; _Var:= 1+A ;"
+     *   <li>testFormulaManyTemporaryVariables() -&gt; ex: "={_Var1:=2; _Var2:=3; _Var3:=_Var1+_Var2; A= _Var+3]"
+     *   <li>formulaWithTemporaryVariable()</li>
      */
 }

@@ -1,11 +1,15 @@
 package lapr4.red.s1.core.n1150623.labelsForContacts;
 
 import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.*;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import lapr4.red.s1.core.n1150623.labelsForContacts.domain.Label;
 import lapr4.white.s1.core.n4567890.contacts.domain.Event;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
@@ -112,7 +116,7 @@ public class LabelsToPDF implements GenericExport<LabelList>{
                 table.addCell(new PdfPCell(new Phrase("Description", fontSpecial)));
 
                 List<Event> event = label.events();
-                for(Event e : event){
+                for (Event e : event) {
                     events.addCell(e.dueDate().toString());
                     events.addCell(e.description());
                 }
@@ -129,11 +133,12 @@ public class LabelsToPDF implements GenericExport<LabelList>{
                 doc.newPage();
                 contLabels++;
             }
-            doc.close();
+        doc.close();
         return valid;
     }
 
     File file;
+
     private Document initiatePrinter() {
 
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();

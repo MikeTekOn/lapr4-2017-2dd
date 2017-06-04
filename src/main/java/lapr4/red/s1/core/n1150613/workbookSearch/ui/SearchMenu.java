@@ -6,10 +6,10 @@
 package lapr4.red.s1.core.n1150613.workbookSearch.ui;
 
 import csheets.ui.ctrl.UIController;
-import javax.swing.JMenu;
+
+import javax.swing.*;
 
 /**
- *
  * @author Diogo
  */
 public class SearchMenu extends JMenu {
