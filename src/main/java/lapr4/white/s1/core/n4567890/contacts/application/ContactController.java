@@ -40,6 +40,11 @@ public class ContactController implements Controller {
         this.contactsRepository=this.persistenceContext.repositories().contacts();
     }
 
+
+    public Contact addContact(String name, String firstName, String lastName, String photo) throws DataConcurrencyException, DataIntegrityViolationException {
+        return this.contactsRepository.save(new Contact(name, firstName, lastName, photo, "", "", ""));
+    }
+
     public Contact addContact(String name, String firstName, String lastName, String photo, String address, String email, String phoneNumber) throws DataConcurrencyException, DataIntegrityViolationException {
         return this.contactsRepository.save(new Contact(name, firstName, lastName, photo, address, email, phoneNumber));
     }
