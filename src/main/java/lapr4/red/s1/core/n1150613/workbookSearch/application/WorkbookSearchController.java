@@ -48,11 +48,11 @@ public class WorkbookSearchController {
      * @return desired cells information in String array
      *
      */
-    public List<String> checkifRegexMatches() {
+    public List<String> searchInWorkbook() {
 
         w = ctrl.getActiveWorkbook();
 
-        return util.checkifRegexMatches(w);
+        return util.searchInWorkbook(w);
     }
 
     /**
