@@ -37,6 +37,7 @@ public class ExportPDF implements ExportStrategy {
     private int maxColumn = 52;
 
     private HashMap<String, Anchor> mapAnchor = new HashMap<>();
+
     public ExportPDF() {
 
     }
@@ -50,7 +51,7 @@ public class ExportPDF implements ExportStrategy {
     }
 
     public void selectPath(String path) {
-                
+
         final Pattern pattern = Pattern.compile(".+\\.pdf");
         if (!pattern.matcher(path).matches()) {
             throw new IllegalArgumentException();
@@ -84,8 +85,9 @@ public class ExportPDF implements ExportStrategy {
                         if (j == minColumn) {
                             if (i == minRow) {
                                 table.addCell(new PdfPCell(new Phrase(lines[0][0], fontSpecial)));
+                            } else {
+                                table.addCell(new PdfPCell(new Phrase(lines[i][0], fontSpecial)));
                             }
-                            table.addCell(new PdfPCell(new Phrase(lines[i][0], fontSpecial)));
                         } else if (i == minRow) {
                             table.addCell(new PdfPCell(new Phrase(lines[0][j], fontSpecial)));
 
@@ -188,7 +190,7 @@ public class ExportPDF implements ExportStrategy {
         }
     }
 
-   public void setLimits(int minRow, int maxRow, int minColumn, int maxColumn) {
+    public void setLimits(int minRow, int maxRow, int minColumn, int maxColumn) {
         this.minRow = minRow;
         this.maxRow = maxRow + 1;
         this.minColumn = minColumn;
