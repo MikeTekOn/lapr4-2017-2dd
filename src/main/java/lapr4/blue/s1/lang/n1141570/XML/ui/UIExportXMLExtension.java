@@ -39,6 +39,7 @@ public class UIExportXMLExtension extends UIExtension {
      *
      * @return an icon with style
      */
+    @Override
     public Icon getIcon() {
         if (icon == null) {
             icon = new ImageIcon(ExportXMLExtension.class.getResource("res/img/exportXMLblack.gif"));
@@ -47,9 +48,9 @@ public class UIExportXMLExtension extends UIExtension {
     }
 
     /**
-     * Returns the macro menu.
+     * Returns the export xml menu.
      *
-     * @return macro menu
+     * @return export xml menu
      */
     public JMenu getMenu() {
         if (menu == null) {
