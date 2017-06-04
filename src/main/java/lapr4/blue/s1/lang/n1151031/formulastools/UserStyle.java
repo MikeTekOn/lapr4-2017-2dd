@@ -3,6 +3,7 @@ package lapr4.blue.s1.lang.n1151031.formulastools;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.io.Serializable;
 
 /**
  * A class that has the user selected styling options to be applied when using
@@ -10,7 +11,7 @@ import java.awt.*;
  *
  * @author Tiago Correia - 1151031@isep.ipp.pt
  */
-public class UserStyle {
+public class UserStyle implements Serializable {
 
     /**
      * The default font

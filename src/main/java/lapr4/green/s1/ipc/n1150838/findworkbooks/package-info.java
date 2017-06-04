@@ -13,7 +13,7 @@
  * It should be possible for the user to open a workbook from this list by double clicking in it
  * The search can be based solely on the file name extension. For instance, find the files with .cls extension.
  * Notes:<p>
- * After a discussion with the client he clarified that the file name must be a path
+ * After a discussion with the client he clarified that the file name must be a path <p>
  * 
  *  
  * <b>Analysis</b><p>
