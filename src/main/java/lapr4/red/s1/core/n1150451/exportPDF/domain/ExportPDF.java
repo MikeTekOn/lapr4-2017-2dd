@@ -188,7 +188,7 @@ public class ExportPDF implements ExportStrategy {
         }
     }
 
-    void setLimits(int minRow, int maxRow, int minColumn, int maxColumn) {
+   public void setLimits(int minRow, int maxRow, int minColumn, int maxColumn) {
         this.minRow = minRow;
         this.maxRow = maxRow + 1;
         this.minColumn = minColumn;

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr4.red.s1.core.n1150451.exportPDF.domain;
+package lapr4.red.s1.core.n1150451.exportPDF;
 
 import csheets.core.Address;
 import csheets.core.Cell;
@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
+import lapr4.red.s1.core.n1150451.exportPDF.domain.ExportPDF;
 
 /**
  *
