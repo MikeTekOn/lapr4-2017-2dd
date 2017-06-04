@@ -96,9 +96,9 @@ public class WorkbookSearchSideBar extends JPanel {
     }
 
     /**
-     * Creates and returns
+     * Creates and returns the panel to show search results
      *
-     * @return
+     * @return JScrollPanel
      */
     private JScrollPane searchList() {
         model = new DefaultListModel();
@@ -132,7 +132,7 @@ public class WorkbookSearchSideBar extends JPanel {
     }
 
     /**
-     * Creates and returns a button to add a comment.
+     * Creates and returns a button to search.
      *
      * @return a JButton
      */

@@ -5,7 +5,6 @@
  */
 package lapr4.red.s1.core.n1150613.workbookSearch.application;
 
-
 import csheets.core.Workbook;
 import csheets.ui.ctrl.UIController;
 import java.util.ArrayList;
@@ -56,6 +55,12 @@ public class WorkbookSearchController {
         return util.checkifRegexMatches(w);
     }
 
+    /**
+     * The call to the method to check if regex is valid
+     *
+     * @param regex desired regular expression
+     * @return true if valid or false if not
+     */
     public boolean checkIfValid(String regex) {
         util = new RegexUtil(regex);
         return util.isRegexValid();

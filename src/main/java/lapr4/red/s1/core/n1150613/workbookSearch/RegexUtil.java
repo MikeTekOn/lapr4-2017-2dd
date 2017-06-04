@@ -62,7 +62,7 @@ public class RegexUtil {
       The call to the method to search through the whole woorkbook and match
       it's contents with the inserted regular expression.
      
-      @param w
+      @param w Active workbook
      
       @return desired cells information in String array
      */
