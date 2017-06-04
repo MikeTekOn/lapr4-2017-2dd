@@ -49,6 +49,14 @@ public class Contact implements AggregateRoot<Long>, Serializable {
     private String lastName=null;
     
     private String photo=null;
+
+    private String address=null;
+
+    //in the future should be created phone and email classes because they have restrictions that should be verified
+
+    private String phone=null;
+
+    private String email=null;
     
     @OneToOne(cascade = CascadeType.ALL) //(cascade = CascadeType.MERGE)
     private Agenda agenda=null;
@@ -57,14 +65,22 @@ public class Contact implements AggregateRoot<Long>, Serializable {
         // for ORM
     }
 
-    public Contact(final String name, final String firstName, final String lastName, String photo) {
-        if (name.isEmpty()|firstName.isEmpty()|lastName.isEmpty()){
+    public Contact(final String name, final String firstName, final String lastName, String photo, String address, String email, String phone) {
+        if (name.isEmpty()|firstName.isEmpty()|lastName.isEmpty()|phone.isEmpty()
+                |address.isEmpty()|email.isEmpty()|email==null|phone==null|address==null
+                |name==null|firstName==null|lastName==null){
             throw new IllegalStateException();
         }
         this.name = name;
         this.firstName = firstName;
         this.lastName = lastName;
         this.photo = photo;
+        this.address=address;
+        this.email=email;
+        this.phone=phone;
+        this.address=address;
+        this.phone=phone;
+        this.email=email;
         this.agenda=new Agenda();
     }
     
@@ -106,6 +122,32 @@ public class Contact implements AggregateRoot<Long>, Serializable {
 
     public String photo() {
         return photo;
+    }
+
+    public String setPhoto(String newPhoto) {
+        return this.photo=newPhoto;
+    }
+
+    public String email() {
+        return this.email;
+    }
+
+    public String setEmail(String newEmail){ return this.email=newEmail;}
+
+    public String phone() {
+        return this.phone;
+    }
+
+    public String setPhone(String newPhone) {
+        return this.phone=newPhone;
+    }
+
+    public String address() {
+        return this.address;
+    }
+
+    public String setAddress(String newAddress) {
+        return this.address=newAddress;
     }
 
     /**

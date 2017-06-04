@@ -7,10 +7,10 @@ package lapr4.red.s1.core.n1150613.workbookSearch.application;
 
 import csheets.core.Workbook;
 import csheets.ui.ctrl.UIController;
-import lapr4.red.s1.core.n1150613.workbookSearch.RegexUtil;
-
 import java.util.ArrayList;
+
 import java.util.List;
+import lapr4.red.s1.core.n1150613.workbookSearch.RegexUtil;
 
 /**
  *
@@ -44,15 +44,26 @@ public class WorkbookSearchController {
      * The call to the method to search through the whole woorkbook and match
      * it's contents with the inserted regular expression.
      *
-     * @param regex regular expression inserted by user
+     *
      * @return desired cells information in String array
+     *
      */
-    public List<String> checkifRegexMatches(String regex) {
+    public List<String> searchInWorkbook() {
 
-        util = new RegexUtil(regex);
         w = ctrl.getActiveWorkbook();
 
-        return util.checkifRegexMatches(w);
+        return util.searchInWorkbook(w);
+    }
+
+    /**
+     * The call to the method to check if regex is valid
+     *
+     * @param regex desired regular expression
+     * @return true if valid or false if not
+     */
+    public boolean checkIfValid(String regex) {
+        util = new RegexUtil(regex);
+        return util.isRegexValid();
     }
 
 }

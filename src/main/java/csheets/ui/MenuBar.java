@@ -27,6 +27,7 @@ import csheets.ui.ext.*;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
+import lapr4.red.s1.core.n1151094.columnSort.presentation.SortMenuUI;
 
 /**
  * The menu bar.
@@ -71,7 +72,7 @@ public class MenuBar extends JMenuBar {
         editMenu.add(actionManager.getAction("paste"));
         editMenu.addSeparator();
         editMenu.add(actionManager.getAction("selectall"));
-        editMenu.add(actionManager.getAction("sort"));
+        editMenu.add(new SortMenuUI(uiController));
         editMenu.add(actionManager.getAction("search"));
         editMenu.add(actionManager.getAction("clear"));
         editMenu.addSeparator();

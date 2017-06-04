@@ -10,10 +10,18 @@ import csheets.ui.ctrl.UIController;
 import javax.swing.*;
 
 /**
- * @author Diogo
+ * Represents the search menu.
+ *
+ * @author Diogo Guedes
  */
 public class SearchMenu extends JMenu {
 
+    /**
+     * Creates an instance of the search menu. Adds the associated search
+     * action.
+     *
+     * @param uiController
+     */
     public SearchMenu(UIController uiController) {
         super("Workbook Search");
         add(new SearchAction(uiController));

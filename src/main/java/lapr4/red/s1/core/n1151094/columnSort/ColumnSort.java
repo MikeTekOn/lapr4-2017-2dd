@@ -16,15 +16,21 @@ import csheets.core.formula.compiler.FormulaCompilationException;
  */
 public class ColumnSort {
 
-    
+    // Vector of cells of a column
     private Cell[] column;
+    // Cell Values ​​Vector
     private Value[] values;
+    // Vector helper to help with sorting 
     private Value[] helper;
+    // Variable that allows to execute the sorting type chosen by the user
     private char op;
-    private int contador = 0;
+    // Variable that allows counting the number of cell contents
+    private int count = 0;
+    // Variable used in ordering to determine the size of the helper vector
     private int number;
 
     /**
+     * Constructor that receives as parameter, a vector of cells
      *
      * @param column
      * @throws IllegalValueTypeException
@@ -35,7 +41,7 @@ public class ColumnSort {
             throw new IllegalArgumentException();
         }
         contaContent(column);
-        this.column = new Cell[contador];
+        this.column = new Cell[count];
     }
 
     public void sort(Value[] values) {
@@ -107,8 +113,7 @@ public class ColumnSort {
     }
 
     /**
-     * Este metodo permite selecionar o tipo de ordenação escolhida pelo
-     * utilizador
+     * This method allows you to select the type of sorting chosen by the User
      *
      * @param op pode ser ascending or descending
      */
@@ -117,7 +122,7 @@ public class ColumnSort {
     }
 
     /**
-     * Devolve o tipo de ordenação escolhida neste caso ascending or descending
+     * Returns the sort order chosen in this case ascending or descending
      *
      * @return op
      */
@@ -126,36 +131,38 @@ public class ColumnSort {
     }
 
     /**
-     * Conta o numero de conteudo das celulas pertence a uma coluna
+     * Count the number of cells that belong to a column
      *
      * @param vec vec
-     * @return contador 
+     * @return count
      * @throws IllegalValueTypeException
      */
     private int contaContent(Cell[] vec) throws IllegalValueTypeException {
 
         for (int i = 0; i < vec.length; i++) {
             if (!vec[i].getContent().equals("")) {
-                contador++;
+                count++;
             }
         }
-        return contador;
+        return count;
     }
 
     /**
-     * Tamanho dos vectores das celulas da coluna
-     * @return 
+     * Size of column cell vectors
+     *
+     * @return count
      */
     public int size() {
-        return this.contador;
+        return this.count;
     }
 
     /**
-     * Prenche o vector dos value com os value das celulas da coluna
+     * Fill in the value vector with the value of the column cells
+     *
      * @param column column
      * @param value value
      * @throws FormulaCompilationException
-     * @throws IllegalValueTypeException 
+     * @throws IllegalValueTypeException
      */
     public void fillInVector(Cell[] column, Value[] value) throws FormulaCompilationException, IllegalValueTypeException {
 
@@ -171,10 +178,11 @@ public class ColumnSort {
     }
 
     /**
-     * Altera os content das celulas depois da ordenção 
+     * Changes content of cells after sorting
+     *
      * @param values Value
      * @throws FormulaCompilationException
-     * @throws IllegalValueTypeException 
+     * @throws IllegalValueTypeException
      */
     public void alterCell(Value[] values) throws FormulaCompilationException, IllegalValueTypeException {
         for (int l = 0; l < column.length; l++) {

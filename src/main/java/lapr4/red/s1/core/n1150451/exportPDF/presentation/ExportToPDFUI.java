@@ -29,8 +29,8 @@ import javax.swing.filechooser.*;
  */
 public class ExportToPDFUI extends JDialog {
 
-    private static final int WIDTH = 600;
-    private static final int HEIGHT = 400;
+    private static final int WIDTH = 620;
+    private static final int HEIGHT = 420;
     private JList sheetList;
 
     /**
@@ -43,7 +43,7 @@ public class ExportToPDFUI extends JDialog {
      */
     protected FileChooser chooser;
     private DefaultListModel<Object> model;
-    private TextField rangeField;
+    private JTextField rangeField;
     private JCheckBox boxSections;
     private JTextField pathField;
 
@@ -118,10 +118,14 @@ public class ExportToPDFUI extends JDialog {
         grid.gridy = 0;
         panel.add(pane, grid);
 
-        rangeField = new TextField(25);
+        JPanel flow = new JPanel(new FlowLayout());
+        rangeField = new JTextField(25);
+        rangeField.setToolTipText("Example: A4:B7");
+        flow.add(new JLabel("Cell Range: "));
+        flow.add(rangeField);
         grid.gridx = 0;
         grid.gridy = 1;
-        panel.add(rangeField, grid);
+        panel.add(flow, grid);
         panel.setBorder(BorderFactory.createTitledBorder("Export range"));
         return panel;
     }
@@ -210,6 +214,7 @@ public class ExportToPDFUI extends JDialog {
                 }
 
                 c.export();
+                JOptionPane.showMessageDialog(rootPane, "Export sucessful!");
             }
         }
         );

@@ -1,21 +1,24 @@
 package lapr4.blue.s1.lang.n1141570.XML.ui;
 
+import csheets.core.Cell;
 import csheets.core.Spreadsheet;
 import csheets.ui.FileChooser;
-import csheets.ui.ctrl.BaseAction;
+import csheets.ui.ctrl.FocusOwnerAction;
 import csheets.ui.ctrl.UIController;
-import lapr4.blue.s1.lang.n1141570.XML.application.ExportXMLController;
-
-import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import javax.swing.JOptionPane;
+import lapr4.blue.s1.lang.n1141570.XML.application.ExportXMLController;
 
 /**
+ *
  * @author Eric
  */
-public class ExportSelectedSpreadsheetActionUI extends BaseAction {
+public class ExportSelectedCellsActionUI extends FocusOwnerAction {
 
     /**
      * The user interface controller
@@ -27,13 +30,13 @@ public class ExportSelectedSpreadsheetActionUI extends BaseAction {
      *
      * @param uiController the user interface controller
      */
-    public ExportSelectedSpreadsheetActionUI(UIController uiController) {
+    public ExportSelectedCellsActionUI(UIController uiController) {
         this.uiController = uiController;
     }
 
     @Override
     protected String getName() {
-        return "Selected spreadsheet";
+        return "Selected cells";
     }
 
     @Override
@@ -42,14 +45,14 @@ public class ExportSelectedSpreadsheetActionUI extends BaseAction {
 
     /**
      * A simple action that presents a confirmation dialog. If the user confirms
-     * then the spreadsheet is exported to xml
+     * then the selected cells are exported to xml
      *
      * @param event the event that was fired
      */
     @Override
     public void actionPerformed(ActionEvent event) {
 
-        int result = JOptionPane.showConfirmDialog(null, "You have selected the Spreadsshet export option. Do you want to export?");
+        int result = JOptionPane.showConfirmDialog(null, "You have selected the cells export option. Do you want to export?");
         boolean exported = false;
         String selectedPath = "D:\\xml.xml";
 
@@ -74,13 +77,31 @@ public class ExportSelectedSpreadsheetActionUI extends BaseAction {
 
                 ExportXMLController exportXMLController = new ExportXMLController(uiController);
                 Spreadsheet spreadsheet = uiController.getActiveSpreadsheet();
-                //Export Selected spreadsheet
-                exported = exportXMLController.exportSpreadsheet(spreadsheet, chosenTagNames, selectedPath);
-                JOptionPane.showMessageDialog(null, "Spreadsheet exported successfully.", "Export XML", JOptionPane.PLAIN_MESSAGE);
+                //Export selecteds cell
+                Map<Spreadsheet, List<Cell>> cellMap = new LinkedHashMap<>();
+                List<Cell> cellsList;
+                cellsList = new LinkedList<Cell>();
+
+                if (focusOwner == null) {
+                    return;
+                }
+                Cell selectedCells[][] = focusOwner.getSelectedCells();
+
+                //rows
+                for (int j = 0; j < selectedCells.length; j++) {
+                    //columns
+                    for (int k = 0; k < selectedCells[j].length; k++) {
+                        cellsList.add(selectedCells[j][k]);
+                    }
+                }
+                cellMap.put(spreadsheet, cellsList);
+
+                exported = exportXMLController.exportSelectedCell(cellMap, chosenTagNames, selectedPath);
+                JOptionPane.showMessageDialog(null, "Cells exported successfully.", "Export XML", JOptionPane.PLAIN_MESSAGE);
 
             }
             if (!exported) {
-                JOptionPane.showMessageDialog(null, "Failed to export Spreadsheet.", "Export XML", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Failed to export Cells.", "Export XML", JOptionPane.ERROR_MESSAGE);
             }
         }
     }

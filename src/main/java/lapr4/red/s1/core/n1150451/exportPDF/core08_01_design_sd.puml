@@ -8,6 +8,14 @@ create ExportContext
 ExportPDFController->ExportContext : create(exportPDF)
 User -> ExportPDFUI : Selects Range
 ExportPDFUI->ExportPDFController: selectRange(r)
+create WorkbookHandler
+ExportPDFController->WorkbookHandler: getListCellsBetweenRange(r)
+note right
+WorkbookHandler has three methods
+depending on the user selecion.
+For design simplications those methods
+are described in the implementation section
+end note
 ExportPDFController->ExportPDF: selectRange(r)
 opt
 User -> ExportPDFUI : Chooses to have sections

@@ -99,7 +99,6 @@ public class Frame extends JFrame implements SelectionListener, ExtensionStateLi
         actionManager.registerAction("paste", new PasteAction());
         actionManager.registerAction("clear", new ClearAction());
         actionManager.registerAction("selectall", new SelectAllAction());
-        actionManager.registerAction("sort", new SortAction());
         actionManager.registerAction("search", new SearchAction());
         actionManager.registerAction("prefs", new PreferencesAction());
 
