@@ -32,14 +32,14 @@ class ConditionalStyleController {
 
     /**
      * Attempts to create a new condition from the given string. If successful,
-     * adds the condition to the given cell. If the input string is empty or null,
-     * the condition is set to null.
+     * adds the condition to the given cell. If the input string is empty or
+     * null, the condition is set to null.
      *
      * @param cell the cell for which the condition should be set
      * @param conditionString the condition, as entered by the user
      * @return true if the cell's condition was changed
      */
-    public boolean setCondition(ConditionStylableCell cell, String conditionString) {
+    public boolean setCondition(ConditionStylableCell cell, String conditionString) throws RuntimeException {
         // Clears condition, if insufficient input
         if (conditionString == null || conditionString.equals("")) {
             cell.setUserCondition(null);
