@@ -78,7 +78,7 @@
  * condition. However, it is important to notice that we cannot use the
  * FormulaCopiler already developed because in order to compile a formula, we
  * need to send the cell linked to that formula. If we insert a condition over
- * the a cell and we evaluate that condition, we will receive an error (#CIRCLE)
+ * the cell and we evaluate that condition, we will receive an error (#CIRCLE)
  * because it will evaluate the condition over itself. To solve that problem, we
  * have to develop the ConditionStyleCompiler. That way we can compile an
  * expression instead of a formula. Then, with the method evaluate() and
@@ -98,7 +98,12 @@
  * <img src="lang03_1_analysis_basic_sd" alt="image">
  *
  * <h2>4. Design</h2>
- *
+ * There are two important methods we have to develop, so we will study them in more detail.
+ * 
+ * <h3>fireConditionChanged() method</h3>
+ * <img src="lang03_1_design_fireConditionChanged" alt="image">
+ * <h3>valueChanged() method</h3>
+ * <img src="lang03_1_design_valueChanged" alt="image">
  * <h2>5. Tests</h2>
  * <ol>
  * <li>ensureConditionIsValidExpression
@@ -189,6 +194,21 @@
  * Today
  * <p>
  * 1. FI Implementation.
+ * <p>
+ * Blocking:
+ * <p>
+ * 1. Nothing
+ * <p>
+ *  * <b>Sunday</b>
+ * <p>
+ * Yesterday I worked on:
+ * <p>
+ * 1. FI Implementation.
+ * <p>
+ * Today
+ * <p>
+ * 1. FI Implementation finish.
+ * 2. Correcting documentation
  * <p>
  * Blocking:
  * <p>
