@@ -14,7 +14,7 @@ import lapr4.red.s1.core.n1150943.contacts.ui.AddEventDialog;
 import lapr4.red.s1.core.n1150943.contacts.ui.EditEventDialog;
 import lapr4.white.s1.core.n4567890.contacts.ContactsExtension;
 import lapr4.white.s1.core.n4567890.contacts.application.ContactController;
-import lapr4.white.s1.core.n4567890.contacts.domain.Contact;
+import lapr4.white.s1.core.n4567890.contacts.domain.*;
 import lapr4.white.s1.core.n4567890.contacts.domain.Event;
 import ui.ImageUtils;
 
@@ -34,19 +34,17 @@ import java.util.ArrayList;
 public class ContactPanel extends JPanel implements ActionListener {
 
     // Controller for Contacts
-    private ContactController controller = null;
+	private ContactController controller=null;
 
-    //Controller for Events
-    private EventController eventController = null;
+	//Controller for Events
+    private EventController eventController =null;
 
-    Iterable<Event> events = null;
+    Iterable<Event> events=null;
 
-    /**
-     * The text field in which the comment of the cell is displayed.
-     */
-    private JTextArea commentField = new JTextArea();
+	/** The text field in which the comment of the cell is displayed.*/
+        private JTextArea commentField = new JTextArea();
 
-        
+
         // Controls for the contacts panel
         private JLabel labelContacts=null;
         private JTextField contactsFilterField=null;
@@ -64,10 +62,12 @@ public class ContactPanel extends JPanel implements ActionListener {
         private JButton contactsViewPastEventsButton=null;
         private JButton contactsViewTodayEventsButton=null;
         private JButton contactsViewFutureEventsButton=null;
-        private JButton contactsApplyFilterButton=null;
+        private JButton contactsApplyFilterButton = null;
 
 
-        private JPanel contactsPane= null;
+
+
+    private JPanel contactsPane= null;
         private JPanel agendaPane=null;
         private JPanel filterPane = null;
         private JPanel contactsButtonPane = null;
@@ -86,8 +86,7 @@ public class ContactPanel extends JPanel implements ActionListener {
         private final static String viewTodayEventsAction="view_today_events";
         private final static String viewFutureEventsAction="view_future_events";
         private final static String applyFilterAction = "apply_filter";
-
-
+    
     /**
      * Edited by João Cardoso - 1150943
      */
@@ -186,25 +185,25 @@ public class ContactPanel extends JPanel implements ActionListener {
 
         //Added by João Cardoso - 1150943
         agendaButtonPane = new JPanel(new FlowLayout(FlowLayout.LEADING));
-        contactsAddEventButton = new JButton("Add Event");
+        contactsAddEventButton=new JButton("Add Event");
         contactsAddEventButton.setActionCommand(ContactPanel.addEventAction);
         contactsAddEventButton.addActionListener(this);
-        contactsEditEventButton = new JButton("Edit Event");
+        contactsEditEventButton=new JButton("Edit Event");
         contactsEditEventButton.setActionCommand(ContactPanel.editEventAction);
         contactsEditEventButton.addActionListener(this);
-        contactsRemoveEventButton = new JButton("Remove Event");
+        contactsRemoveEventButton=new JButton("Remove Event");
         contactsRemoveEventButton.setActionCommand(ContactPanel.removeEventAction);
         contactsRemoveEventButton.addActionListener(this);
-        contactsViewAllEventsButton = new JButton("All Events");
+        contactsViewAllEventsButton=new JButton("All Events");
         contactsViewAllEventsButton.setActionCommand(ContactPanel.viewAllEventsAction);
         contactsViewAllEventsButton.addActionListener(this);
-        contactsViewPastEventsButton = new JButton("Past Events");
+        contactsViewPastEventsButton=new JButton("Past Events");
         contactsViewPastEventsButton.setActionCommand(ContactPanel.viewPastEventsAction);
         contactsViewPastEventsButton.addActionListener(this);
-        contactsViewTodayEventsButton = new JButton("Today's Events");
+        contactsViewTodayEventsButton=new JButton("Today's Events");
         contactsViewTodayEventsButton.setActionCommand(ContactPanel.viewTodayEventsAction);
         contactsViewTodayEventsButton.addActionListener(this);
-        contactsViewFutureEventsButton = new JButton("Future Events");
+        contactsViewFutureEventsButton=new JButton("Future Events");
         contactsViewFutureEventsButton.setActionCommand(ContactPanel.viewFutureEventsAction);
         contactsViewFutureEventsButton.addActionListener(this);
 
@@ -215,6 +214,10 @@ public class ContactPanel extends JPanel implements ActionListener {
         agendaButtonPane.add(contactsViewPastEventsButton);
         agendaButtonPane.add(contactsViewTodayEventsButton);
         agendaButtonPane.add(contactsViewFutureEventsButton);
+
+        agendaPane = new JPanel(new BorderLayout());
+        agendaPane.add(eventsPane, BorderLayout.CENTER);
+        agendaPane.add(agendaButtonPane, BorderLayout.PAGE_END);
     }
 
     private void updateEventModel() {
@@ -329,6 +332,7 @@ public class ContactPanel extends JPanel implements ActionListener {
                     JOptionPane.showMessageDialog(null,CleanSheets.getString("status_please_choose_contact"));
                 }
                 break;
+
             case ContactPanel.editEventAction:
                 int indexContact = contactsList.getSelectedIndex();
                 index = eventsList.getSelectedIndex();
@@ -340,6 +344,7 @@ public class ContactPanel extends JPanel implements ActionListener {
                     JOptionPane.showMessageDialog(null,CleanSheets.getString("status_please_choose_event"));
                 }
                 break;
+
             case ContactPanel.removeEventAction:
                 indexContact = contactsList.getSelectedIndex();
                 index = eventsList.getSelectedIndex();
@@ -360,9 +365,11 @@ public class ContactPanel extends JPanel implements ActionListener {
                     JOptionPane.showMessageDialog(null,CleanSheets.getString("status_please_choose_event"));
                 }
                 break;
+
             case ContactPanel.viewAllEventsAction:
                 updateEventModel();
                 break;
+
             case ContactPanel.viewPastEventsAction:
                 indexContact = contactsList.getSelectedIndex();
                 c = contactsModel.elementAt(indexContact);
@@ -371,6 +378,7 @@ public class ContactPanel extends JPanel implements ActionListener {
                     eventsModel.addElement(ev);
                 }
                 break;
+
             case ContactPanel.viewTodayEventsAction:
                 indexContact = contactsList.getSelectedIndex();
                 c = contactsModel.elementAt(indexContact);
@@ -379,6 +387,7 @@ public class ContactPanel extends JPanel implements ActionListener {
                     eventsModel.addElement(ev);
                 }
                 break;
+
             case ContactPanel.viewFutureEventsAction:
                 indexContact = contactsList.getSelectedIndex();
                 c = contactsModel.elementAt(indexContact);
@@ -389,14 +398,14 @@ public class ContactPanel extends JPanel implements ActionListener {
                 break;
 
             case ContactPanel.applyFilterAction: {
-                
+
                 /**
                  * Faciltated chossing contacts
-                 * 
+                 *
                  * @author Gulherme Ferreira 1150623 - Filter feature added.
-                 * 
+                 *
                  */
-                
+
                 String text = contactsFilterField.getText().trim().toLowerCase();
                 contactsModel.clear();
                 Iterable<Contact> contacts = controller.allContacts();
@@ -411,7 +420,7 @@ public class ContactPanel extends JPanel implements ActionListener {
                     }
                     System.out.println(contactsModel);
                 } else {
-                    
+
                     for (Contact con : contacts) {
                         contactsModel.addElement(con);
                     }
