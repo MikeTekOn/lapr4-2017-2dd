@@ -18,10 +18,10 @@
  * along with CleanSheets; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package lapr4.blue.s1.lang.n1151088.temporaryVariables;
+package lapr4.blue.s1.lang.n1151088.temporaryVariables.core;
 
 import csheets.core.formula.util.ExpressionVisitorException;
-import lapr4.blue.s1.lang.n1151088.Formula;
+import lapr4.blue.s1.lang.n1151088.temporaryVariables.core.BlueFormula;
 
 /**
  * An exception that is thrown if a formula contains a reference (directly or
@@ -36,29 +36,25 @@ public class CircularReferenceException extends ExpressionVisitorException {
      */
     private static final long serialVersionUID = 4204972508404909370L;
 
-    /**
-     * The formula in which the circularity exists
-     */
-    private Formula formula;
+	/** The formula in which the circularity exists */
+	private BlueFormula formula;
 
-    /**
-     * Creates a new circular reference exception.
-     *
-     * @param formula the formula that caused the exception
-     */
-    public CircularReferenceException(Formula formula) {
-        super("A circular reference was encountered in the formula " + formula + ".");
-        this.formula = formula;
-    }
+	/**
+	 * Creates a new circular reference exception.
+	 * @param formula the formula that caused the exception
+	 */
+	public CircularReferenceException(BlueFormula formula) {
+		super("A circular reference was encountered in the formula " + formula + ".");
+		this.formula = formula;
+	}
 
-    /**
-     * Returns the formula in which the circularity exists.
-     *
-     * @return the formula in which the circularity exists
-     */
-    public Formula getFormula() {
-        return formula;
-    }
+	/**
+	 * Returns the formula in which the circularity exists.
+	 * @return the formula in which the circularity exists
+	 */
+	public BlueFormula getFormula() {
+		return formula;
+	}
 
     /**
      * Returns a string representation of the exception.
