@@ -13,14 +13,16 @@ import java.io.FileOutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Created by Guilherme Ferreira 1150623 on 01/06/2017.
  */
 public class LabelsToPDF implements GenericExport<LabelList>{
 
+    List<Label> labels;
 
-    private PdfWriter pdf;
+    private LabelList list;
 
     public LabelsToPDF(){
         //For ORM
@@ -67,39 +69,47 @@ public class LabelsToPDF implements GenericExport<LabelList>{
      */
     @Override
     public boolean export(LabelList list){
+        this.list = list;
         boolean valid = true;
-
+        labels = list.labels();
         Document doc = null;
         doc = initiatePrinter();
         doc.open();
         Font fontSpecial = new Font(Font.FontFamily.COURIER, 6, Font.BOLD); //Used in the first line and first column
-
+        Font font = new Font(Font.FontFamily.COURIER, 6, Font.NORMAL);
 
         int contLabels = 1;
             Paragraph p1 = new Paragraph();
+            String info[][];
             for (Label label : list.labels()) {
                 doc.addTitle("Label " + contLabels + ":");
-             /*ADDS IMAGE
-               try {
-                    Image image2 = Image.getInstance(new URL(label.photo()));
-                    doc.add(image2);
-                } catch (BadElementException | IOException e){
-                    System.out.println("ERRO LOADING IMG");
-                } catch (DocumentException e) {
-                    e.printStackTrace();
-                    valid = false;
-                }
-            */
+
+                //ADDS IMAGE
+                   try {
+                        Image image2 = Image.getInstance(new URL(label.photo()));
+                        doc.add(p1);
+                        doc.add(image2);
+                    } catch (Exception e){
+                        System.out.println("ERRO LOADING IMG");
+                    }
+
+
+
                 PdfPTable table = new PdfPTable(2);
+                info = generateTableInformation(label);
+
                 table.setWidthPercentage(90);
-                table.addCell(new PdfPCell(new Phrase("Name", fontSpecial)));
-                table.addCell(new PdfPCell(new Phrase(label.name(), fontSpecial)));
-                table.addCell(new PdfPCell(new Phrase("Address", fontSpecial)));
-                table.addCell(new PdfPCell(new Phrase(label.address(), fontSpecial)));
-                table.addCell(new PdfPCell(new Phrase("Email", fontSpecial)));
-                table.addCell(new PdfPCell(new Phrase(label.email(), fontSpecial)));
-                table.addCell(new PdfPCell(new Phrase("Phone Number", fontSpecial)));
-                table.addCell(new PdfPCell(new Phrase(label.phoneNumber(), fontSpecial)));
+
+                for (int i = 0; i < 4; i++) {
+                    for (int j = 0; j < 2; j++) {
+                        if (j == 0){
+                            table.addCell(new PdfPCell(new Phrase(info[i][j], fontSpecial)));
+                        }else{
+                            table.addCell(new PdfPCell(new Phrase(info[i][j], font)));
+                        }
+                    }
+                }
+
                 Paragraph p = new Paragraph();
                 try {
                     doc.add(p);
@@ -111,15 +121,21 @@ public class LabelsToPDF implements GenericExport<LabelList>{
                 Paragraph p2 = new Paragraph("Events:");
 
                 PdfPTable events = new PdfPTable(2);
-                table.setWidthPercentage(90);
-                table.addCell(new PdfPCell(new Phrase("Date ", fontSpecial)));
-                table.addCell(new PdfPCell(new Phrase("Description", fontSpecial)));
+                String [][]eventInfo = generateEventTableInformation(label);
 
-                List<Event> event = label.events();
-                for (Event e : event) {
-                    events.addCell(e.dueDate().toString());
-                    events.addCell(e.description());
+                events.setWidthPercentage(90);
+
+                for (int i = 0; i < eventInfo.length; i++) {
+                    for (int j = 0; j < eventInfo[0].length; j++) {
+                        if (i == 0){
+                            events.addCell(new PdfPCell(new Phrase(info[i][j], fontSpecial)));
+                        }else{
+                            events.addCell(new PdfPCell(new Phrase(info[i][j], font)));
+                        }
+                    }
                 }
+
+
 
                 Paragraph p3 = new Paragraph();
                 try {
@@ -137,28 +153,65 @@ public class LabelsToPDF implements GenericExport<LabelList>{
         return valid;
     }
 
+    private String[][] generateEventTableInformation(Label label) {
+        List<Event> events = label.events();
+        String[][] info = new String[events.size()][2];
+
+        info[0][0] = "Date";
+        info[0][1] = "Description";
+        for(int i = 0 ; i < events.size(); i++){
+            Event e = events.get(i);
+            info[i][0] = e.dueDate().toString();
+            info[i][1] = e.description();
+        }
+
+        return info;
+    }
+
     File file;
+    String path;
 
     private Document initiatePrinter() {
-
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        URL url = classLoader.getResource("path/to/folder.pdf");
-        try {
-            file = new File(url.toURI());
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
         Document document = null;
-
+        selectPath(list.path());
         try {
             document = new Document(PageSize.A4.rotate());
-            PdfWriter.getInstance(document, new FileOutputStream(file));
+            PdfWriter.getInstance(document, new FileOutputStream(path));
             document.open();
-            document.setMargins(5, 5, 5, 5);
+            document.setMargins(1, 1, 1, 1);
         } catch (DocumentException | FileNotFoundException e) {
+            return null;
         }
         return document;
 
     }
+
+
+    public String[][] generateTableInformation(Label label){
+
+        String[][] info = new String[4][2];
+        info[0][0] = "Name";
+        info[1][0] = "Phone Number";
+        info[2][0] = "Email";
+        info[3][0] = "Address";
+
+        info[0][1] = label.name();
+        info[1][1] = label.phoneNumber();
+        info[2][1] = label.email();
+        info[3][1] = label.address();
+
+        return info;
+    }
+
+    public void selectPath(String path) {
+
+        final Pattern pattern = Pattern.compile(".+\\.pdf");
+        if (!pattern.matcher(path).matches()) {
+            throw new IllegalArgumentException();
+        }
+        this.path = path;
+    }
+
+
 }
 

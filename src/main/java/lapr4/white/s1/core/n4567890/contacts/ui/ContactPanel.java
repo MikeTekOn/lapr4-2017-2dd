@@ -9,6 +9,8 @@ import csheets.CleanSheets;
 import csheets.ui.ctrl.UIController;
 import eapli.framework.persistence.DataConcurrencyException;
 import eapli.framework.persistence.DataIntegrityViolationException;
+import lapr4.red.s1.core.n1150623.labelsForContacts.application.LabelsForContactsController;
+import lapr4.red.s1.core.n1150623.labelsForContacts.presentation.LabelsForContactsUI;
 import lapr4.red.s1.core.n1150943.contacts.application.EventController;
 import lapr4.red.s1.core.n1150943.contacts.ui.AddEventDialog;
 import lapr4.red.s1.core.n1150943.contacts.ui.EditEventDialog;
@@ -39,6 +41,9 @@ public class ContactPanel extends JPanel implements ActionListener {
 	//Controller for Events
     private EventController eventController =null;
 
+    //Controller for Label Exportation
+    private LabelsForContactsController expController = null;
+
     Iterable<Event> events=null;
 
 	/** The text field in which the comment of the cell is displayed.*/
@@ -63,6 +68,7 @@ public class ContactPanel extends JPanel implements ActionListener {
         private JButton contactsViewTodayEventsButton=null;
         private JButton contactsViewFutureEventsButton=null;
         private JButton contactsApplyFilterButton = null;
+        private JButton contactsExportToLabelsButton = null;
 
 
 
@@ -86,6 +92,7 @@ public class ContactPanel extends JPanel implements ActionListener {
         private final static String viewTodayEventsAction="view_today_events";
         private final static String viewFutureEventsAction="view_future_events";
         private final static String applyFilterAction = "apply_filter";
+        private final static String exportLabelsAction = "export_labels";
 
     /**
      * Edited by João Cardoso - 1150943
@@ -104,9 +111,15 @@ public class ContactPanel extends JPanel implements ActionListener {
         contactsApplyFilterButton.setActionCommand(ContactPanel.applyFilterAction);
         contactsApplyFilterButton.addActionListener(this);
 
+        contactsExportToLabelsButton = new JButton();
+        contactsExportToLabelsButton.setText("Export");
+        contactsExportToLabelsButton.setActionCommand(ContactPanel.exportLabelsAction);
+        contactsExportToLabelsButton.addActionListener(this);
+
         filterPane.add(labelContacts);
         filterPane.add(contactsFilterField);
         filterPane.add(contactsApplyFilterButton);
+        filterPane.add(contactsExportToLabelsButton);
 
         contactsModel = new DefaultListModel();
         Iterable<Contact> contacts = controller.allContacts();
@@ -244,7 +257,7 @@ public class ContactPanel extends JPanel implements ActionListener {
         // Creates controllers
         this.controller = new ContactController(uiController.getUserProperties());
         this.eventController = new EventController(uiController.getUserProperties());
-
+        this.expController = new LabelsForContactsController((uiController.getUserProperties()));
         setupContactsWidgets();
 
         JPanel mainPanel = new JPanel(new GridLayout(2, 1));
@@ -428,6 +441,14 @@ public class ContactPanel extends JPanel implements ActionListener {
                 contactsList.setModel(contactsModel);
             }
 
+            break;
+
+            case ContactPanel.exportLabelsAction:
+            {
+                LabelsForContactsUI dialog = new LabelsForContactsUI(expController);
+                dialog.pack();
+                dialog.setVisible(true);
+            }
             break;
         }
     }

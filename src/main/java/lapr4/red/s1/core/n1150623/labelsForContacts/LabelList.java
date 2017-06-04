@@ -25,6 +25,10 @@ public class LabelList {
      */
     GenericExport<LabelList> exp;
 
+    /**
+     * Where to export the PDF file
+     */
+    private String path;
 
     public LabelList(){
         wantedLabels = new ArrayList<>();
@@ -43,6 +47,10 @@ public class LabelList {
         return valid;
     }
 
+    /**
+     *
+     * @return labels to export
+     */
     public List<Label> labels(){
         return wantedLabels;
     }
@@ -62,6 +70,10 @@ public class LabelList {
         return canExport;
     }
 
+    /**
+     * Deletes events that start after the date passed per parameter
+     * @param endDate - last date of events to keep
+     */
     public void limitEvents(Calendar endDate) {
 
         for (Label lab : wantedLabels) {
@@ -69,10 +81,26 @@ public class LabelList {
         }
     }
 
+    /**
+     * Choose exportation path
+     * @param path - path to export file
+     */
+    public void choosePath(String path){
+        this.path  = path;
+    }
+
     public void removeEvents() {
 
         for (Label l : wantedLabels) {
             l.removeEvents();
         }
+    }
+
+    /**
+     *
+     * @return exportation path
+     */
+    public String path(){
+        return this.path;
     }
 }
