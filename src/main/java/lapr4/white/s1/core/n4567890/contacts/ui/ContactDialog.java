@@ -185,7 +185,10 @@ public class ContactDialog extends JDialog implements ActionListener {
                     // All fields in read-only mode
                     this.fullNameField.setEditable(false);
                     this.firstNameField.setEditable(false);
-                    this.lastNameField.setEditable(false);                    
+                    this.lastNameField.setEditable(false);
+                    this.emailField.setEditable(false);
+                    this.phoneField.setEditable(false);
+                    this.addressField.setEditable(false);
                     break;
                 case EDIT:
                     statusLabel.setText(CleanSheets.getString("status_please_update_data_of_contcat"));

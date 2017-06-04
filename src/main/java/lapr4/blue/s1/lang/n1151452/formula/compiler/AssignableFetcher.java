@@ -11,15 +11,15 @@ import lapr4.blue.s1.lang.n1151452.formula.lang.Assigner;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-
 /**
- * A expression visitor that collects only nonAssignableRefs that are not assignable
+ * A expression visitor that collects only nonAssignableRefs that are not
+ * assignable
  * <p>
  * (Note: This is to avoid a cell that assigns a value to another cell becomes a
  * dependent of that cell and entering a infinite loop)
  *
- * @author Daniel Gonçalves [1151452@isep.ipp.pt]
- *         on 03/06/17.
+ * @author Daniel Gonçalves [1151452@isep.ipp.pt] on 03/06/17.
+ * @author Diana Silva [1151088@isep.ipp.pt] on 04/06/17 (temporary variables)
  */
 public class AssignableFetcher extends AbstractExpressionVisitor {
 
@@ -35,7 +35,8 @@ public class AssignableFetcher extends AbstractExpressionVisitor {
     }
 
     /**
-     * Traverses the given expression and returns only the non-assignable nonAssignableRefs that were found.
+     * Traverses the given expression and returns only the non-assignable
+     * nonAssignableRefs that were found.
      *
      * @param expression the expression from which to fetch nonAssignableRefs
      * @return the non-assignable nonAssignableRefs that have been fetched
@@ -49,7 +50,9 @@ public class AssignableFetcher extends AbstractExpressionVisitor {
         SortedSet<Reference> references = new ReferenceFetcher().getReferences(expression);
 
         // If there is no assignable references return the whole list
-        if (nonAssignableRefs.size() == 0) return references;
+        if (nonAssignableRefs.size() == 0) {
+            return references;
+        }
 
         // If not, remove non-assignable
         SortedSet<Reference> filteredReferences = new TreeSet<>();
@@ -64,7 +67,9 @@ public class AssignableFetcher extends AbstractExpressionVisitor {
                 }
             }
             // If it doesn't contain add
-            if (!contains) filteredReferences.add(ref);
+            if (!contains) {
+                filteredReferences.add(ref);
+            }
         }
 
         return filteredReferences;
@@ -75,10 +80,12 @@ public class AssignableFetcher extends AbstractExpressionVisitor {
 
         if (operation.getOperator() instanceof Assigner) {
 
-            assert operation.getLeftOperand() instanceof CellReference; // Already verified (Can not happen)
+            if (operation.getLeftOperand() instanceof Reference) {
+                assert operation.getLeftOperand() instanceof CellReference; // Already verified (Can not happen)
 
-            nonAssignableRefs.add((CellReference) operation.getLeftOperand());
-            nonAssignableRefs.addAll((new ReferenceFetcher()).getReferences(operation.getRightOperand()));
+                nonAssignableRefs.add((CellReference) operation.getLeftOperand());
+                nonAssignableRefs.addAll((new ReferenceFetcher()).getReferences(operation.getRightOperand()));
+            }
         }
 
         return operation;

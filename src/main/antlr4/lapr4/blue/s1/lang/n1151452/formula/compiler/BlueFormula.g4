@@ -29,7 +29,7 @@ atom
 	|	LPAR comparison RPAR
 	|	block
 	|	assignment
-        |       temporary_variable
+        |       VARIABLE_NAME
 	;
 
 for_loop
@@ -41,7 +41,7 @@ block
 	;
 
 assignment
-	:  LPAR reference ASSIGN comparison RPAR
+	:  LPAR (reference | (VARIABLE_NAME) ) ASSIGN comparison RPAR
 	;
 
 function_call
@@ -49,11 +49,6 @@ function_call
 		( comparison ( SEMI comparison )* )?
 		RPAR
 	;
-
-	
-temporary_variable
-          : LPAR TEMPORARY_VARIABLE ASSIGN comparison RPAR
-          ;
 
 reference
 	:	CELL_REF ( ( COLON ) CELL_REF )?
@@ -79,8 +74,8 @@ CELL_REF
 		( ABS )? ( DIGIT )+
 	;
 
-TEMPORARY_VARIABLE :
-        UNDERSCORE LETTER (DIGIT|LETTER)*
+VARIABLE_NAME 
+        : UNDERSCORE LETTER (DIGIT|LETTER)*
         ;
 
 /* String literals, i.e. anything inside the delimiters */
@@ -128,7 +123,7 @@ LPAR	: '(' ;
 RPAR	: ')' ; 
 L_CURLY_BRACKET	: '{' ;
 R_CURLY_BRACKET	: '}' ;
-UNDERSCORE : '_';
+fragment UNDERSCORE : '_';
 
 /* assignment operator */
 ASSIGN  : ':=' ;

@@ -20,7 +20,7 @@
 * <b>Use Case "Column Sort":</b>
 *
 * The user selects any cell of the column he wants to order. Reaches the top
-* bar and selects "Edit" option -> "Sort" -> "Column Sort" and then he can
+* bar and selects "Edit" option -&gt; "Sort" -&gt; "Column Sort" and then he can
 * select ascending or descending sort depending oh what kind of order he
 * desires. The system orders the cell values.
 *
@@ -47,7 +47,7 @@
 * To start the use-case, the user needs to select a column from the currently active spreadsheeet that will be converted to an array that can be passed as an argument to the ColumnSort object, but if the array is null it is not possible to sort.
 * In case it is different, it is possible to sort the contents of the cells of the column, be it ascending or descending order.
 * <p>
-* <h3><b>Sequence Diagrams</b><p></h3>
+* <h3><b>Sequence Diagrams</b></h3>
 * The following sequence diagram illustrates what happens when the user orders
 * a column.
 * <p>

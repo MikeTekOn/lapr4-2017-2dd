@@ -61,11 +61,11 @@
  *
  * <h3>4.1. Functional Tests</h3>
  *
- * testIsRegexValid() -> Tests if the given regular expression is valid.
- * testIsNotRegexValid() -> Tests if the given regular expression is not valid.
- * testCheckIfMatches() -> Tests if the given regular expression matches a cell
+ * testIsRegexValid() -&gt; Tests if the given regular expression is valid.
+ * testIsNotRegexValid() -&gt; Tests if the given regular expression is not valid.
+ * testCheckIfMatches() -&gt; Tests if the given regular expression matches a cell
  * content. 
- * testSearchInWorkbook() -> Tests if it searches through the whole
+ * testSearchInWorkbook() -&gt; Tests if it searches through the whole
  * workbook and matches it's contents with the inserted regular expression.
  *
  * <p>
