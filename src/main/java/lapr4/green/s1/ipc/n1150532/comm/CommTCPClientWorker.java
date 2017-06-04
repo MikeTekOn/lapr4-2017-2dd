@@ -3,6 +3,8 @@ package lapr4.green.s1.ipc.n1150532.comm;
 import lapr4.green.s1.ipc.n1150532.comm.connection.SocketEncapsulatorDTO;
 import lapr4.green.s1.ipc.n1150738.securecomm.BasicDataTransmissionContext;
 import lapr4.green.s1.ipc.n1150738.securecomm.DataTransmissionContext;
+import lapr4.green.s1.ipc.n1150738.securecomm.streams.NonClosingInputStreamWrapper;
+import lapr4.green.s1.ipc.n1150738.securecomm.streams.NonClosingOutputStreamWrapper;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -54,6 +56,8 @@ public class CommTCPClientWorker extends Thread implements Serializable {
      */
     private ObjectOutputStream outStream;
     private DataTransmissionContext transmissionContext;
+    private NonClosingOutputStreamWrapper socketOut;
+    private NonClosingInputStreamWrapper socketIn;
 
     /**
      * The worker constructor. It binds the socket.
@@ -136,6 +140,9 @@ public class CommTCPClientWorker extends Thread implements Serializable {
     @Override
     public void run() {
         try {
+            socketOut = new NonClosingOutputStreamWrapper(socket.getOutputStream());
+            socketIn = new NonClosingInputStreamWrapper(socket.getInputStream());
+
             getObjectOutputStream();
             getObjectInputStream();
             while (true) {
@@ -222,5 +229,13 @@ public class CommTCPClientWorker extends Thread implements Serializable {
         this.transmissionContext.wiretapInput().transferTappers(ctx.wiretapInput());
         this.transmissionContext.wiretapOutput().transferTappers(ctx.wiretapOutput());
         this.transmissionContext = ctx;
+        try {
+            outStream.close();
+            inStream.close();
+            outStream = transmissionContext.outputStream(socketOut);
+            inStream = transmissionContext.inputStream(socketIn);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -12,6 +12,8 @@ import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lapr4.green.s1.ipc.n1150532.comm.connection.SocketEncapsulatorDTO;
+import lapr4.green.s1.ipc.n1150738.securecomm.streams.NonClosingInputStreamWrapper;
+import lapr4.green.s1.ipc.n1150738.securecomm.streams.NonClosingOutputStreamWrapper;
 
 /**
  * A TCP server dedicated to one specific client.
@@ -40,6 +42,8 @@ public class CommTCPServerWorker extends Thread {
      */
     private ObjectOutputStream outStream;
     private DataTransmissionContext transmissionContext;
+    private NonClosingOutputStreamWrapper socketOut;
+    private NonClosingInputStreamWrapper socketIn;
 
     /**
      * The TCP server worker constructor.
@@ -52,6 +56,7 @@ public class CommTCPServerWorker extends Thread {
         server = theServer;
         inStream = null;
         outStream = null;
+
         transmissionContext = new BasicDataTransmissionContext();
     }
 
@@ -63,8 +68,11 @@ public class CommTCPServerWorker extends Thread {
     @Override
     public void run() {
         try {
-            outStream = transmissionContext.outputStream(socket.getOutputStream());
-            inStream = transmissionContext.inputStream(socket.getInputStream());
+            socketOut = new NonClosingOutputStreamWrapper(socket.getOutputStream());
+            socketIn = new NonClosingInputStreamWrapper(socket.getInputStream());
+
+            outStream = transmissionContext.outputStream(socketOut);
+            inStream = transmissionContext.inputStream(socketIn);
             while (true) {
                 processIncommingDTO(inStream.readObject());
             }
@@ -152,6 +160,15 @@ public class CommTCPServerWorker extends Thread {
         this.transmissionContext.wiretapInput().transferTappers(ctx.wiretapInput());
         this.transmissionContext.wiretapOutput().transferTappers(ctx.wiretapOutput());
         this.transmissionContext = ctx;
+
+        try {
+            outStream.close();
+            inStream.close();
+            outStream = transmissionContext.outputStream(socketOut);
+            inStream = transmissionContext.inputStream(socketIn);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
