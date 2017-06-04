@@ -27,53 +27,73 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * A cell decorator visualizes extension-specific data by drawing on top of
- * a cell's graphics context. Decorators should respect the enabled state set
- * on them.
+ * A cell decorator visualizes extension-specific data by drawing on top of a
+ * cell's graphics context. Decorators should respect the enabled state set on
+ * them.
+ *
  * @author Einar Pehrson
  */
 public abstract class CellDecorator {
 
-	/** Whether the decorator should be used when rendering, default is false */
-	protected boolean enabled = false;
+    /**
+     * Whether the decorator should be used when rendering, default is false
+     */
+    protected boolean enabled = false;
 
-	/**
-	 * Creates a new cell decorator.
-	 */
-	public CellDecorator() {}
+    /**
+     * Creates a new cell decorator.
+     */
+    public CellDecorator() {
+    }
 
-	/**
-	 * Decorates the given graphics context, by drawing visualizations of
-	 * extension-specific data on it.
-	 * @param component the cell renderer component
-	 * @param g the graphics context on which drawing should be done
-	 * @param cell the cell being rendered
-	 * @param selected whether the cell is selected
-	 * @param hasFocus whether the cell has focus
-	 */
-	public abstract void decorate(JComponent component, Graphics g, Cell cell,
-			boolean selected, boolean hasFocus);
+    /**
+     * Decorates the given graphics context, by drawing visualizations of
+     * extension-specific data on it.
+     *
+     * @param component the cell renderer component
+     * @param g the graphics context on which drawing should be done
+     * @param cell the cell being rendered
+     * @param selected whether the cell is selected
+     * @param hasFocus whether the cell has focus
+     */
+    public abstract void decorate(JComponent component, Graphics g, Cell cell,
+            boolean selected, boolean hasFocus);
 
-	/**
-	 * Returns whether the decorator should be used when rendering.
-	 * @return true if the decorator should be used when rendering
-	 */	
-	public final boolean isEnabled() {
-		return enabled;
-	}
+    /**
+     * Returns whether the decorator should be used when rendering.
+     *
+     * @return true if the decorator should be used when rendering
+     */
+    public final boolean isEnabled() {
+        return enabled;
+    }
 
-	/**
-	 * Sets whether the decorator should be used when rendering.
-	 * @param enabled whether the decorator should be used when rendering
-	 */
-	public final void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
+    /**
+     * Sets whether the decorator should be used when rendering.
+     *
+     * @param enabled whether the decorator should be used when rendering
+     */
+    public final void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 
+    /**
+     * Verifies if its necessary to add a tooltip to a cell.
+     *
+     * @param cell the cell to verify if has comments.
+     * @return true if the cell has comments to add to the tooltip. Otherwise
+     * returns false.
+     */
     public boolean hasTooltip(Cell cell) {
         return true;
     }
 
+    /**
+     * Apply a tooltip to a cell.
+     *
+     * @param c the cell renderer
+     * @param cell the cell to apply a tooltip
+     */
     public void applyTooltip(CellRenderer c, Cell cell) {
     }
 }
