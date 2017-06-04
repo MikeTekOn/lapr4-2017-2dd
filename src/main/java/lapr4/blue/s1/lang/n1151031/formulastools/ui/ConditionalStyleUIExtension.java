@@ -3,16 +3,16 @@ package lapr4.blue.s1.lang.n1151031.formulastools.ui;
 import csheets.ext.Extension;
 import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.UIExtension;
-import javax.swing.Icon;
-import javax.swing.JComponent;
+
+import javax.swing.*;
 
 /**
  * This class implements the UI interface extension for the conditional
  * formatting extension. A UI interface extension must extend the UIExtension
  * abstract class.
  *
- * @see UIExtension
  * @author Tiago Correia - 1151031@isep.ipp.pt
+ * @see UIExtension
  */
 public class ConditionalStyleUIExtension extends UIExtension {
 

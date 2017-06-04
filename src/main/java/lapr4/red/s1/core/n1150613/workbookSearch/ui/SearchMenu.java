@@ -6,14 +6,22 @@
 package lapr4.red.s1.core.n1150613.workbookSearch.ui;
 
 import csheets.ui.ctrl.UIController;
-import javax.swing.JMenu;
+
+import javax.swing.*;
 
 /**
+ * Represents the search menu.
  *
- * @author Diogo
+ * @author Diogo Guedes
  */
 public class SearchMenu extends JMenu {
 
+    /**
+     * Creates an instance of the search menu. Adds the associated search
+     * action.
+     *
+     * @param uiController
+     */
     public SearchMenu(UIController uiController) {
         super("Workbook Search");
         add(new SearchAction(uiController));

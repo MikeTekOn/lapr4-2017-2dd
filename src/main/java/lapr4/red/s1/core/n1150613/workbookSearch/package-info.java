@@ -125,9 +125,9 @@
  * <p>
  * <b>Monday 5/06/2017</b>
  * <p>
- * Yesterday:
+ * Yesterday: Finished UC
  * <p>
- * Today:
+ * Today: Test UC
  * <p>
  * Blocking:
  * <p>

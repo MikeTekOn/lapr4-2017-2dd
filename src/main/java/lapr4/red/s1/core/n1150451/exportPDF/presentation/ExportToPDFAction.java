@@ -9,10 +9,10 @@ import csheets.CleanSheets;
 import csheets.ui.FileChooser;
 import csheets.ui.ctrl.FocusOwnerAction;
 import csheets.ui.ctrl.UIController;
+
 import java.awt.event.ActionEvent;
 
 /**
- *
  * @author Sofia Silva [1150690@isep.ipp.pt]
  */
 @SuppressWarnings("serial")

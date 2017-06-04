@@ -20,12 +20,12 @@
  */
 package csheets.core.formula.util;
 
-import java.util.SortedSet;
-import java.util.TreeSet;
-
 import csheets.core.formula.Expression;
 import csheets.core.formula.Reference;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperation;
+
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * An expression visitor that collects the references from an expression.
@@ -70,4 +70,4 @@ public class ReferenceFetcher extends AbstractExpressionVisitor {
             }
             return operation;
         }
-    }
+}

@@ -3,18 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr4.red.s1.core.n1150451.exportPDF.domain;
+package lapr4.red.s1.core.n1150451.exportPDF;
 
 import csheets.core.Address;
 import csheets.core.Cell;
 import csheets.core.Spreadsheet;
 import csheets.core.Workbook;
 import csheets.ui.ctrl.UIController;
+import lapr4.green.s1.ipc.n1150800.importexportTXT.CellRange;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import lapr4.green.s1.ipc.n1150800.importexportTXT.CellRange;
+import java.util.regex.Pattern;
+import lapr4.red.s1.core.n1150451.exportPDF.domain.ExportPDF;
 
 /**
  *
@@ -42,7 +44,7 @@ public class WorkbookHandler {
         list.addAll(getListCellsBetweenRange(s, 0, 127, 0, 52));
         return list;
     }
-    
+
     private List<Cell> getListCellsBetweenRange(Spreadsheet s, int topLeftRow, int bottomRightRow, int topLeftColumn, int topRightColumn) {
         List<Cell> list = new ArrayList<>();
         for (int i = topLeftRow; i <= bottomRightRow; i++) {
@@ -54,6 +56,11 @@ public class WorkbookHandler {
     }
 
     public List<Cell> getListCellsSpreadSheetWithinRange(Spreadsheet ws, String text, UIController uiC, ExportPDF ePDF) {
+        
+        final Pattern pattern = Pattern.compile("[A-Z]+[0-9]+:[A-Z]+[0-9]+");
+        if (!pattern.matcher(text).matches()) {
+            throw new IllegalArgumentException();
+        }
         String[] range = text.split(":");
         CellRange cellRange = new CellRange(range[0], range[1], uiC);
         List<Cell> cells = new ArrayList<>();
@@ -62,6 +69,6 @@ public class WorkbookHandler {
         ePDF.setLimits(leftCell.getRow(), rightCell.getRow(), leftCell.getColumn(), rightCell.getColumn());
         cells.addAll(ws.getCells(leftCell, rightCell));
         return cells;
-    
+
     }
 }

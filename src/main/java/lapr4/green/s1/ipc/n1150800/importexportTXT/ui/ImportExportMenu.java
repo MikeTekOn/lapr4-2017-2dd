@@ -5,11 +5,12 @@
  */
 package lapr4.green.s1.ipc.n1150800.importexportTXT.ui;
 
+import csheets.ui.ctrl.UIController;
 import lapr4.green.s1.ipc.n1150800.importexportTXT.exportTXT.ui.ExportDataAction;
 import lapr4.green.s1.ipc.n1150800.importexportTXT.importTXT.ui.ImportDataAction;
-import csheets.ui.ctrl.UIController;
+
+import javax.swing.*;
 import java.awt.event.KeyEvent;
-import javax.swing.JMenu;
 
 /**
  *
@@ -18,8 +19,8 @@ import javax.swing.JMenu;
 public class ImportExportMenu extends JMenu {
     
     public ImportExportMenu(UIController uiController) {
-		super("Import/Export TXT");
-		setMnemonic(KeyEvent.VK_I);
+        super("Import/Export TXT");
+        setMnemonic(KeyEvent.VK_I);
 
 		// Adds font actions
                 add(new ImportDataAction(uiController));

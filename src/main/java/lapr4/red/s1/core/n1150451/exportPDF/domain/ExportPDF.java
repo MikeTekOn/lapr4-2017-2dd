@@ -5,30 +5,20 @@
  */
 package lapr4.red.s1.core.n1150451.exportPDF.domain;
 
-import lapr4.s1.export.ExportStrategy;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.*;
 import com.itextpdf.text.Font.FontFamily;
-import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import csheets.core.Cell;
-import csheets.core.IllegalValueTypeException;
 import csheets.core.Spreadsheet;
+import lapr4.s1.export.ExportStrategy;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -46,6 +36,8 @@ public class ExportPDF implements ExportStrategy {
     private int minColumn = 0;
     private int maxColumn = 52;
 
+    private HashMap<String, Anchor> mapAnchor = new HashMap<>();
+
     public ExportPDF() {
 
     }
@@ -59,6 +51,11 @@ public class ExportPDF implements ExportStrategy {
     }
 
     public void selectPath(String path) {
+
+        final Pattern pattern = Pattern.compile(".+\\.pdf");
+        if (!pattern.matcher(path).matches()) {
+            throw new IllegalArgumentException();
+        }
         this.path = path;
     }
 
@@ -69,6 +66,12 @@ public class ExportPDF implements ExportStrategy {
             doc = initiatePrinter();
 
             Map<Spreadsheet, Set<Cell>> map = getMapBySpreadSheet();
+
+            if (sections) {
+
+                createFrontPage(doc, map);
+                doc.newPage();
+            }
             Font font = new Font(FontFamily.COURIER, 6, Font.NORMAL);
             Font fontSpecial = new Font(FontFamily.COURIER, 6, Font.BOLD); //Used in the first line and first column
             for (Spreadsheet s : map.keySet()) {
@@ -82,8 +85,9 @@ public class ExportPDF implements ExportStrategy {
                         if (j == minColumn) {
                             if (i == minRow) {
                                 table.addCell(new PdfPCell(new Phrase(lines[0][0], fontSpecial)));
+                            } else {
+                                table.addCell(new PdfPCell(new Phrase(lines[i][0], fontSpecial)));
                             }
-                            table.addCell(new PdfPCell(new Phrase(lines[i][0], fontSpecial)));
                         } else if (i == minRow) {
                             table.addCell(new PdfPCell(new Phrase(lines[0][j], fontSpecial)));
 
@@ -98,7 +102,11 @@ public class ExportPDF implements ExportStrategy {
                 }
 
                 if (sections) {
-                    Paragraph p = new Paragraph(s.getTitle());
+                    Anchor anchorTarget
+                            = new Anchor(s.getTitle());
+                    anchorTarget.setName(s.getTitle());
+                    Paragraph p = new Paragraph();
+                    p.add(anchorTarget);
                     doc.add(p);
                 }
                 doc.add(table);
@@ -182,10 +190,31 @@ public class ExportPDF implements ExportStrategy {
         }
     }
 
-    void setLimits(int minRow, int maxRow, int minColumn, int maxColumn) {
+    public void setLimits(int minRow, int maxRow, int minColumn, int maxColumn) {
         this.minRow = minRow;
         this.maxRow = maxRow + 1;
         this.minColumn = minColumn;
         this.maxColumn = maxColumn + 1;
+    }
+
+    private void createFrontPage(Document doc, Map<Spreadsheet, Set<Cell>> map) {
+        PdfPTable table = new PdfPTable(1);
+        table.setWidthPercentage(50);
+        for (Spreadsheet s : map.keySet()) {
+            Anchor anchor
+                    = new Anchor(s.getTitle());
+            anchor.setReference("#" + s.getTitle());
+            Paragraph p = new Paragraph();
+            p.add(anchor);
+
+            mapAnchor.put(s.getTitle(), anchor);
+            table.addCell(new PdfPCell(new Phrase(p)));
+
+        }
+        try {
+            doc.add(table);
+        } catch (DocumentException ex) {
+            //Logger.getLogger(ExportPDF.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

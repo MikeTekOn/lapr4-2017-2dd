@@ -5,11 +5,7 @@
  */
 package lapr4.green.s1.ipc.n1140925.fileShare;
 
-import com.sun.javafx.scene.control.skin.VirtualFlow;
-import java.io.File;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *

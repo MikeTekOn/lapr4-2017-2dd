@@ -37,6 +37,7 @@ public class Assigner implements BinaryOperator {
         }
         // Assign
         CellReference left = (CellReference) leftOperand;
+
         Value value = rightOperand.evaluate();
         String content;
         try {

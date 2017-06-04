@@ -18,68 +18,69 @@
  * along with CleanSheets; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package lapr4.blue.s1.lang.n1151088.temporaryVariables;
+package lapr4.blue.s1.lang.n1151088.temporaryVariables.core;
 
 import csheets.core.Cell;
 import csheets.core.formula.Reference;
 import csheets.core.formula.util.AbstractExpressionVisitor;
 import csheets.core.formula.util.ExpressionVisitorException;
-import lapr4.blue.s1.lang.n1151088.Formula;
-
 import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVariable;
-
+import lapr4.blue.s1.lang.n1151088.temporaryVariables.core.BlueFormula;
 /**
  * An expression visitor that looks for circular references in a formula, i.e.
  * a reference back to the cell in the formula of a cell that precedes it.
+ *
  * @author Einar Pehrson
  */
 public class CircularReferenceFinder extends AbstractExpressionVisitor {
 
 	/** The cell to search for circular references */
-	private Formula formula;
+	private BlueFormula formula;
 
-	/**
-	 * Creates a new circular reference finder.
-	 */
-	public CircularReferenceFinder() {}
+    /**
+     * Creates a new circular reference finder.
+     */
+    public CircularReferenceFinder() {
+    }
 
 	/**
 	 * Checks if the given formula has any circular references.
          * @param formula formula
 	 * @throws CircularReferenceException if the formula contains any circular references
 	 */
-	public void check(Formula formula) throws CircularReferenceException {
+	public void check(BlueFormula formula) throws CircularReferenceException {
 		this.formula = formula;
 		formula.accept(this);
 	}
 
 	/*
-	 * Returns whether the given formula has any circular references.
+     * Returns whether the given formula has any circular references.
 	 * @param formula the formula to check for circularities
 	 * @return true if the given formula has any circular references
 	 */
 /*	public boolean hasCircularReference(Formula formula) {} */
 
-	/**
-	 * Checks if the given reference causes a circular reference.
-	 * @param reference the reference to visit
-     * @return 
-	 * @throws CircularReferenceException if the given reference causes a circular reference
-	 */
-        @Override
-	public Object visitReference(Reference reference) throws CircularReferenceException, ExpressionVisitorException {
-		for (Cell precedent : reference.getCells()) {
-			// Checks for circularity
-			if (precedent.equals(formula.getCell()))
-				throw new CircularReferenceException(formula);
+    /**
+     * Checks if the given reference causes a circular reference.
+     *
+     * @param reference the reference to visit
+     * @return
+     * @throws CircularReferenceException if the given reference causes a circular reference
+     */
+    @Override
+    public Object visitReference(Reference reference) throws CircularReferenceException, ExpressionVisitorException {
+        for (Cell precedent : reference.getCells()) {
+            // Checks for circularity
+            if (precedent.equals(formula.getCell()))
+                throw new CircularReferenceException(formula);
 
-			// Looks further
-			csheets.core.formula.Formula precedentFormula = precedent.getFormula();
-			if (precedentFormula != null)
-				precedentFormula.accept(this);
-		}
-		return reference;
+            // Looks further
+            csheets.core.formula.Formula precedentFormula = precedent.getFormula();
+            if (precedentFormula != null)
+                precedentFormula.accept(this);
         }
+        return reference;
+    }
 
     @Override
     public Object visitTemporaryVariable(TemporaryVariable tempVar) {

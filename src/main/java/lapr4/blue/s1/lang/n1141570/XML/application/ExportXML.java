@@ -2,11 +2,11 @@ package lapr4.blue.s1.lang.n1141570.XML.application;
 
 import csheets.core.Cell;
 import csheets.core.Spreadsheet;
-import java.io.File;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import lapr4.s1.export.ExportStrategy;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -16,11 +16,11 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import lapr4.s1.export.ExportStrategy;
-import org.w3c.dom.Attr;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+import java.io.File;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -36,16 +36,19 @@ public class ExportXML implements ExportStrategy {
     private static final String TAG_CELL_NAME = "cell";
 
     private String path;
-    private List<Cell> cellsList;
     private List<String> tagNamesList;
     private Map<Spreadsheet, List<Cell>> cellMap;
 
+    /**
+     * Creates an export xml instance.
+     */
     public ExportXML() {
     }
 
     /**
-     * Defines the selected range of cells.
+     * Defines the selected cells.
      *
+     * @param cellMap the cell map.
      */
     public void selectRange(Map<Spreadsheet, List<Cell>> cellMap) {
         this.cellMap = cellMap;
@@ -100,7 +103,7 @@ public class ExportXML implements ExportStrategy {
                 Element spreadsheetElement = doc.createElement(tagNamesList.get(ELEMENT1_VALUE));
                 rootElement.appendChild(spreadsheetElement);
 
-                // set attribute to spreadsheet element
+                // set attribute(title) to spreadsheet element
                 Attr attr = doc.createAttribute("title");
                 attr.setValue(spreadsheet.getTitle());
                 spreadsheetElement.setAttributeNode(attr);
@@ -110,6 +113,17 @@ public class ExportXML implements ExportStrategy {
                     Element cellElement = doc.createElement(tagNamesList.get(ELEMENT2_VALUE));
                     if (!currentCell.getValue().toString().equalsIgnoreCase("")) {
                         cellElement.appendChild(doc.createTextNode((currentCell.getValue()).toString()));
+
+                        // set attribute(row) to cell element
+                        Attr row_attr = doc.createAttribute("row");
+                        row_attr.setValue(String.valueOf(currentCell.getAddress().getRow()+1));
+                        cellElement.setAttributeNode(row_attr);
+                        
+                        // set attribute(column) to cell element
+                        Attr column_attr = doc.createAttribute("column");
+                        column_attr.setValue(String.valueOf(currentCell.getAddress().getColumn()+1));
+                        cellElement.setAttributeNode(column_attr);
+
                         spreadsheetElement.appendChild(cellElement);
                     }
                 }

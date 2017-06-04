@@ -5,7 +5,7 @@
  * <p>
  * <h2>1. Notes:</h2>
  * <p><ol>
- * <li><b>This feature increment and this documentation are work in progress! It was already partially elaborated.</b>
+ * <li><b>This feature increment and this documentation was already partially elaborated.</b>
  * <li><b>Spent significant time analyzing the already implemented code base for this feature.</b>
  * <li>The code base implemented "on top" of the cleansheets core, does not follow the core pattern. <b>Should we refactor to obey core pattern? A: YES</b>
  * <li>The class {@link org.antlr.v4.runtime.ANTLRInputStream} is deprecated, but we decided to continue to use it because the related documentation
@@ -135,7 +135,6 @@
  * <li>ensureBlockReturnsLastStatementResult
  * <li>ensureBlockExecutesAllStatements
  * <li>ensureForLoopsStatementExecutions
- * <li>ensureForLoopStopsWhenBoundaryConditionIsFalse
  * </ol><p>
  * <h3>4.1. Functional Tests</h3>
  * <p>
@@ -155,9 +154,74 @@
  * </ol>
  * <p>
  * <p>
+ * <b>4.1.3. Test for loop with iteration count </b>
+ * <p>
+ * <ol>
+ * <li>Insert in cell A3 the following expression "= FOR {(A1:= 1) ; A1 &#60; 10; (A2:= A2 + A1); (A1:= A1 + 1) }"
+ * <li>Results:
+ * </ol><p>
+ * <table summary="results 4.1.3.">
+ * <tr>
+ * <th>Iteration</th>
+ * <th>A1</th>
+ * <th>A2</th>
+ * </tr>
+ * <tr>
+ * <td>#1</td>
+ * <td>1</td>
+ * <td>1</td>
+ * </tr>
+ * <tr>
+ * <td>#2</td>
+ * <td>2</td>
+ * <td>3</td>
+ * </tr>
+ * <tr>
+ * <td>#3</td>
+ * <td>3</td>
+ * <td>6</td>
+ * </tr>
+ * <tr>
+ * <td>#4</td>
+ * <td>4</td>
+ * <td>10</td>
+ * </tr>
+ * <tr>
+ * <td>#5</td>
+ * <td>5</td>
+ * <td>15</td>
+ * </tr>
+ * <tr>
+ * <td>#6</td>
+ * <td>6</td>
+ * <td>21</td>
+ * </tr>
+ * <tr>
+ * <td>#7</td>
+ * <td>7</td>
+ * <td>28</td>
+ * </tr>
+ * <tr>
+ * <td>#8</td>
+ * <td>8</td>
+ * <td>36</td>
+ * </tr>
+ * <tr>
+ * <td>#9</td>
+ * <td>9</td>
+ * <td>45</td>
+ * </tr>
+ * <tr>
+ * <td>Last</td>
+ * <td>10</td>
+ * <td>N/A</td>
+ * </tr>
+ * </table>
+ * <p>
+ * <p>
  * <h2>5. Design</h2>
  * <p>
- * <b>Note:</b>We proposed to surround the assignment operator with round brackets so that the impact in the grammar is minor <b>"=(a1:=a3+1)+23"</b>.<p>
+ * <b>Note: </b>We proposed to surround the assignment operator with round brackets so that the impact in the grammar is minor <b>"=(a1:=a3+1)+23"</b>.<p>
  * <p>
  * <h3>5.1. Language Class Design</h3>
  * <p>
@@ -179,12 +243,37 @@
  * <p>
  * <img src="block_instructions_cd.png" alt="block_instructions_cd">
  * <p>
- * <h3>5.5. Design Patterns and Best Practices</h3>
+ * <h3>5.5. Assign Infinite Loop Solution</h3>
+ * <p>
+ * While implementing the for loop block, we encountered a loop problem when self assigning a value. Because of the core functionality
+ * when we reference a cell from another cell we create a dependency, this is, whenever the precedent's value changes all dependents
+ * are listening and re-evaluate. But this feature cannot work with the assign operator because if we assign a value to itself (ex. A1:=A1+1),
+ * A1 will create a dependency to itself making it re-evaluate infinitely.<p>
+ * To resolve the problem we had slightly adjust how the core "fetches" it's dependents. The following designs explains how the formula
+ * should get their dependents.
+ * <p>
+ * <img src="dependents_refactor_sd.png" alt="dependents_refactor_sd">
+ * <p>
+ * <h3>5.6. Design Patterns and Best Practices</h3>
  * <p>
  * The cleansheets core implementation already uses the <b>visitor pattern</b> to interact with the ANTLR generated classes, as well
  * as the <b>decorator pattern</b> to design the expressions functionality.
  * <p>
  * We well continue the best practices and implement our FI using the same patterns.
+ * <p>
+ * <p>
+ * <h2>6. Integration/Demonstration</h2>
+ * <p>
+ * <p>
+ * It was necessary to integrate this feature with already developed formula core package without altering it. In some pontual situations
+ * it was necessary to do so.
+ * <p>
+ * <h2>7. Final Remarks</h2>
+ * <p>
+ * As an extra for this functional increment, we resolved the infinite loop created by a self assignment and refactored the partially
+ * implementation features to obey core pattern.
+ * <p>
+ * This section can be vastly improved with more operations/expressions (ex. conditional blocks, multiple assignments, etc.).
  * <p>
  * <p>
  * <br>
@@ -252,6 +341,23 @@
  * <p><ol>
  * <li>Implement the FI (TDD approach).
  * <li>Help colleagues that maybe delayed.
+ * </ol><p>
+ * Blocking:
+ * <p>
+ * -nothing-
+ * <p>
+ * <b>Saturday [03/06/2017]</b><p>
+ * I worked on:<p>
+ * Yesterday
+ * <p><ol>
+ * <li>Implemented the FI (TDD approach).
+ * <li>Helped colleagues that maybe delayed.
+ * </ol><p>
+ * Today
+ * <p><ol>
+ * <li>Refactored encountered bugs (Infinite loop when self assigned, etc.)
+ * <li>Developed for loop.
+ * <li>Update documentation.
  * </ol><p>
  * Blocking:
  * <p>

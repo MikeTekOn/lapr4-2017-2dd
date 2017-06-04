@@ -4,14 +4,14 @@ import csheets.core.Cell;
 import csheets.core.formula.Expression;
 import csheets.core.formula.compiler.ExpressionCompiler;
 import csheets.core.formula.compiler.FormulaCompilationException;
+import lapr4.blue.s1.lang.n1151452.formula.compiler.BlueFormulaLexer;
+import lapr4.blue.s1.lang.n1151452.formula.compiler.BlueFormulaParser;
+import lapr4.blue.s1.lang.n1151452.formula.compiler.FormulaEvalVisitor;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.Collections;
 import java.util.List;
-import lapr4.blue.s1.lang.n1151452.formula.compiler.BlueFormulaLexer;
-import lapr4.blue.s1.lang.n1151452.formula.compiler.BlueFormulaParser;
-import lapr4.blue.s1.lang.n1151452.formula.compiler.FormulaEvalVisitor;
 
 /**
  * A compiler that generates Excel-style expressions from strings.
@@ -91,10 +91,10 @@ public class ConditionalStyleCompiler implements ExpressionCompiler {
 
         @Override
         public void syntaxError(Recognizer<?, ?> recognizer,
-                Object offendingSymbol,
-                int line, int charPositionInLine,
-                String msg,
-                RecognitionException e) {
+                                Object offendingSymbol,
+                                int line, int charPositionInLine,
+                                String msg,
+                                RecognitionException e) {
             List<String> stack = ((Parser) recognizer).getRuleInvocationStack();
             Collections.reverse(stack);
 

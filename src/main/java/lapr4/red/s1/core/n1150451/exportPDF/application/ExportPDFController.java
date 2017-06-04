@@ -5,14 +5,14 @@
  */
 package lapr4.red.s1.core.n1150451.exportPDF.application;
 
-import lapr4.red.s1.core.n1150451.exportPDF.domain.ExportPDF;
-import csheets.core.Cell;
 import csheets.core.Spreadsheet;
 import csheets.core.Workbook;
 import csheets.ui.ctrl.UIController;
-import java.util.List;
-import lapr4.red.s1.core.n1150451.exportPDF.domain.WorkbookHandler;
+import lapr4.red.s1.core.n1150451.exportPDF.domain.ExportPDF;
+import lapr4.red.s1.core.n1150451.exportPDF.WorkbookHandler;
 import lapr4.s1.export.ExportContext;
+
+import java.util.regex.Pattern;
 
 /**
  *
@@ -27,7 +27,7 @@ public class ExportPDFController {
     public void initiateExport(UIController c) {
         ePDF = new ExportPDF();
         exportContext = new ExportContext(ePDF);
-        this.c=c;
+        this.c = c;
     }
 
     public void selectRange(Workbook wb) {
@@ -39,7 +39,7 @@ public class ExportPDFController {
     }
 
     public void selectRange(Spreadsheet ws, String text) {
-       ePDF.selectRange(new WorkbookHandler(ws.getWorkbook()).getListCellsSpreadSheetWithinRange(ws, text, c, ePDF));
+        ePDF.selectRange(new WorkbookHandler(ws.getWorkbook()).getListCellsSpreadSheetWithinRange(ws, text, c, ePDF));
     }
 
     public void toggleSections() {

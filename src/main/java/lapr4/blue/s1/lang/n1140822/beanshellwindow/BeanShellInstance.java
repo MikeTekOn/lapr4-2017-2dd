@@ -10,13 +10,14 @@ import bsh.Interpreter;
 import csheets.core.IllegalValueTypeException;
 import csheets.core.Value;
 import csheets.ui.ctrl.UIController;
+import lapr4.blue.s1.lang.n1151159.macros.MacroController;
+import lapr4.blue.s1.lang.n1151159.macros.compiler.MacroCompilationException;
+import org.bouncycastle.util.Strings;
+
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Objects;
-import lapr4.blue.s1.lang.n1151159.macros.MacroController;
-import lapr4.blue.s1.lang.n1151159.macros.compiler.MacroCompilationException;
-import org.bouncycastle.util.Strings;
 
 /**
  *
@@ -76,7 +77,7 @@ public class BeanShellInstance {
                 results.put(codeLine, evaluation);
             }
         }
-        //macros dont need to be evaluated in a line fashion, can be appended to a string and evaluated in bulk.
+        //macros dont need to be evaluated in a line fashion, can be appended to a string and evaluated in bulk by the macro UC.
         for (String macro : macro) {
             appendedMacro+=macro+Strings.lineSeparator();
         }

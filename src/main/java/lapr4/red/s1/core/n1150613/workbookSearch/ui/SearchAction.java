@@ -7,11 +7,14 @@ package lapr4.red.s1.core.n1150613.workbookSearch.ui;
 
 import csheets.ui.ctrl.BaseAction;
 import csheets.ui.ctrl.UIController;
+
 import java.awt.event.ActionEvent;
 
 /**
  *
- * @author Diogo
+ * Represents an action to execute search
+ *
+ * @author Diogo Guedes
  */
 public class SearchAction extends BaseAction {
 

@@ -15,7 +15,7 @@ public class AgendaTest {
 
     @Before
     public void setUp() {
-        contact=new Contact("João Cardoso","João","Cardoso","");
+        contact=new Contact("João Cardoso","João","Cardoso","","ads","ads","asd");
         agenda=contact.agenda();
     }
 

@@ -1,7 +1,6 @@
 package lapr4.blue.s1.lang.n1151031.formulastools;
 
 /**
- *
  * @author Tiago Correia - 1151031@isep.ipp.pt
  */
 public interface ConditionStylableCellListener {

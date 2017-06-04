@@ -1,10 +1,9 @@
 package lapr4.blue.s1.lang.n1151031.formulastools;
 
-import java.awt.Color;
-import java.awt.Font;
-import javax.swing.BorderFactory;
-import javax.swing.UIManager;
+import javax.swing.*;
 import javax.swing.border.Border;
+import java.awt.*;
+import java.io.Serializable;
 
 /**
  * A class that has the user selected styling options to be applied when using
@@ -12,7 +11,7 @@ import javax.swing.border.Border;
  *
  * @author Tiago Correia - 1151031@isep.ipp.pt
  */
-public class UserStyle {
+public class UserStyle implements Serializable {
 
     /**
      * The default font
@@ -90,8 +89,6 @@ public class UserStyle {
 
     /**
      * Creates an instance of UserStyle with the default options.
-     *
-     * @param cell
      */
     public UserStyle() {
         this.trueStyleFont = DEFAULT_FONT;

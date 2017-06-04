@@ -3,13 +3,11 @@ package lapr4.blue.s1.lang.n1141570.XML.ui;
 import csheets.ext.Extension;
 import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.UIExtension;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JMenu;
 import lapr4.blue.s1.lang.n1141570.XML.ExportXMLExtension;
 
+import javax.swing.*;
+
 /**
- *
  * @author Eric
  */
 public class UIExportXMLExtension extends UIExtension {
@@ -27,7 +25,7 @@ public class UIExportXMLExtension extends UIExtension {
     /**
      * Creates the user interface for the export xml extension.
      *
-     * @param extension the extension for which components are provided
+     * @param extension    the extension for which components are provided
      * @param uiController the user interface controller
      */
     public UIExportXMLExtension(Extension extension, UIController uiController) {
@@ -39,6 +37,7 @@ public class UIExportXMLExtension extends UIExtension {
      *
      * @return an icon with style
      */
+    @Override
     public Icon getIcon() {
         if (icon == null) {
             icon = new ImageIcon(ExportXMLExtension.class.getResource("res/img/exportXMLblack.gif"));
@@ -47,9 +46,9 @@ public class UIExportXMLExtension extends UIExtension {
     }
 
     /**
-     * Returns the macro menu.
+     * Returns the export xml menu.
      *
-     * @return macro menu
+     * @return export xml menu
      */
     public JMenu getMenu() {
         if (menu == null) {

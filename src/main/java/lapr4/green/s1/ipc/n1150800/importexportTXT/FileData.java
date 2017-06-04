@@ -11,17 +11,10 @@ import csheets.core.Spreadsheet;
 import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.ext.style.StylableCell;
 import csheets.ext.style.StyleExtension;
-import java.awt.Font;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.CellDTO;
+
+import java.awt.*;
+import java.io.*;
 
 /**
  *
@@ -74,11 +67,12 @@ public class FileData {
         this.cellRange = cellRange;
         this.firstLineRepresentsHeader = firstLineRepresentsHeaders;
     }
-    
+
     /**
      * Static method validates if the file extension is a valid one
+     *
      * @param file - the file to be validated
-     * @return 
+     * @return
      */
     public static boolean validateFileExtension(File file) {
         String fileName = file.getName();
@@ -165,10 +159,10 @@ public class FileData {
                 cell.setContent(content);
                 
                 /* HEADER CONTENT IS BOLD */
-                if(i == 0 && firstLineRepresentsHeader) {
-                    StylableCell stylableCell = (StylableCell)cell.getExtension(StyleExtension.NAME);
+                if (i == 0 && firstLineRepresentsHeader) {
+                    StylableCell stylableCell = (StylableCell) cell.getExtension(StyleExtension.NAME);
                     stylableCell.setFont(new Font(stylableCell.getFont().getFamily(),
-			stylableCell.getFont().getStyle() ^ Font.BOLD, stylableCell.getFont().getSize()));
+                            stylableCell.getFont().getStyle() ^ Font.BOLD, stylableCell.getFont().getSize()));
                 }
             }
         }

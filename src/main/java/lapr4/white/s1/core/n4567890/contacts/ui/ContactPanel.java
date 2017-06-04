@@ -34,48 +34,58 @@ import java.util.ArrayList;
 public class ContactPanel extends JPanel implements ActionListener {
 
     // Controller for Contacts
-    private ContactController controller = null;
+	private ContactController controller=null;
 
-    //Controller for Events
-    private EventController eventController = null;
+	//Controller for Events
+    private EventController eventController =null;
 
-    Iterable<Event> events = null;
+    Iterable<Event> events=null;
 
-    /**
-     * The text field in which the comment of the cell is displayed.
-     */
-    private JTextArea commentField = new JTextArea();
+	/** The text field in which the comment of the cell is displayed.*/
+        private JTextArea commentField = new JTextArea();
 
-    // Controls for the contacts panel
-    private JLabel labelContacts = null;
-    private JTextField contactsFilterField = null;
-    private JList<Contact> contactsList = null;
-    private JList<Contact> eventsList = null;
-    private DefaultListModel<Contact> contactsModel = null;
-    private DefaultListModel<Event> eventsModel = null;
-    private JButton contactsAddButton = null;
-    private JButton contactsRemoveButton = null;
-    private JButton contactsEditButton = null;
-    private JButton contactsAddEventButton = null;
-    private JButton contactsEditEventButton = null;
-    private JButton contactsRemoveEventButton = null;
-    private JButton contactsApplyFilterButton = null;
 
-    private JPanel contactsPane = null;
-    private JPanel agendaPane = null;
-    private JPanel filterPane = null;
-    private JPanel contactsButtonPane = null;
-    private JPanel eventsPane = null;
-    private JPanel agendaButtonPane = null;
+        // Controls for the contacts panel
+        private JLabel labelContacts=null;
+        private JTextField contactsFilterField=null;
+        private JList<Contact> contactsList=null;
+        private JList<Event> eventsList=null;
+        private DefaultListModel<Contact> contactsModel=null;
+        private DefaultListModel<Event> eventsModel=null;
+        private JButton contactsAddButton=null;
+        private JButton contactsRemoveButton=null;
+        private JButton contactsEditButton=null;
+        private JButton contactsAddEventButton=null;
+        private JButton contactsEditEventButton=null;
+        private JButton contactsRemoveEventButton=null;
+        private JButton contactsViewAllEventsButton=null;
+        private JButton contactsViewPastEventsButton=null;
+        private JButton contactsViewTodayEventsButton=null;
+        private JButton contactsViewFutureEventsButton=null;
+        private JButton contactsApplyFilterButton = null;
 
-    // Action commands
-    private final static String addAction = "add";
-    private final static String removeAction = "remove";
-    private final static String editAction = "edit";
-    private final static String addEventAction = "add_event";
-    private final static String editEventAction = "edit_event";
-    private final static String removeEventAction = "remove_event";
-    private final static String applyFilterAction = "apply_filter";
+
+
+
+    private JPanel contactsPane= null;
+        private JPanel agendaPane=null;
+        private JPanel filterPane = null;
+        private JPanel contactsButtonPane = null;
+        private JPanel eventsPane = null;
+        private JPanel agendaButtonPane= null;
+
+        // Action commands
+        private final static String addAction="add";
+        private final static String removeAction="remove";
+        private final static String editAction="edit";
+        private final static String addEventAction="add_event";
+        private final static String editEventAction="edit_event";
+        private final static String removeEventAction="remove_event";
+        private final static String viewAllEventsAction="view_all_events";
+        private final static String viewPastEventsAction="view_past_events";
+        private final static String viewTodayEventsAction="view_today_events";
+        private final static String viewFutureEventsAction="view_future_events";
+        private final static String applyFilterAction = "apply_filter";
 
     /**
      * Edited by João Cardoso - 1150943
@@ -175,19 +185,35 @@ public class ContactPanel extends JPanel implements ActionListener {
 
         //Added by João Cardoso - 1150943
         agendaButtonPane = new JPanel(new FlowLayout(FlowLayout.LEADING));
-        contactsAddEventButton = new JButton("Add Event");
+        contactsAddEventButton=new JButton("Add Event");
         contactsAddEventButton.setActionCommand(ContactPanel.addEventAction);
         contactsAddEventButton.addActionListener(this);
-        contactsEditEventButton = new JButton("Edit Event");
+        contactsEditEventButton=new JButton("Edit Event");
         contactsEditEventButton.setActionCommand(ContactPanel.editEventAction);
         contactsEditEventButton.addActionListener(this);
-        contactsRemoveEventButton = new JButton("Remove Event");
+        contactsRemoveEventButton=new JButton("Remove Event");
         contactsRemoveEventButton.setActionCommand(ContactPanel.removeEventAction);
         contactsRemoveEventButton.addActionListener(this);
+        contactsViewAllEventsButton=new JButton("All Events");
+        contactsViewAllEventsButton.setActionCommand(ContactPanel.viewAllEventsAction);
+        contactsViewAllEventsButton.addActionListener(this);
+        contactsViewPastEventsButton=new JButton("Past Events");
+        contactsViewPastEventsButton.setActionCommand(ContactPanel.viewPastEventsAction);
+        contactsViewPastEventsButton.addActionListener(this);
+        contactsViewTodayEventsButton=new JButton("Today's Events");
+        contactsViewTodayEventsButton.setActionCommand(ContactPanel.viewTodayEventsAction);
+        contactsViewTodayEventsButton.addActionListener(this);
+        contactsViewFutureEventsButton=new JButton("Future Events");
+        contactsViewFutureEventsButton.setActionCommand(ContactPanel.viewFutureEventsAction);
+        contactsViewFutureEventsButton.addActionListener(this);
 
         agendaButtonPane.add(contactsAddEventButton);
         agendaButtonPane.add(contactsEditEventButton);
         agendaButtonPane.add(contactsRemoveEventButton);
+        agendaButtonPane.add(contactsViewAllEventsButton);
+        agendaButtonPane.add(contactsViewPastEventsButton);
+        agendaButtonPane.add(contactsViewTodayEventsButton);
+        agendaButtonPane.add(contactsViewFutureEventsButton);
 
         agendaPane = new JPanel(new BorderLayout());
         agendaPane.add(eventsPane, BorderLayout.CENTER);
@@ -202,6 +228,7 @@ public class ContactPanel extends JPanel implements ActionListener {
         for (Event ev : c.agenda().events()) {
             eventsModel.addElement(ev);
         }
+        eventsList.setModel(eventsModel);
     }
 
     /**
@@ -299,31 +326,25 @@ public class ContactPanel extends JPanel implements ActionListener {
                 if (index != -1) {
                     Contact c;
                     c = contactsModel.getElementAt(index);
-                    new AddEventDialog(eventController, c);
-
-                    if (ContactDialog.successResult()) {
-                        // Update the model of the JList
-                        contactsModel.set(index, c);
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(null, CleanSheets.getString("status_please_choose_contact"));
+                    new AddEventDialog(eventController,c);
+                    updateEventModel();
+                }else{
+                    JOptionPane.showMessageDialog(null,CleanSheets.getString("status_please_choose_contact"));
                 }
                 break;
+
             case ContactPanel.editEventAction:
                 int indexContact = contactsList.getSelectedIndex();
                 index = eventsList.getSelectedIndex();
                 Contact c = contactsModel.elementAt(indexContact);
-                if (index != -1) {
-                    new EditEventDialog(eventController, c, index);
-
-                    if (ContactDialog.successResult()) {
-                        updateEventModel();
-                        eventsList.updateUI();
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(null, CleanSheets.getString("status_please_choose_event"));
+                if (index!=-1) {
+                    new EditEventDialog(eventController,c,index);
+                    updateEventModel();
+                }else{
+                    JOptionPane.showMessageDialog(null,CleanSheets.getString("status_please_choose_event"));
                 }
                 break;
+
             case ContactPanel.removeEventAction:
                 indexContact = contactsList.getSelectedIndex();
                 index = eventsList.getSelectedIndex();
@@ -339,24 +360,52 @@ public class ContactPanel extends JPanel implements ActionListener {
                             e1.printStackTrace();
                         }
                     }
-                    if (ContactDialog.successResult()) {
-                        updateEventModel();
-                        eventsList.updateUI();
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(null, CleanSheets.getString("status_please_choose_event"));
+                    updateEventModel();
+                }else{
+                    JOptionPane.showMessageDialog(null,CleanSheets.getString("status_please_choose_event"));
+                }
+                break;
+
+            case ContactPanel.viewAllEventsAction:
+                updateEventModel();
+                break;
+
+            case ContactPanel.viewPastEventsAction:
+                indexContact = contactsList.getSelectedIndex();
+                c = contactsModel.elementAt(indexContact);
+                eventsModel.clear();
+                for(Event ev : eventController.pastEvents(c)){
+                    eventsModel.addElement(ev);
+                }
+                break;
+
+            case ContactPanel.viewTodayEventsAction:
+                indexContact = contactsList.getSelectedIndex();
+                c = contactsModel.elementAt(indexContact);
+                eventsModel.clear();
+                for(Event ev : eventController.todayEvents(c)){
+                    eventsModel.addElement(ev);
+                }
+                break;
+
+            case ContactPanel.viewFutureEventsAction:
+                indexContact = contactsList.getSelectedIndex();
+                c = contactsModel.elementAt(indexContact);
+                eventsModel.clear();
+                for(Event ev : eventController.futureEvents(c)){
+                    eventsModel.addElement(ev);
                 }
                 break;
 
             case ContactPanel.applyFilterAction: {
-                
+
                 /**
                  * Faciltated chossing contacts
-                 * 
+                 *
                  * @author Gulherme Ferreira 1150623 - Filter feature added.
-                 * 
+                 *
                  */
-                
+
                 String text = contactsFilterField.getText().trim().toLowerCase();
                 contactsModel.clear();
                 Iterable<Contact> contacts = controller.allContacts();
@@ -371,7 +420,7 @@ public class ContactPanel extends JPanel implements ActionListener {
                     }
                     System.out.println(contactsModel);
                 } else {
-                    
+
                     for (Contact con : contacts) {
                         contactsModel.addElement(con);
                     }

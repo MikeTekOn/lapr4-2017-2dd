@@ -22,6 +22,9 @@ import org.antlr.v4.runtime.Token;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVariable;
 
 /**
  * Represents the Formula Visitor (ANTLR4).
@@ -72,7 +75,11 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
             }
         }
 
-        return visit(ctx.concatenation(0));
+        if (ctx.getChild(0) instanceof BlueFormulaParser.ConcatenationContext) {
+            return visit(ctx.concatenation(0));
+        }
+
+        return visit(ctx.for_loop());
     }
 
     @Override
@@ -184,6 +191,7 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
     public Expression visitAssignment(BlueFormulaParser.AssignmentContext ctx) {
         if (ctx.ASSIGN() != null) {
             try {
+
                 // Convert binary operation
                 BinaryOperator operator = Language.getInstance().getBinaryOperator(ctx.getChild(2).getText());
                 return new BinaryOperation(
@@ -228,7 +236,67 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
         return visitChildren(ctx);
     }
 
-    public void addVisitError(String msg) {
+    @Override
+    public Expression visitFor_loop(BlueFormulaParser.For_loopContext ctx) {
+
+        if (ctx.FOR() != null) {
+            try {
+                // Get n-ary operator that identifies a for loop
+                String operatorID = ctx.FOR().getText().toLowerCase();
+                NaryOperator operator = Language.getInstance().getNaryOperator(operatorID);
+
+                // Get # of expressions by: dividing by 2 to not count for SEMI-COLON/BRACKETS & - 1 for the "for"
+                Expression expressions[] = new Expression[(ctx.getChildCount() / 2) - 1];
+
+                // #1 Convert all the child nodes
+                for (int nChild = 2, i = 0; i < expressions.length; nChild += 2, i++) {
+
+                    expressions[i] = visit(ctx.getChild(nChild));
+                }
+
+                return new NaryOperation(operator, expressions);
+
+            } catch (UnknownElementException ex) {
+                addVisitError(ex.getMessage());
+            }
+        }
+        return visitChildren(ctx);
+    }
+
+      @Override
+    public Expression visitTemporary_variable(BlueFormulaParser.Temporary_variableContext ctx) {
+       Value value=null;
+        if(ctx.ASSIGN()!=null){
+            
+           try {
+               /*
+               BinaryOperator operator = Language.getInstance().getBinaryOperator(ctx.getChild(2).getText());
+               BinaryOperation operation=new BinaryOperation(
+               visit(ctx.getChild(1)), operator, visit(ctx.getChild(3)));
+               
+               //value=operator.applyTo(visit(ctx.getChild(1)), visit(ctx.getChild(3)));
+               //value=operation.evaluate();
+               */
+               value=Value.parseNumericValue(ctx.getChild(3).getText());
+           } catch (ParseException ex) {
+               Logger.getLogger(FormulaEvalVisitor.class.getName()).log(Level.SEVERE, null, ex);
+           }
+                if(ctx.TEMPORARY_VARIABLE()!=null){
+
+                    return new TemporaryVariable(ctx.getChild(1).getText(), value);
+                }
+        }
+        //FIXME 
+       return visitChildren(ctx);
+    }
+
+    
+    /**
+     * Adds an error to the error buffer.
+     *
+     * @param msg the message to append
+     */
+    private void addVisitError(String msg) {
         errorBuffer.append(msg).append("\n");
         numberOfErrors++;
     }
