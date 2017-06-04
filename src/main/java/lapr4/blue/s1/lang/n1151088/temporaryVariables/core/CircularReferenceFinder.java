@@ -18,14 +18,14 @@
  * along with CleanSheets; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package lapr4.blue.s1.lang.n1151088.temporaryVariables;
+package lapr4.blue.s1.lang.n1151088.temporaryVariables.core;
 
 import csheets.core.Cell;
 import csheets.core.formula.Reference;
 import csheets.core.formula.util.AbstractExpressionVisitor;
 import csheets.core.formula.util.ExpressionVisitorException;
-import lapr4.blue.s1.lang.n1151088.Formula;
-
+import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVariable;
+import lapr4.blue.s1.lang.n1151088.temporaryVariables.core.BlueFormula;
 /**
  * An expression visitor that looks for circular references in a formula, i.e.
  * a reference back to the cell in the formula of a cell that precedes it.
@@ -34,10 +34,8 @@ import lapr4.blue.s1.lang.n1151088.Formula;
  */
 public class CircularReferenceFinder extends AbstractExpressionVisitor {
 
-    /**
-     * The cell to search for circular references
-     */
-    private Formula formula;
+	/** The cell to search for circular references */
+	private BlueFormula formula;
 
     /**
      * Creates a new circular reference finder.
@@ -45,16 +43,15 @@ public class CircularReferenceFinder extends AbstractExpressionVisitor {
     public CircularReferenceFinder() {
     }
 
-    /**
-     * Checks if the given formula has any circular references.
-     *
-     * @param formula formula
-     * @throws CircularReferenceException if the formula contains any circular references
-     */
-    public void check(Formula formula) throws CircularReferenceException {
-        this.formula = formula;
-        formula.accept(this);
-    }
+	/**
+	 * Checks if the given formula has any circular references.
+         * @param formula formula
+	 * @throws CircularReferenceException if the formula contains any circular references
+	 */
+	public void check(BlueFormula formula) throws CircularReferenceException {
+		this.formula = formula;
+		formula.accept(this);
+	}
 
 	/*
      * Returns whether the given formula has any circular references.

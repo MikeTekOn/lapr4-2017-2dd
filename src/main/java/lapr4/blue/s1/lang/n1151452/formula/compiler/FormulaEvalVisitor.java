@@ -22,6 +22,9 @@ import org.antlr.v4.runtime.Token;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVariable;
 
 /**
  * Represents the Formula Visitor (ANTLR4).
@@ -260,6 +263,34 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
         return visitChildren(ctx);
     }
 
+      @Override
+    public Expression visitTemporary_variable(BlueFormulaParser.Temporary_variableContext ctx) {
+       Value value=null;
+        if(ctx.ASSIGN()!=null){
+            
+           try {
+               /*
+               BinaryOperator operator = Language.getInstance().getBinaryOperator(ctx.getChild(2).getText());
+               BinaryOperation operation=new BinaryOperation(
+               visit(ctx.getChild(1)), operator, visit(ctx.getChild(3)));
+               
+               //value=operator.applyTo(visit(ctx.getChild(1)), visit(ctx.getChild(3)));
+               //value=operation.evaluate();
+               */
+               value=Value.parseNumericValue(ctx.getChild(3).getText());
+           } catch (ParseException ex) {
+               Logger.getLogger(FormulaEvalVisitor.class.getName()).log(Level.SEVERE, null, ex);
+           }
+                if(ctx.TEMPORARY_VARIABLE()!=null){
+
+                    return new TemporaryVariable(ctx.getChild(1).getText(), value);
+                }
+        }
+        //FIXME 
+       return visitChildren(ctx);
+    }
+
+    
     /**
      * Adds an error to the error buffer.
      *

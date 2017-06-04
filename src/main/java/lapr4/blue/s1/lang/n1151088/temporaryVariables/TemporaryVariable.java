@@ -9,18 +9,16 @@ import csheets.core.IllegalValueTypeException;
 import csheets.core.Value;
 import csheets.core.formula.Expression;
 import csheets.core.formula.util.ExpressionVisitor;
+import java.util.Objects;
 
 /**
  * A temporary variable in a formula.
  * @author Diana Silva - 1151088@isep.ipp.pt
  */
 public class TemporaryVariable implements Expression {
-
     //FIXME
-    /**
-     * The unique version identifier used for serialization
-     */
-    private static final long serialVersionUID = 7854180857828149859L;
+    /** The unique version identifier used for serialization */
+    //private static final long serialVersionUID = 7854180857828149859L;
 
 
     /**
@@ -32,9 +30,10 @@ public class TemporaryVariable implements Expression {
      * The value of the temporary variable
      */
     private Value value;
-
-    public TemporaryVariable(String name) {
-        this.name = name;
+    
+    public TemporaryVariable(String name, Value value){
+        this.name=name;
+        this.value=value;
     }
 
     @Override
@@ -45,18 +44,44 @@ public class TemporaryVariable implements Expression {
     public String getName() {
         return this.name;
     }
-
+    
+    /**
+     * Update the temporary variable value
+     * @param value 
+     */
+    public void updateValue(Value value){
+        this.value=value;
+    }
+    
     @Override
     public String toString() {
-        if (value.getType() == Value.Type.TEXT
-                || value.getType() == Value.Type.DATE)
-            return "\"" + value.toString() + "\"";
-        else
-            return value.toString();
+            if (value.getType() == Value.Type.TEXT
+             || value.getType() == Value.Type.DATE)
+                    return "\"" + value.toString() + "\"";
+            else
+                    return value.toString();
     }
 
     @Override
     public Object accept(ExpressionVisitor visitor) {
         return visitor.visitTemporaryVariable(this);
+    }
+    
+    @Override
+     public boolean equals(Object other){
+        if (!(other instanceof TemporaryVariable))
+           return false;
+        
+        TemporaryVariable otherVar = (TemporaryVariable)other;
+        return otherVar.getName().equals(this.getName());
+
+
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 97 * hash + Objects.hashCode(this.name);
+        return hash;
     }
 }

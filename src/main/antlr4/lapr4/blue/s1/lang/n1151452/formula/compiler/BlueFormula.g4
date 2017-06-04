@@ -52,7 +52,7 @@ function_call
 
 	
 temporary_variable
-          : TEMPORARY_VARIABLE ASSIGN
+          : LPAR TEMPORARY_VARIABLE ASSIGN comparison RPAR
           ;
 
 reference
@@ -80,7 +80,7 @@ CELL_REF
 	;
 
 TEMPORARY_VARIABLE :
-        UNDERSCORE LETTER ((DIGIT)?(LETTER)?)+
+        UNDERSCORE LETTER (DIGIT|LETTER)*
         ;
 
 /* String literals, i.e. anything inside the delimiters */
