@@ -73,14 +73,14 @@ public class ConditionStylableCell extends CellExtension {
      *
      * @param condition the user-specified condition
      */
-    public void setUserCondition(String condition) {
+    public void setUserCondition(String condition) throws RuntimeException {
         this.userCondition = condition;
         // Notifies listeners
         fireConditionChanged();
     }
 
     @Override
-    public void valueChanged(Cell cell) {
+    public void valueChanged(Cell cell) throws RuntimeException {
         assert getDelegate() != null;
 
         Expression expression = null;
@@ -102,7 +102,7 @@ public class ConditionStylableCell extends CellExtension {
                 }
             } catch (FormulaCompilationException e) {
                 e.printStackTrace();
-                JOptionPane.showMessageDialog(null, "The entered condition is not valid!", "Invalid Condition", JOptionPane.WARNING_MESSAGE);
+                throw new IllegalConditionException("The entered condition is not valid!");
             }
             try {
                 StylableCell stylableCell = (StylableCell) getDelegate().getExtension(StyleExtension.NAME);
@@ -120,7 +120,7 @@ public class ConditionStylableCell extends CellExtension {
                 }
             } catch (IllegalValueTypeException e) {
                 e.printStackTrace();
-                JOptionPane.showMessageDialog(null, "Invalid cell value: " + e.toString(), "Invalid Value", JOptionPane.WARNING_MESSAGE);
+                throw new IllegalConditionException("Invalid cell value: " + e.toString());
             }
         }
     }
@@ -128,7 +128,7 @@ public class ConditionStylableCell extends CellExtension {
     /**
      * Sets the user defined style options.
      *
-     * @param userStyle
+     * @param userStyle the user defined style
      */
     public void setStyle(UserStyle userStyle) {
         this.userStyle = userStyle;
@@ -155,7 +155,7 @@ public class ConditionStylableCell extends CellExtension {
     /**
      * Notifies all registered listeners that the cell's condition changed.
      */
-    protected void fireConditionChanged() {
+    protected void fireConditionChanged() throws RuntimeException {
         for (ConditionStylableCellListener listener : listeners) {
             listener.conditionChanged(this);
         }
