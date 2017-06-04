@@ -210,6 +210,7 @@ public class ExportToPDFUI extends JDialog {
                 }
 
                 c.export();
+                JOptionPane.showMessageDialog(rootPane, "Export sucessful!");
             }
         }
         );

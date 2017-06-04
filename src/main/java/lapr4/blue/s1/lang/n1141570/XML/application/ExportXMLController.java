@@ -28,9 +28,15 @@ public class ExportXMLController {
      */
     public ExportXMLController(UIController uiController) {
         this.uiController = uiController;
-
     }
 
+    /**
+     * Exports a workbook.
+     * @param workbook the workbook to be exported.
+     * @param chosenTagNames the chosen tag names.
+     * @param selectedPath the selected path where to save.
+     * @return true if exported, false otherwise.
+     */
     public boolean exportWorkbook(Workbook workbook, List<String> chosenTagNames, String selectedPath) {
         ExportXML exporterXML = new ExportXML();
         Map<Spreadsheet, List<Cell>> cellMap = new LinkedHashMap<>();
@@ -38,7 +44,6 @@ public class ExportXMLController {
 
         for (int i = 0; i < workbook.getSpreadsheetCount(); i++) {
             cellList = new LinkedList<Cell>();
-            //names.add(book.getSpreadsheet(i).getTitle());
 
             for (int j = 0; j < workbook.getSpreadsheet(i).getColumnCount() + 1; j++) {
                 for (int k = 0; k < workbook.getSpreadsheet(i).getRowCount() + 1; k++) {
@@ -46,7 +51,6 @@ public class ExportXMLController {
                 }
                 cellMap.put(workbook.getSpreadsheet(i), cellList);
             }
-
         }
 
         exporterXML.configureTagNames(chosenTagNames);
@@ -56,12 +60,17 @@ public class ExportXMLController {
         return exporterXML.export();
     }
 
+    /**
+     * Exports a spreadsheet.
+     * @param spreadsheet the selected spreadsheet to export.
+     * @param chosenTagNames the chosen tag names.
+     * @param selectedPath the selected path where to save.
+     * @return true if exports spreadsheet, false otherwise.
+     */
     public boolean exportSpreadsheet(Spreadsheet spreadsheet, List<String> chosenTagNames, String selectedPath) {
         ExportXML exporterXML = new ExportXML();
-
         Map<Spreadsheet, List<Cell>> cellMap = new LinkedHashMap<>();
         List<Cell> cellList;
-
         cellList = new LinkedList<Cell>();
 
         for (int j = 0; j < spreadsheet.getColumnCount() + 1; j++) {
@@ -78,6 +87,13 @@ public class ExportXMLController {
         return exporterXML.export();
     }
 
+    /**
+     * Exports a selected cell.
+     * @param cellMap the cell map.
+     * @param chosenTagNames the chosen tag names.
+     * @param selectedPath the selected path where to save.
+     * @return true if exported, false otherwise.
+     */
     public boolean exportSelectedCell(Map<Spreadsheet, List<Cell>> cellMap, List<String> chosenTagNames, String selectedPath) {
         ExportXML exporterXML = new ExportXML();
 
@@ -88,12 +104,18 @@ public class ExportXMLController {
         return exporterXML.export();
     }
 
+    /**
+     * Exports the selected column.
+     * @param spreadsheet the spreadsheet where column was selected.
+     * @param chosenTagNames the chosen tag names.
+     * @param selectedPath the selected path where to save.
+     * @param selectedColumn the selected column.
+     * @return true if exported, false otherwise.
+     */
     public boolean exportSelectedColumn(Spreadsheet spreadsheet, List<String> chosenTagNames, String selectedPath, int selectedColumn) {
         ExportXML exporterXML = new ExportXML();
-
         Map<Spreadsheet, List<Cell>> cellMap = new LinkedHashMap<>();
         List<Cell> cellList;
-
         cellList = new LinkedList<Cell>();
 
         for (int k = 0; k < spreadsheet.getRowCount() + 1; k++) {
@@ -108,12 +130,18 @@ public class ExportXMLController {
         return exporterXML.export();
     }
 
+    /**
+     * Export the selected row.
+     * @param spreadsheet the spreadsheet where the row was selected.
+     * @param chosenTagNames the chosen tag names.
+     * @param selectedPath the selected path where to save.
+     * @param selectedRow the selected row to export.
+     * @return true if exports, false otherwise.
+     */
     public boolean exportSelectedRow(Spreadsheet spreadsheet, List<String> chosenTagNames, String selectedPath, int selectedRow) {
         ExportXML exporterXML = new ExportXML();
-
         Map<Spreadsheet, List<Cell>> cellMap = new LinkedHashMap<>();
         List<Cell> cellList;
-
         cellList = new LinkedList<Cell>();
 
         for (int j = 0; j < spreadsheet.getColumnCount() + 1; j++) {

@@ -11,7 +11,10 @@ import csheets.ui.ctrl.UIController;
 import java.awt.event.ActionEvent;
 
 /**
- * @author Diogo
+ *
+ * Represents an action to execute search
+ *
+ * @author Diogo Guedes
  */
 public class SearchAction extends BaseAction {
 
