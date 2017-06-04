@@ -2,7 +2,6 @@ package lapr4.green.s1.ipc.n1150738.securecomm;
 
 import org.apache.commons.io.input.TeeInputStream;
 import org.apache.commons.io.output.TeeOutputStream;
-import org.eclipse.persistence.internal.jpa.metadata.accessors.mappings.BasicAccessor;
 
 import java.io.*;
 
@@ -11,12 +10,12 @@ import java.io.*;
  */
 public class BasicDataTransmissionContext implements DataTransmissionContext {
 
-    private WiretapedStream inputTap;
-    private WiretapedStream outputTap;
+    private WiretappedStream inputTap;
+    private WiretappedStream outputTap;
 
     public BasicDataTransmissionContext(){
-        inputTap = new WiretapedStream();
-        outputTap = new WiretapedStream();
+        inputTap = new WiretappedStream();
+        outputTap = new WiretappedStream();
     }
 
     /**
@@ -40,16 +39,16 @@ public class BasicDataTransmissionContext implements DataTransmissionContext {
      */
     @Override
     public ObjectOutputStream outputStream(OutputStream socketOutStream) throws IOException{
-        return new ObjectOutputStream(new TeeOutputStream(socketOutStream, inputTap));
+        return new ObjectOutputStream(new TeeOutputStream(socketOutStream, outputTap));
     }
 
     @Override
-    public WiretapedStream wiretapInput() {
+    public WiretappedStream wiretapInput() {
         return inputTap;
     }
 
     @Override
-    public WiretapedStream wiretapOutput() {
+    public WiretappedStream wiretapOutput() {
         return outputTap;
     }
 }

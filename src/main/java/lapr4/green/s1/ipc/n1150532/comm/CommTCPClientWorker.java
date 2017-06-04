@@ -1,5 +1,6 @@
 package lapr4.green.s1.ipc.n1150532.comm;
 
+import lapr4.green.s1.ipc.n1150532.comm.connection.SocketEncapsulatorDTO;
 import lapr4.green.s1.ipc.n1150738.securecomm.BasicDataTransmissionContext;
 import lapr4.green.s1.ipc.n1150738.securecomm.DataTransmissionContext;
 
@@ -197,8 +198,29 @@ public class CommTCPClientWorker extends Thread implements Serializable {
     private void processIncommingDTO(Object inDTO) {
         CommHandler handler = manager.getHandler(inDTO.getClass());
         if (handler != null) {
-            handler.handleDTO(inDTO, outStream);
+            //handler.handleDTO(inDTO, outStream);
+            SocketEncapsulatorDTO dto = new SocketEncapsulatorDTO(socket, handler, inDTO);
+            handler.handleDTO(dto, outStream);
         }
     }
 
+    /**
+     * Henrique Oliveira [1150738@isep.ipp.pt]
+     * @param s
+     * @return
+     */
+    public boolean hasSocket(Socket s){
+        return socket == s;
+    }
+
+    /**
+     * @author Henrique Oliveira [1150738@isep.ipp.pt]
+     *
+     * @param ctx
+     */
+    public void switchDataTransmissionContext(DataTransmissionContext ctx) {
+        this.transmissionContext.wiretapInput().transferTappers(ctx.wiretapInput());
+        this.transmissionContext.wiretapOutput().transferTappers(ctx.wiretapOutput());
+        this.transmissionContext = ctx;
+    }
 }

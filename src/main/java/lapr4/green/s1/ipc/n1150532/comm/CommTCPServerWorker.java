@@ -134,4 +134,24 @@ public class CommTCPServerWorker extends Thread {
         }
     }
 
+    /**
+     * Henrique Oliveira [1150738@isep.ipp.pt]
+     * @param s
+     * @return
+     */
+    public boolean hasSocket(Socket s){
+        return socket == s;
+    }
+
+    /**
+     * @author Henrique Oliveira [1150738@isep.ipp.pt]
+     *
+     * @param ctx
+     */
+    public void switchDataTransmissionContext(DataTransmissionContext ctx) {
+        this.transmissionContext.wiretapInput().transferTappers(ctx.wiretapInput());
+        this.transmissionContext.wiretapOutput().transferTappers(ctx.wiretapOutput());
+        this.transmissionContext = ctx;
+    }
+
 }

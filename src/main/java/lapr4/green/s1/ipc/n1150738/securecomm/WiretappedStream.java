@@ -1,7 +1,5 @@
 package lapr4.green.s1.ipc.n1150738.securecomm;
 
-import com.ibm.icu.util.Output;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;
@@ -14,11 +12,11 @@ import java.util.*;
  *
  * @author Henrique Oliveira [1150738@isep.ipp.pt]
  */
-public class WiretapedStream extends OutputStream {
+public class WiretappedStream extends OutputStream {
 
     private Queue<OutputStream> wiretappers;
 
-    public WiretapedStream(){
+    public WiretappedStream(){
         wiretappers = new java.util.concurrent.ConcurrentLinkedDeque<OutputStream>();
     }
 
@@ -28,6 +26,16 @@ public class WiretapedStream extends OutputStream {
 
     public void detach(OutputStream wiretapper){
         wiretappers.remove(wiretapper);
+    }
+
+    public void transferTappers(WiretappedStream dest){
+        for (OutputStream wiretapper : wiretappers) {
+            dest.attach(wiretapper);
+        }
+    }
+
+    public void detachAll(){
+        wiretappers.clear();
     }
 
     @Override

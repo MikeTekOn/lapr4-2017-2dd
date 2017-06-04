@@ -2,6 +2,7 @@ package lapr4.green.s1.ipc.n1150532.startSharing;
 
 import java.io.ObjectOutputStream;
 import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
+import lapr4.green.s1.ipc.n1150532.comm.connection.SocketEncapsulatorDTO;
 
 /**
  * An handler to deal with the sharing cells response.
@@ -23,7 +24,8 @@ public class HandlerResponseSharedCellsDTO implements CommHandler {
      */
     @Override
     public void handleDTO(Object dto, ObjectOutputStream outStream) {
-        lastReceivedDTO = dto;
+        SocketEncapsulatorDTO encapsulator = (SocketEncapsulatorDTO) dto;
+        lastReceivedDTO = encapsulator.getDTO();
     }
 
     /**

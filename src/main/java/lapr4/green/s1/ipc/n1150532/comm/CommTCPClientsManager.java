@@ -4,6 +4,7 @@ import csheets.core.Address;
 import csheets.core.Spreadsheet;
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -134,6 +135,15 @@ public class CommTCPClientsManager implements Serializable {
      */
     private void addClient(ConnectionID connection, CommTCPClientWorker worker) {
         clients.put(connection, worker);
+    }
+
+    public CommTCPClientWorker workerBySocket(Socket s){
+        for(Map.Entry<ConnectionID, CommTCPClientWorker> entry : clients.entrySet()){
+            if(entry.getValue().hasSocket(s)){
+                return entry.getValue();
+            }
+        }
+        return null;
     }
 
 }
