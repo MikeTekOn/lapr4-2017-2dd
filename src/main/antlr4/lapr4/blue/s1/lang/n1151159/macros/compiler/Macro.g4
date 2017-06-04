@@ -4,7 +4,7 @@ grammar Macro;
 }
 
 macro
-    : expression* EQ? comparison NEWLINE* EOF
+    : NEWLINE* expression* EQ? comparison NEWLINE* EOF
     ;
 
 expression

@@ -23,7 +23,6 @@
  */
 package lapr4.blue.s1.lang.n1151088;
 
-import lapr4.blue.s1.lang.n1151452.formula.*;
 import csheets.core.*;
 import csheets.core.formula.Expression;
 import lapr4.blue.s1.lang.n1151452.formula.compiler.BlueFormulaLexer;

@@ -18,7 +18,7 @@
  * along with CleanSheets; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package lapr4.blue.s1.lang.n1151088;
+package lapr4.blue.s1.lang.n1151088.temporaryVariables.core;
 
 import csheets.core.Cell;
 import csheets.core.IllegalValueTypeException;
@@ -30,8 +30,6 @@ import csheets.core.formula.util.ExpressionVisitorException;
 import csheets.core.formula.util.ReferenceFetcher;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import lapr4.blue.s1.lang.n1151088.temporaryVariables.CircularReferenceException;
-import lapr4.blue.s1.lang.n1151088.temporaryVariables.CircularReferenceFinder;
 import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVarContentor;
 import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVariable;
 
@@ -40,7 +38,7 @@ import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVariable;
  * @author Diana Silva on 03/06/2017
  * @author Einar Pehrson
  */
-public class Formula implements Expression {
+public class BlueFormula implements Expression {
 
 	/** The unique version identifier used for serialization */
 	private static final long serialVersionUID = 7127589370042533160L;
@@ -63,7 +61,7 @@ public class Formula implements Expression {
 	 * @param cell the cell to which the formula belongs
 	 * @param expression the expression in the formula
 	 */
-	public Formula(Cell cell, Expression expression) {
+	public BlueFormula(Cell cell, Expression expression) {
 		// Stores members
 		this.cell = cell;
 		this.expression = expression;

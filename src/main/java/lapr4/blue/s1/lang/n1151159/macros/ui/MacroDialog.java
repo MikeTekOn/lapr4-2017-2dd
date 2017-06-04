@@ -1,9 +1,13 @@
 package lapr4.blue.s1.lang.n1151159.macros.ui;
 
+import bsh.EvalError;
 import csheets.core.IllegalValueTypeException;
 import csheets.core.Value;
 import csheets.ui.ctrl.UIController;
+import lapr4.blue.s1.lang.n1140822.beanshellwindow.BeanShellClassLoaderController;
+import lapr4.blue.s1.lang.n1140822.beanshellwindow.BeanShellResult;
 import lapr4.blue.s1.lang.n1151159.macros.MacroController;
+import lapr4.blue.s1.lang.n1151159.macros.MacroExtension;
 import lapr4.blue.s1.lang.n1151159.macros.compiler.MacroCompilationException;
 
 import javax.swing.*;
@@ -16,9 +20,6 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lapr4.blue.s1.lang.n1140822.beanshellwindow.BeanShellClassLoaderController;
-import lapr4.blue.s1.lang.n1140822.beanshellwindow.BeanShellResult;
-import lapr4.blue.s1.lang.n1151159.macros.MacroExtension;
 
 /**
  * Represents a dialog to execute macros.
@@ -46,7 +47,7 @@ public class MacroDialog extends JDialog {
     private JRadioButton beanShellLanguageRadioButton;
     private JTextArea macroTextArea;
     private JTextField macroOutputTextField;
-    private Dimension BUTTON_SIZE = new Dimension(115, 30);
+    private Dimension BUTTON_SIZE = new Dimension(100, 30);
 
     /**
      * Creates an instance of macro dialog.
@@ -84,9 +85,9 @@ public class MacroDialog extends JDialog {
         JPanel macroLanguagePanel = new JPanel();
 
         macroLanguageRadioButton = new JRadioButton("Macro");
-           macroLanguageRadioButton .addActionListener(new ActionListener() {
+        macroLanguageRadioButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                    macroTextArea.setText("");
+                macroTextArea.setText(macroController.getDefaultMacro());
             }
         });
         beanShellLanguageRadioButton = new JRadioButton("Bean Shell");
@@ -95,9 +96,10 @@ public class MacroDialog extends JDialog {
                 try {
                     //@1140822 Renato
                     //ONLY FOR THE DEFAULT SCRIPT - TO BE REMOVED IN SECOND ITERATION
+                    macroTextArea.setText("");
                     Scanner scan = new Scanner(new File(MacroExtension.class.getResource("res/script/default_script.bsh").getFile()));
                     while (scan.hasNextLine()) {
-                        macroTextArea.append(scan.nextLine()+"\n");
+                        macroTextArea.append(scan.nextLine() + "\n");
                     }
                 } catch (FileNotFoundException ex) {
                     Logger.getLogger(MacroDialog.class.getName()).log(Level.SEVERE, null, ex);
@@ -127,6 +129,7 @@ public class MacroDialog extends JDialog {
 
         macroTextArea = new JTextArea(MACRO_TEXT_AREA_ROWS, MACRO_TEXT_AREA_COLUMNS);
         macroTextArea.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+        macroTextArea.setText(macroController.getDefaultMacro());
 
         JScrollPane macroTextAreaScrollPane = new JScrollPane(macroTextArea);
 
@@ -169,6 +172,7 @@ public class MacroDialog extends JDialog {
         JPanel buttonsPanel = new JPanel();
 
         buttonsPanel.add(createRunButton());
+        buttonsPanel.add(createClearButton());
         buttonsPanel.add(createCancelButton());
 
         return buttonsPanel;
@@ -200,15 +204,48 @@ public class MacroDialog extends JDialog {
                         }
                     } else if (beanShellLanguageRadioButton.isSelected()) {
 
-                        BeanShellClassLoaderController beanShellController = new BeanShellClassLoaderController();
-                        BeanShellResult result = beanShellController.createAndExecuteScript(macroText, uiController);
-                        macroOutputTextField.setText(result.lastResult());
+                        try {
+                            BeanShellClassLoaderController beanShellController = new BeanShellClassLoaderController();
+                            BeanShellResult result = beanShellController.createAndExecuteScript(macroText, uiController);
+                            macroOutputTextField.setText(result.lastResult());
+                        } catch (FileNotFoundException | EvalError | MacroCompilationException | IllegalValueTypeException ex) {
+                            Logger.getLogger(MacroDialog.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                 }
             }
         });
 
         return runButton;
+    }
+
+    /**
+     * Creates the clear button.
+     *
+     * @return clear button
+     */
+    private JButton createClearButton() {
+        JButton clearButton = new JButton("Clear");
+        clearButton.setPreferredSize(BUTTON_SIZE);
+
+        clearButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                String macroText = macroTextArea.getText();
+                if (!macroText.isEmpty()) {
+                    int dialogResult = JOptionPane.showConfirmDialog(
+                            null,
+                            "Do you want to clear all the macro?",
+                            "Warning",
+                            JOptionPane.YES_NO_OPTION);
+                    if (dialogResult == JOptionPane.YES_OPTION) {
+                        macroTextArea.setText("");
+                    }
+                }
+            }
+        });
+
+        return clearButton;
     }
 
     /**

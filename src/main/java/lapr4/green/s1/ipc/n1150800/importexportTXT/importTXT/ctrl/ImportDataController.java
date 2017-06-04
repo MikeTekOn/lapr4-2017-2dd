@@ -9,11 +9,12 @@ import csheets.core.Spreadsheet;
 import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.ui.ctrl.UIController;
 import eapli.framework.application.Controller;
-import java.io.File;
-import java.io.IOException;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.CellDTO;
 import lapr4.green.s1.ipc.n1150800.importexportTXT.CellRange;
 import lapr4.green.s1.ipc.n1150800.importexportTXT.FileData;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  *
@@ -44,6 +45,8 @@ public class ImportDataController implements Controller {
      * @param separatorCharacter - the character that separates the data by
      * columns in the file
      * @param cellRange - the range of cells that will be filled with the data
+     * @param firstLineRepresentsHeaders - a boolean variable that determines if
+     * the first line of the file is a line of headers
      *
      */
     public ImportDataController(UIController uiController, File fileToRead, char separatorCharacter, CellRange cellRange, boolean firstLineRepresentsHeaders) {

@@ -58,8 +58,6 @@ public class BootEventVerifier {
         for(Event e : agenda.events()){
             if(e.isToday()){
                 ShowAlertAction.showAlert(e.description(),e.dueDate());
-            }else{
-                new EventReminder(e.dueDate(),e.description());
             }
         }
     }

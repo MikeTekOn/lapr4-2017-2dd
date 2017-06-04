@@ -100,8 +100,8 @@ public class ConnectionTable extends JPanel implements Observer {
      */
     @Override
     public void update(Observable o, Object arg) {
-        if (arg instanceof ConnectionDetailsResponseDTO) {
-            insertRow(((ConnectionDetailsResponseDTO) arg).getConnectionID());
+        if (arg instanceof ConnectionID) {
+            insertRow((ConnectionID) arg);
         }
     }
 

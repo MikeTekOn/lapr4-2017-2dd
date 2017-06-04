@@ -1,0 +1,20 @@
+@startuml core10_01_design3.png
+    participant "bev : BootEventVerifier" as bev
+    participant "c : Contact" as contact
+    participant "agenda: Agenda" as agenda
+    participant "ev: Event" as event
+    participant "ShowAlertAction" as sha
+    database ContactRepository as repo
+
+    bev -> contact : agenda = agenda()
+
+    loop All Events
+        bev -> event : isToday()
+        alt Event is today
+            bev -> event : desc = description()
+            bev -> event : dueDate = dueDate()
+            bev -> sha : showAlert(desc, dueDate)
+        end
+    end
+
+@enduml

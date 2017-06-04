@@ -1,5 +1,7 @@
 package lapr4.green.s1.ipc.n1150532.comm.connection;
 
+import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
+
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
@@ -10,7 +12,6 @@ import java.util.List;
 import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
 
 /**
  * An handler to deal with UDP connection details response. It is supposed to be
@@ -39,7 +40,7 @@ public class HandlerConnectionDetailsResponseDTO extends Observable implements C
         int portNumber = ((ConnectionDetailsResponseDTO) reply.getDTO()).getPortNumber();
         if (isOutsiderAnnouncement(serverIP)) {
             setChanged();
-            ConnectionDetailsResponseDTO connection = new ConnectionDetailsResponseDTO(serverIP, portNumber);
+            ConnectionID connection = new ConnectionIDImpl(serverIP, portNumber);
             notifyObservers(connection);
         }
     }
@@ -62,20 +63,20 @@ public class HandlerConnectionDetailsResponseDTO extends Observable implements C
      * outside source or false otherwise.
      */
     private boolean isOutsiderAnnouncement(InetAddress senderIP) {
-//        Enumeration<NetworkInterface> interfaces;
-//        try {
-//            interfaces = NetworkInterface.getNetworkInterfaces();
-//            while (interfaces.hasMoreElements()) {
-//                List<InterfaceAddress> list = interfaces.nextElement().getInterfaceAddresses();
-//                for (InterfaceAddress address : list) {
-//                    if (address.getAddress().equals(senderIP)) {
-//                        return false;
-//                    }
-//                }
-//            }
-//        } catch (SocketException ex) {
-//            Logger.getLogger(HandlerConnectionDetailsResponseDTO.class.getName()).log(Level.SEVERE, null, ex);
-//        }
+        Enumeration<NetworkInterface> interfaces;
+        try {
+            interfaces = NetworkInterface.getNetworkInterfaces();
+            while (interfaces.hasMoreElements()) {
+                List<InterfaceAddress> list = interfaces.nextElement().getInterfaceAddresses();
+                for (InterfaceAddress address : list) {
+                    if (address.getAddress().equals(senderIP)) {
+                        return false;
+                    }
+                }
+            }
+        } catch (SocketException ex) {
+            Logger.getLogger(HandlerConnectionDetailsResponseDTO.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return true;
     }
 

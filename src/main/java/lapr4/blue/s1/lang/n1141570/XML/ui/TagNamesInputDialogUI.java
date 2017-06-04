@@ -1,13 +1,13 @@
 package lapr4.blue.s1.lang.n1141570.XML.ui;
 
 import csheets.ui.ctrl.UIController;
+import lapr4.blue.s1.lang.n1141570.XML.application.ExportXMLController;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
-import lapr4.blue.s1.lang.n1141570.XML.application.ExportXMLController;
 
 /**
  * Represents a dialog to input the chosen the tag names.

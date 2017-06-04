@@ -13,7 +13,7 @@
  * It should be possible for the user to open a workbook from this list by double clicking in it
  * The search can be based solely on the file name extension. For instance, find the files with .cls extension.
  * Notes:<p>
- * After a discussion with the client he clarified that the file name must be a path
+ * After a discussion with the client he clarified that the file name must be a path <p>
  * 
  *  
  * <b>Analysis</b><p>
@@ -40,12 +40,6 @@
  *
  * <b>UnitTest:</b> ensureDirectoryPathIsValid<p>
  * The directory only should be created with a valid path. Expect a exception<p>
- * 
- * <b>Test2:</b> ShareCellTest<p>
- * Test the initial connection regarding the sharing of the contents of a range of cells. Should we move/refactor this test to Acceptance Test?<p>
- * See Package lapr4.black.s1.ipc.n2345678.comm.sharecells:<p>
- * ShareCellsTest<p>
- * 
  * 
  * 
  * <b>Design</b><p>
