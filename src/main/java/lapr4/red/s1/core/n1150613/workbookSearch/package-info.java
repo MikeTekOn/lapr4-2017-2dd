@@ -89,15 +89,19 @@
  * 
  * Package lapr4.red.s1.core.n1150613.workbookSearch:<p>
  * {@link lapr4.red.s1.core.n1150613.workbookSearch.RegexUtil}
+ * <p>
  * {@link lapr4.red.s1.core.n1150613.workbookSearch.SearchExtension}
  * <p>
  * Package lapr4.red.s1.core.n1150613.workbookSearch.application:<p>
- * {@link lapr4.red.s1.core.n1150613.workbookSearch.WorkbookSearchController}
+ * {@link lapr4.red.s1.core.n1150613.workbookSearch.application.WorkbookSearchController}
  * <p>
  *  * Package lapr4.red.s1.core.n1150613.workbookSearch.ui:<p>
- * {@link lapr4.red.s1.core.n1150613.workbookSearch.WorkbookSearchSideBar}
- * {@link lapr4.red.s1.core.n1150613.workbookSearch.UIExtensionSearch}
+ * {@link lapr4.red.s1.core.n1150613.workbookSearch.ui.WorkbookSearchSideBar}
+ * <p>
+ * {@link lapr4.red.s1.core.n1150613.workbookSearch.ui.UIExtensionSearch}
+ * <p>
  * {@link lapr4.red.s1.core.n1150613.workbookSearch.ui.SearchMenu}
+ * <p>
  * {@link lapr4.red.s1.core.n1150613.workbookSearch.ui.SearchAction}
  * <p>
  * <p>
