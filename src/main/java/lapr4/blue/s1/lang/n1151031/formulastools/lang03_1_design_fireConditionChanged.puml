@@ -1,0 +1,22 @@
+@startuml lang03_1_design_fireConditionChanged.png
+
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+participant "ConditionStylableCell" as cscell
+participant "ConditionStylablePanel" as cspanel
+participant "CellImpl" as cellimp
+
+[-> cscell : fireConditionChanged()
+
+loop forEach listener : listeners
+cscell -> cspanel : listener.conditionChanged()
+end
+
+loop forEach Cell dependent : dependents
+cscell -> cellimp : dependent.removeCellListener()
+end
+
+cscell -> cscell : valueChanged(getDelegate())
+
+@enduml

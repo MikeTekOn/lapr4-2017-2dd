@@ -2,6 +2,10 @@ package lapr4.green.s1.ipc.n1150532.comm;
 
 import csheets.core.Address;
 import csheets.core.Spreadsheet;
+import lapr4.black.s1.ipc.n2345678.comm.sharecells.RequestSharedCellsDTO;
+import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
+import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionRequestDTO;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.Socket;
@@ -9,9 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lapr4.black.s1.ipc.n2345678.comm.sharecells.RequestSharedCellsDTO;
-import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
-import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionRequestDTO;
 
 /**
  * A singleton to manage all the TCP clients created.

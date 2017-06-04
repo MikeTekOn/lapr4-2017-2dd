@@ -29,28 +29,44 @@ public class ContactTest {
 
     @Before
     public void setUp() {
-        contact1 = new Contact("João Cardoso", "João","Cardoso","");
-        contact2 = new Contact(name,first,last,"");
+        contact1 = new Contact("João Cardoso", "João","Cardoso","","asd","asd","asd");
+        contact2 = new Contact(name,first,last,"","asd","asd","asd");
     }
 
     @Test(expected = IllegalStateException.class)
     public void testContactHasName() {
-        Contact c = new Contact("",first,last,"");
+        Contact c = new Contact("",first,last,"","ads","ads","asd");
     }
 
     @Test(expected = IllegalStateException.class)
     public void testContactHasFirstName() {
-        Contact c = new Contact(name,"",last,"");
+        Contact c = new Contact(name,"",last,"","ads","ads","asd");
     }
 
     @Test(expected = IllegalStateException.class)
     public void testContactHasLastName() {
-        Contact c = new Contact(name,first,"","");
+        Contact c = new Contact(name,first,"","","ads","ads","asd");
     }
+
+    @Test(expected = IllegalStateException.class)
+    public void testContactHasAddress() {
+        Contact c = new Contact(name,first,"","","","ads","asd");
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testContactHasEmail() {
+        Contact c = new Contact(name,first,"","","ads","","asd");
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testContactHasPhoneNumber() {
+        Contact c = new Contact(name,first,"","","ads","ads","");
+    }
+
 
     @Test
     public void testContactIsSameTrue() {
-        Contact c = new Contact(name,first,last,"");
+        Contact c = new Contact(name,first,last,"","ads","ads","asd");
         boolean res = contact2.sameAs(c);
         assertTrue(res);
     }

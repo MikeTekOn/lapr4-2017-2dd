@@ -52,6 +52,11 @@ public class Event {
 
     public Calendar dueDate(){return dueDate;}
 
+    /**
+     * Created by João Cardoso - 1150943
+     * @param newDescription
+     * @param newDueDate
+     */
     protected void update(String newDescription, Calendar newDueDate) {
         if(dueDate.compareTo(Calendar.getInstance())>0 | !description.isEmpty()) {
             this.description = newDescription;
@@ -74,8 +79,41 @@ public class Event {
         return (dueDate.get(Calendar.YEAR)==year && dueDate.get(Calendar.MONTH)==month && dueDate.get(Calendar.DAY_OF_MONTH)==day);
     }
 
+    /**
+     * Created by João Cardoso - 1150943
+     * @return
+     */
     @Override
     public String toString() {
         return String.format("Description: %s %n Due Date: %s",description,DateTime.format(dueDate));
     }
+
+    /**
+     * Created by João Cardoso - 1150943
+     * @return
+     */
+    public boolean hasPassed() {
+        Calendar today = Calendar.getInstance();
+        today.set(Calendar.HOUR_OF_DAY, 0);
+        today.set(Calendar.MINUTE, 0);
+        today.set(Calendar.SECOND, 0);
+        today.set(Calendar.MILLISECOND, 0);
+        return dueDate.before(today);
+    }
+
+    /**
+     * Created by João Cardoso - 1150943
+     * @return
+     */
+    public boolean isFuture(){
+        Calendar today = Calendar.getInstance();
+        today.add(Calendar.DAY_OF_MONTH,1);
+        today.set(Calendar.HOUR_OF_DAY, 0);
+        today.set(Calendar.MINUTE, 0);
+        today.set(Calendar.SECOND, 0);
+        today.set(Calendar.MILLISECOND, 0);
+        today.add(Calendar.MINUTE,-1);
+        return dueDate.after(today);
+    }
+
 }

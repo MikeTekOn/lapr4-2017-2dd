@@ -9,35 +9,48 @@ import csheets.core.IllegalValueTypeException;
 import csheets.core.Value;
 import csheets.core.formula.Expression;
 import csheets.core.formula.util.ExpressionVisitor;
+import java.util.Objects;
 
 /**
  * A temporary variable in a formula.
  * @author Diana Silva - 1151088@isep.ipp.pt
  */
 public class TemporaryVariable implements Expression {
-    
     //FIXME
     /** The unique version identifier used for serialization */
-    private static final long serialVersionUID = 7854180857828149859L;
+    //private static final long serialVersionUID = 7854180857828149859L;
 
-    
-    /** The name of the temporary variable     */
+
+    /**
+     * The name of the temporary variable
+     */
     private final String name;
-    
-    /** The value of the temporary variable */
+
+    /**
+     * The value of the temporary variable
+     */
     private Value value;
     
-    public TemporaryVariable(String name){
+    public TemporaryVariable(String name, Value value){
         this.name=name;
+        this.value=value;
     }
 
     @Override
     public Value evaluate() throws IllegalValueTypeException {
         return this.value;
     }
-    
-    public String getName(){
+
+    public String getName() {
         return this.name;
+    }
+    
+    /**
+     * Update the temporary variable value
+     * @param value 
+     */
+    public void updateValue(Value value){
+        this.value=value;
     }
     
     @Override
@@ -50,7 +63,25 @@ public class TemporaryVariable implements Expression {
     }
 
     @Override
-    public Object accept(ExpressionVisitor  visitor) {
-         return visitor.visitTemporaryVariable(this);
+    public Object accept(ExpressionVisitor visitor) {
+        return visitor.visitTemporaryVariable(this);
+    }
+    
+    @Override
+     public boolean equals(Object other){
+        if (!(other instanceof TemporaryVariable))
+           return false;
+        
+        TemporaryVariable otherVar = (TemporaryVariable)other;
+        return otherVar.getName().equals(this.getName());
+
+
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 97 * hash + Objects.hashCode(this.name);
+        return hash;
     }
 }

@@ -5,27 +5,22 @@ import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.ext.Extension;
 import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.UIExtension;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.SortedSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.CellDTO;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.RequestSharedCellsDTO;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.ResponseSharedCellsDTO;
-import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionDetailsRequestDTO;
-import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionRequestDTO;
-import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionResponseDTO;
-import lapr4.green.s1.ipc.n1150532.comm.connection.HandlerConnectionDetailsRequestDTO;
-import lapr4.green.s1.ipc.n1150532.comm.connection.HandlerConnectionRequestDTO;
-import lapr4.green.s1.ipc.n1150532.comm.connection.HandlerConnectionResponseDTO;
-import lapr4.green.s1.ipc.n1150532.comm.connection.NewConnectionMadeEvent;
+import lapr4.green.s1.ipc.n1150532.comm.connection.*;
 import lapr4.green.s1.ipc.n1150532.comm.ui.UICommExtension;
 import lapr4.green.s1.ipc.n1150532.comm.ui.UICommExtensionSideBar;
 import lapr4.green.s1.ipc.n1150532.startSharing.HandlerRequestSharedCellsDTO;
 import lapr4.green.s1.ipc.n1150532.startSharing.HandlerResponseSharedCellsDTO;
 import lapr4.green.s1.ipc.n1150532.startSharing.SharedCellsEvent;
 import lapr4.green.s1.ipc.n1150738.securecomm.*;
+
+import java.util.Observable;
+import java.util.Observer;
+import java.util.SortedSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The Communication extension. It manages all the servers and clients of the
@@ -242,11 +237,11 @@ public class CommExtension extends Extension implements Observer {
                 NewConnectionMadeEvent event = (NewConnectionMadeEvent) arg;
                 tcpClientsManager.requestConnectionTo(event.getConnectionID());
             }
-            if(arg instanceof SharedCellsEvent) {
+            if (arg instanceof SharedCellsEvent) {
                 SharedCellsEvent event = (SharedCellsEvent) arg;
                 Spreadsheet ss = uiController.getActiveSpreadsheet();
                 SortedSet<CellDTO> cells = event.getCells();
-                for(CellDTO cell : cells){
+                for (CellDTO cell : cells) {
                     try {
                         ss.getCell(cell.getAddress()).setContent(cell.getContent());
                     } catch (FormulaCompilationException ex) {

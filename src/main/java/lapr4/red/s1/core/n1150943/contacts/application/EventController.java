@@ -11,6 +11,7 @@ import lapr4.white.s1.core.n4567890.contacts.persistence.ContactRepository;
 import lapr4.white.s1.core.n4567890.contacts.persistence.PersistenceContext;
 
 import javax.swing.*;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Optional;
 import java.util.Properties;
@@ -92,4 +93,15 @@ public class EventController implements Controller {
         return contact.agenda().events();
     }
 
+    public ArrayList<Event> pastEvents(Contact contact) {
+        return contact.agenda().pastEvents();
+    }
+
+    public ArrayList<Event> todayEvents(Contact contact) {
+        return contact.agenda().todayEvents();
+    }
+
+    public ArrayList<Event> futureEvents(Contact contact) {
+        return contact.agenda().futureEvents();
+    }
 }

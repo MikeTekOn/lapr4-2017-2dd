@@ -9,28 +9,28 @@ import csheets.CleanSheets;
 import csheets.core.Spreadsheet;
 import csheets.ui.FileChooser;
 import csheets.ui.ctrl.UIController;
-import java.awt.Dimension;
+import lapr4.red.s1.core.n1150451.exportPDF.application.ExportPDFController;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import lapr4.red.s1.core.n1150451.exportPDF.application.ExportPDFController;
+import javax.swing.filechooser.*;
 
 /**
- *
  * @author Sofia Silva [1150690@isep.ipp.pt]
  */
 public class ExportToPDFUI extends JDialog {
 
-    private static final int WIDTH = 600;
-    private static final int HEIGHT = 400;
+    private static final int WIDTH = 620;
+    private static final int HEIGHT = 420;
     private JList sheetList;
 
     /**
@@ -43,7 +43,7 @@ public class ExportToPDFUI extends JDialog {
      */
     protected FileChooser chooser;
     private DefaultListModel<Object> model;
-    private TextField rangeField;
+    private JTextField rangeField;
     private JCheckBox boxSections;
     private JTextField pathField;
 
@@ -52,6 +52,8 @@ public class ExportToPDFUI extends JDialog {
         super.setMinimumSize(new Dimension(WIDTH, HEIGHT));
         super.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         createComponents();
+        setFocusable(true);
+        setTitle("Export to PDF");
         super.setVisible(true);
     }
 
@@ -71,9 +73,14 @@ public class ExportToPDFUI extends JDialog {
         boxSections = new JCheckBox("Sections");
         panel.add(boxSections, grid);
 
+        grid.insets = new Insets(10, 0, 10, 0);
         grid.gridx = 0;
         grid.gridy = 2;
         panel.add(createPathPanel(), grid);
+
+        grid.gridx = 0;
+        grid.gridy = 3;
+        panel.add(createExportButton(), grid);
 
         grid.fill = GridBagConstraints.EAST;
         grid.anchor = GridBagConstraints.CENTER;
@@ -111,10 +118,56 @@ public class ExportToPDFUI extends JDialog {
         grid.gridy = 0;
         panel.add(pane, grid);
 
-        rangeField = new TextField(25);
+        JPanel flow = new JPanel(new FlowLayout());
+        rangeField = new JTextField(25);
+        rangeField.setToolTipText("Example: A4:B7");
+        flow.add(new JLabel("Cell Range: "));
+        flow.add(rangeField);
         grid.gridx = 0;
         grid.gridy = 1;
-        panel.add(rangeField, grid);
+        panel.add(flow, grid);
+        panel.setBorder(BorderFactory.createTitledBorder("Export range"));
+        return panel;
+    }
+
+    private Component createPathPanel() {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        pathField = new JTextField(25);
+        panel.add(pathField);
+
+        //JButton button = createButtonFolder();
+        JButton button = new JButton();
+        Image img=null;
+        try {
+            img = ImageIO.read(CleanSheets.class.getResource("res/img/open.gif"));
+        } catch (IOException ex) {
+            Logger.getLogger(ExportToPDFUI.class.getName()).log(Level.FINE, null, ex);
+        }
+        Image newimg = img.getScaledInstance(25, 25, Image.SCALE_SMOOTH);
+        ImageIcon icon = new ImageIcon(newimg);
+        button.setIcon(icon);
+        button.setBorder(BorderFactory.createEmptyBorder());
+        button.setContentAreaFilled(false);
+        JFileChooser chooser = new JFileChooser(".");
+        FileFilter filter = new FileNameExtensionFilter("PDF file", new String[]{"pdf"});
+        chooser.setFileFilter(filter);
+        chooser.addChoosableFileFilter(filter);
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                chooser.showOpenDialog(rootPane);
+                if (chooser.getSelectedFile() != null) {
+                    pathField.setText(chooser.getSelectedFile().getPath());
+                }
+            }
+        });
+
+        panel.add(button);
+        panel.setBorder(BorderFactory.createTitledBorder("Output path"));
+        return panel;
+    }
+
+    private JButton createExportButton() {
 
         JButton exportButton = new JButton("Export");
         exportButton.addActionListener(new ActionListener() {
@@ -122,6 +175,10 @@ public class ExportToPDFUI extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 ExportPDFController c = new ExportPDFController();
                 c.initiateExport(uiController);
+                if (sheetList.getSelectedValue() == null) {
+                    JOptionPane.showMessageDialog(rootPane, "You didn't select any item from the list.");
+                    return;
+                }
                 if (sheetList.getSelectedValue().equals("all")) {
                     c.selectRange(uiController.getActiveWorkbook());
                 } else {
@@ -136,59 +193,32 @@ public class ExportToPDFUI extends JDialog {
                     if (rangeField.getText().trim().equals("")) {
                         c.selectRange(s);
                     } else {
-                        c.selectRange(s, rangeField.getText());
+                        try {
+                            c.selectRange(s, rangeField.getText());
+                        } catch (IllegalArgumentException ex) {
+                            JOptionPane.showMessageDialog(rootPane, "Inserted Range is invalid. The range should be in A1:B2 format.");
+                            return;
+                        }
                     }
                 }
-                c.selectPath(pathField.getText());
+                try {
+
+                    c.selectPath(pathField.getText());
+                } catch (IllegalArgumentException ex) {
+                    JOptionPane.showMessageDialog(rootPane, "Inserted path is invalid. It should be a path to a pdf.");
+                    return;
+                }
+
                 if (boxSections.isSelected()) {
                     c.toggleSections();
                 }
+
                 c.export();
+                JOptionPane.showMessageDialog(rootPane, "Export sucessful!");
             }
-        });
-        grid.gridx = 0;
-        grid.gridy = 2;
-        panel.add(exportButton, grid);
-        return panel;
-    }
-
-    private Component createPathPanel() {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        pathField = new JTextField(25);
-        panel.add(pathField);
-
-        //JButton button = createButtonFolder();
-        JButton button = new JButton("test");
-        JFileChooser chooser = new JFileChooser(".");
-        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                chooser.showOpenDialog(rootPane);
-                if (chooser.getSelectedFile() != null) {
-                    pathField.setText(chooser.getSelectedFile().getPath());
-                }
-            }
-        });
-
-        panel.add(button);
-        return panel;
-    }
-
-    private JButton createButtonFolder() {
-        JButton button = new JButton();
-        try {
-            Image img;
-            img = ImageIO.read(getClass().getResource("res/img/reopen.gif"));
-            Image newimg = img.getScaledInstance(25, 25, Image.SCALE_SMOOTH);
-            ImageIcon icon = new ImageIcon(newimg);
-            button.setIcon(icon);
-            button.setBorder(BorderFactory.createEmptyBorder());
-            button.setContentAreaFilled(false);
-        } catch (IOException ex) {
-            Logger.getLogger(ExportToPDFUI.class.getName()).log(Level.FINEST, null, ex);
         }
-        return button;
-    }
+        );
+        return exportButton;
 
+    }
 }

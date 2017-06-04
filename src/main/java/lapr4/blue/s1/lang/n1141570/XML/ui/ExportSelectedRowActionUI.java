@@ -4,15 +4,15 @@ import csheets.core.Spreadsheet;
 import csheets.ui.FileChooser;
 import csheets.ui.ctrl.BaseAction;
 import csheets.ui.ctrl.UIController;
+import lapr4.blue.s1.lang.n1141570.XML.application.ExportXMLController;
+
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
-import javax.swing.JOptionPane;
-import lapr4.blue.s1.lang.n1141570.XML.application.ExportXMLController;
 
 /**
- *
  * @author Eric
  */
 public class ExportSelectedRowActionUI extends BaseAction {
@@ -31,10 +31,12 @@ public class ExportSelectedRowActionUI extends BaseAction {
         this.uiController = uiController;
     }
 
+    @Override
     protected String getName() {
         return "Selected row";
     }
 
+    @Override
     protected void defineProperties() {
     }
 
@@ -44,27 +46,43 @@ public class ExportSelectedRowActionUI extends BaseAction {
      *
      * @param event the event that was fired
      */
+    @Override
     public void actionPerformed(ActionEvent event) {
 
-        // Lets user select a font
         int result = JOptionPane.showConfirmDialog(null, "You have selected the row export option. Do you want to export?");
+        boolean exported = false;
+        String selectedPath = "D:\\xml.xml";
 
         if (result == JOptionPane.YES_OPTION) {
+            //Cancel option =1 , Approve option = 0
+            int returnVal = 0;
             List<String> chosenTagNames = new LinkedList<>();
-            chosenTagNames.add("projectowner");
-            chosenTagNames.add("scrumofscrums");
-            chosenTagNames.add("scrum");
+
+            TagNamesInputDialogUI exportXMLDialog = new TagNamesInputDialogUI(uiController);
+            exportXMLDialog.setModal(true);
+            exportXMLDialog.setVisible(true);
+            chosenTagNames = exportXMLDialog.tagNamesDefinedByUser();
 
             Properties properties = new Properties();
             FileChooser fileChooser = new FileChooser(null, properties);
-            String selectedPath = fileChooser.getFileToSave().getAbsolutePath();
+            if (returnVal == fileChooser.APPROVE_OPTION) {
+                try {
+                    selectedPath = fileChooser.getFileToSave().getAbsolutePath();
+                } catch (Exception ex) {
+                    System.err.println("Error selecting path");
+                }
 
-            ExportXMLController exportXMLController = new ExportXMLController(uiController);
-            Spreadsheet spreadsheet = uiController.getActiveSpreadsheet();
-            int selectedRow = uiController.getActiveCell().getAddress().getRow();
+                ExportXMLController exportXMLController = new ExportXMLController(uiController);
+                Spreadsheet spreadsheet = uiController.getActiveSpreadsheet();
+                int selectedRow = uiController.getActiveCell().getAddress().getRow();
+                //Export Selected Row
+                exported = exportXMLController.exportSelectedRow(spreadsheet, chosenTagNames, selectedPath, selectedRow);
+                JOptionPane.showMessageDialog(null, "Row exported successfully.", "Export XML", JOptionPane.PLAIN_MESSAGE);
 
-            //Export Selected Row
-            exportXMLController.exportSelectedRow(spreadsheet, chosenTagNames, selectedPath, selectedRow);
+            }
+            if (!exported) {
+                JOptionPane.showMessageDialog(null, "Failed to export Row.", "Export XML", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 }

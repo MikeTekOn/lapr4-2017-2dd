@@ -1,0 +1,27 @@
+@startuml core10_01_design2.png
+    participant "CleanSheets" as cs
+    participant "bev : BootEventVerifier" as bev
+    participant "c : Contact" as contact
+    database ContactRepository as repo
+
+    create bev
+
+    cs -> bev :create()
+
+    note right of cs
+        CleanSheets verifies if there are any Events today
+    end note
+
+    cs -> bev : verify(props)
+
+    cs -> repo : findAll()
+    loop All Contacts
+        alt Contact is OWN (default contact)
+            bev -> bev : checkEvents()
+        else
+            bev -> contact : create(OWN_NAME,OWN_NAME,OWN_NAME,"")
+            bev -> repo : save(contact)
+        end
+    end
+
+@enduml

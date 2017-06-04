@@ -20,7 +20,14 @@ public class EventReminder {
         Calendar date;
 
 
-        public EventReminder(Calendar date, String eventDescription) {
+    /**
+     * For now this class isn't being used because the Event Due Date precision is the day, not hour
+     * this makes the timers a bit useless, this can and should be used when the event has an hour so the system
+     * can alert the user an hour before the event for example
+     * @param date
+     * @param eventDescription
+     */
+    public EventReminder(Calendar date, String eventDescription) {
             toolkit = Toolkit.getDefaultToolkit();
             timer = new Timer();
             this.eventDescription = eventDescription;

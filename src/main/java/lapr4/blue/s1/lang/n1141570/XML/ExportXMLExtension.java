@@ -6,11 +6,10 @@ import csheets.ui.ext.UIExtension;
 import lapr4.blue.s1.lang.n1141570.XML.ui.UIExportXMLExtension;
 
 /**
- *
  * @author Eric
  */
 public class ExportXMLExtension extends Extension {
-    
+
     /**
      * The name of the extension
      */
@@ -24,10 +23,10 @@ public class ExportXMLExtension extends Extension {
     }
 
     /**
-     * Returns the user interface for the macro extension.
+     * Returns the user interface for the export xml extension.
      *
      * @param uiController the user interface controller
-     * @return the UI of the macro extension
+     * @return the UI of the export xml extension
      */
     public UIExtension getUIExtension(UIController uiController) {
         return new UIExportXMLExtension(this, uiController);

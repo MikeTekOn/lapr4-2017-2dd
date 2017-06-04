@@ -96,9 +96,9 @@ public class WorkbookSearchSideBar extends JPanel {
     }
 
     /**
-     * Creates and returns
+     * Creates and returns the panel to show search results
      *
-     * @return
+     * @return JScrollPanel
      */
     private JScrollPane searchList() {
         model = new DefaultListModel();
@@ -132,7 +132,7 @@ public class WorkbookSearchSideBar extends JPanel {
     }
 
     /**
-     * Creates and returns a button to add a comment.
+     * Creates and returns a button to search.
      *
      * @return a JButton
      */
@@ -140,23 +140,27 @@ public class WorkbookSearchSideBar extends JPanel {
         JButton b = new JButton("Search");
         b.addActionListener((new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                try {
 
-                    model.clear();
-                    info = controller.checkifRegexMatches(searchField.getText().trim());
+                model.clear();
+
+                if (!controller.checkIfValid(searchField.getText().trim())) {
+
+                    JOptionPane.showMessageDialog(null,
+                            "The inserted regular expression is not valid.",
+                            "Invalid regex",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+                try {
+                    info = controller.searchInWorkbook();
 
                     for (String s : info) {
 
                         model.addElement(s);
 
                     }
-                } catch (NullPointerException nll) {
-                    JOptionPane.showMessageDialog(null,
-                            "The inserted regular expression is not valid.",
-                            "Invalid regex",
-                            JOptionPane.ERROR_MESSAGE);
+                } catch (NullPointerException ne) {
+                    model.addElement("There are no results");
                 }
-
                 searchField.setText("");
             }
         }));

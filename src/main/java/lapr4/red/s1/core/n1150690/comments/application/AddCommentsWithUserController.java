@@ -6,10 +6,11 @@
 package lapr4.red.s1.core.n1150690.comments.application;
 
 import csheets.ui.ctrl.UIController;
-import java.util.List;
-import java.util.Map;
 import lapr4.red.s1.core.n1150690.comments.CommentableCellWithMultipleUsers;
 import lapr4.red.s1.core.n1150690.comments.domain.User;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * A controller for add and updating the comments of a cell with the

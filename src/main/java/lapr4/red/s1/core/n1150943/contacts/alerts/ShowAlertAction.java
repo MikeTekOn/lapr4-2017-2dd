@@ -11,11 +11,11 @@ import java.util.Date;
 public class ShowAlertAction {
 
     public static void showAlert(String description, Calendar date){
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd z yyyy");
         Date d = date.getTime();
         String eventDate = dateFormat.format(d);
         String text = String.format("Event Description: %s\nDue Date: %s",description,eventDate);
-        JOptionPane.showMessageDialog(null,text,"You have an event in ",JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null,text,"You have an event today",JOptionPane.INFORMATION_MESSAGE);
     }
 
 }

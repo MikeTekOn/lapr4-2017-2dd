@@ -8,21 +8,14 @@ package lapr4.green.s1.ipc.n1150800.importexportTXT.importTXT.ui;
 import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.ui.FileChooser;
 import csheets.ui.ctrl.UIController;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import lapr4.green.s1.ipc.n1150800.importexportTXT.CellRange;
+import lapr4.green.s1.ipc.n1150800.importexportTXT.importTXT.ctrl.ImportDataController;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-import lapr4.green.s1.ipc.n1150800.importexportTXT.CellRange;
-import lapr4.green.s1.ipc.n1150800.importexportTXT.importTXT.ctrl.ImportDataController;
 
 /**
  *
@@ -112,11 +105,11 @@ public class ImportDataUI extends JFrame {
         buttonConfirm.addActionListener((ActionEvent e) -> {
             try {
                 /* SEPARATOR CHARACTER */
-                if(txtFieldCharacter.getText().length() > 1) {
+                if (txtFieldCharacter.getText().length() > 1) {
                     throw new IllegalArgumentException("The separator character must have ONLY one character!");
                 }
-                
-                if(txtFieldCharacter.getText().isEmpty()) {
+
+                if (txtFieldCharacter.getText().isEmpty()) {
                     throw new IllegalArgumentException("Choose a separator character!");
                 }
 
@@ -124,9 +117,9 @@ public class ImportDataUI extends JFrame {
 
                 /* FIRST LINE */
                 boolean firstLineRepresentsHeaders = false;
-                if(!radioButtonColumnHeader.isSelected() && !radioButtonNormalRow.isSelected()) {
+                if (!radioButtonColumnHeader.isSelected() && !radioButtonNormalRow.isSelected()) {
                     throw new IllegalArgumentException("Choose a format option for the first line of the file!");
-                } else if(radioButtonColumnHeader.isSelected()) {
+                } else if (radioButtonColumnHeader.isSelected()) {
                     firstLineRepresentsHeaders = true;
                 }
 

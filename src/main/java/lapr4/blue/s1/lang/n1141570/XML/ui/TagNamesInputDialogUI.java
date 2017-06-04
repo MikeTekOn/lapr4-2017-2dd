@@ -1,56 +1,57 @@
 package lapr4.blue.s1.lang.n1141570.XML.ui;
 
 import csheets.ui.ctrl.UIController;
-import lapr4.blue.s1.lang.n1151159.macros.MacroController;
+import lapr4.blue.s1.lang.n1141570.XML.application.ExportXMLController;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
-import lapr4.blue.s1.lang.n1141570.XML.application.ExportXMLController;
 
 /**
- * Represents a dialog to execute macros.
+ * Represents a dialog to input the chosen the tag names.
  *
  * @author Eric
  */
 public class TagNamesInputDialogUI extends JDialog {
 
-    /* Constants */
     /**
      * The controller of the user interface.
      */
     private UIController uiController;
 
-     /**
+    /**
      * The macro controller.
      */
     private ExportXMLController exportXMLController = new ExportXMLController(uiController);
-    
+
     /* UI Components */
     private JTextField workbookTagTextField;
     private JTextField spreadsheetTagTextField;
     private JTextField cellTagTextField;
+    private final Dimension BUTTON_SIZE = new Dimension(115, 30);
 
-    private Dimension BUTTON_SIZE = new Dimension(115, 30);
     private LinkedList<String> tagNames = new LinkedList<>();
-    
-    
 
     /**
      * Creates an instance of export xml dialog.
      *
      * @param uiController the user interface controller
      */
-    public  TagNamesInputDialogUI(UIController uiController) {
+    public TagNamesInputDialogUI(UIController uiController) {
         setLocationRelativeTo(null);
         this.uiController = uiController;
         createComponents();
         pack();
     }
-    
-    public LinkedList<String> tagNamesDefinedByUser(){
+
+    /**
+     * Obtains the tag names list.
+     *
+     * @return the tag names.
+     */
+    public LinkedList<String> tagNamesDefinedByUser() {
         return tagNames;
     }
 
@@ -77,15 +78,12 @@ public class TagNamesInputDialogUI extends JDialog {
         JPanel southPanel = new JPanel(new FlowLayout());
 
         this.workbookTagTextField = new JTextField();
-       // this.workbookTextField.enableInputMethods(true);
         this.workbookTagTextField.setPreferredSize(BUTTON_SIZE);
 
         this.spreadsheetTagTextField = new JTextField();
-        //this.spreadsheetTextField.enableInputMethods(true);
         this.spreadsheetTagTextField.setPreferredSize(BUTTON_SIZE);
 
         this.cellTagTextField = new JTextField();
-       // this.cellTextField.enableInputMethods(true);
         this.cellTagTextField.setPreferredSize(BUTTON_SIZE);
 
         JLabel workbookLabel = new JLabel("workbook tag");
@@ -139,15 +137,14 @@ public class TagNamesInputDialogUI extends JDialog {
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                String workbookTagText = workbookTagTextField.getText();
-                String spreadsheetTagText = spreadsheetTagTextField.getText();
-                String cellTagText = cellTagTextField.getText();
-                if (!workbookTagText.trim().isEmpty() & !spreadsheetTagText.trim().isEmpty() & !cellTagText.trim().isEmpty()) {
-                    tagNames.add(workbookTagText);
-                    tagNames.add(spreadsheetTagText);
-                    tagNames.add(cellTagText);
-                    dispose();
-                }
+                String workbookTagText = workbookTagTextField.getText().toLowerCase();
+                String spreadsheetTagText = spreadsheetTagTextField.getText().toLowerCase();
+                String cellTagText = cellTagTextField.getText().toLowerCase();
+
+                tagNames.add(workbookTagText);
+                tagNames.add(spreadsheetTagText);
+                tagNames.add(cellTagText);
+                dispose();
             }
         });
 
@@ -160,7 +157,7 @@ public class TagNamesInputDialogUI extends JDialog {
      * @return cancel button
      */
     private JButton createCancelButton() {
-        JButton cancelButton = new JButton("Close");
+        JButton cancelButton = new JButton("Cancel");
         cancelButton.setPreferredSize(BUTTON_SIZE);
 
         cancelButton.addActionListener(new ActionListener() {

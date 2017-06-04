@@ -20,12 +20,7 @@
  */
 package csheets.core.formula.util;
 
-import csheets.core.formula.BinaryOperation;
-import csheets.core.formula.Expression;
-import csheets.core.formula.FunctionCall;
-import csheets.core.formula.Literal;
-import csheets.core.formula.Reference;
-import csheets.core.formula.UnaryOperation;
+import csheets.core.formula.*;
 import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVariable;
 import lapr4.blue.s1.lang.n1151159.macros.Macro;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperation;
@@ -82,8 +77,8 @@ public abstract class AbstractExpressionVisitor implements ExpressionVisitor {
 		return macro.accept(this);
 	}
 
-        @Override
-        public Object visitTemporaryVariable(TemporaryVariable tempVar){
-            return tempVar.accept(this);
-        }
+    @Override
+    public Object visitTemporaryVariable(TemporaryVariable tempVar) {
+        return tempVar.accept(this);
+    }
 }

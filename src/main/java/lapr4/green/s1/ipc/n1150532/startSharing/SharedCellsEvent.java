@@ -1,7 +1,8 @@
 package lapr4.green.s1.ipc.n1150532.startSharing;
 
-import java.util.SortedSet;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.CellDTO;
+
+import java.util.SortedSet;
 
 /**
  * An event that contains the shared cells received.
@@ -24,8 +25,8 @@ public class SharedCellsEvent {
      * The full constructor of the event.
      *
      * @param theSpreadsheetName The spreadsheet name from where the Cells are
-     * original.
-     * @param theCells The shared cells.
+     *                           original.
+     * @param theCells           The shared cells.
      */
     public SharedCellsEvent(String theSpreadsheetName, SortedSet<CellDTO> theCells) {
         spreadsheetName = theSpreadsheetName;

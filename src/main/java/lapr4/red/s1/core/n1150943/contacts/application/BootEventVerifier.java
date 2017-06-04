@@ -44,7 +44,7 @@ public class BootEventVerifier {
                 return;
             }
         }
-        Contact ownContact = new Contact(OWN_NAME,OWN_NAME,OWN_NAME,"");
+        Contact ownContact = new Contact(OWN_NAME,OWN_NAME,OWN_NAME,"","address","email","987515234");
         contactsRepository.save(ownContact);
     }
 
@@ -58,8 +58,6 @@ public class BootEventVerifier {
         for(Event e : agenda.events()){
             if(e.isToday()){
                 ShowAlertAction.showAlert(e.description(),e.dueDate());
-            }else{
-                new EventReminder(e.dueDate(),e.description());
             }
         }
     }

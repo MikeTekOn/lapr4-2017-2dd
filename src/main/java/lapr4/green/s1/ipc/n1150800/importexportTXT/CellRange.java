@@ -24,17 +24,17 @@ public class CellRange {
      * The range's last cell
      */
     private Cell lastCell;
-    
+
     /**
      * Regular expression pattern to validate a cell address
      */
     private static final String PATTERN_ADDRESS = "[a-zA-Z]+[1-9][0-9]*";
-    
+
     /**
      * Regular expression that returns the letters of a valid cell address
      */
     private static final String PATTERN_RETURNS_LETTER = "[1-9][0-9]*";
-    
+
     /**
      * Regular expression that returns the number of a valid cell address
      */
@@ -65,11 +65,11 @@ public class CellRange {
      * @param uiController - the user interface controller
      */
     public CellRange(String strAddressFirstCell, String strAddressLastCell, UIController uiController) {
-        if(strAddressFirstCell.isEmpty() || strAddressLastCell.isEmpty()) {
+        if (strAddressFirstCell.isEmpty() || strAddressLastCell.isEmpty()) {
             throw new IllegalArgumentException("Cell addresses can't be empty!");
         }
-        
-        if(!strAddressFirstCell.matches(PATTERN_ADDRESS) || !strAddressLastCell.matches(PATTERN_ADDRESS)) {
+
+        if (!strAddressFirstCell.matches(PATTERN_ADDRESS) || !strAddressLastCell.matches(PATTERN_ADDRESS)) {
             throw new IllegalArgumentException("Cell address is not valid!\nIt should follow the pattern e.g: 'A1'");
         }
         

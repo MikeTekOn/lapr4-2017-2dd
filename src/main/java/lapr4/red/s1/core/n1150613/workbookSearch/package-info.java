@@ -61,25 +61,49 @@
  *
  * <h3>4.1. Functional Tests</h3>
  *
+ * testIsRegexValid() -> Tests if the given regular expression is valid.
+ * testIsNotRegexValid() -> Tests if the given regular expression is not valid.
+ * testCheckIfMatches() -> Tests if the given regular expression matches a cell
+ * content. 
+ * testSearchInWorkbook() -> Tests if it searches through the whole
+ * workbook and matches it's contents with the inserted regular expression.
  *
  * <p>
  *
  * <h3>4.2. UC Realization</h3>
- * 
+ *
  * <img src="core07_01_design_sd.png" alt="image">
- * 
+ *
  * <p>
  *
  * <h3>4.3. Classes</h3>
- * 
+ *
  * <img src="core07_01_design_cd.png" alt="image">
- * 
+ *
  * <p>
  *
  * <h3>4.4. Design Patterns and Best Practices</h3>
  * <p>
  *
  * <h2>5. Implementation</h2>
+ * 
+ * Package lapr4.red.s1.core.n1150613.workbookSearch:<p>
+ * {@link lapr4.red.s1.core.n1150613.workbookSearch.RegexUtil}
+ * <p>
+ * {@link lapr4.red.s1.core.n1150613.workbookSearch.SearchExtension}
+ * <p>
+ * Package lapr4.red.s1.core.n1150613.workbookSearch.application:<p>
+ * {@link lapr4.red.s1.core.n1150613.workbookSearch.application.WorkbookSearchController}
+ * <p>
+ *  * Package lapr4.red.s1.core.n1150613.workbookSearch.ui:<p>
+ * {@link lapr4.red.s1.core.n1150613.workbookSearch.ui.WorkbookSearchSideBar}
+ * <p>
+ * {@link lapr4.red.s1.core.n1150613.workbookSearch.ui.UIExtensionSearch}
+ * <p>
+ * {@link lapr4.red.s1.core.n1150613.workbookSearch.ui.SearchMenu}
+ * <p>
+ * {@link lapr4.red.s1.core.n1150613.workbookSearch.ui.SearchAction}
+ * <p>
  * <p>
  *
  * <h2>6. Integration/Demonstration</h2>
@@ -109,7 +133,7 @@
  * <p>
  * <b>Thursday 1/06/2017 </b>
  * <p>
- * Yesterday: Finished analysis 
+ * Yesterday: Finished analysis
  * <p>
  * Today: I started the design process
  * <p>
@@ -123,22 +147,15 @@
  * <p>
  * Blocking:
  * <p>
- * <b>Monday 5/06/2017</b>
+ * <b>Saturday 3/06/2017</b>
  * <p>
- * Yesterday:
+ * Yesterday: Finished UC
  * <p>
- * Today:
+ * Today: Finish UC and test it
  * <p>
  * Blocking:
  * <p>
  *
- * <h2>9. Self Assessment</h2>
- *
- * <h3>R3. Rubric Requirements Fulfilment: </h3>
- *
- * <h3>R6. Rubric Requirements Analysis: </h3>
- *
- * <h3>R7. Rubric Design and Implement: </h3>
  *
  *
  * @author Diogo Guedes 1150@isep.ipp.pt

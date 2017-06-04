@@ -1,21 +1,29 @@
 package lapr4.blue.s1.lang.n1151088.temporaryVariables;
 
+import csheets.core.IllegalValueTypeException;
+import csheets.core.Value;
 import csheets.core.formula.Expression;
 import csheets.core.formula.util.AbstractExpressionVisitor;
 import csheets.core.formula.util.ExpressionVisitor;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import java.util.SortedSet;
 import java.util.TreeSet;
-import lapr4.gray.s1.lang.n3456789.formula.NaryOperation;
 
 /**
- *An expression visitor that collects the temporary variables from an expression.
+ * An expression visitor that collects the temporary variables from an expression.
+ *
  * @author Diana Silva (1151088@isep.ipp.pt)
- * on 02/06/2017
+ *         on 02/06/2017
  */
 public class TemporaryVarContentor extends AbstractExpressionVisitor{
     
     /** The temporary variables that have been collected */
-    private SortedSet<TemporaryVariable> temp_contentor;
+    private HashMap<String,TemporaryVariable> temp_contentor;
    
     
     public TemporaryVarContentor(){ }
@@ -25,27 +33,41 @@ public class TemporaryVarContentor extends AbstractExpressionVisitor{
     * @param expression the expression from which to fetch temporary variables
     * @return the temporary variables that have been fetched
     */
-   public SortedSet<TemporaryVariable> getTemporaryVariables(Expression expression) {
-        this.temp_contentor=new TreeSet<TemporaryVariable>();   
-        expression.accept((ExpressionVisitor) this);
+   public HashMap getTemporaryVariables() {
         return temp_contentor;
    }
    
-    @Override
+   /**
+    * Visit a parse tree produced by {@link FormulaParser}.
+    * 
+    * @param tempVar temporary variable to visit
+     * @return the visitor result
+    */
+   @Override
    public Object visitTemporaryVariable(TemporaryVariable tempVar){
-       if(!this.temp_contentor.contains(tempVar))
-            temp_contentor.add(tempVar);
+       if(!this.temp_contentor.containsKey(tempVar.getName()))  
+          temp_contentor.put(tempVar.getName(), tempVar);
+      
+       else{
+        
+           try {
+               changeValue(tempVar);
+           } catch (IllegalValueTypeException ex) {
+               Logger.getLogger(TemporaryVarContentor.class.getName()).log(Level.SEVERE, null, ex);
+           }
+       
+       }
        return tempVar;
    }
-    
-    @Override
-    public Object visitNaryOperation(NaryOperation operation){
-        Expression[] operands=operation.getOperands();
-        
-        for(Expression exp:operands){
-            exp.accept(this);
-        }
-            
-        return operation;
-    }
+   
+   private void changeValue(TemporaryVariable tempVar) throws IllegalValueTypeException{
+       Set set=temp_contentor.entrySet();
+       Iterator it=set.iterator();
+       while(it.hasNext()){
+           TemporaryVariable temp=(TemporaryVariable)it.next();
+           if(tempVar.equals(temp)){
+               temp.updateValue(tempVar.evaluate());
+           }
+       }
+   }
 }

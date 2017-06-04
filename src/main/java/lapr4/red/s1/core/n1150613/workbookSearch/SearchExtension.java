@@ -19,7 +19,7 @@ import lapr4.red.s1.core.n1150613.workbookSearch.ui.UIExtensionSearch;
 public class SearchExtension extends Extension {
 
 	/** The name of the extension */
-	public static final String NAME = "Workbook Search";
+    public static final String NAME = "Workbook Search";
 
 	/**
 	 * Creates a new Example extension.
@@ -35,6 +35,6 @@ public class SearchExtension extends Extension {
 	 */
         @Override
 	public UIExtension getUIExtension(UIController uiController) {
-		return new UIExtensionSearch(this, uiController);
-	}
+            return new UIExtensionSearch(this, uiController);
+        }
 }

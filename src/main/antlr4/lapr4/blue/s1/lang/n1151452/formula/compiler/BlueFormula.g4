@@ -1,18 +1,16 @@
 grammar BlueFormula;
 @header {
     package lapr4.blue.s1.lang.n1151452.formula.compiler;
-}	         
+}
+
 expression
 	: EQ comparison EOF
 	;
 
-block
-	: L_CURLY_BRACKET comparison ( SEMI comparison )* R_CURLY_BRACKET 
-	;
-
 comparison
 	: concatenation
-		( ( EQ | NEQ | GT | LT | LTEQ | GTEQ ) concatenation )?
+		(  ( EQ | NEQ | LTEQ | GTEQ | GT | LT ) concatenation )?
+	| for_loop
 	;
 
 concatenation
@@ -34,6 +32,14 @@ atom
         |       temporary_variable
 	;
 
+for_loop
+    : FOR L_CURLY_BRACKET assignment SEMI  comparison ( SEMI comparison )+ R_CURLY_BRACKET
+    ;
+
+block
+	: L_CURLY_BRACKET comparison ( SEMI comparison )* R_CURLY_BRACKET
+	;
+
 assignment
 	:  LPAR reference ASSIGN comparison RPAR
 	;
@@ -46,12 +52,11 @@ function_call
 
 	
 temporary_variable
-          : TEMPORARY_VARIABLE ASSIGN ATOM
+          : LPAR TEMPORARY_VARIABLE ASSIGN comparison RPAR
           ;
 
 reference
-	:	CELL_REF
-		( ( COLON ) CELL_REF )?
+	:	CELL_REF ( ( COLON ) CELL_REF )?
 	;
 
 literal
@@ -61,11 +66,12 @@ literal
 	
 
 fragment LETTER: ('a'..'z'|'A'..'Z') ;
-  
-FUNCTION : 
+
+FOR : 'FOR' | 'for' | 'For';
+
+FUNCTION :
 	  ( LETTER )+ 
-	;	
-	 
+	;
  
 CELL_REF
 	:
@@ -74,7 +80,7 @@ CELL_REF
 	;
 
 TEMPORARY_VARIABLE :
-        UNDERSCORE LETTER ((DIGIT)?(LETTER)?)+
+        UNDERSCORE LETTER (DIGIT|LETTER)*
         ;
 
 /* String literals, i.e. anything inside the delimiters */

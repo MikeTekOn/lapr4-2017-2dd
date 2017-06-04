@@ -10,12 +10,15 @@ import eapli.framework.persistence.DataConcurrencyException;
 import eapli.framework.persistence.DataIntegrityViolationException;
 import lapr4.white.s1.core.n4567890.contacts.application.ContactController;
 import lapr4.white.s1.core.n4567890.contacts.domain.Contact;
+import ui.ImageUtils;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -88,12 +91,18 @@ public class ContactDialog extends JDialog implements ActionListener {
     private JLabel fullNameLabel=null;
     private JLabel firstNameLabel=null;
     private JLabel lastNameLabel=null;
+    private JLabel addressLabel=null;
+    private JLabel emailLabel=null;
+    private JLabel phoneLabel=null;
+
 
     private JTextField fullNameField=null;
     private JTextField firstNameField=null;
     private JTextField lastNameField=null;
+    private JTextField addressField=null;
+    private JTextField emailField=null;
+    private JTextField phoneField=null;
 
-    private JPanel picPanel=null;
     private JPanel formPanel=null;
     private JPanel buttonPanel=null;
 
@@ -101,14 +110,6 @@ public class ContactDialog extends JDialog implements ActionListener {
 
     private void setupContactsWidgets() {
 
-//            picPanel = new JPanel(new FlowLayout());
-//
-//            try {
-//                ImageIcon profilePic = ImageUtils.getResizedPhoto(new File(_contact.photo()),70,70);
-//                picPanel.add(new JLabel(profilePic,JLabel.TRAILING));
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
 
             formPanel = new JPanel(new SpringLayout());
 
@@ -133,8 +134,29 @@ public class ContactDialog extends JDialog implements ActionListener {
             formPanel.add(lastNameLabel);
             formPanel.add(lastNameField);
 
+            // Phone
+            phoneLabel=new JLabel("Phone:");
+            phoneField=new JTextField(10);
+            phoneLabel.setLabelFor(phoneField);
+            formPanel.add(phoneLabel);
+            formPanel.add(phoneField);
+
+            // Address
+            addressLabel=new JLabel("Address:");
+            addressField=new JTextField(10);
+            addressLabel.setLabelFor(addressField);
+            formPanel.add(addressLabel);
+            formPanel.add(addressField);
+
+            // Email
+            emailLabel=new JLabel("Email:");
+            emailField=new JTextField(10);
+            emailLabel.setLabelFor(emailField);
+            formPanel.add(emailLabel);
+            formPanel.add(emailField);
+
             SpringUtilities.makeCompactGrid(formPanel,
-                                3, 2, //rows, cols
+                                6, 2, //rows, cols
                                 6, 6,        //initX, initY
                                 6, 6);       //xPad, yPad
 
@@ -163,7 +185,10 @@ public class ContactDialog extends JDialog implements ActionListener {
                     // All fields in read-only mode
                     this.fullNameField.setEditable(false);
                     this.firstNameField.setEditable(false);
-                    this.lastNameField.setEditable(false);                    
+                    this.lastNameField.setEditable(false);
+                    this.emailField.setEditable(false);
+                    this.phoneField.setEditable(false);
+                    this.addressField.setEditable(false);
                     break;
                 case EDIT:
                     statusLabel.setText(CleanSheets.getString("status_please_update_data_of_contcat"));
@@ -184,6 +209,9 @@ public class ContactDialog extends JDialog implements ActionListener {
             this.fullNameField.setText(_contact.name());
             this.firstNameField.setText(_contact.firstName());
             this.lastNameField.setText(_contact.lastName());
+            this.emailField.setText(_contact.email());
+            this.phoneField.setText(_contact.phone());
+            this.addressField.setText(_contact.address());
         }
     }
  
@@ -217,7 +245,7 @@ public class ContactDialog extends JDialog implements ActionListener {
                     {
                         try {
                             // The User confirms the creation of a Contact
-                            if(this.fullNameField.getText().isEmpty()|this.firstNameField.getText().isEmpty()|this.lastNameField.getText().isEmpty()){
+                            if(this.fullNameField.getText().isEmpty()|this.firstNameField.getText().isEmpty()|this.lastNameField.getText().isEmpty()|this.addressField.getText().isEmpty()|this.phoneField.getText().isEmpty()|this.emailField.getText().isEmpty()){
                                 JOptionPane.showMessageDialog(rootPane,"All fields must be filled");
                             }else{
                                 String photo_path="";
@@ -232,7 +260,7 @@ public class ContactDialog extends JDialog implements ActionListener {
                                         photo_path = chooser.getSelectedFile().getAbsolutePath();
                                     }
                                 }
-                                _contact=this.ctrl.addContact(this.fullNameField.getText(), this.firstNameField.getText(), this.lastNameField.getText(), photo_path);
+                                _contact=this.ctrl.addContact(this.fullNameField.getText(), this.firstNameField.getText(), this.lastNameField.getText(), photo_path, this.addressField.getText(), this.emailField.getText(), this.phoneField.getText());
                                 _success=true;
                                 // Exit the dialog
                                 ContactDialog.dialog.setVisible(false);
@@ -277,16 +305,32 @@ public class ContactDialog extends JDialog implements ActionListener {
                 case EDIT:
                     {
                         try {
-                            try {
-                                _contact=this.ctrl.updateContact(_contact, this.fullNameField.getText(), this.firstNameField.getText(), this.lastNameField.getText());
-                            } catch (IllegalAccessException e1) {
-                                JOptionPane.showMessageDialog(getContentPane(),"You can't edit this contact","Warning", JOptionPane.ERROR_MESSAGE);
-                                break;
-                            }
+                            if(this.fullNameField.getText().isEmpty()|this.firstNameField.getText().isEmpty()|this.lastNameField.getText().isEmpty()|this.addressField.getText().isEmpty()|this.phoneField.getText().isEmpty()|this.emailField.getText().isEmpty()){
+                                JOptionPane.showMessageDialog(rootPane,"All fields must be filled");
+                            }else {
+                                String photo_path = _contact.photo();
+                                int option = JOptionPane.showConfirmDialog(rootPane, "Do you want to edit the profile picture?", "Profile Picture", JOptionPane.YES_NO_OPTION);
+                                if (option == JOptionPane.YES_OPTION) {
+                                    JFileChooser chooser = new JFileChooser("Choose profile photo");
+                                    FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                                            "JPG & PNG Images", "jpg", "jpeg", "png");
+                                    chooser.setFileFilter(filter);
+                                    int returnVal = chooser.showOpenDialog(formPanel);
+                                    if (returnVal == JFileChooser.APPROVE_OPTION) {
+                                        photo_path = chooser.getSelectedFile().getAbsolutePath();
+                                    }
+                                }
+                                try {
+                                    _contact = this.ctrl.updateContact(_contact, this.fullNameField.getText(), this.firstNameField.getText(), this.lastNameField.getText(), photo_path, this.addressField.getText(), this.emailField.getText(), this.phoneField.getText());
+                                } catch (IllegalAccessException e1) {
+                                    JOptionPane.showMessageDialog(getContentPane(), "You can't edit this contact", "Warning", JOptionPane.ERROR_MESSAGE);
+                                    break;
+                                }
 
-                            _success=true;
-                            // Exit the dialog
-                            ContactDialog.dialog.setVisible(false);
+                                _success = true;
+                                // Exit the dialog
+                                ContactDialog.dialog.setVisible(false);
+                            }
                         } catch (DataConcurrencyException ex) {
                             Logger.getLogger(ContactDialog.class.getName()).log(Level.SEVERE, null, ex);
                             statusLabel.setForeground(Color.red);

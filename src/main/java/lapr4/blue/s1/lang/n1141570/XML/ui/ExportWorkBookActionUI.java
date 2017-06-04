@@ -4,15 +4,15 @@ import csheets.core.Workbook;
 import csheets.ui.FileChooser;
 import csheets.ui.ctrl.BaseAction;
 import csheets.ui.ctrl.UIController;
+import lapr4.blue.s1.lang.n1141570.XML.application.ExportXMLController;
+
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
-import javax.swing.JOptionPane;
-import lapr4.blue.s1.lang.n1141570.XML.application.ExportXMLController;
 
 /**
- *
  * @author Eric
  */
 public class ExportWorkBookActionUI extends BaseAction {
@@ -31,10 +31,12 @@ public class ExportWorkBookActionUI extends BaseAction {
         this.uiController = uiController;
     }
 
+    @Override
     protected String getName() {
-        return "Opened workbook";
+        return "Selected workbook";
     }
 
+    @Override
     protected void defineProperties() {
     }
 
@@ -44,9 +46,9 @@ public class ExportWorkBookActionUI extends BaseAction {
      *
      * @param event the event that was fired
      */
+    @Override
     public void actionPerformed(ActionEvent event) {
 
-        // Lets user select a font
         int result = JOptionPane.showConfirmDialog(null, "You have selected the Workbook export option. Do you want to export?");
         boolean exported = false;
         String selectedPath = "D:\\xml.xml";
@@ -59,7 +61,6 @@ public class ExportWorkBookActionUI extends BaseAction {
             TagNamesInputDialogUI exportXMLDialog = new TagNamesInputDialogUI(uiController);
             exportXMLDialog.setModal(true);
             exportXMLDialog.setVisible(true);
-
             chosenTagNames = exportXMLDialog.tagNamesDefinedByUser();
 
             Properties properties = new Properties();
@@ -74,15 +75,14 @@ public class ExportWorkBookActionUI extends BaseAction {
 
                 ExportXMLController exportXMLController = new ExportXMLController(uiController);
                 Workbook workbook = uiController.getActiveWorkbook();
-
                 //Export Selected workbook
                 exported = exportXMLController.exportWorkbook(workbook, chosenTagNames, selectedPath);
                 JOptionPane.showMessageDialog(null, "Workbook exported successfully.", "Export XML", JOptionPane.PLAIN_MESSAGE);
+
             }
             if (!exported) {
                 JOptionPane.showMessageDialog(null, "Failed to export Workbook.", "Export XML", JOptionPane.ERROR_MESSAGE);
             }
-
         }
     }
 }

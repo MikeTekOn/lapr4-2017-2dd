@@ -1,18 +1,18 @@
 package lapr4.blue.s1.lang.n1151031.formulastools;
 
-import lapr4.blue.s1.lang.n1151031.formulastools.ui.ConditionalStyleUIExtension;
 import csheets.core.Cell;
 import csheets.ext.Extension;
 import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.UIExtension;
+import lapr4.blue.s1.lang.n1151031.formulastools.ui.ConditionalStyleUIExtension;
 
 /**
  * An extension to support conditions on cells. An extension must extend the
  * Extension abstract class. The class that implements the Extension is the
  * "bootstrap" of the extension.
  *
- * @see Extension
  * @author Tiago Correia - 1151031@isep.ipp.pt
+ * @see Extension
  */
 public class ConditionalStyleExtension extends Extension {
 
