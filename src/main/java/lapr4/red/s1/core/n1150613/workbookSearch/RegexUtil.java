@@ -66,7 +66,7 @@ public class RegexUtil {
      
       @return desired cells information in String array
      */
-    public List<String> checkifRegexMatches(Workbook w) {
+    public List<String> searchInWorkbook(Workbook w) {
         Spreadsheet s;
         Cell c;
         String content;

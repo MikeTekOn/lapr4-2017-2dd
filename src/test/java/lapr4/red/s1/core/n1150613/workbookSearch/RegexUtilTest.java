@@ -78,7 +78,7 @@ public class RegexUtilTest {
      * Test of checkifRegexMatches method, of class RegexUtil.
      */
     @Test
-    public void testCheckifRegexMatches() throws FormulaCompilationException {
+    public void testSearchInWorkbook() throws FormulaCompilationException {
         System.out.println("checkifRegexMatches");
         Workbook w = new Workbook();
         w.addSpreadsheet();
@@ -90,7 +90,7 @@ public class RegexUtilTest {
         String teste = "TESTADO Spreadsheet:1 Adress:A1";
         List<String> expResult = new ArrayList<>();
         expResult.add(teste);
-        List<String> result = instance.checkifRegexMatches(w);
+        List<String> result = instance.searchInWorkbook(w);
         assertEquals(expResult, result);
 
     }

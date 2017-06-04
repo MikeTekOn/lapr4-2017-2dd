@@ -151,7 +151,7 @@ public class WorkbookSearchSideBar extends JPanel {
                             JOptionPane.ERROR_MESSAGE);
                 }
                 try {
-                    info = controller.checkifRegexMatches();
+                    info = controller.searchInWorkbook();
 
                     for (String s : info) {
 
