@@ -23,7 +23,7 @@ public class Label {
     protected String contact_address;
     protected String contact_email;
     protected String contact_phoneNumber;
-    protected Set<Event>  events;
+    protected List<Event>  events;
 
     protected Agenda contact_agenda;
 
@@ -63,15 +63,15 @@ public class Label {
      * Adds Events to label
      * @param events - list of events to add
      */
-    public void addEvents(final List<Event> events){
+    public void addEvents(List<Event> events){
 
         if(events == null || events.contains(null)){
             throw new IllegalArgumentException("Invalid Event");
         }
 
-        this.events = new HashSet();
+        this.events = new ArrayList<>();
         for(Event e : events){
-            events.add(e);
+            this.events.add(e);
         }
     }
 
@@ -93,5 +93,24 @@ public class Label {
         for(int i = 0; i< size; i++){
             contact_agenda.events().remove(0);
         }
+    }
+
+    public String phoneNumber(){
+        return this.contact_phoneNumber;
+    }
+    public String address(){
+        return this.contact_address;
+    }
+    public String name(){
+        return this.contact_Name;
+    }
+    public String email(){
+        return this.contact_email;
+    }
+    public String photo(){
+        return this.contact_Foto;
+    }
+    public List<Event> events(){
+        return this.contact_agenda.events();
     }
 }

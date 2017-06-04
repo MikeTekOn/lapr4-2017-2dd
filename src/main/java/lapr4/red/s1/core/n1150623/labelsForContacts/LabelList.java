@@ -59,7 +59,6 @@ public class LabelList {
             canExport = false;
         }else{
             exp = new LabelsToPDF();
-            canExport = exportPDF();
         }
         return canExport;
     }
