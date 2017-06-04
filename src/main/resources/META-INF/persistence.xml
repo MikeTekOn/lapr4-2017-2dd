@@ -14,5 +14,5 @@
       <property name="javax.persistence.schema-generation.database.action" value="create"/>
       <property name="eclipselink.logging.level" value="FINE"/>
     </properties>
-  </persistence-unit>    
+  </persistence-unit>
 </persistence>

@@ -21,16 +21,18 @@ import org.antlr.v4.runtime.Token;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Set;
+import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVarContentor;
 import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVariable;
 
 /**
  * Represents the Formula Visitor (ANTLR4).
  *
- * @author Daniel Gonçalves [1151452@isep.ipp.pt]
- *         on 01/06/17.
+ * @author Diana Silva {1151088@isep.ipp.pt]} on 03/06/17
+ * @author Daniel Gonçalves [1151452@isep.ipp.pt] on 01/06/17.
  * @author jrt
  */
 @SuppressWarnings("Duplicates")
@@ -39,11 +41,18 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
     private Cell cell = null;
     private int numberOfErrors;
     private final StringBuilder errorBuffer;
+    /**The starter lexical rule for temporary variables*/
+    private static final char TEMP_VAR_STARTER='_';
+    /**The temporary variables manager*/
+    private TemporaryVarContentor contentorTempVar;
+    private Set<TemporaryVariable> temp_contentor;
 
     public FormulaEvalVisitor(Cell cell) {
         this.cell = cell;
         numberOfErrors = 0;
         errorBuffer = new StringBuilder();
+        temp_contentor = new HashSet<>();
+        contentorTempVar=new TemporaryVarContentor();
     }
 
     public int getNumberOfErrors() {
@@ -115,10 +124,55 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
         return visitChildren(ctx);
     }
 
+    /**
+     * Updated method to consider temporary variables
+     * 
+     * @author Diana Silva[1151088@isep.ipp.pt]
+     * @param ctx tree parse
+     * @return the visitor result
+     */
     @Override
     public Expression visitAtom(BlueFormulaParser.AtomContext ctx) {
         if (ctx.getChildCount() == 3) {
             return visit(ctx.getChild(1));
+        }
+        else if (ctx.VARIABLE_NAME() != null) {
+            
+            String tempVarName=ctx.VARIABLE_NAME().getText();
+            
+            try {
+                //contentorTempVar.getExpressionTemporaryVariable(tempVarName);
+                
+                Iterator it=temp_contentor.iterator();
+                TemporaryVariable tempVar;
+                while(it.hasNext()){
+                    tempVar=(TemporaryVariable)it.next();
+                    if (tempVar.getName().equalsIgnoreCase(tempVarName)) {
+                        return tempVar.getExpression();
+                    }
+                }
+
+            
+            } catch (IllegalArgumentException ex) {
+                addVisitError(ex.getMessage());
+            }
+         
+        }
+        else if(ctx.assignment() != null) {
+            //it´s a temporary variable
+            if (ctx.assignment().VARIABLE_NAME() != null) { 
+                
+                TemporaryVariable temp_var = (TemporaryVariable)visit(ctx.assignment());
+                
+                //contentorTempVar.update(temp_var);
+                
+                if(temp_contentor.contains(temp_var)) {
+                    temp_contentor.remove(temp_var);
+                    temp_contentor.add(temp_var);
+                } else {
+                    temp_contentor.add(temp_var);
+                }
+            }
         }
 
         return visitChildren(ctx);
@@ -188,19 +242,34 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
     }
 
     @Override
+    /**
+     * Updated method to consider a temporay variable.
+     *
+     * @author Diana Silva [1151088@isep.ipp.pt]
+     */
     public Expression visitAssignment(BlueFormulaParser.AssignmentContext ctx) {
         if (ctx.ASSIGN() != null) {
-            try {
+            
+            //it´s a cell reference assignment
+            if (ctx.reference() != null) {
+                try {
+                    // Convert binary operation
+                    BinaryOperator operator = Language.getInstance().getBinaryOperator(ctx.getChild(2).getText());
+                    return new BinaryOperation(
+                            visit(ctx.getChild(1)),
+                            operator,
+                            visit(ctx.getChild(3))
+                    );
+                } catch (UnknownElementException ex) {
+                    addVisitError(ex.getMessage());
+                }
+            
+            //it´s a temporary variable
+            } else if (ctx.VARIABLE_NAME() != null) {
 
-                // Convert binary operation
-                BinaryOperator operator = Language.getInstance().getBinaryOperator(ctx.getChild(2).getText());
-                return new BinaryOperation(
-                        visit(ctx.getChild(1)),
-                        operator,
-                        visit(ctx.getChild(3))
-                );
-            } catch (UnknownElementException ex) {
-                addVisitError(ex.getMessage());
+                String name = ctx.VARIABLE_NAME().getText();
+                
+                return new TemporaryVariable(name, visit(ctx.comparison()));
             }
         }
 
@@ -263,34 +332,6 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
         return visitChildren(ctx);
     }
 
-      @Override
-    public Expression visitTemporary_variable(BlueFormulaParser.Temporary_variableContext ctx) {
-       Value value=null;
-        if(ctx.ASSIGN()!=null){
-            
-           try {
-               /*
-               BinaryOperator operator = Language.getInstance().getBinaryOperator(ctx.getChild(2).getText());
-               BinaryOperation operation=new BinaryOperation(
-               visit(ctx.getChild(1)), operator, visit(ctx.getChild(3)));
-               
-               //value=operator.applyTo(visit(ctx.getChild(1)), visit(ctx.getChild(3)));
-               //value=operation.evaluate();
-               */
-               value=Value.parseNumericValue(ctx.getChild(3).getText());
-           } catch (ParseException ex) {
-               Logger.getLogger(FormulaEvalVisitor.class.getName()).log(Level.SEVERE, null, ex);
-           }
-                if(ctx.TEMPORARY_VARIABLE()!=null){
-
-                    return new TemporaryVariable(ctx.getChild(1).getText(), value);
-                }
-        }
-        //FIXME 
-       return visitChildren(ctx);
-    }
-
-    
     /**
      * Adds an error to the error buffer.
      *

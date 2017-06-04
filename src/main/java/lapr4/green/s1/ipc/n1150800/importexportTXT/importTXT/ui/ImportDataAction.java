@@ -45,7 +45,7 @@ public class ImportDataAction extends BaseAction {
         
         File fileToRead = fileChooser.getFileToOpen();
         if(fileToRead != null) {
-            if (FileData.validateFileExtension(fileToRead)) {
+            if (FileData.validateFileExtension(fileToRead) && fileToRead.isFile()) {
                 ImportDataUI ui = new ImportDataUI(uiController, fileToRead);
             } else {
                 JOptionPane.showMessageDialog(fileChooser, "Chosen file is not valid!", "Error", JOptionPane.ERROR_MESSAGE);

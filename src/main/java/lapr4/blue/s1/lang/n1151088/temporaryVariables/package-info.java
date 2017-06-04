@@ -71,19 +71,24 @@
  *
  * <h3>4.1. Tests</h3>
  * <b>Domain Tests</b>
+ * <p>Language (ANTLR)
  * <ol>
  *   <li>startWithUnderscore()</li>
  *   <li>haveLetterAfterUnderscore()</li>
  *   <li>rejectNumberAfterUnderscore()</li>
  *   <li>acceptDigitsAndLettersName()</li>
- *   <li>addTemporaryVariableToContentorFirstTime()</li>
- *   <li>addTemporaryVariableToContentorAlreadyExists</li>
+ * </ol>
+ * <p>Functional Tests
+ * <ol>
  *   <li>testBasicExpressionWithTemporary() -&gt; example "_Var:=1+2"</li>
  *   <li>testAssignmentOperatorWithTemporary() -&gt; example "_Var:=A1"</li>
  *   <li>testFunctionExpressionWithTemporary() -&gt; example "_Var:= sum(A2:A4)"</li>
 *    <li>testFormulaBlocksWithTemporary() -&gt; ex: "= {A=1+2; _Var:= 1+A ;"
 *   <li>testFormulaManyTemporaryVariables() -&gt; ex: "={_Var1:=2; _Var2:=3; _Var3:=_Var1+_Var2; A= _Var+3]"
+*   <li>testItSelfCall() -&gt; ex: 
 *   <li>formulaWithTemporaryVariable()</li>
+*   <li>addTemporaryVariableToContentorFirstTime()</li>
+ *   <li>addTemporaryVariableToContentorAlreadyExists</li>
  * </ol> 
  *
  *  <b>Functional Tests </b>
@@ -149,7 +154,12 @@
  * <b>Saturday</b>
  * <ol>
  *    <li>Update design</li>
- *    <li>Finish implementation</li>
+ *    <li>Implementation</li>
+ * </ol>
+ * <b>Monday</b>
+ * <ol>
+ *     <li>Update test implementation</li>
+ *    <li>Update implementation due to Assign modifications</li>
  * </ol>
  *
  * @author Diana Silva - 1151088@isep.ipp.pt - 2DD - 2016/17

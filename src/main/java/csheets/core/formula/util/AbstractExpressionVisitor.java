@@ -21,6 +21,8 @@
 package csheets.core.formula.util;
 
 import csheets.core.formula.*;
+import java.util.HashSet;
+import java.util.Set;
 import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVariable;
 import lapr4.blue.s1.lang.n1151159.macros.Macro;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperation;
@@ -29,10 +31,10 @@ import lapr4.gray.s1.lang.n3456789.formula.NaryOperation;
  * A default implementation of an expression visitor, that simply visits all
  * the nodes in the tree. All methods return the expression that was visited.
  * @author Einar Pehrson
+ * @author Diana Silva (update due temporaryVariables operation)
  */
 public abstract class AbstractExpressionVisitor implements ExpressionVisitor {
-
-	/**
+      /**
 	 * Creates a new expression visitor.
 	 */
 	public AbstractExpressionVisitor() {}
@@ -46,26 +48,50 @@ public abstract class AbstractExpressionVisitor implements ExpressionVisitor {
 		return operation;
 	}
 
+        @Override
 	public Object visitBinaryOperation(BinaryOperation operation) {
 		operation.getLeftOperand().accept(this);
 		operation.getRightOperand().accept(this);
 		return operation;
 	}
 
+        @Override
 	public Object visitReference(Reference reference) {
 		return reference;
 	}
 
+        @Override
 	public Object visitFunctionCall(FunctionCall call) {
 		for (Expression argument : call.getArguments())
 			argument.accept(this);
 		return call;
 	}
         
+        /**
+         * Update due to temporary variables
+         * @author Diana Silva
+         * @param operation
+         * @return 
+         */
+        @Override
         public Object visitNaryOperation(NaryOperation operation) {
             Expression[] operands=operation.getOperands();
         
+            Set<TemporaryVariable> tempVars = new HashSet<>();
+            
             for (Expression expr: operands) {
+                
+                if (expr instanceof TemporaryVariable) {
+                    
+                
+                if(tempVars.contains(expr)) {
+                    tempVars.remove(expr);
+                    tempVars.add((TemporaryVariable)expr);
+                } else {
+                    tempVars.add((TemporaryVariable) expr);
+                }
+                }
+                
                 expr.accept(this);
             }
         
@@ -76,9 +102,9 @@ public abstract class AbstractExpressionVisitor implements ExpressionVisitor {
 	public Object visitMacro(Macro macro) {
 		return macro.accept(this);
 	}
-
-    @Override
-    public Object visitTemporaryVariable(TemporaryVariable tempVar) {
-        return tempVar.accept(this);
-    }
+        
+        @Override
+        public Object visitTemporaryVariable(TemporaryVariable tempVar) {
+            return tempVar.accept(this);
+        }
 }
