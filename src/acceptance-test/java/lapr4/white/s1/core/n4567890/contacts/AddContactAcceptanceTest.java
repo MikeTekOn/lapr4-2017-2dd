@@ -15,8 +15,6 @@ import java.util.Properties;
 import lapr4.white.s1.core.n4567890.contacts.domain.Contact;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -62,7 +60,7 @@ public class AddContactAcceptanceTest {
         controller=new ContactController(appProps);
         
         // Populate the repository
-        aContact=controller.addContact("John Doe", "John", "Doe","");
+        aContact=controller.addContact("John Doe", "John", "Doe","", "", "", "");
 
         EventController c = new EventController(appProps);
         Calendar date = Calendar.getInstance();
@@ -81,15 +79,15 @@ public class AddContactAcceptanceTest {
     @Test(expected = DataIntegrityViolationException.class)
     public void ensureNoContactDuplicates() throws DataConcurrencyException, DataIntegrityViolationException { 
 
-        controller.addContact("John Doe2", "John", "Doe2","");
+        controller.addContact("John Doe2", "John", "Doe2","","","","");
         
-        controller.addContact("John Doe2", "John", "Doe2","");
+        controller.addContact("John Doe2", "John", "Doe2","","","","");
     } 
     
     @Test 
     public void ensureNewContactHasAgenda() throws DataIntegrityViolationException, DataConcurrencyException { 
         
-        Contact contact=controller.addContact("Jane Doe3", "Jane", "Doe3","");
+        Contact contact=controller.addContact("Jane Doe3", "Jane", "Doe3","","","","");
         assertNotNull(contact.agenda().id());
     } 
 
