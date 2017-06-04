@@ -9,6 +9,8 @@ import csheets.core.Cell;
 import csheets.core.Spreadsheet;
 import csheets.core.Workbook;
 import csheets.core.formula.compiler.FormulaCompilationException;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -68,6 +70,27 @@ public class RegexUtilTest {
         RegexUtil instance = new RegexUtil(validRegex);
         boolean expResult = true;
         boolean result = instance.checkIfMatches(cellContent);
+        assertEquals(expResult, result);
+
+    }
+
+    /**
+     * Test of checkifRegexMatches method, of class RegexUtil.
+     */
+    @Test
+    public void testSearchInWorkbook() throws FormulaCompilationException {
+        System.out.println("checkifRegexMatches");
+        Workbook w = new Workbook();
+        w.addSpreadsheet();
+        Spreadsheet s = w.getSpreadsheet(0);
+        Cell c =s.getCell(0, 0);
+        c.setContent("TESTADO");
+        String regex = "[A-Z]+";
+        RegexUtil instance = new RegexUtil(regex);
+        String teste = "TESTADO Spreadsheet:1 Adress:A1";
+        List<String> expResult = new ArrayList<>();
+        expResult.add(teste);
+        List<String> result = instance.searchInWorkbook(w);
         assertEquals(expResult, result);
 
     }

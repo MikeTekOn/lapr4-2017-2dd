@@ -57,7 +57,7 @@ public class EventAcceptanceTest {
         controller2=new ContactController(appProps);
 
         // Populate the repository
-        aContact = controller2.addContact("Jane Doe", "Jane", "Doe", "");
+        aContact = controller2.addContact("Jane Doe", "Jane", "Doe", "","asd","asd","asd");
 
         Calendar tomorrow=Calendar.getInstance();
         tomorrow.add(Calendar.DAY_OF_WEEK, 1);
@@ -68,7 +68,7 @@ public class EventAcceptanceTest {
     public void normalBehaviorAddEventToContact() throws DataIntegrityViolationException, DataConcurrencyException {
 
         // First: Add or Select existing Contact
-        Contact contact=controller2.addContact("Jane Doe4", "Jane", "Doe4","");
+        Contact contact=controller2.addContact("Jane Doe4", "Jane", "Doe4","","asd","asd","asd");
         EventController c = new EventController(appProps);
         // Second: Add Event to Contact's Agenda
         Event ev=null;

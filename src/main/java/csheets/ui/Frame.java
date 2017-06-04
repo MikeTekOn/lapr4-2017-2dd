@@ -35,6 +35,11 @@ import lapr4.red.s1.core.n1150451.exportPDF.presentation.ExportToPDFAction;
 
 import javax.swing.*;
 import java.awt.*;
+import lapr4.blue.s1.lang.n1141570.XML.ui.ExportSelectedCellsActionUI;
+import lapr4.blue.s1.lang.n1141570.XML.ui.ExportSelectedColumnActionUI;
+import lapr4.blue.s1.lang.n1141570.XML.ui.ExportSelectedRowActionUI;
+import lapr4.blue.s1.lang.n1141570.XML.ui.ExportSelectedSpreadsheetActionUI;
+import lapr4.blue.s1.lang.n1141570.XML.ui.ExportWorkBookActionUI;
 
 /**
  * The main frame of the GUI.
@@ -91,6 +96,13 @@ public class Frame extends JFrame implements SelectionListener, ExtensionStateLi
         actionManager.registerAction("exit", new ExitAction(app, uiController, chooser));
         actionManager.registerAction("print", new PrintAction());
 
+        // Register actions of XML exportation submenu
+        actionManager.registerAction("exportworkbook", new ExportWorkBookActionUI(uiController));
+        actionManager.registerAction("exportspreadsheet", new ExportSelectedSpreadsheetActionUI(uiController));
+        actionManager.registerAction("exportselectedrow", new ExportSelectedRowActionUI(uiController));
+        actionManager.registerAction("exportselectedcolumn", new ExportSelectedColumnActionUI(uiController));
+        actionManager.registerAction("exportselectedcells", new ExportSelectedCellsActionUI(uiController));
+
         // Registers edit actions
         actionManager.registerAction("undo", new UndoAction());
         actionManager.registerAction("redo", new RedoAction());
@@ -99,7 +111,6 @@ public class Frame extends JFrame implements SelectionListener, ExtensionStateLi
         actionManager.registerAction("paste", new PasteAction());
         actionManager.registerAction("clear", new ClearAction());
         actionManager.registerAction("selectall", new SelectAllAction());
-        actionManager.registerAction("sort", new SortAction());
         actionManager.registerAction("search", new SearchAction());
         actionManager.registerAction("prefs", new PreferencesAction());
 

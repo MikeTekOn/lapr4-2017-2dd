@@ -77,7 +77,7 @@ public class BeanShellInstance {
                 results.put(codeLine, evaluation);
             }
         }
-        //macros dont need to be evaluated in a line fashion, can be appended to a string and evaluated in bulk.
+        //macros dont need to be evaluated in a line fashion, can be appended to a string and evaluated in bulk by the macro UC.
         for (String macro : macro) {
             appendedMacro+=macro+Strings.lineSeparator();
         }

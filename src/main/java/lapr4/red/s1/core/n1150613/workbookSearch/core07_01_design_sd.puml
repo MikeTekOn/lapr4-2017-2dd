@@ -17,19 +17,31 @@
     deactivate UI
     User -> UI : Inserts regular expression
     activate UI
-    UI -> ctrl : checkIfRegexMatches(String regex)
+    UI -> ctrl : checkIfValid(String regex)
     activate ctrl
+   
     ctrl -> util : isRegexValid(regex)
+    activate util
+ deactivate ctrl
+    deactivate util
+
+    UI -> ctrl : searchWorkbook(String regex)
+    activate ctrl
+    ctrl -> util : searchInWorkbook(w)
+    activate util
+    
     loop for Spreadsheet s : listSpreadsheets
     loop for Cells c : listCells
-    ctrl -> cll : getContent()
-    ctrl -> util : checkIfMatches(regex,String cellContent)
-    ctrl <-- util : return boolean
+    util -> cll : getContent()
+    util -> util : checkIfMatches(String cellContent)
+   
     alt : if true
-    ctrl -> ctrl : searchResults.add()
+    util -> util : searchResults.add()
     end
     end
     end
+    util -> ctrl : return searchResults
+    deactivate util
     UI <-- ctrl : return searchResults
     UI -> UI : showInfo()
     deactivate ctrl

@@ -67,7 +67,10 @@ dependencies {
 
   //https://mvnrepository.com/artifact/com.itextpdf/root
   compile group: 'com.itextpdf', name: 'root', version: '7.0.2'
-        
+    // https://mvnrepository.com/artifact/commons-io/commons-io
+    compile group: 'commons-io', name: 'commons-io', version: '2.5'
+
+
     compile 'org.eclipse.persistence:eclipselink:2.6.1'
 	compile 'org.eclipse.persistence:org.eclipse.persistence.jpa.modelgen.processor:2.6.1'
 	compile 'com.h2database:h2:1.4.191'

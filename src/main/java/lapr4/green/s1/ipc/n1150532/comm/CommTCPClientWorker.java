@@ -1,5 +1,9 @@
 package lapr4.green.s1.ipc.n1150532.comm;
 
+import lapr4.green.s1.ipc.n1150532.comm.connection.SocketEncapsulatorDTO;
+import lapr4.green.s1.ipc.n1150738.securecomm.BasicDataTransmissionContext;
+import lapr4.green.s1.ipc.n1150738.securecomm.DataTransmissionContext;
+
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -49,6 +53,7 @@ public class CommTCPClientWorker extends Thread implements Serializable {
      * The output stream to which the objects are sent through the socket.
      */
     private ObjectOutputStream outStream;
+    private DataTransmissionContext transmissionContext;
 
     /**
      * The worker constructor. It binds the socket.
@@ -69,6 +74,7 @@ public class CommTCPClientWorker extends Thread implements Serializable {
         manager = theManager;
         inStream = null;
         outStream = null;
+        transmissionContext = new BasicDataTransmissionContext();
     }
 
     /**
@@ -101,7 +107,7 @@ public class CommTCPClientWorker extends Thread implements Serializable {
         if (outStream != null) {
             return outStream;
         } else {
-            outStream = new ObjectOutputStream(socket.getOutputStream());
+            outStream = transmissionContext.outputStream(socket.getOutputStream());
             return outStream;
         }
     }
@@ -117,7 +123,7 @@ public class CommTCPClientWorker extends Thread implements Serializable {
         if (inStream != null) {
             return inStream;
         } else {
-            inStream = new ObjectInputStream(socket.getInputStream());
+            inStream = transmissionContext.inputStream(socket.getInputStream());
             return inStream;
         }
     }
@@ -192,8 +198,29 @@ public class CommTCPClientWorker extends Thread implements Serializable {
     private void processIncommingDTO(Object inDTO) {
         CommHandler handler = manager.getHandler(inDTO.getClass());
         if (handler != null) {
-            handler.handleDTO(inDTO, outStream);
+            //handler.handleDTO(inDTO, outStream);
+            SocketEncapsulatorDTO dto = new SocketEncapsulatorDTO(socket, handler, inDTO);
+            handler.handleDTO(dto, outStream);
         }
     }
 
+    /**
+     * Henrique Oliveira [1150738@isep.ipp.pt]
+     * @param s
+     * @return
+     */
+    public boolean hasSocket(Socket s){
+        return socket == s;
+    }
+
+    /**
+     * @author Henrique Oliveira [1150738@isep.ipp.pt]
+     *
+     * @param ctx
+     */
+    public void switchDataTransmissionContext(DataTransmissionContext ctx) {
+        this.transmissionContext.wiretapInput().transferTappers(ctx.wiretapInput());
+        this.transmissionContext.wiretapOutput().transferTappers(ctx.wiretapOutput());
+        this.transmissionContext = ctx;
+    }
 }

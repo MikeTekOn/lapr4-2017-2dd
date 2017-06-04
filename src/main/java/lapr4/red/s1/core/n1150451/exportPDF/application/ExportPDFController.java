@@ -9,7 +9,7 @@ import csheets.core.Spreadsheet;
 import csheets.core.Workbook;
 import csheets.ui.ctrl.UIController;
 import lapr4.red.s1.core.n1150451.exportPDF.domain.ExportPDF;
-import lapr4.red.s1.core.n1150451.exportPDF.domain.WorkbookHandler;
+import lapr4.red.s1.core.n1150451.exportPDF.WorkbookHandler;
 import lapr4.s1.export.ExportContext;
 
 import java.util.regex.Pattern;

@@ -83,7 +83,8 @@
  * To realize this functional increment, we will need the classes depicted in the analysis section.
  * In this section there will be two sequence diagrams: one that depicts the generic approach of building any beanshell script, and the other will illustrate the construction and the execution of the default script.
  * In order to reflect the changes on the UI we need to send a reference to the UIController class, which fires events to repaint and update the UI. Since this is a controller, it still respects the MvC pattern, although, the decision to send this object into the deep domain objects (beanshellclassinstance) is due to the fact that beanshell can only return serializable objects.
- * We would have to create a uiController inside the beanshell script (user shouldnt be bothered by this) and serialize it, then rebuild it on the application side and update our UIController with this one as reference. It is just easier for the user to not get bothered with this.
+ * We would have to create a uiController inside the beanshell script (user shouldnt be bothered by this) and extract it off beanshell, then rebuild it on the application side and update our UIController with this one as reference. It is just easier for the user to not get bothered with this.
+ * Note that this applies to changes made to the workbook with beanshell scripts. With changes being made with the macros, the acess to the workbook are made inside their implementation. See package-info of lapr4.blue.s1.lang.n1151159.macros.
  * <p>
  * Sequence Diagram 1 - Generic class loading and script executing
  * <p>
@@ -98,6 +99,8 @@
  * The tricky part is building the script. We will have to read each line of the script file (or textbox in this case) and evaluate each one separatly. That task is realized in the create method of the builder class which is hidden in this diagram (simple text read).
  * As explained, the evaluation of each line of code is executed by the newly  created instance returned by the loader.
  * Note that you can define methods in this scripting language but they have to be defined in the same line of code.
+ * About the macros, they are evaluated differently. They are not interpreted by the beanshell interpreter. They are evaluated using the implementation of lapr4.blue.s1.lang.n1151159.macros which is totally independent of this UC.
+ * To achieve this, we have to separate the lines of code into two sections: Beanshellcode and Macrocode.
  * <h3>4.3. Classes</h3>
  * 
  * <p>
@@ -106,8 +109,8 @@
  * 
  * <h3>4.4. Design Patterns and Best Practices</h3>
  * 
- * This is an extension, so all extension related patterns are already explained in other documents, such as the hollywood pattern.
- * As the rest of the project, we will be using the MvC pattern.
+ * This is an extension, so all extension related patterns are already explained in other documents.
+ * In regards to the macros, their specification can be found in lapr4.blue.s1.lang.n1151159.macros.
  * 
  * 
  * <h2>5. Implementation</h2>
@@ -115,6 +118,8 @@
  * Added the planned classes.
  * Added junit testing to guarantee domain rules are enforced.
  * Implemented controller class.
+ * Integrated macros with beanshell
+ * Integrated beanshell with cleansheets
  * <p>
  * 
  * 
@@ -125,7 +130,7 @@
  * <h2>7. Final Remarks</h2>
  * Future possible changes and improvements: Total domain interaction as depicted in the CleanSheets API UC, improve reading method to allow method implementations on different lines.
  * <p>
- * As an extra this use case also implements a small cell visual decorator if the cell has a comment. This "feature" is not documented in this page.
+ * As an extra this use case already allows for many scripts to run, and allows unprotected acess (for now) to domain objects.
  * 
  * 
  * <h2>8. Work Log</h2> 
@@ -138,7 +143,7 @@
  * <p>
  * Today
  * <p>
- * 1. Analysis of the...
+ * 1. Analysis of the use case and cleansheets application.
  * <p>
  * Blocking:
  * <p>
@@ -148,31 +153,75 @@
  * <p>
  * Yesterday I worked on: 
  * <p>
- * 1. ...
+ * 1. Analysis of the use case and cleansheets application.
  * <p>
  * Today
+ * <p>
+ * Finishing the analysis and starting the design.
+ * <p>
+ * Blocking:
+ * <p>
+ * 1. -nothing-
+ * <p>
+* <b>Wednesday</b>
+ * <p>
+ * Yesterday I worked on:
+ * <p>
+ * 1. Finishing the analysis and starting the design.
+ * <p>
+ * Today
+ * <p>
+ * 1.  Finishing the design and started the domain junit testing.
+ * <p>
+ * Blocking:
+ * <p>
+ * 1. -nothing-
+ * <p>
+ * <b>Thursday</b>
+ * <p>
+ * Yesterday I worked on: 
+ * <p>
+ * 1.Finishing the design and started the domain junit testing.
+ * <p>
+ *  Finished the junit tests and started the implementation.
  * <p>
  * 1. ...
  * <p>
  * Blocking:
+* <p>
+ * 1. -nothing-
  * <p>
- * 1. ...
- * 
+* <b>Friday</b>
+ * <p>
+ * Yesterday I worked on:
+ * <p>
+ * 1. Finished the junit tests and started the implementation.
+ * <p>
+ * Today
+ * <p>
+ * 1. Continued the implementation.
+ * <p>
+ * Blocking:
+ * <p>
+ * 1. -nothing-
+ * <p>
+ * <b>Saturday</b>
+ * <p>
+ * Yesterday I worked on:
+ * <p>
+ * 1.  Continued the implementation.
+ * <p>
+ * Today
+ * <p>
+ * 1. Finished the implementation.
+ * <p>
+ * Blocking:
+ * <p>
+ * 1. -nothing-
+ * <p>
  * <h2>9. Self Assessment</h2> 
  * 
  * 
- * 
- * <h3>R3. Rubric Requirements Fulfilment: 3</h3>
- * 
- * 3- some defects. The student did fulfil all the requirements and also did justify the eventual options related to the interpretation/analysis of the problem.
- * 
- * <h3>R6. Rubric Requirements Analysis: 4</h3>
- * 
- * 4- correct. There is a robust and very complete analysis of the problem with well chosen technical artifacts (diagrams, grammars, etc.) for its documentation and without errors.
- * 
- * <h3>R7. Rubric Design and Implement: 2</h3>
- * 
- * 2- many defects. The code follows good practices although some design patterns should have been applied. The technical documentation covers the majority of the solution although it may have some errors. However the appropriate type of technical artifacts for documenting design are present and the ideia behind the solution is understandable. Code does not "goes against" the design options of the original code of the project. Unit tests seem to cover a significant amount of functionalities (e.g., more than 50%) but there was not test first approach.
  * 
  */
 package lapr4.blue.s1.lang.n1140822.beanshellwindow;

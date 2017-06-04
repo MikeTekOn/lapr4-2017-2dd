@@ -31,10 +31,12 @@ public class ExportSelectedSpreadsheetActionUI extends BaseAction {
         this.uiController = uiController;
     }
 
+    @Override
     protected String getName() {
         return "Selected spreadsheet";
     }
 
+    @Override
     protected void defineProperties() {
     }
 
@@ -44,26 +46,42 @@ public class ExportSelectedSpreadsheetActionUI extends BaseAction {
      *
      * @param event the event that was fired
      */
+    @Override
     public void actionPerformed(ActionEvent event) {
 
-        // Lets user select a font
-        int result = JOptionPane.showConfirmDialog(null, "You have selected the spreadsheet export option. Do you want to export?");
+        int result = JOptionPane.showConfirmDialog(null, "You have selected the Spreadsshet export option. Do you want to export?");
+        boolean exported = false;
+        String selectedPath = "D:\\xml.xml";
 
         if (result == JOptionPane.YES_OPTION) {
+            //Cancel option =1 , Approve option = 0
+            int returnVal = 0;
             List<String> chosenTagNames = new LinkedList<>();
-            chosenTagNames.add("projectowner");
-            chosenTagNames.add("scrumofscrums");
-            chosenTagNames.add("scrum");
+
+            TagNamesInputDialogUI exportXMLDialog = new TagNamesInputDialogUI(uiController);
+            exportXMLDialog.setModal(true);
+            exportXMLDialog.setVisible(true);
+            chosenTagNames = exportXMLDialog.tagNamesDefinedByUser();
 
             Properties properties = new Properties();
             FileChooser fileChooser = new FileChooser(null, properties);
-            String selectedPath = fileChooser.getFileToSave().getAbsolutePath();
+            if (returnVal == fileChooser.APPROVE_OPTION) {
+                try {
+                    selectedPath = fileChooser.getFileToSave().getAbsolutePath();
+                } catch (Exception ex) {
+                    System.err.println("Error selecting path");
+                }
 
-            ExportXMLController exportXMLController = new ExportXMLController(uiController);
-            Spreadsheet spreadsheet = uiController.getActiveSpreadsheet();
+                ExportXMLController exportXMLController = new ExportXMLController(uiController);
+                Spreadsheet spreadsheet = uiController.getActiveSpreadsheet();
+                //Export Selected spreadsheet
+                exported = exportXMLController.exportSpreadsheet(spreadsheet, chosenTagNames, selectedPath);
+                JOptionPane.showMessageDialog(null, "Spreadsheet exported successfully.", "Export XML", JOptionPane.PLAIN_MESSAGE);
 
-            //Export Selected spreadsheet
-            exportXMLController.exportSpreadsheet(spreadsheet, chosenTagNames, selectedPath);
+            }
+            if (!exported) {
+                JOptionPane.showMessageDialog(null, "Failed to export Spreadsheet.", "Export XML", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 }

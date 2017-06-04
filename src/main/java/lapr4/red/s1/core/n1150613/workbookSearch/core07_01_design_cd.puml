@@ -6,7 +6,8 @@ class UIController{
     getActiveWorkbook()
 }
 class WorkbookSearchCtrl{
-    checkIfRegexMatches()
+    checkIfValid()
+    searchInWorkbook()
 }
 class Cell{
     getContent()
@@ -14,6 +15,7 @@ class Cell{
 class RegexUtil {
     checkIfMatches()
     isRegexValid()
+    searchInWorkbook()
 }
 
 UIExtensionSearch ..> UIController

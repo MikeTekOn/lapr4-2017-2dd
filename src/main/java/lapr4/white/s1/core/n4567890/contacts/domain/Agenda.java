@@ -18,7 +18,7 @@ import javax.persistence.OneToMany;
 
 /**
  *
- * @author alexandrebraganca
+ * @author alexandrebraganca - edited by João Cardoso - 1150943
  */
 @Entity
 public class Agenda implements Serializable {
@@ -49,6 +49,13 @@ public class Agenda implements Serializable {
         return this.events.add(ev);
     }
 
+    /**
+     * Created by João Cardoso - 1150943
+     * @param index
+     * @param newDescription
+     * @param newDueDate
+     * @return
+     */
     public boolean edit(int index, String newDescription, Calendar newDueDate){
         int i=0;
         Event ev=null;
@@ -62,6 +69,11 @@ public class Agenda implements Serializable {
         return true;
     }
 
+    /**
+     * Created by João Cardoso - 1150943
+     * @param index
+     * @return
+     */
     public boolean remove(int index){
         int i=0;
         Event ev=null;
@@ -77,6 +89,10 @@ public class Agenda implements Serializable {
         return this.events.remove(ev);
     }
 
+    /**
+     * Created by João Cardoso - 1150943
+     * @return
+     */
     public List<Event> events(){
         ArrayList<Event>events=new ArrayList<>(this.events);
         return events;
@@ -84,11 +100,51 @@ public class Agenda implements Serializable {
 
 
     /**
+     * Created by João Cardoso - 1150943
      * returns true if the agenda has no events
      * @return
      */
     protected boolean isEmpty(){
         return events.isEmpty();
+    }
+
+    /**
+     * Created by João Cardoso - 1150943
+     * @return
+     */
+    public ArrayList<Event> pastEvents() {
+        ArrayList<Event>events=new ArrayList<>();
+        for (Event event : this.events){
+            if(event.hasPassed())
+                events.add(event);
+        }
+        return events;
+    }
+
+    /**
+     * Created by João Cardoso - 1150943
+     * @return
+     */
+    public ArrayList<Event> todayEvents(){
+        ArrayList<Event>events=new ArrayList<>();
+        for (Event event : this.events){
+            if(event.isToday())
+                events.add(event);
+        }
+        return events;
+    }
+
+    /**
+     * Created by João Cardoso - 1150943
+     * @return
+     */
+    public ArrayList<Event> futureEvents(){
+        ArrayList<Event>events=new ArrayList<>();
+        for (Event event : this.events){
+            if(event.isFuture())
+                events.add(event);
+        }
+        return events;
     }
 
 }

@@ -2,6 +2,7 @@ package lapr4.blue.s1.lang.n1151031.formulastools;
 
 import csheets.core.Cell;
 import csheets.core.IllegalValueTypeException;
+import csheets.core.Value;
 import csheets.core.formula.Expression;
 import csheets.core.formula.Reference;
 import csheets.core.formula.compiler.FormulaCompilationException;
@@ -84,6 +85,11 @@ public class ConditionStylableCell extends CellExtension {
 
         Expression expression = null;
         if (getUserCondition() != null) {
+            if (cell.getValue().isOfType(Value.Type.TEXT)) {
+                StylableCell stylableCell = (StylableCell) getDelegate().getExtension(StyleExtension.NAME);
+                stylableCell.resetStyle();
+                return;
+            }
             try {
                 expression = ConditionalStyleCompiler.getInstance().compile(getDelegate(), getUserCondition());
                 SortedSet<Reference> references = (new ReferenceFetcher()).getReferences(expression);
@@ -121,6 +127,9 @@ public class ConditionStylableCell extends CellExtension {
                 e.printStackTrace();
                 throw new IllegalConditionException("Invalid cell value: " + e.toString());
             }
+        } else {
+            StylableCell stylableCell = (StylableCell) getDelegate().getExtension(StyleExtension.NAME);
+            stylableCell.resetStyle();
         }
     }
 
@@ -170,10 +179,10 @@ public class ConditionStylableCell extends CellExtension {
      * Customizes serialization, by recreating the listener list.
      *
      * @param stream the object input stream from which the object is to be read
-     * @throws IOException            If any of the usual Input/Output related exceptions
-     *                                occur
+     * @throws IOException If any of the usual Input/Output related exceptions
+     * occur
      * @throws ClassNotFoundException If the class of a serialized object cannot
-     *                                be found.
+     * be found.
      */
     private void readObject(java.io.ObjectInputStream stream)
             throws java.io.IOException, ClassNotFoundException {

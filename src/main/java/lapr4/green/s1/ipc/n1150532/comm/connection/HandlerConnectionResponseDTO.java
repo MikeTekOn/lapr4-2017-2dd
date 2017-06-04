@@ -27,8 +27,9 @@ public class HandlerConnectionResponseDTO extends Observable implements CommHand
      */
     @Override
     public void handleDTO(Object dto, ObjectOutputStream outStream) {
-        lastReceivedDTO = dto;
-        ConnectionResponseDTO reply = (ConnectionResponseDTO) dto;
+        SocketEncapsulatorDTO encapsulator = (SocketEncapsulatorDTO) dto;
+        lastReceivedDTO = encapsulator.getDTO();
+        ConnectionResponseDTO reply = (ConnectionResponseDTO) encapsulator.getDTO();
         if (reply.wasAccepted()) {
             setChanged();
             notifyObservers(reply);
