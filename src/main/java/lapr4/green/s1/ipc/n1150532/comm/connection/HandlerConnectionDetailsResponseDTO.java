@@ -39,7 +39,7 @@ public class HandlerConnectionDetailsResponseDTO extends Observable implements C
         int portNumber = ((ConnectionDetailsResponseDTO) reply.getDTO()).getPortNumber();
         if (isOutsiderAnnouncement(serverIP)) {
             setChanged();
-            ConnectionDetailsResponseDTO connection = new ConnectionDetailsResponseDTO(serverIP, portNumber);
+            ConnectionID connection = new ConnectionIDImpl(serverIP, portNumber);
             notifyObservers(connection);
         }
     }
