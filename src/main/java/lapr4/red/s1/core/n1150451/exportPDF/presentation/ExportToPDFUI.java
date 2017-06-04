@@ -25,7 +25,7 @@ import java.util.logging.Logger;
 import javax.swing.filechooser.*;
 
 /**
- * @author Sofia Silva [1150690@isep.ipp.pt]
+ * @author Diogo Santos 1150451
  */
 public class ExportToPDFUI extends JDialog {
 
