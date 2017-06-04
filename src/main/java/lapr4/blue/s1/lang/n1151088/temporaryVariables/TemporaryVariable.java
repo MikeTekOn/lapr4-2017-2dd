@@ -29,43 +29,34 @@ public class TemporaryVariable implements Expression {
     /**
      * The value of the temporary variable
      */
-    private Value value;
+    private Expression expression;
     
-    public TemporaryVariable(String name, Value value){
+    public TemporaryVariable(String name, Expression expression){
         this.name=name;
-        this.value=value;
+        this.expression=expression;
     }
 
     @Override
     public Value evaluate() throws IllegalValueTypeException {
-        return this.value;
+        return this.expression.evaluate();
     }
 
     public String getName() {
         return this.name;
     }
     
-    /**
-     * Update the temporary variable value
-     * @param value 
-     */
-    public void updateValue(Value value){
-        this.value=value;
+        public Expression getExpression() {
+        return this.expression;
     }
     
-    @Override
-    public String toString() {
-            if (value.getType() == Value.Type.TEXT
-             || value.getType() == Value.Type.DATE)
-                    return "\"" + value.toString() + "\"";
-            else
-                    return value.toString();
-    }
-
-    @Override
-    public Object accept(ExpressionVisitor visitor) {
-        return visitor.visitTemporaryVariable(this);
-    }
+//    @Override
+//    public String toString() {
+//            if (expression.getType() == Value.Type.TEXT
+//             || expression.getType() == Value.Type.DATE)
+//                    return "\"" + expression.toString() + "\"";
+//            else
+//                    return expression.toString();
+//    }
     
     @Override
      public boolean equals(Object other){
@@ -83,5 +74,11 @@ public class TemporaryVariable implements Expression {
         int hash = 7;
         hash = 97 * hash + Objects.hashCode(this.name);
         return hash;
+    }
+
+    @Override
+    public Object accept(ExpressionVisitor visitor) {
+    
+        return this.expression.accept(visitor);
     }
 }
