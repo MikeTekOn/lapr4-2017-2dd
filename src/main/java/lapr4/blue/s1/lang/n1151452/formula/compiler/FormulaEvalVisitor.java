@@ -43,11 +43,11 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
         errorBuffer = new StringBuilder();
     }
 
-    int getNumberOfErrors() {
+    public int getNumberOfErrors() {
         return numberOfErrors;
     }
 
-    String getErrorsMessage() {
+    public String getErrorsMessage() {
         return errorBuffer.toString();
     }
 

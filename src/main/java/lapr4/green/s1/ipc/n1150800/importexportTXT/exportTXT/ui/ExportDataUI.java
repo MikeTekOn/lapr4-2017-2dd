@@ -5,24 +5,20 @@
  */
 package lapr4.green.s1.ipc.n1150800.importexportTXT.exportTXT.ui;
 
-import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.ui.ctrl.UIController;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
-import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import lapr4.green.s1.ipc.n1150800.importexportTXT.CellRange;
 import lapr4.green.s1.ipc.n1150800.importexportTXT.exportTXT.ctrl.ExportDataController;
-import lapr4.green.s1.ipc.n1150800.importexportTXT.importTXT.ctrl.ImportDataController;
 
 /**
  *
@@ -31,19 +27,19 @@ import lapr4.green.s1.ipc.n1150800.importexportTXT.importTXT.ctrl.ImportDataCont
 public class ExportDataUI extends JFrame {
     
     /**
-     * 
+     * The user interface controller
      */
     private UIController uiController;
     
     /**
-     * 
+     * The file to write data into
      */
     private File fileToWrite;
     
     /**
-     * 
-     * @param uiController
-     * @param fileToWrite 
+     * Creates an instance of ExportDataUI with
+     * @param uiController - the user interface controller
+     * @param fileToWrite - the file to write
      */
     public ExportDataUI(UIController uiController, File fileToWrite) {
         this.uiController = uiController;
@@ -51,13 +47,14 @@ public class ExportDataUI extends JFrame {
         
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         createComponents();
-        setLocationRelativeTo(null);
         pack();
+        setLocationRelativeTo(null);
+        setResizable(false);
         setVisible(true);
     }
     
     /**
-     * 
+     * Creates the components of the frame
      */
     private void createComponents() {
         JPanel panel = new JPanel();
@@ -86,25 +83,20 @@ public class ExportDataUI extends JFrame {
         subPanelRange.add(labelLastCell);
         subPanelRange.add(txtFieldLastCell);
 
-        JPanel subPanelRadioButtons = new JPanel();
-
-        JLabel labelFirstLine = new JLabel("The first line of the file represents:");
-        JRadioButton radioButtonColumnHeader = new JRadioButton("Column headers");
-        JRadioButton radioButtonNormalRow = new JRadioButton("Normal row");
-        ButtonGroup group = new ButtonGroup();
-        group.add(radioButtonColumnHeader);
-        group.add(radioButtonNormalRow);
-
-        subPanelRadioButtons.add(labelFirstLine);
-        subPanelRadioButtons.add(radioButtonColumnHeader);
-        subPanelRadioButtons.add(radioButtonNormalRow);
-
         JPanel subPanelButtons = new JPanel();
 
         JButton buttonConfirm = new JButton("Confirm");
         buttonConfirm.addActionListener((ActionEvent e) -> {
             try {
                 /* SEPARATOR CHARACTER */
+                if(txtFieldCharacter.getText().length() > 1) {
+                    throw new IllegalArgumentException("The separator character must have ONLY one character!");
+                }
+                
+                if(txtFieldCharacter.getText().isEmpty()) {
+                    throw new IllegalArgumentException("Choose a separator character!");
+                }
+                
                 char separatorCharacter = txtFieldCharacter.getText().charAt(0);
 
                 /* CELL RANGE */
@@ -113,7 +105,7 @@ public class ExportDataUI extends JFrame {
 
                 CellRange cellRange = new CellRange(addressStrFirstCell, addressStrLastCell, uiController);
 
-                ExportDataController controller = new ExportDataController(uiController, fileToWrite, separatorCharacter, cellRange);
+                ExportDataController controller = new ExportDataController(uiController, fileToWrite, separatorCharacter, cellRange, false);
                 controller.writeData();
 
                 dispose();
@@ -136,14 +128,10 @@ public class ExportDataUI extends JFrame {
 
         c.gridx = 0;
         c.gridy = 1;
-        panel.add(subPanelRadioButtons, c);
-
-        c.gridx = 0;
-        c.gridy = 2;
         panel.add(subPanelRange, c);
 
         c.gridx = 0;
-        c.gridy = 3;
+        c.gridy = 2;
         panel.add(subPanelButtons, c);
 
         add(panel);

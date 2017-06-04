@@ -40,6 +40,8 @@ import csheets.ui.ext.CellDecorator;
 import csheets.ui.ext.UIExtension;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionEvent;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionStateListener;
+import lapr4.red.s1.core.n1150690.comments.application.AddCommentsWithUserController;
+import lapr4.red.s1.core.n1150690.comments.presentation.CommentsWithUserUI;
 
 /**
  * The renderer used for cells in a spreadsheet.
@@ -109,14 +111,19 @@ public class CellRenderer extends DefaultTableCellRenderer implements ExtensionS
 				else
 					setForeground(stylableCell.getForegroundColor());
 			}
-
+                        
 			// Applies tool tip
 			if (value.getType() == Value.Type.ERROR)
 				try {
 					setToolTipText(value.toError().getMessage());
 				} catch (IllegalValueTypeException e) {}
 			else
-				setToolTipText(null);
+				//setToolTipText(null);
+                            for(CellDecorator decores : decorators){
+                                if(decores.hasTooltip(cell)){
+                                    decores.applyTooltip(this, cell);
+                                }
+                            }
 		}
 		return this;
 	}

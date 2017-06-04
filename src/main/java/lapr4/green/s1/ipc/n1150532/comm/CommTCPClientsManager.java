@@ -4,7 +4,6 @@ import csheets.core.Address;
 import csheets.core.Spreadsheet;
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -108,15 +107,11 @@ public class CommTCPClientsManager implements Serializable {
         CommTCPClientWorker worker = clients.get(connection);
         if (worker!=null) {
             RequestSharedCellsDTO request = new RequestSharedCellsDTO(spreadsheet.getTitle(), spreadsheet,firstAddress,lastAddress);
-            //@TODO
-            //@author Manuel Meireles (1150532)
-            // The handlers are not yet implemented.
-            // When the handlers are implemented, the following code can be used.
-//            try {
-//                worker.getObjectOutputStream().writeObject(request);
-//            } catch (IOException ex) {
-//                Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, ex);
-//            }
+            try {
+                worker.getObjectOutputStream().writeObject(request);
+            } catch (IOException ex) {
+                Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 

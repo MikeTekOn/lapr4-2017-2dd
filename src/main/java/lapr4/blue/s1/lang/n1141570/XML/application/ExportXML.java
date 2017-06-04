@@ -46,7 +46,6 @@ public class ExportXML implements ExportStrategy {
     /**
      * Defines the selected range of cells.
      *
-     * @param cellsList the selected list of cells.
      */
     public void selectRange(Map<Spreadsheet, List<Cell>> cellMap) {
         this.cellMap = cellMap;

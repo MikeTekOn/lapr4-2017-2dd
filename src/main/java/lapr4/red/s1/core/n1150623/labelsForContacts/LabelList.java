@@ -1,8 +1,10 @@
 package lapr4.red.s1.core.n1150623.labelsForContacts;
 
+import eapli.util.DateTime;
 import lapr4.red.s1.core.n1150623.labelsForContacts.domain.Label;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -57,8 +59,21 @@ public class LabelList {
             canExport = false;
         }else{
             exp = new LabelsToPDF();
-            canExport = exportPDF();
         }
         return canExport;
+    }
+
+    public void limitEvents(Calendar endDate) {
+
+        for(Label lab : wantedLabels){
+            lab.deleteEventsOutsideBoundaries(endDate);
+        }
+    }
+
+    public void removeEvents() {
+
+        for(Label l : wantedLabels){
+            l.removeEvents();
+        }
     }
 }

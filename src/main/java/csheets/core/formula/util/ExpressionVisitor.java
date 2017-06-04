@@ -21,6 +21,7 @@
 package csheets.core.formula.util;
 
 import csheets.core.formula.*;
+import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVariable;
 import lapr4.blue.s1.lang.n1151159.macros.Macro;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperation;
 
@@ -86,4 +87,13 @@ public interface ExpressionVisitor {
      * @return an arbitrary object
      */
     public Object visitMacro(Macro macro);
+    
+     /**
+     * Visits a given temporary variable.
+     *
+     * @param tempVar temporary variable to be visited
+     * @return an arbitrary object
+     */
+    public Object visitTemporaryVariable(TemporaryVariable tempVar);
+    
 }

@@ -1,13 +1,13 @@
 package lapr4.red.s1.core.n1150623.labelsForContacts.domain;
 
 import java.lang.IllegalArgumentException;
+
+import eapli.util.DateTime;
 import eapli.util.Strings;
 import lapr4.white.s1.core.n4567890.contacts.domain.Agenda;
 import lapr4.white.s1.core.n4567890.contacts.domain.Event;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by Guilherme Ferreira 1150623 on 01/06/2017.
@@ -18,21 +18,20 @@ import java.util.Set;
  */
 public class Label {
 
-    String contact_Foto;
-    String contact_Name;
-    String contact_LastName;
-    Set<String> contact_addresses;
-    Set<String> contact_emails;
-    Set<String> contact_phoneNumbers;
-    Set<Event>  events;
+    protected String contact_Foto;
+    protected String contact_Name;
+    protected String contact_address;
+    protected String contact_email;
+    protected String contact_phoneNumber;
+    protected List<Event>  events;
 
-    Agenda contact_agenda;
+    protected Agenda contact_agenda;
 
     public Label(){
         //For ORM
     }
 
-    public void fillLabel(String name, String photo, Set<String> addresses, Set<String> emails, Set<String> phoneNumbers) throws IllegalArgumentException{
+    public void fillLabel(final String name, final String photo, final String address, final String email, final String phoneNumber) throws IllegalArgumentException{
 
         if (Strings.isNullOrEmpty(name) || Strings.isNullOrWhiteSpace(name)) {
             throw new IllegalArgumentException("The name mas not be null or empty!");
@@ -40,39 +39,24 @@ public class Label {
         if (Strings.isNullOrEmpty(photo) || Strings.isNullOrWhiteSpace(photo)) {
             throw new IllegalArgumentException("The photo must contain something!");
         }
-        if (addresses == null) {
+        if (address == null) {
             throw new IllegalArgumentException("The addresses can't be null!");
         }
-        if (emails == null) {
-            throw new IllegalArgumentException("The emails can't be null!");
+        if (Strings.isNullOrEmpty(email) || Strings.isNullOrWhiteSpace(email)) {
+            throw new IllegalArgumentException("The email mas not be null or empty!");
         }
-        if (phoneNumbers == null) {
-            throw new IllegalArgumentException("The phoneNumbers can't be null!");
+        if (Strings.isNullOrEmpty(phoneNumber) || Strings.isNullOrWhiteSpace(phoneNumber)) {
+            throw new IllegalArgumentException("The phone Number mas not be null or empty!");
         }
-
-
-        //Se sets can be empty, but if they have at leat an element, it can't be empty or null (the element)
-        for(String s : addresses){
-            if (Strings.isNullOrEmpty(s) || Strings.isNullOrWhiteSpace(s)) {
-                throw new IllegalArgumentException("The address must contain something!");
-            }
-        }
-        for(String s : phoneNumbers){
-            if (Strings.isNullOrEmpty(s) || Strings.isNullOrWhiteSpace(s) || phoneNumbers == null) {
-                throw new IllegalArgumentException("The phone Number must contain something!");
-            }
-        }
-        for(String s : emails){
-            if (Strings.isNullOrEmpty(s) || Strings.isNullOrWhiteSpace(s) || emails == null) {
-                throw new IllegalArgumentException("The email must contain something!");
-            }
+        if (Strings.isNullOrEmpty(address) || Strings.isNullOrWhiteSpace(address)) {
+            throw new IllegalArgumentException("The address mas not be null or empty!");
         }
 
         this.contact_Foto = photo;
         this.contact_Name = name;
-        this.contact_addresses = addresses;
-        this.contact_emails = emails;
-        this.contact_phoneNumbers = phoneNumbers;
+        this.contact_address = address;
+        this.contact_email = email;
+        this.contact_phoneNumber = phoneNumber;
     }
 
     /**
@@ -85,9 +69,48 @@ public class Label {
             throw new IllegalArgumentException("Invalid Event");
         }
 
-        this.events = new HashSet();
+        this.events = new ArrayList<>();
         for(Event e : events){
-            events.add(e);
+            this.events.add(e);
         }
+    }
+
+    public void deleteEventsOutsideBoundaries(Calendar endDate){
+        List<Event> toRemove = new ArrayList<>();
+        for(Event e : events){
+            if(e.dueDate().compareTo(endDate) == 1){ // se data evento > endDate
+                toRemove.add(e);
+            }
+        }
+
+        for(Event e : toRemove){
+            events.remove(e);
+        }
+    }
+
+    public void removeEvents() {
+        int size = contact_agenda.events().size();
+        for(int i = 0; i< size; i++){
+            contact_agenda.events().remove(0);
+        }
+    }
+
+    public String phoneNumber(){
+        return this.contact_phoneNumber;
+    }
+    public String address(){
+        return this.contact_address;
+    }
+    public String name(){
+        return this.contact_Name;
+    }
+    public String email(){
+        return this.contact_email;
+    }
+    public String photo(){
+        return this.contact_Foto;
+    }
+    public List<Event> events(){
+        return this.contact_agenda.events();
     }
 }

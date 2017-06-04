@@ -1,5 +1,8 @@
 /**
- * <p>Technical documentation regarding the user story Lang05.1: Macro Window</p>
+ * <p>Technical documentation regarding the user story Lang05.1: Macro Window.</p>
+ *
+ * <p><b>Scrum Master: no</b></p>
+ * <p><b>Team Leader: yes</b></p>
  *
  *
  *
@@ -28,7 +31,7 @@
  *
  * <p>Although the formulas starts with an '=' in the cells,  for the macros it can be omitted.</p>
  *
- * <p>A comment starts with ';', and this line should be ignored for processing.</p>
+ * <p>A comment starts with ';' and it should be ignored for processing.</p>
  *
  * <p>
  *     <b>Use Case "Macro Window":</b> The user selects the menu Extensions &gt; Macros &gt; Edit/Execute Macros. The
@@ -117,7 +120,6 @@
  *     <li>The cell A1 must have the value 4.</li>
  *     <li>The cell B2 must have the value 6.</li>
  *     <li>The cell B3 must have the value 10.</li>
- *     <li></li>
  * </ol>
  *
  *
@@ -142,12 +144,64 @@
  *     <b>MacroBaseVisitor</b> using the grammar defined with ANTLR.
  * </p>
  * <p>The <b>Decorator</b> design pattern is also used to design the formulas implementations.</p>
+ * <p>
+ *     For the extensions to be loaded the <b>Inversion of Control (IOC) pattern</b> is used, as referred in the
+ *     overview page of the javadoc.
+ * </p>
+ *
+ *
+ *
+ *
+ * <h2>6. Implementation</h2>
+ *
+ * <p>Refer to the classes present on this package for the implementation.</p>
+ *
+ * <p>
+ *     The class {@link lapr4.blue.s1.lang.n1151159.macros.Macro} was created to handle the new grammar.
+ *     It is an expression that has a list of other expressions. It has the responsibility of evaluate
+ *     the expressions. The class MacroCompiler was created to compile the rules of the macro grammar.
+ *     As well, it was necessary to create the MacroEvalVisitor to transverse the grammar and make the evaluations.
+ * </p>
+ *
+ * <p>
+ *     The functionality was integrated as an extension of the CleanSheets. The class
+ *     {@link lapr4.blue.s1.lang.n1151159.macros.MacroExtension} is the entry point. It was necessary to add this path
+ *     to the extensions.props file. At the package {@link lapr4.blue.s1.lang.n1151159.macros.ui} we can find the
+ *     components of this extension.
+ * </p>
+ *
+ *
+ *
+ *
+ * <h2>6. Integration/Demonstration</h2>
+ *
+ * <p>
+ *     It was necessary to integrate the beanshell use case with this use case. For that I've worked with the
+ *     developer of the beanshell functional increment (Renato Oliveira) to make this integration.
+ * </p>
+ * <p>I was very active and I successfully collaborate with the team members.</p>
+ *
+ *
+ *
+ *
+ * <h2>7. Final Remarks</h2>
+ * <p>
+ *     As an extra for this functional increment, a default macro was created. When the macros window is launched,
+ *     the default macro script will be there, as an example for the user. The user can always select the clear button
+ *     to clear the macro text area.
+ * </p>
+ * <p>
+ *     As a possible extra for this feature, a list of useful macros could be made. The users could use this macros and
+ *     edit them as they like. As an example of this macros, a table with grades could be created with the necessary
+ *     calculations to obtain final grades.
+ * </p>
+ *
  *
  *
  *
  * <h2>8. Work Log</h2>
  *
- * <p><b>Tuesday</b></p>
+ * <h3>Tuesday</h3>
  *
  * <p>Yesterday I've worked on:</p>
  * <ol>
@@ -167,7 +221,7 @@
  * </ol>
  *
  *
- * <p><b>Wednesday</b></p>
+ * <h3>Wednesday</h3>
  *
  * <p><b>Yesterday I've worked on:</b></p>
  * <ol>
@@ -188,7 +242,7 @@
  * </ol>
  *
  *
- * <p><b>Thursday</b></p>
+ * <h3>Thursday</h3>
  *
  * <p><b>Yesterday I've worked on:</b></p>
  * <ol>
@@ -207,6 +261,49 @@
  * <ol>
  *     <li>Nothing</li>
  * </ol>
+ *
+ *
+ * <h3>Friday</h3>
+ *
+ * <p><b>Yesterday I've worked on:</b></p>
+ * <ol>
+ *     <li>Conclusion of the tests</li>
+ *     <li>Conclusion of the design</li>
+ *     <li>Start the Implementation</li>
+ * </ol>
+ *
+ * <p><b>Today</b></p>
+ * <ol>
+ *     <li>Finish the implementation</li>
+ * </ol>
+ *
+ * <p><b>Blocking:</b></p>
+ * <ol>
+ *     <li>Nothing</li>
+ * </ol>
+ *
+ *
+ * <h3>Saturday</h3>
+ *
+ * <p><b>Yesterday I've worked on:</b></p>
+ * <ol>
+ *     <li>Finishing the implementation</li>
+ * </ol>
+ *
+ * <p><b>Today</b></p>
+ * <ol>
+ *     <li>Functional Tests</li>
+ *     <li>Review the functional increment</li>
+ *     <li>Helping teammates</li>
+ * </ol>
+ *
+ * <p><b>Blocking:</b></p>
+ * <ol>
+ *     <li>Nothing</li>
+ * </ol>
+ *
+ *
+ *
  *
  * @author Ivo Ferro
  */

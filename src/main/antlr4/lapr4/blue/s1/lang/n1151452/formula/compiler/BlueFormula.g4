@@ -6,7 +6,7 @@ grammar BlueFormula;
 expression
 	: EQ comparison EOF
 	;
-	
+
 comparison
 	: concatenation
 		(  ( EQ | NEQ | LTEQ | GTEQ | GT | LT ) concatenation )?
@@ -29,6 +29,7 @@ atom
 	|	LPAR comparison RPAR
 	|	block
 	|	assignment
+        |       temporary_variable
 	;
 
 for_loop
@@ -48,6 +49,11 @@ function_call
 		( comparison ( SEMI comparison )* )?
 		RPAR
 	;
+
+	
+temporary_variable
+          : TEMPORARY_VARIABLE ASSIGN
+          ;
 
 reference
 	:	CELL_REF ( ( COLON ) CELL_REF )?
@@ -72,6 +78,10 @@ CELL_REF
 		( ABS )? LETTER ( LETTER )?
 		( ABS )? ( DIGIT )+
 	;
+
+TEMPORARY_VARIABLE :
+        UNDERSCORE LETTER ((DIGIT)?(LETTER)?)+
+        ;
 
 /* String literals, i.e. anything inside the delimiters */
 
@@ -118,12 +128,10 @@ LPAR	: '(' ;
 RPAR	: ')' ; 
 L_CURLY_BRACKET	: '{' ;
 R_CURLY_BRACKET	: '}' ;
+UNDERSCORE : '_';
 
 /* assignment operator */
 ASSIGN  : ':=' ;
 
 /* White-space (ignored) */
 WS: ( ' ' | '\r' '\n' | '\n' | '\t' ) -> skip ;
-	
-	
- 

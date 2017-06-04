@@ -15,8 +15,6 @@ import java.util.Properties;
 import lapr4.white.s1.core.n4567890.contacts.domain.Contact;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
