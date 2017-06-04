@@ -262,6 +262,20 @@
  * We well continue the best practices and implement our FI using the same patterns.
  * <p>
  * <p>
+ * <h2>6. Integration/Demonstration</h2>
+ * <p>
+ * <p>
+ * It was necessary to integrate this feature with already developed formula core package without altering it. In some pontual situations
+ * it was necessary to do so.
+ * <p>
+ * <h2>7. Final Remarks</h2>
+ * <p>
+ * As an extra for this functional increment, we resolved the infinite loop created by a self assignment and refactored the partially
+ * implementation features to obey core pattern.
+ * <p>
+ * This section can be vastly improved with more operations/expressions (ex. conditional blocks, multiple assignments, etc.).
+ * <p>
+ * <p>
  * <br>
  * <h2>8. Work Log</h2>
  * <p>
