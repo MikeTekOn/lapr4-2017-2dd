@@ -11,13 +11,14 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
+ * Tests new expressions (Sequence Block, Assigner & For Loop)
+ *
  * @author Daniel Gonçalves [1151452@isep.ipp.pt]
  *         on 01/06/17.
  */
 public class FormulaTest {
 
     private CleanSheets app;
-    Cell cellA1;
 
     @Before
     public void setUp() throws Exception {
@@ -102,7 +103,7 @@ public class FormulaTest {
     }
 
     /**
-     * Tests if all expresions of the block are executed.
+     * Tests if all expressions of the block are executed.
      *
      * @throws FormulaCompilationException if the formula could not be compiled
      * @throws IllegalValueTypeException   if unexpected value
@@ -122,5 +123,28 @@ public class FormulaTest {
         assert cellA1.getValue().toDouble() == 1d;
         assert cellA2.getValue().toDouble() == 2d;
         assert cellA3.getValue().toDouble() == 3d;
+    }
+
+    /**
+     * Tests if all expressions of the for loop are executed.
+     *
+     * @throws FormulaCompilationException if the formula could not be compiled
+     * @throws IllegalValueTypeException   if unexpected value
+     */
+    @Test
+    public void ensureForLoopsStatementExecutions() throws FormulaCompilationException, IllegalValueTypeException {
+
+        // Get cells & define A1's formula
+        Cell cellA1 = app.getWorkbooks()[0].getSpreadsheet(0).getCell(new Address(0, 0));
+        Cell cellA2 = app.getWorkbooks()[0].getSpreadsheet(0).getCell(new Address(0, 1));
+        Cell cellB1 = app.getWorkbooks()[0].getSpreadsheet(0).getCell(new Address(1, 0));
+
+        String block = "=for{(A1:=1);A1<10;(A1:=A1+1);(B1:=A1 * 2)}";
+        cellA2.setContent(block);
+
+        //Test Each cell's value
+        assert cellA1.getValue().toDouble() == 10d;
+        assert cellA2.getValue().toDouble() == 20d;
+        assert cellB1.getValue().toDouble() == 20d;
     }
 }

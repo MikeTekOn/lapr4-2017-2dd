@@ -72,7 +72,11 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
             }
         }
 
-        return visit(ctx.concatenation(0));
+        if (ctx.getChild(0) instanceof BlueFormulaParser.ConcatenationContext) {
+            return visit(ctx.concatenation(0));
+        }
+
+        return visit(ctx.for_loop());
     }
 
     @Override
@@ -184,6 +188,7 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
     public Expression visitAssignment(BlueFormulaParser.AssignmentContext ctx) {
         if (ctx.ASSIGN() != null) {
             try {
+
                 // Convert binary operation
                 BinaryOperator operator = Language.getInstance().getBinaryOperator(ctx.getChild(2).getText());
                 return new BinaryOperation(
@@ -228,6 +233,38 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
         return visitChildren(ctx);
     }
 
+    @Override
+    public Expression visitFor_loop(BlueFormulaParser.For_loopContext ctx) {
+
+        if (ctx.FOR() != null) {
+            try {
+                // Get n-ary operator that identifies a for loop
+                String operatorID = ctx.FOR().getText().toLowerCase();
+                NaryOperator operator = Language.getInstance().getNaryOperator(operatorID);
+
+                // Get # of expressions by: dividing by 2 to not count for SEMI-COLON/BRACKETS & - 1 for the "for"
+                Expression expressions[] = new Expression[(ctx.getChildCount() / 2) - 1];
+
+                // #1 Convert all the child nodes
+                for (int nChild = 2, i = 0; i < expressions.length; nChild += 2, i++) {
+
+                    expressions[i] = visit(ctx.getChild(nChild));
+                }
+
+                return new NaryOperation(operator, expressions);
+
+            } catch (UnknownElementException ex) {
+                addVisitError(ex.getMessage());
+            }
+        }
+        return visitChildren(ctx);
+    }
+
+    /**
+     * Adds an error to the error buffer.
+     *
+     * @param msg the message to append
+     */
     private void addVisitError(String msg) {
         errorBuffer.append(msg).append("\n");
         numberOfErrors++;
