@@ -1,4 +1,4 @@
-package lapr4.white.s1.core.n4567890.contacts.application;
+package lapr4.red.s1.core.n1150623.labelsForContacts.application;
 
 import lapr4.red.s1.core.n1150623.labelsForContacts.domain.Label;
 import lapr4.white.s1.core.n4567890.contacts.persistence.jpa.JpaRepositoryFactory;
@@ -14,10 +14,10 @@ public class LabelFactory{
         //For ORM
     }
 
-    public Label construct(String name, String photo, Set<String> email, Set<String> addresses,  Set<String> phoneNumbers){
+    public Label construct(String name, String photo, String email, String address,  String phoneNumber){
         Label label = new Label();
         try {
-            label.fillLabel(name, photo, addresses, email, phoneNumbers);
+            label.fillLabel(name, photo, address, email, phoneNumber);
         }catch(Exception e){
             return null;
         }
