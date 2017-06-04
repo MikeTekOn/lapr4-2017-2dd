@@ -1,0 +1,39 @@
+@startuml contacts_domain_model.png
+    skinparam handwritten true
+    skinparam monochrome true
+    skinparam packageStyle rect
+    skinparam defaultFontName FG Virgil
+    skinparam shadowing false
+
+    title Domain Model
+
+    hide methods
+
+    class CRMUser << (E, lightgray) >>{
+    }
+
+    class Contact << (E, lightgray) >>{
+        firstName
+        lastName
+        photo
+    }
+
+    class Agenda << (E, lightgray) >>{
+    }
+
+    class Event << (E, lightgray) >>{
+        description
+        dueDate
+    }
+
+    CRMUser -> "*" Contact : manages
+
+    Contact --> "1" Agenda : has
+
+    Agenda -left-> "*" Event : has
+
+    Event --> CRMUser : notifies
+
+    CRMUser --> "*" Event : records
+
+@enduml

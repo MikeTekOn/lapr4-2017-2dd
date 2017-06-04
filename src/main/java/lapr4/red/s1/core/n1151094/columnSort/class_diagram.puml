@@ -1,0 +1,35 @@
+@startuml
+
+class ColumnSortUI{
+   
+}
+
+
+class ColumnSortController{
+   
+    + selectCellsOfColumn(Spreadsheet spreadsheetActive, SpreadsheetTable focusOwner)
+    + sortAscending()
+    + sortDescending()
+}
+
+class ColumnSort{
+    -column: Cell[] column
+    +fillInVector(Cell[] column, Value[] value)
+    +selectSort(op)
+    +sort()
+    +mergeSort(low, high)
+    +merge(low,  middle,high)
+    +alterCell(matrix, values)
+}
+
+class UIController{
+    +getActiveSpreadsheet()
+}
+ 
+ColumnSortUI -> ColumnSortController
+ColumnSortUI -> UIController
+ColumnSortController -> ColumnSort
+
+
+
+@enduml

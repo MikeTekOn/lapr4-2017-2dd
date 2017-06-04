@@ -1,0 +1,59 @@
+@startuml uc_core03._01_design.png
+ 
+
+title Use Case: Column Sort
+
+actor "User" as Actor  
+participant ColumnSortUI as UI  
+participant ColumnSortController as Controller  
+participant UIController as uiController
+participant ColumnSort as sort
+participant "spreadsheetActive: SpreadSheet"
+participant "Cell:Cell[] column"
+participant "focusOwner: SpreadsheetTable"
+
+Actor ->UI:select a column
+activate UI   
+    UI->Controller: create
+ 
+activate Controller    
+deactivate sort
+    UI-> uiController: spreadsheetActive=getActiveSpreadsheet()
+activate uiController
+deactivate uiController
+UI-> Controller:selectCellsOfColumn(spreadsheetActive,focusOwner)
+Controller->sort:create(column)
+activate sort
+deactivate sort
+Controller->sort:fillInVector(matrix, values)
+activate sort
+deactivate sort
+deactivate Controller
+ 
+Actor->UI: Click the edit button,\n then click the sort column button \n 
+alt sort
+Actor->UI: Click the ascending button
+UI->Controller:sortAscending()
+activate Controller
+activate sort
+Controller->sort:selectSort(op)
+Controller->sort:sort()
+sort->sort: mergeSort(low, high)
+sort->sort:merge(low,  middle,high)
+Controller->sort:alterCell(matrix, values)
+
+else
+Actor->UI: Click the descending button
+UI->Controller:sortDescending()
+Controller->sort:selectSort(op)
+Controller->sort:sort()
+sort->sort: mergeSort(low, high)
+sort->sort:merge(low,  middle,high)
+Controller->sort:alterCell(matrix, values)
+deactivate UI
+deactivate Controller
+deactivate sort
+end
+
+ 
+@enduml
