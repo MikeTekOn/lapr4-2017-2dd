@@ -86,7 +86,8 @@ public class CommTCPServerWorker extends Thread {
             outStream = transmissionContext.outputStream(socketOut);
             inStream = transmissionContext.inputStream(socketIn);
             while (true) {
-                processIncommingDTO(inStream.readObject());
+                Object dto = inStream.readObject();
+                processIncommingDTO(dto);
             }
         } catch (SocketException ex) {
             //@FIXME O cliente fechou a ligação.
