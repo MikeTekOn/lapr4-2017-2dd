@@ -4,7 +4,9 @@ import lapr4.green.s1.ipc.n1150738.securecomm.BasicDataTransmissionContext;
 import lapr4.green.s1.ipc.n1150738.securecomm.DataTransmissionContext;
 
 import java.io.*;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -185,5 +187,11 @@ public class CommTCPServerWorker extends Thread {
 //            e.printStackTrace();
 //        }
 //    }
+    public SocketAddress getRemoteAdress(){
+        return socket.getRemoteSocketAddress();
+    }
 
+    public DataTransmissionContext getTransmissionContext() {
+        return transmissionContext;
+    }
 }

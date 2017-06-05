@@ -156,4 +156,8 @@ public class CommTCPServer extends Thread {
 //        return null;
 //    }
 
+
+    public static List<CommTCPServerWorker> getWorkers() {
+        return workers;
+    }
 }

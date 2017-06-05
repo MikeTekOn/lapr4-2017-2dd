@@ -248,4 +248,10 @@ public class CommTCPClientWorker extends Thread implements Serializable {
 //            e.printStackTrace();
 //        }
 //    }
+
+
+    public DataTransmissionContext getTransmissionContext() {
+        return transmissionContext;
+    }
+
 }
