@@ -81,4 +81,8 @@ public class LabelsForContactsController {
     public void removeEvents() {
         labelList.removeEvents();
     }
+
+    public void setPath(String path) {
+        labelList.choosePath(path);
+    }
 }

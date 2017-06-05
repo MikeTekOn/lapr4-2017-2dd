@@ -34,7 +34,8 @@ public class LabelsToPDFTest {
     @Before
     public void setUp() {
 
-       /* Event a = new Event("Evento1", Calendar.getInstance());
+       /*
+        Event a = new Event("Evento1", Calendar.getInstance());
         Event b = new Event("Evento2", Calendar.getInstance());
         Event c = new Event("Evento3", Calendar.getInstance());
         Event d = new Event("Evento4", Calendar.getInstance());
