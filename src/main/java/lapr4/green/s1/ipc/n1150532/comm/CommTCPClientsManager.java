@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import lapr4.green.s1.ipc.n1150657.chat.RequestMessageDTO;
 import lapr4.green.s1.ipc.n1150901.search.workbook.RequestWorkbookDTO;
 
 /**
@@ -61,13 +62,13 @@ public class CommTCPClientsManager extends Observable implements Serializable {
         }
         return manager;
     }
-    
+
     /**
      * A getter of the current connections available.
-     * 
+     *
      * @return It returns the map containing the connections.
      */
-    public Map<ConnectionID, CommTCPClientWorker> getClients(){
+    public Map<ConnectionID, CommTCPClientWorker> getClients() {
         return clients;
     }
 
@@ -122,8 +123,8 @@ public class CommTCPClientsManager extends Observable implements Serializable {
      */
     public void shareCellsWith(ConnectionID connection, Spreadsheet spreadsheet, Address firstAddress, Address lastAddress) {
         CommTCPClientWorker worker = clients.get(connection);
-        if (worker!=null) {
-            RequestSharedCellsDTO request = new RequestSharedCellsDTO(spreadsheet.getTitle(), spreadsheet,firstAddress,lastAddress);
+        if (worker != null) {
+            RequestSharedCellsDTO request = new RequestSharedCellsDTO(spreadsheet.getTitle(), spreadsheet, firstAddress, lastAddress);
             try {
                 worker.getObjectOutputStream().writeObject(request);
             } catch (IOException ex) {
@@ -131,14 +132,32 @@ public class CommTCPClientsManager extends Observable implements Serializable {
             }
         }
     }
-    
-    public void searchWorkbookIn(ConnectionID connection, Workbook workbook){
+
+    public void searchWorkbookIn(ConnectionID connection, Workbook workbook) {
         CommTCPClientWorker worker = clients.get(connection);
-        if (worker != null){
+        if (worker != null) {
             RequestWorkbookDTO request = new RequestWorkbookDTO(workbook);
-            try{
+            try {
                 worker.getObjectOutputStream().writeObject(request);
-            } catch (IOException ex){
+            } catch (IOException ex) {
+                Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    /**
+     * IT sends the message to the server
+     *
+     * @param connection The connection id.
+     * @param message The message.
+     */
+    public void sendMessageWith(ConnectionID connection, String message) {
+        CommTCPClientWorker worker = clients.get(connection);
+        if (worker != null) {
+            RequestMessageDTO dto = new RequestMessageDTO(message);
+            try {
+                worker.getObjectOutputStream().writeObject(dto);
+            } catch (IOException ex) {
                 Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -175,5 +194,4 @@ public class CommTCPClientsManager extends Observable implements Serializable {
 //        }
 //        return null;
 //    }
-
 }

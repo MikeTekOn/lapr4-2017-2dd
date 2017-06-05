@@ -6,7 +6,10 @@ import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.ext.Extension;
 import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.UIExtension;
+import java.net.InetAddress;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.CellDTO;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.RequestSharedCellsDTO;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.ResponseSharedCellsDTO;
@@ -23,6 +26,12 @@ import java.util.Observer;
 import java.util.SortedSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import lapr4.green.s1.ipc.n1150657.chat.ControllerConnection;
+import lapr4.green.s1.ipc.n1150657.chat.HandlerRequestMessageDTO;
+import lapr4.green.s1.ipc.n1150657.chat.MessageEvent;
+import lapr4.green.s1.ipc.n1150657.chat.RequestMessageDTO;
+import lapr4.green.s1.ipc.n1150657.chat.ServerMessage;
 import lapr4.green.s1.ipc.n1150901.search.workbook.HandlerRequestWorkbookDTO;
 import lapr4.green.s1.ipc.n1150901.search.workbook.HandlerResponseWorkbookDTO;
 import lapr4.green.s1.ipc.n1150901.search.workbook.RequestWorkbookDTO;
@@ -89,11 +98,14 @@ public class CommExtension extends Extension implements Observer {
      */
     private UIController uiController;
 
+    private Map<InetAddress, ServerMessage> threadsList;
+
     /**
      * The extension constructor.
      */
     public CommExtension() {
         super(NAME);
+        threadsList = new HashMap<>();
     }
 
     /**
@@ -127,6 +139,15 @@ public class CommExtension extends Extension implements Observer {
     }
 
     /**
+     * It stops the threads messages.
+     */
+    public void stopMessages() {
+        for (InetAddress address : threadsList.keySet()) {
+            threadsList.get(address).stopThread();
+        }
+    }
+
+    /**
      * It provides the UI Extension to render.
      *
      * @param uiController The UI Controller.
@@ -151,6 +172,9 @@ public class CommExtension extends Extension implements Observer {
         HandlerRequestWorkbookDTO h3 = new HandlerRequestWorkbookDTO();
         h3.addObserver(this);
         tcpServer.addHandler(RequestWorkbookDTO.class, h3);
+        HandlerRequestMessageDTO h4 = new HandlerRequestMessageDTO();
+        h4.addObserver(this);
+        tcpServer.addHandler(RequestMessageDTO.class, h4);
         //TODO 
     }
 
@@ -175,6 +199,9 @@ public class CommExtension extends Extension implements Observer {
         tcpClientsManager.addHandler(ResponseSharedCellsDTO.class, h2);
         HandlerResponseWorkbookDTO h3 = new HandlerResponseWorkbookDTO();
         tcpClientsManager.addHandler(ResponseWorkbookDTO.class, h3);
+        //HandlerResponseMessageDTO h4 = new HandlerResponseMessageDTO();
+        //tcpClientsManager.addHandler(ResponseMessageDTO.class,h4);
+        //tcpServer.addHandler(RequestMessageDTO.class, h4);
         //TODO
     }
 
@@ -266,6 +293,38 @@ public class CommExtension extends Extension implements Observer {
                         Logger.getLogger(CommExtension.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
+            }
+            if (arg instanceof MessageEvent) {
+
+                MessageEvent event = (MessageEvent) arg;
+                String m = event.getMessage();
+                InetAddress adress = event.getSocket().getInetAddress();
+
+                ConnectionID connection = new ConnectionIDImpl(adress, event.getSocket().getPort());
+                //@FIXME quick fix, explained in class Controller Connection
+                ControllerConnection.setChatController(connection);
+                //@FIXME popup with time
+                JOptionPane.showMessageDialog(null, "New message from " + adress.getHostName());
+                //creates threads server for each conversation.
+                Thread server;
+                if (threadsList.containsKey(adress)) {
+                    ServerMessage serverMessage = threadsList.get(adress);
+                    serverMessage.addMessage(m, adress);
+                    //It notifies the server for the new message.
+                    //@FIXME, notify ins't doin it well
+                    synchronized (serverMessage) {
+                        serverMessage.notify();
+                    }
+                } else {
+                    ServerMessage serverMessage = new ServerMessage(m, adress);
+                    threadsList.put(adress, serverMessage);
+                    server = new Thread(serverMessage);
+                    server.start();
+                    synchronized (serverMessage) {
+                        serverMessage.notify();
+                    }
+                }
+
             }
         }
     }
