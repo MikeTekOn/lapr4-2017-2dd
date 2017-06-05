@@ -59,7 +59,7 @@ import java.util.ResourceBundle;
  */
 public class CleanSheets {
 
-	public static final String OWN_NAME = "ME";
+	public static final String OWN_NAME = System.getProperty("user.name");
 
         /** The filename for the localization resources */
     	private static final String DEFAULT_RESOURCE_FILENAME = "MessagesBundle";

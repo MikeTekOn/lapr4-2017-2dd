@@ -5,6 +5,8 @@ import csheets.ext.ExtensionManager;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,9 +20,11 @@ public class EnableDisableExtensionTest {
         Extension[] extensions = ExtensionManager.getInstance().getExtensions();
         if(extensions.length > 0){
             int index = (int) Math.random() * extensions.length;
-            ExtensionManager.getInstance().disableExtension(extensions[index].getName());
+            ArrayList<String> list = new ArrayList<>();
+            list.add(extensions[index].getName());
+            ExtensionManager.getInstance().disableExtensions(list);
             Assert.assertEquals(null, ExtensionManager.getInstance().getExtension(extensions[index].getName()));
-            ExtensionManager.getInstance().enableExtension(extensions[index].getName());
+            ExtensionManager.getInstance().enableExtensions(list);
             Assert.assertNotEquals(null, ExtensionManager.getInstance().getExtension(extensions[index].getName()));
         } else {
             Logger.getLogger(this.getClass().getName()).log(Level.WARNING, "ExtensionManager did not load any extensions, so could not be tested.");
