@@ -1,10 +1,13 @@
 package lapr4.green.s1.ipc.n1150532.comm;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import lapr4.green.s1.ipc.n1150532.comm.connection.SocketEncapsulatorDTO;
+import lapr4.green.s1.ipc.n1150738.securecomm.BasicDataTransmissionContext;
+import lapr4.green.s1.ipc.n1150738.securecomm.DataTransmissionContext;
+import lapr4.green.s1.ipc.n1150738.securecomm.SecureAESDataTransmissionContext;
+import lapr4.green.s1.ipc.n1150738.securecomm.trash.streams.NonClosingInputStreamWrapper;
+import lapr4.green.s1.ipc.n1150738.securecomm.trash.streams.NonClosingOutputStreamWrapper;
+
+import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -49,6 +52,9 @@ public class CommTCPClientWorker extends Thread implements Serializable {
      * The output stream to which the objects are sent through the socket.
      */
     private ObjectOutputStream outStream;
+    private DataTransmissionContext transmissionContext;
+    private OutputStream socketOut;
+    private InputStream socketIn;
 
     /**
      * The worker constructor. It binds the socket.
@@ -57,7 +63,7 @@ public class CommTCPClientWorker extends Thread implements Serializable {
      * @param theServerIP The address on which to bind the socket.
      * @param thePortNumber The port number on which to bind the socket.
      */
-    public CommTCPClientWorker(CommTCPClientsManager theManager, InetAddress theServerIP, int thePortNumber) {
+    public CommTCPClientWorker(CommTCPClientsManager theManager, InetAddress theServerIP, int thePortNumber, boolean secure) {
         serverIP = theServerIP;
         portNumber = thePortNumber;
         try {
@@ -69,6 +75,22 @@ public class CommTCPClientWorker extends Thread implements Serializable {
         manager = theManager;
         inStream = null;
         outStream = null;
+
+        try {
+            socketOut = socket.getOutputStream();
+            socketIn = socket.getInputStream();
+            if(secure){
+                byte[] sec = {(byte)0,(byte)0,(byte)0,(byte)0};
+                socketOut.write(sec, 0, 4);
+                transmissionContext = new SecureAESDataTransmissionContext();
+            } else {
+                byte[] sec = {(byte)1,(byte)1,(byte)1,(byte)1};
+                socketOut.write(sec, 0, 4);
+                transmissionContext = new BasicDataTransmissionContext();
+            }
+        } catch (IOException e) {
+            Logger.getLogger(CommTCPClientWorker.class.getName()).log(Level.SEVERE, null, e);;
+        }
     }
 
     /**
@@ -101,7 +123,7 @@ public class CommTCPClientWorker extends Thread implements Serializable {
         if (outStream != null) {
             return outStream;
         } else {
-            outStream = new ObjectOutputStream(socket.getOutputStream());
+            outStream = transmissionContext.outputStream(socketOut);
             return outStream;
         }
     }
@@ -117,7 +139,7 @@ public class CommTCPClientWorker extends Thread implements Serializable {
         if (inStream != null) {
             return inStream;
         } else {
-            inStream = new ObjectInputStream(socket.getInputStream());
+            inStream = transmissionContext.inputStream(socketIn);
             return inStream;
         }
     }
@@ -190,10 +212,40 @@ public class CommTCPClientWorker extends Thread implements Serializable {
      * @param inDTO The received object.
      */
     private void processIncommingDTO(Object inDTO) {
+        System.out.println(inDTO.getClass());
         CommHandler handler = manager.getHandler(inDTO.getClass());
         if (handler != null) {
-            handler.handleDTO(inDTO, outStream);
+            //handler.handleDTO(inDTO, outStream);
+            SocketEncapsulatorDTO dto = new SocketEncapsulatorDTO(socket, handler, inDTO);
+            handler.handleDTO(dto, outStream);
         }
     }
 
+    /**
+     * Henrique Oliveira [1150738@isep.ipp.pt]
+     * @param s
+     * @return
+     */
+    public boolean hasSocket(Socket s){
+        return socket == s;
+    }
+
+    /**
+     * @author Henrique Oliveira [1150738@isep.ipp.pt]
+     *
+     * @param ctx
+     */
+//    public void switchDataTransmissionContext(DataTransmissionContext ctx) {
+//        this.transmissionContext.wiretapInput().transferTappers(ctx.wiretapInput());
+//        this.transmissionContext.wiretapOutput().transferTappers(ctx.wiretapOutput());
+//        this.transmissionContext = ctx;
+//        try {
+//            outStream.close();
+//            inStream.close();
+//            outStream = transmissionContext.outputStream(socketOut);
+//            inStream = transmissionContext.inputStream(socketIn);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 }

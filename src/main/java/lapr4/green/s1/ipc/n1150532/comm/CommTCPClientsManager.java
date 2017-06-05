@@ -6,9 +6,12 @@ import csheets.core.Workbook;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.RequestSharedCellsDTO;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionRequestDTO;
+import lapr4.green.s1.ipc.n1150738.securecomm.SecureAESDataTransmissionContext;
+import lapr4.green.s1.ipc.n1150738.securecomm.TransmissionContextRequestDTO;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -92,10 +95,10 @@ public class CommTCPClientsManager implements Serializable {
      *
      * @param theConnection The connection information.
      */
-    public void requestConnectionTo(ConnectionID theConnection) {
+    public void requestConnectionTo(ConnectionID theConnection, boolean secure) {
         if (clients.get(theConnection) == null) {
-            CommTCPClientWorker worker = new CommTCPClientWorker(this, theConnection.getAddress(), theConnection.getPortNumber());
-            ConnectionRequestDTO request = new ConnectionRequestDTO(CommTCPServer.getServer().provideConnectionPort(), theConnection.getAddress(), theConnection.getPortNumber());
+            CommTCPClientWorker worker = new CommTCPClientWorker(this, theConnection.getAddress(), theConnection.getPortNumber(), secure);
+            ConnectionRequestDTO request = new ConnectionRequestDTO(CommTCPServer.getServer().provideConnectionPort(), theConnection.getAddress(), theConnection.getPortNumber(), secure);
             worker.start();
             try {
                 worker.getObjectOutputStream().writeObject(request);
@@ -159,5 +162,14 @@ public class CommTCPClientsManager implements Serializable {
     private void addClient(ConnectionID connection, CommTCPClientWorker worker) {
         clients.put(connection, worker);
     }
+
+//    public CommTCPClientWorker workerBySocket(Socket s){
+//        for(Map.Entry<ConnectionID, CommTCPClientWorker> entry : clients.entrySet()){
+//            if(entry.getValue().hasSocket(s)){
+//                return entry.getValue();
+//            }
+//        }
+//        return null;
+//    }
 
 }

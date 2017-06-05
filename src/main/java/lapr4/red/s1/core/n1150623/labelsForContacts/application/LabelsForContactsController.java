@@ -46,7 +46,7 @@ public class LabelsForContactsController {
      * @throws DataConcurrencyException
      * @throws DataIntegrityViolationException
      */
-    private boolean addLabel(String name, String photo, String email, String address, String phoneNumber) throws DataConcurrencyException, DataIntegrityViolationException {
+    public boolean addLabel(String name, String photo, String email, String address, String phoneNumber) throws DataConcurrencyException, DataIntegrityViolationException {
         Label createdLabel = labelFactory.construct(name, photo, email, address, phoneNumber);
         return labelList.addLabel(createdLabel);
     }
@@ -69,16 +69,6 @@ public class LabelsForContactsController {
         return list;
     }
 
-    public boolean toExportContacts(List<Contact> toExport) {
-        for (Contact c : toExport) {
-            try {
-                //addLabel(c.name(), c.photo(), c.email(), c.address(), c.phoneNumber());
-            } catch (Exception e) {
-                return false;
-            }
-        }
-        return true;
-    }
 
     public void limitEvents(Calendar endDate) {
         labelList.limitEvents(endDate);

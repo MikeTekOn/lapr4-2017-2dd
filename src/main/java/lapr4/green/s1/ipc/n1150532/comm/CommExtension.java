@@ -16,6 +16,7 @@ import lapr4.green.s1.ipc.n1150532.comm.ui.UICommExtensionSideBar;
 import lapr4.green.s1.ipc.n1150532.startSharing.HandlerRequestSharedCellsDTO;
 import lapr4.green.s1.ipc.n1150532.startSharing.HandlerResponseSharedCellsDTO;
 import lapr4.green.s1.ipc.n1150532.startSharing.SharedCellsEvent;
+import lapr4.green.s1.ipc.n1150738.securecomm.*;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -240,7 +241,7 @@ public class CommExtension extends Extension implements Observer {
             }
             if (arg instanceof NewConnectionMadeEvent) {
                 NewConnectionMadeEvent event = (NewConnectionMadeEvent) arg;
-                tcpClientsManager.requestConnectionTo(event.getConnectionID());
+                tcpClientsManager.requestConnectionTo(event.getConnectionID(), event.isSecure());
             }
             if (arg instanceof SharedCellsEvent) {
                 SharedCellsEvent event = (SharedCellsEvent) arg;

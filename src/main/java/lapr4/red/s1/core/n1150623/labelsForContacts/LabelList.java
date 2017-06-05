@@ -58,6 +58,7 @@ public class LabelList {
             canExport = false;
         }else{
             exp = new LabelsToPDF();
+            exp.export(this);
         }
         return canExport;
     }
@@ -67,6 +68,16 @@ public class LabelList {
         for (Label lab : wantedLabels) {
             lab.deleteEventsOutsideBoundaries(endDate);
         }
+    }
+
+    String path;
+
+    public void choosePath(String path){
+        this.path = path;
+    }
+
+    public String path(){
+        return this.path;
     }
 
     public void removeEvents() {

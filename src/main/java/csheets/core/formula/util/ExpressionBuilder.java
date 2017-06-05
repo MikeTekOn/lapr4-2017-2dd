@@ -35,10 +35,15 @@ import lapr4.gray.s1.lang.n3456789.formula.NaryOperation;
  */
 public class ExpressionBuilder implements ExpressionVisitor {
 
+       // private Set<TemporaryVariable> temp_contentor;
+
 	/**
 	 * Creates a new expression builder.
 	 */
-	public ExpressionBuilder() {}
+	public ExpressionBuilder() {
+            
+            //temp_contentor = new HashSet<>();
+        }
 
 	/**
 	 * Returns a copy of the given expression.
@@ -49,21 +54,25 @@ public class ExpressionBuilder implements ExpressionVisitor {
 		return (Expression)expression.accept(this);
 	}
 
+        @Override
 	public Expression visitLiteral(Literal literal) {
 		return new Literal(literal.getValue());
 	}
 
+        @Override
 	public Expression visitUnaryOperation(UnaryOperation operation) {
 		Expression operand = (Expression)operation.getOperand().accept(this);
 		return new UnaryOperation(operation.getOperator(), operand);
 	}
 
+        @Override
 	public Expression visitBinaryOperation(BinaryOperation operation) {
 		Expression leftOperand = (Expression)operation.getLeftOperand().accept(this);
 		Expression rightOperand = (Expression)operation.getRightOperand().accept(this);
 		return new BinaryOperation(leftOperand, operation.getOperator(), rightOperand);
 	}
 
+        @Override
 	public Expression visitReference(Reference reference) {
 		if (reference instanceof CellReference) {
 			CellReference cellRef = (CellReference)reference;
@@ -78,6 +87,7 @@ public class ExpressionBuilder implements ExpressionVisitor {
 		}
 	}
 
+        @Override
 	public Expression visitFunctionCall(FunctionCall call) {
 		Expression[] arguments = call.getArguments();
 		Expression[] newArguments = new Expression[arguments.length];
@@ -114,7 +124,9 @@ public class ExpressionBuilder implements ExpressionVisitor {
 
     @Override
     public Object visitTemporaryVariable(TemporaryVariable tempVar) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    
+        Expression expression = (Expression) tempVar.getExpression().accept(this);    
+        return new TemporaryVariable(tempVar.getName(), expression);
     }
 
      

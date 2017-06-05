@@ -39,7 +39,7 @@ public class HandlerConnectionRequestDTO extends Observable implements CommHandl
         InetAddress requesterIP = encapsulator.getSocket().getInetAddress();
         int requesterPortNumber = request.getRequesterServerPortNumber();
         setChanged();
-        notifyObservers(new NewConnectionMadeEvent(requesterIP, requesterPortNumber));
+        notifyObservers(new NewConnectionMadeEvent(requesterIP, requesterPortNumber, request.isSecure()));
 
         ConnectionResponseDTO reply = new ConnectionResponseDTO(true, request.getServerIPAddress(), request.getServerPortNumber());
         try {

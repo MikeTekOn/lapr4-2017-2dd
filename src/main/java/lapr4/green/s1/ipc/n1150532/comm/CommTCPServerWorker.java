@@ -1,14 +1,17 @@
 package lapr4.green.s1.ipc.n1150532.comm;
 
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import lapr4.green.s1.ipc.n1150738.securecomm.BasicDataTransmissionContext;
+import lapr4.green.s1.ipc.n1150738.securecomm.DataTransmissionContext;
+
+import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lapr4.green.s1.ipc.n1150532.comm.connection.SocketEncapsulatorDTO;
+import lapr4.green.s1.ipc.n1150738.securecomm.SecureAESDataTransmissionContext;
+import lapr4.green.s1.ipc.n1150738.securecomm.trash.streams.NonClosingInputStreamWrapper;
+import lapr4.green.s1.ipc.n1150738.securecomm.trash.streams.NonClosingOutputStreamWrapper;
 
 /**
  * A TCP server dedicated to one specific client.
@@ -36,6 +39,9 @@ public class CommTCPServerWorker extends Thread {
      * The worker output stream. It is attached to the socket output stream.
      */
     private ObjectOutputStream outStream;
+    private DataTransmissionContext transmissionContext;
+    private OutputStream socketOut;
+    private InputStream socketIn;
 
     /**
      * The TCP server worker constructor.
@@ -48,6 +54,25 @@ public class CommTCPServerWorker extends Thread {
         server = theServer;
         inStream = null;
         outStream = null;
+        try {
+            socketOut = socket.getOutputStream();
+            socketIn = socket.getInputStream();
+            byte[] sec = new byte[4];
+            sec[0] = (byte)socketIn.read();
+            sec[1] = (byte)socketIn.read();
+            sec[2] = (byte)socketIn.read();
+            sec[3] = (byte)socketIn.read();
+            if(sec[0] == (byte)0 && sec[1] == (byte)0 && sec[2] == (byte)0 && sec[3] == (byte)0){
+                System.out.println("SecureMode");
+                transmissionContext = new SecureAESDataTransmissionContext();
+            } else {
+                System.out.println("Unsecure");
+                transmissionContext = new BasicDataTransmissionContext();
+            }
+        } catch (IOException e) {
+            Logger.getLogger(CommTCPClientWorker.class.getName()).log(Level.SEVERE, null, e);
+            ;
+        }
     }
 
     /**
@@ -58,14 +83,15 @@ public class CommTCPServerWorker extends Thread {
     @Override
     public void run() {
         try {
-            outStream = new ObjectOutputStream(socket.getOutputStream());
-            inStream = new ObjectInputStream(socket.getInputStream());
+            outStream = transmissionContext.outputStream(socketOut);
+            inStream = transmissionContext.inputStream(socketIn);
             while (true) {
                 processIncommingDTO(inStream.readObject());
             }
         } catch (SocketException ex) {
             //@FIXME O cliente fechou a ligação.
             // Deve retirar da UI a ligação.
+            Logger.getLogger(CommTCPServerWorker.class.getName()).log(Level.SEVERE, "", ex);
         } catch (EOFException ex) {
             Logger.getLogger(CommTCPServerWorker.class.getName()).log(Level.WARNING, "The client seems to have closed the connection. Will terminate the worker thread.");
         } catch (IOException ex) {
@@ -122,11 +148,41 @@ public class CommTCPServerWorker extends Thread {
      * @param inDTO The object to handler.
      */
     private void processIncommingDTO(Object inDTO) {
+        System.out.println(inDTO.getClass());
         CommHandler handler = server.getHandler(inDTO.getClass());
         if (handler != null) {
             SocketEncapsulatorDTO dto = new SocketEncapsulatorDTO(socket, handler, inDTO);
             handler.handleDTO(dto, outStream);
         }
     }
+
+    /**
+     * Henrique Oliveira [1150738@isep.ipp.pt]
+     * @param s
+     * @return
+     */
+    public boolean hasSocket(Socket s){
+        return socket == s;
+    }
+
+    /**
+     * @author Henrique Oliveira [1150738@isep.ipp.pt]
+     *
+     * @param ctx
+     */
+//    public void switchDataTransmissionContext(DataTransmissionContext ctx) {
+//        this.transmissionContext.wiretapInput().transferTappers(ctx.wiretapInput());
+//        this.transmissionContext.wiretapOutput().transferTappers(ctx.wiretapOutput());
+//        this.transmissionContext = ctx;
+//
+//        try {
+//            outStream.close();
+//            inStream.close();
+//            outStream = transmissionContext.outputStream(socketOut);
+//            inStream = transmissionContext.inputStream(socketIn);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
 }
