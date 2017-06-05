@@ -20,18 +20,20 @@
  */
 package csheets.ext;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.text.DateFormat;
 import java.util.*;
 
 import csheets.CleanSheets;
+import csheets.io.NamedProperties;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionEvent;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionStateListener;
+import lapr4.white.s1.core.n4567890.contacts.persistence.jpa.JpaRepositoryFactory;
+
+import javax.persistence.Embedded;
 
 /**
  * The class that manages extensions to the CleanSheets application.
@@ -45,9 +47,13 @@ public class ExtensionManager {
 	/** The name of the files in which extension properties are stored */
 	private static final String PROPERTIES_FILENAME = "extensions.props";
 
+	/** The extension properties */
+	private Properties props = null;
+
 	/** The extensions that have been loaded */
 	private SortedMap<String, Extension> extensionMap = new TreeMap<String, Extension>();
 
+	/** The extensions that are disabled */
 	private SortedMap<String, Extension> disabledExtensionMap = new TreeMap<String, Extension>();
 
 	/** The extension state listeners registered to receive events */
@@ -61,11 +67,11 @@ public class ExtensionManager {
 	 */
 	private ExtensionManager() {
 		// Loads default extension properties
-		Properties extProps = new Properties();
+		props = new Properties();
 		InputStream stream = CleanSheets.class.getResourceAsStream("res/" + PROPERTIES_FILENAME);
 		if (stream != null)
 			try {
-				extProps.load(stream);
+				props.load(stream);
 			} catch (IOException e) {
 				System.err.println("Could not load default extension properties from: "
 					+ PROPERTIES_FILENAME);
@@ -82,7 +88,7 @@ public class ExtensionManager {
 			stream = null;
 			try {
 				stream = new FileInputStream(userExtPropsFile);
-				extProps.load(stream);
+				props.load(stream);
 			} catch (IOException e) {
 			} finally {
 				try {
@@ -92,30 +98,12 @@ public class ExtensionManager {
 			}
 
 		// Loads extensions
-		for (Map.Entry<Object, Object> entry : extProps.entrySet()) {
-			// Resolves class path
-			String classPathProp = (String)entry.getValue();
-			URL classPath = null;
-			if (classPathProp.length() > 0) {
-				// Looks for resource
-				classPath = ExtensionManager.class.getResource(classPathProp);
-				if (classPath == null) {
-					// Looks for file
-					File classPathFile = new File(classPathProp);
-					if (classPathFile.exists())
-						try {
-							classPath = classPathFile.toURL();
-						} catch (MalformedURLException e) {}
-				}
-			}
-
+		for (Map.Entry<Object, Object> entry : props.entrySet()) {
 			// Loads class
 			String className = (String)entry.getKey();
-			if (classPath == null)
-				load(className);
-			else
-				load(className, classPath);
+			load(className);
 		}
+
 	}
 
 	/**
@@ -140,26 +128,53 @@ public class ExtensionManager {
 		return extensions.toArray(new Extension[extensions.size()]);
 	}
 
-	public boolean disableExtension(String extensionName) {
-		Extension extension = extensionMap.remove(extensionName);
-		if(extension != null){
-			disabledExtensionMap.put(extensionName, extension);
-			fireExtensionListChanged();
-			return true;
-		} else {
-			return false;
+	private boolean changeExtensionsEnabledState(List<String> extensionsName, boolean enabled){
+		boolean shouldUpdate = false;
+		for(String str : extensionsName){
+			Extension extension;
+			if(enabled){
+				extension = disabledExtensionMap.remove(str);
+			}else{
+				extension = extensionMap.remove(str);
+			}
+			if(extension != null){
+				props.setProperty(extension.getClass().getName(), String.valueOf(enabled));
+				if(enabled){
+					extensionMap.put(str, extension);
+				}else{
+					disabledExtensionMap.put(str, extension);
+				}
+				shouldUpdate = true;
+			}
 		}
+		if(shouldUpdate){
+			File propsFile = new File(PROPERTIES_FILENAME);
+			if(!propsFile.exists())
+				try {
+					propsFile.createNewFile();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			try {
+				FileOutputStream stream = new FileOutputStream(propsFile);
+				props.store(stream, "CleanSheets User Extensions Properties (" +
+						DateFormat.getDateTimeInstance().format(new Date()) + ")");
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			fireExtensionListChanged();
+		}
+		return shouldUpdate;
 	}
 
-	public boolean enableExtension(String extensionName){
-		Extension extension = disabledExtensionMap.remove(extensionName);
-		if(extension != null){
-			extensionMap.put(extensionName, extension);
-			fireExtensionListChanged();
-			return true;
-		} else {
-			return false;
-		}
+	public boolean disableExtensions(List<String> extensionsName) {
+		return changeExtensionsEnabledState(extensionsName, false);
+	}
+
+	public boolean enableExtensions(List<String> extensionsName){
+		return changeExtensionsEnabledState(extensionsName, true);
 	}
 
 	/**
@@ -214,7 +229,11 @@ public class ExtensionManager {
 	public Extension load(Class extensionClass) {
 		try {
 			Extension extension = (Extension)extensionClass.newInstance();
-			extensionMap.put(extension.getName(), extension);
+			if(Boolean.valueOf(props.getProperty(extensionClass.getName()))){
+				extensionMap.put(extension.getName(), extension);
+			}else{
+				disabledExtensionMap.put(extension.getName(), extension);
+			}
 			addExtensionListener(extension);
 			return extension;
 		} catch (IllegalAccessException iae) {

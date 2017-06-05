@@ -54,6 +54,10 @@
  * </p>
  *
  * If a custom extension is disabled, they should not be able to receive events, so they must be unregistered from the events listeners list.
+ * <br>
+ * Also, there is the question of persistence. Since there already is a properties file that tells the program what extensions it should and shouldn't load, I guess
+ * it is okay for that file to also include information about whether or not the extension to be loaded is enabled. Therefore, the new way to store information
+ * about whether or not an extensions should be loaded must be in the format: "<b>extensionClassName=enabled</b>", where enabled is either "true" or "false".
  *
  * <h2>4. Design</h2>
  * Extensions are loaded by the ExtensionManager, therefore, he is the one that should know what extensions are enabled or disabled. To implement this
