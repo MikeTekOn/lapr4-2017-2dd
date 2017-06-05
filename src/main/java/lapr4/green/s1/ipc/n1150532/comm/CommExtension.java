@@ -1,10 +1,12 @@
 package lapr4.green.s1.ipc.n1150532.comm;
 
 import csheets.core.Spreadsheet;
+import csheets.core.Workbook;
 import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.ext.Extension;
 import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.UIExtension;
+import java.util.Iterator;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.CellDTO;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.RequestSharedCellsDTO;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.ResponseSharedCellsDTO;
@@ -21,6 +23,11 @@ import java.util.Observer;
 import java.util.SortedSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import lapr4.green.s1.ipc.n1150901.search.workbook.HandlerRequestWorkbookDTO;
+import lapr4.green.s1.ipc.n1150901.search.workbook.HandlerResponseWorkbookDTO;
+import lapr4.green.s1.ipc.n1150901.search.workbook.RequestWorkbookDTO;
+import lapr4.green.s1.ipc.n1150901.search.workbook.ResponseWorkbookDTO;
+import lapr4.green.s1.ipc.n1150901.search.workbook.SearchWorkbookEvent;
 
 /**
  * The Communication extension. It manages all the servers and clients of the
@@ -141,6 +148,9 @@ public class CommExtension extends Extension implements Observer {
         HandlerRequestSharedCellsDTO h2 = new HandlerRequestSharedCellsDTO();
         h2.addObserver(this);
         tcpServer.addHandler(RequestSharedCellsDTO.class, h2);
+        HandlerRequestWorkbookDTO h3 = new HandlerRequestWorkbookDTO();
+        h3.addObserver(this);
+        tcpServer.addHandler(RequestWorkbookDTO.class, h3);
         //TODO 
     }
 
@@ -163,7 +173,9 @@ public class CommExtension extends Extension implements Observer {
         tcpClientsManager.addHandler(ConnectionResponseDTO.class, h1);
         HandlerResponseSharedCellsDTO h2 = new HandlerResponseSharedCellsDTO();
         tcpClientsManager.addHandler(ResponseSharedCellsDTO.class, h2);
-        //TODO 
+        HandlerResponseWorkbookDTO h3 = new HandlerResponseWorkbookDTO();
+        tcpClientsManager.addHandler(ResponseWorkbookDTO.class, h3);
+        //TODO
     }
 
     /**
@@ -239,6 +251,18 @@ public class CommExtension extends Extension implements Observer {
                     try {
                         ss.getCell(cell.getAddress()).setContent(cell.getContent());
                     } catch (FormulaCompilationException ex) {
+                        Logger.getLogger(CommExtension.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+            if (arg instanceof SearchWorkbookEvent) {
+                SearchWorkbookEvent event = (SearchWorkbookEvent) arg;
+                Workbook w = uiController.getActiveWorkbook();
+                Iterator<Spreadsheet> ss = w.iterator();
+                while (ss.hasNext()) {
+                    try {
+                        ss.next().getTitle();
+                    } catch (Exception ex) {
                         Logger.getLogger(CommExtension.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }

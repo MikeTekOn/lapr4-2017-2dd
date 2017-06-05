@@ -2,6 +2,7 @@ package lapr4.green.s1.ipc.n1150532.comm;
 
 import csheets.core.Address;
 import csheets.core.Spreadsheet;
+import csheets.core.Workbook;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.RequestSharedCellsDTO;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionRequestDTO;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import lapr4.green.s1.ipc.n1150901.search.workbook.RequestWorkbookDTO;
 
 /**
  * A singleton to manage all the TCP clients created.
@@ -56,6 +58,15 @@ public class CommTCPClientsManager implements Serializable {
             manager = new CommTCPClientsManager();
         }
         return manager;
+    }
+    
+    /**
+     * A getter of the current connections available.
+     * 
+     * @return It returns the map containing the connections.
+     */
+    public Map<ConnectionID, CommTCPClientWorker> getClients(){
+        return clients;
     }
 
     /**
@@ -114,6 +125,18 @@ public class CommTCPClientsManager implements Serializable {
             try {
                 worker.getObjectOutputStream().writeObject(request);
             } catch (IOException ex) {
+                Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    public void searchWorkbookIn(ConnectionID connection, Workbook workbook){
+        CommTCPClientWorker worker = clients.get(connection);
+        if (worker != null){
+            RequestWorkbookDTO request = new RequestWorkbookDTO(workbook);
+            try{
+                worker.getObjectOutputStream().writeObject(request);
+            } catch (IOException ex){
                 Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, ex);
             }
         }

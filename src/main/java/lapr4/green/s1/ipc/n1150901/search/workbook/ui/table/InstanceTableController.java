@@ -5,10 +5,16 @@
  */
 package lapr4.green.s1.ipc.n1150901.search.workbook.ui.table;
 
-import csheets.core.Workbook;
+import java.net.InetAddress;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import javax.swing.table.AbstractTableModel;
+import lapr4.green.s1.ipc.n1150532.comm.CommTCPClientWorker;
+import lapr4.green.s1.ipc.n1150532.comm.CommTCPClientsManager;
+import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
 
 /**
  *
@@ -20,22 +26,35 @@ public class InstanceTableController extends AbstractTableModel {
      * The table headers.
      */
     private final String[] columnNames = {"IP Address"};
+    
+    /**
+     * The manager of clients TCP connections.
+     */
+    private final CommTCPClientsManager comm;
+    
+    /**
+     * Map containing the connections and respective IDs.
+     */
+    private final Map<ConnectionID, CommTCPClientWorker> connections;
 
     /**
      * The files list.
      */
-    private final List<String> list;
+    private final List<InetAddress> list;
 
     /**
      * The constructor of the controller.
      */
     public InstanceTableController() {
         this.list = new ArrayList<>();
-        Workbook w = new Workbook();
-        String[][] content = new String[1][1];
-        content[0][0] = "hello";
-        w.addSpreadsheet(content);
-        list.add(w.getSpreadsheet(0).getCell(0, 0).getContent());
+        comm = CommTCPClientsManager.getManager();
+        connections = comm.getClients();
+        Set<ConnectionID> ids = connections.keySet();
+        for (ConnectionID id : ids){
+            this.list.add(id.getAddress());
+        }
+//        this.list.add("195.168.0.1");
+//        this.list.add("195.168.0.2");
     }
 
     /**
@@ -102,11 +121,20 @@ public class InstanceTableController extends AbstractTableModel {
      * @param index The index of the instance to retrieve.
      * @return It returns the instance or null if the index is not valid.
      */
-    public String provideInstance(int index) {
+    public InetAddress provideInstance(int index) {
         if (index < 0 || index >= list.size()) {
             return null;
         }
         return list.get(index);
+    }
+    
+    public void searchWorbook(String workbookName, InetAddress ip){
+        Collection<CommTCPClientWorker> comms = connections.values();
+        while (connections.keySet().iterator().hasNext()){
+            if (connections.keySet().iterator().next().getAddress().equals(ip)){
+
+            }
+        }
     }
 
 }
