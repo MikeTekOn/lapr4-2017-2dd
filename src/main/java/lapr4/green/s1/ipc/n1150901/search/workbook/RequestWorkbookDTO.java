@@ -5,11 +5,14 @@
  */
 package lapr4.green.s1.ipc.n1150901.search.workbook;
 
+import eapli.framework.dto.DTO;
+import java.io.Serializable;
+
 /**
  *
  * @author Miguel Silva - 1150901
  */
-public class RequestWorkbookDTO {
+public class RequestWorkbookDTO implements Serializable, DTO {
 
     private final String workbookName;
 

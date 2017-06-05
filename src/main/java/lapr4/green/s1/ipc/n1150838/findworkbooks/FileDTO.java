@@ -6,13 +6,14 @@
 package lapr4.green.s1.ipc.n1150838.findworkbooks;
 
 import csheets.core.Workbook;
+import eapli.framework.dto.DTO;
 import java.io.Serializable;
 
 /**
  * DTO to transfer file information through events
  * @author nunopinto
  */
-public class FileDTO implements Serializable, Comparable<FileDTO>{
+public class FileDTO implements Serializable, Comparable<FileDTO>, DTO {
 
     private String fileName;
     private String filePath;

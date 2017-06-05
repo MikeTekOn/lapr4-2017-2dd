@@ -6,12 +6,14 @@
 package lapr4.green.s1.ipc.n1150901.search.workbook;
 
 import csheets.core.Workbook;
+import eapli.framework.dto.DTO;
+import java.io.Serializable;
 
 /**
  *
  * @author Miguel Silva - 1150901
  */
-public class ResponseWorkbookDTO {
+public class ResponseWorkbookDTO implements Serializable, DTO {
 
     private final String workbookName;
 
