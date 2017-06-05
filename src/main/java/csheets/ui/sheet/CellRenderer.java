@@ -108,6 +108,7 @@ public class CellRenderer extends DefaultTableCellRenderer implements ExtensionS
 			}
 
             // Applies tool tip
+			setToolTipText(null);
             if (value.getType() == Value.Type.ERROR)
 				try {
 					setToolTipText(value.toError().getMessage());
