@@ -27,7 +27,7 @@
  * cell will change the style according to the condition output and styles
  * defined.
  * <p>
- * <img src="lang03_1_ssd" alt="image">
+ * <img src="lang03_1_ssd.png" alt="image">
  *
  * <h2>3. Analysis</h2>
  * For the conditional formatting of cells use case to work, an update to the
@@ -68,7 +68,7 @@
  * can add an entire new functionality using part of the code already
  * implemented and overcoming some of the problems mentioned before.
  * <p>
- * <img src="lang03_1_analysis_classes" alt="image">
+ * <img src="lang03_1_analysis_classes.png" alt="image">
  *
  * <h3>Condition associated with a cell</h3>
  * To make a cell condition stylable, we have to evaluate a user defined
@@ -95,15 +95,15 @@
  * exists as such in the code of the application (at least at the moment that
  * this diagram was created).
  * <p>
- * <img src="lang03_1_analysis_basic_sd" alt="image">
+ * <img src="lang03_1_analysis_basic_sd.png" alt="image">
  *
  * <h2>4. Design</h2>
  * There are two important methods we have to develop, so we will study them in more detail.
  * 
  * <h3>fireConditionChanged() method</h3>
- * <img src="lang03_1_design_fireConditionChanged" alt="image">
+ * <img src="lang03_1_design_fireConditionChanged.png" alt="image">
  * <h3>valueChanged() method</h3>
- * <img src="lang03_1_design_valueChanged" alt="image">
+ * <img src="lang03_1_design_valueChanged.png" alt="image">
  * <h2>5. Tests</h2>
  * <ol>
  * <li>ensureConditionIsValidExpression

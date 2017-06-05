@@ -10,7 +10,7 @@ import java.io.Serializable;
 /**
  * A DTO to respond to a TCP connection request.
  *
- * @FIXME class incomplete. It need the serverIPAddress and port for the replier
+ * FIXME class incomplete. It need the serverIPAddress and port for the replier
  * @author Sofia
  */
 public class ResponseMessageDTO implements Serializable {

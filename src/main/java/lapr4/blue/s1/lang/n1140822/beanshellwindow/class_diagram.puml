@@ -1,4 +1,4 @@
-@startuml
+@startuml class_diagram.png
 class MacroExtensionUI
 class BeanShellLoaderController
 class BeanShellLoader

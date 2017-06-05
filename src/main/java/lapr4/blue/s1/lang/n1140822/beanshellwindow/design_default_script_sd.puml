@@ -1,4 +1,4 @@
-@startuml
+@startuml design_default_script.png
 actor User
 User -> MacroExtensionUI : Selects beanshell script option
 MacroExtensionUI -> BeanShellClassLoaderController : createClassFromScript(aScript,uiController)

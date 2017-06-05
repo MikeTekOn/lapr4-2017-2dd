@@ -9,7 +9,7 @@ import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
 import lapr4.green.s1.ipc.n1150657.chat.ui.ChatController;
 
 /**
- * @FIXME, quix fix for the ChatPanel and all the instances have the controller
+ * FIXME, quix fix for the ChatPanel and all the instances have the controller
  * since it beggines first than the parameter "connection" that is needed
  * @author Sofia
  */
