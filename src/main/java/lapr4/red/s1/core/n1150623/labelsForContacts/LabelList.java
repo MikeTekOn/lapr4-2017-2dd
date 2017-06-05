@@ -54,7 +54,7 @@ public class LabelList {
      */
     public boolean exportPDF(){
         boolean canExport = true;
-        if(wantedLabels.isEmpty()){
+        if(wantedLabels.isEmpty() || path.trim().length() == 0 || path == null){
             canExport = false;
         }else{
             exp = new LabelsToPDF();
