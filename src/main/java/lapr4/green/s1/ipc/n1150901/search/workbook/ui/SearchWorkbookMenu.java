@@ -1,6 +1,5 @@
 package lapr4.green.s1.ipc.n1150901.search.workbook.ui;
 
-import csheets.ext.simple.ui.*;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JMenu;
@@ -22,7 +21,7 @@ public class SearchWorkbookMenu extends JMenu {
      * @param uiController the user interface controller
      */
     public SearchWorkbookMenu(UIController uiController) {
-        super("Search Workbook");
+        super("Workbook");
         setMnemonic(KeyEvent.VK_S);
 
         // Adds font actions
