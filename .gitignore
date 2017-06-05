@@ -186,6 +186,7 @@ fabric.properties
 
 # Cleansheets
 csheets.xml
+extensions.props
 
 # Special files of the project
 !/tools/**
