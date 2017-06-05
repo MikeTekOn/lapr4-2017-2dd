@@ -2,9 +2,11 @@ package lapr4.green.s1.ipc.n1150532.comm;
 
 import csheets.core.Address;
 import csheets.core.Spreadsheet;
+import csheets.core.Workbook;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.RequestSharedCellsDTO;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionRequestDTO;
+import lapr4.green.s1.ipc.n1150738.securecomm.NewConnectionOnMangerEvent;
 import lapr4.green.s1.ipc.n1150738.securecomm.SecureAESDataTransmissionContext;
 import lapr4.green.s1.ipc.n1150738.securecomm.TransmissionContextRequestDTO;
 
@@ -13,15 +15,17 @@ import java.io.Serializable;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import lapr4.green.s1.ipc.n1150901.search.workbook.RequestWorkbookDTO;
 
 /**
  * A singleton to manage all the TCP clients created.
  *
  * @author Manuel Meireles (1150532@isep.ipp.pt)
  */
-public class CommTCPClientsManager implements Serializable {
+public class CommTCPClientsManager extends Observable implements Serializable {
 
     /**
      * The singleton object.
@@ -57,6 +61,15 @@ public class CommTCPClientsManager implements Serializable {
         }
         return manager;
     }
+    
+    /**
+     * A getter of the current connections available.
+     * 
+     * @return It returns the map containing the connections.
+     */
+    public Map<ConnectionID, CommTCPClientWorker> getClients(){
+        return clients;
+    }
 
     /**
      * It adds a handler to be used by its clients.
@@ -86,13 +99,10 @@ public class CommTCPClientsManager implements Serializable {
      */
     public void requestConnectionTo(ConnectionID theConnection, boolean secure) {
         if (clients.get(theConnection) == null) {
-            CommTCPClientWorker worker = new CommTCPClientWorker(this, theConnection.getAddress(), theConnection.getPortNumber());
+            CommTCPClientWorker worker = new CommTCPClientWorker(this, theConnection.getAddress(), theConnection.getPortNumber(), secure);
             ConnectionRequestDTO request = new ConnectionRequestDTO(CommTCPServer.getServer().provideConnectionPort(), theConnection.getAddress(), theConnection.getPortNumber(), secure);
             worker.start();
             try {
-                if(secure){
-                    worker.getObjectOutputStream().writeObject(new TransmissionContextRequestDTO(SecureAESDataTransmissionContext.class.getName()));
-                }
                 worker.getObjectOutputStream().writeObject(request);
             } catch (IOException ex) {
                 Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -121,6 +131,18 @@ public class CommTCPClientsManager implements Serializable {
             }
         }
     }
+    
+    public void searchWorkbookIn(ConnectionID connection, Workbook workbook){
+        CommTCPClientWorker worker = clients.get(connection);
+        if (worker != null){
+            RequestWorkbookDTO request = new RequestWorkbookDTO(workbook);
+            try{
+                worker.getObjectOutputStream().writeObject(request);
+            } catch (IOException ex){
+                Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
 
     /**
      * It orders all clients to terminate their execution and deletes the
@@ -141,15 +163,17 @@ public class CommTCPClientsManager implements Serializable {
      */
     private void addClient(ConnectionID connection, CommTCPClientWorker worker) {
         clients.put(connection, worker);
+        setChanged();
+        notifyObservers(new NewConnectionOnMangerEvent());
     }
 
-    public CommTCPClientWorker workerBySocket(Socket s){
-        for(Map.Entry<ConnectionID, CommTCPClientWorker> entry : clients.entrySet()){
-            if(entry.getValue().hasSocket(s)){
-                return entry.getValue();
-            }
-        }
-        return null;
-    }
+//    public CommTCPClientWorker workerBySocket(Socket s){
+//        for(Map.Entry<ConnectionID, CommTCPClientWorker> entry : clients.entrySet()){
+//            if(entry.getValue().hasSocket(s)){
+//                return entry.getValue();
+//            }
+//        }
+//        return null;
+//    }
 
 }

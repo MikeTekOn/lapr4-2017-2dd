@@ -10,7 +10,7 @@ class WorkbookSearchCtrl{
     searchInWorkbook()
 }
 class Cell{
-    getContent()
+    getValue()
 }
 class RegexUtil {
     checkIfMatches()

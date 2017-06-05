@@ -11,6 +11,7 @@ import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.CellDecorator;
 import csheets.ui.ext.TableDecorator;
 import csheets.ui.ext.UIExtension;
+import lapr4.red.s1.core.n1150690.comments.CommentedCellWithMultipleUsersDecorator;
 import lapr4.red.s1.core.n1150690.comments.presentation.CommentsWithUserUI;
 
 /**
@@ -65,9 +66,11 @@ public class UIExtensionComments extends UIExtension {
 	 */
 	public CellDecorator getCellDecorator() {
 		if (cellDecorator == null)
-			cellDecorator = new CommentedCellDecorator();
+			//cellDecorator = new CommentedCellDecorator();
+                    cellDecorator = new CommentedCellWithMultipleUsersDecorator();
 		return cellDecorator;
-	}
+        }
+        
 
 	/**
 	 * Returns a table decorator that visualizes the data added by the extension.

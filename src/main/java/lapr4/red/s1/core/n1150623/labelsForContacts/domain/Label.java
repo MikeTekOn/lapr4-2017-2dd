@@ -1,12 +1,13 @@
 package lapr4.red.s1.core.n1150623.labelsForContacts.domain;
 
+import java.lang.IllegalArgumentException;
+
+import eapli.util.DateTime;
 import eapli.util.Strings;
 import lapr4.white.s1.core.n4567890.contacts.domain.Agenda;
 import lapr4.white.s1.core.n4567890.contacts.domain.Event;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Guilherme Ferreira 1150623 on 01/06/2017.
@@ -22,15 +23,15 @@ public class Label {
     protected String contact_address;
     protected String contact_email;
     protected String contact_phoneNumber;
-    protected List<Event> events;
 
-    protected Agenda contact_agenda;
+    protected List<Event> contact_agenda;
 
     public Label(){
+        contact_agenda = new ArrayList<>();
         //For ORM
     }
 
-    public void fillLabel(final String name, final String photo, final String address, final String email, final String phoneNumber) throws IllegalArgumentException {
+    public void fillLabel(final String name, final String photo, final String address, final String email, final String phoneNumber) throws IllegalArgumentException{
 
         if (Strings.isNullOrEmpty(name) || Strings.isNullOrWhiteSpace(name)) {
             throw new IllegalArgumentException("The name mas not be null or empty!");
@@ -68,53 +69,47 @@ public class Label {
             throw new IllegalArgumentException("Invalid Event");
         }
 
-        this.events = new ArrayList<>();
         for(Event e : events){
-            this.events.add(e);
+            contact_agenda.add(e);
         }
     }
 
-    public void deleteEventsOutsideBoundaries(Calendar endDate) {
+    public void deleteEventsOutsideBoundaries(Calendar endDate){
         List<Event> toRemove = new ArrayList<>();
-        for (Event e : events) {
-            if (e.dueDate().compareTo(endDate) == 1) { // se data evento > endDate
+        for(Event e : contact_agenda){
+            if(e.dueDate().compareTo(endDate) == 1){ // se data evento > endDate
                 toRemove.add(e);
             }
         }
 
-        for (Event e : toRemove) {
-            events.remove(e);
+        for(Event e : toRemove){
+            contact_agenda.remove(e);
         }
     }
 
     public void removeEvents() {
-        int size = contact_agenda.events().size();
-        for (int i = 0; i < size; i++) {
-            contact_agenda.events().remove(0);
+        int size = contact_agenda.size();
+        for(int i = 0; i < size; i++){
+            contact_agenda.remove(0);
         }
     }
 
-    public String phoneNumber() {
+    public String phoneNumber(){
         return this.contact_phoneNumber;
     }
-
-    public String address() {
+    public String address(){
         return this.contact_address;
     }
-
-    public String name() {
+    public String name(){
         return this.contact_Name;
     }
-
-    public String email() {
+    public String email(){
         return this.contact_email;
     }
-
-    public String photo() {
+    public String photo(){
         return this.contact_Foto;
     }
-
-    public List<Event> events() {
-        return this.contact_agenda.events();
+    public List<Event> events(){
+        return this.contact_agenda;
     }
 }

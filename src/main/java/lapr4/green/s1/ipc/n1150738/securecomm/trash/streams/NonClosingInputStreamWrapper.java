@@ -1,4 +1,4 @@
-package lapr4.green.s1.ipc.n1150738.securecomm.streams;
+package lapr4.green.s1.ipc.n1150738.securecomm.trash.streams;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,7 +11,7 @@ public class NonClosingInputStreamWrapper extends InputStream{
     private InputStream in;
 
     public NonClosingInputStreamWrapper(InputStream in){
-        this.in = in;
+       this.in = in;
     }
 
 
@@ -20,8 +20,9 @@ public class NonClosingInputStreamWrapper extends InputStream{
         return in.read();
     }
 
+
     @Override
     public void close() throws IOException {
-        System.out.println("Atempted Closing");
+        in.close();
     }
 }

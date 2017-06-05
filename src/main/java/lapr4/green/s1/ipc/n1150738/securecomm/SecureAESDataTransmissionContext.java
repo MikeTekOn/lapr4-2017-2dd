@@ -4,6 +4,8 @@ import org.apache.commons.io.input.TeeInputStream;
 import org.apache.commons.io.output.TeeOutputStream;
 
 import javax.crypto.Cipher;
+import javax.crypto.CipherInputStream;
+import javax.crypto.CipherOutputStream;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -23,12 +25,12 @@ public class SecureAESDataTransmissionContext implements DataTransmissionContext
             'C', 'l', 'e', 'a', 'n', 'S', 'h', 'e', 'e', 't', 's', 'L', 'A', 'P', 'R', '4'
     };
 
-    private WiretappedStream inputTap;
-    private WiretappedStream outputTap;
+//    private WiretappedStream inputTap;
+//    private WiretappedStream outputTap;
 
     public SecureAESDataTransmissionContext(){
-        inputTap = new WiretappedStream();
-        outputTap = new WiretappedStream();
+//        inputTap = new WiretappedStream();
+//        outputTap = new WiretappedStream();
     }
 
     /**
@@ -45,7 +47,7 @@ public class SecureAESDataTransmissionContext implements DataTransmissionContext
             Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
             IvParameterSpec iv = new IvParameterSpec(raw);
             cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
-            return new ObjectInputStream(new TeeInputStream(socketInStream, inputTap));
+            return new ObjectInputStream(new CipherInputStream(socketInStream, cipher));
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException | InvalidKeyException e) {
             Logger.getLogger(SecureAESDataTransmissionContext.class.getName()).log(Level.SEVERE, "Crypto Setup Failed", e);
         }
@@ -68,7 +70,7 @@ public class SecureAESDataTransmissionContext implements DataTransmissionContext
             Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
             IvParameterSpec iv = new IvParameterSpec(raw);
             cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
-            return new ObjectOutputStream(new TeeOutputStream(socketOutStream, outputTap));
+            return new ObjectOutputStream(new CipherOutputStream(socketOutStream, cipher));
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException | InvalidKeyException e) {
             Logger.getLogger(SecureAESDataTransmissionContext.class.getName()).log(Level.SEVERE, "Crypto Setup Failed", e);
         }
@@ -76,14 +78,25 @@ public class SecureAESDataTransmissionContext implements DataTransmissionContext
         throw new IOException("Cannot use cryptographic stream");
     }
 
-    @Override
-    public WiretappedStream wiretapInput() {
-        return inputTap;
-    }
+//    @Override
+//    public WiretappedStream wiretapInput() {
+//        return inputTap;
+//    }
+//
+//    @Override
+//    public WiretappedStream wiretapOutput() {
+//        return outputTap;
+//    }
 
     @Override
-    public WiretappedStream wiretapOutput() {
-        return outputTap;
+    public boolean isSecure() {
+        return true;
+    }
+
+
+    @Override
+    public String securityDesc() {
+        return "Secure (AES)";
     }
 
 }

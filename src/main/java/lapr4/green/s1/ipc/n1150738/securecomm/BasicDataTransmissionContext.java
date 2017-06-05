@@ -10,12 +10,12 @@ import java.io.*;
  */
 public class BasicDataTransmissionContext implements DataTransmissionContext {
 
-    private WiretappedStream inputTap;
-    private WiretappedStream outputTap;
+//    private WiretappedStream inputTap;
+//    private WiretappedStream outputTap;
 
     public BasicDataTransmissionContext(){
-        inputTap = new WiretappedStream();
-        outputTap = new WiretappedStream();
+//        inputTap = new WiretappedStream();
+//        outputTap = new WiretappedStream();
     }
 
     /**
@@ -27,7 +27,7 @@ public class BasicDataTransmissionContext implements DataTransmissionContext {
      */
     @Override
     public ObjectInputStream inputStream(InputStream socketInStream) throws IOException {
-        return new ObjectInputStream(new TeeInputStream(socketInStream, inputTap));
+        return new ObjectInputStream(socketInStream);
     }
 
     /**
@@ -39,16 +39,27 @@ public class BasicDataTransmissionContext implements DataTransmissionContext {
      */
     @Override
     public ObjectOutputStream outputStream(OutputStream socketOutStream) throws IOException{
-        return new ObjectOutputStream(new TeeOutputStream(socketOutStream, outputTap));
+        return new ObjectOutputStream(socketOutStream);
+    }
+
+//    @Override
+//    public WiretappedStream wiretapInput() {
+//        return inputTap;
+//    }
+//
+//    @Override
+//    public WiretappedStream wiretapOutput() {
+//        return outputTap;
+//    }
+
+
+    @Override
+    public String securityDesc() {
+        return "Unsecure";
     }
 
     @Override
-    public WiretappedStream wiretapInput() {
-        return inputTap;
-    }
-
-    @Override
-    public WiretappedStream wiretapOutput() {
-        return outputTap;
+    public boolean isSecure() {
+        return false;
     }
 }
