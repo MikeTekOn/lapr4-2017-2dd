@@ -13,6 +13,7 @@ participant "contactRepository : ContactRepository" as crep <<interface>>
 participant "JpaContactRepository" as jpacrep
 participant "labelFactory : LabelFactory" as lfac
 participant "labelList : LabelList" as llist
+participant LabelsToPDF as l2pdf
 
 
 activate UI
@@ -36,26 +37,14 @@ activate UI
     deactivate UI
     loop "While the CRM user wants to add more contacts"
 
-        UI <- Actor : Writes contact name (or regex expression)
-    activate UI
 
-           activate ctrl
-                UI -> ctrl : getContactByRegex(regexPattern)
 
     deactivate UI
                 create list
                 ctrl -> list : create()
-                activate crep
-                    ctrl -> crep : findByRegex(regexPattern)
-                    activate jpacrep
-                            crep -> jpacrep : findByRegex(regexPattern)
-                    deactivate jpacrep
 
-                deactivate crep
-
-            deactivate ctrl
     activate UI
-        UI <- Actor : Selects contact
+         UI <- Actor : Chooses contact or writes contact name (or regex expression)
 
             activate ctrl
                 UI -> ctrl : addLabel(name, photo, emails, addresses, phoneNumbers)
@@ -72,21 +61,29 @@ activate UI
     end loop
 
 
-
     UI --> Actor : Asks if wants to add contact's events
     deactivate UI
 
     alt Accepts
         Actor -> UI : Wants to add events
         activate UI
-        UI --> Actor : Asks the initial and end date of the list of events to export with contacts
+        UI --> Actor : Asks the  end date of the list of events to export with contacts
 
-        UI <- Actor : Chooses initial and end dates
+        UI <- Actor : Chooses end dates
 
         activate ctrl
-                UI -> ctrl : limitEvents(iniDate, endDate)
+                UI --> Actor : Asks to choose path to save file
+                Actor -> UI : Chooses path
+                UI -> ctrl : choosePath(path)
                 activate llist
-                ctrl -> llist : limitEvents(iniDate, endDate)
+                ctrl -> llist : choosePath(path)
+                deactivate llist
+        deactivate ctrl
+
+
+                UI -> ctrl : limitEvents(endDate)
+                activate llist
+                ctrl -> llist : limitEvents(endDate)
                 deactivate llist
 
                 UI -> ctrl : doExport()
@@ -94,6 +91,9 @@ activate UI
 
                 activate llist
                     ctrl -> llist : export()
+                      activate l2pdf
+                          llist -> l2pdf : export(this)
+                      deactivate l2pdf
                 deactivate llist
 
         deactivate ctrl
@@ -101,6 +101,25 @@ activate UI
         UI --> Actor : generates file with labels including the events list and shows success message
 
     else Refuses
+                activate ctrl
+                        UI --> Actor : Asks to choose path to save file
+                        Actor -> UI : Chooses path
+                        UI -> ctrl : choosePath(path)
+                        activate llist
+                        ctrl -> llist : choosePath(path)
+                        deactivate llist
+
+                UI -> ctrl : doExport()
+
+
+                activate llist
+                    ctrl -> llist : export()
+                    activate l2pdf
+                        llist -> l2pdf : export(this)
+                    deactivate l2pdf
+                deactivate llist
+
+                deactivate ctrl
 
         UI --> Actor : generates file with labels and shows success message
 
