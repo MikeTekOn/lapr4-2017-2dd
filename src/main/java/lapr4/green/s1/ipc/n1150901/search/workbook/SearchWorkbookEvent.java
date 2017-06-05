@@ -14,26 +14,26 @@ import csheets.core.Workbook;
 public class SearchWorkbookEvent {
 
     /**
-     * The workbook to be searched..
+     * The workbook to be searched.
      */
-    private final Workbook workbook;
+    private final String workbookName;
 
     /**
      * The full constructor of the event.
      *
-     * @param wb The workbook to be searched.
+     * @param wbName The workbook name to be searched.
      */
-    public SearchWorkbookEvent(Workbook wb) {
-        workbook = wb;
+    public SearchWorkbookEvent(String wbName) {
+        workbookName = wbName;
     }
 
     /**
-     * A getter of the workbook.
+     * A getter of the workbook name.
      *
-     * @return It returns the workbook
+     * @return It returns the workbook name.
      */
-    public Workbook getWorkbook() {
-        return workbook;
+    public String getWorkbookName() {
+        return workbookName;
     }
 
 }

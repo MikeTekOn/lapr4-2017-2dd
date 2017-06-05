@@ -5,6 +5,7 @@
  */
 package lapr4.green.s1.ipc.n1150901.search.workbook.ui.table;
 
+import csheets.core.Workbook;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,21 +27,21 @@ public class InstanceTableController extends AbstractTableModel {
      * The table headers.
      */
     private final String[] columnNames = {"IP Address"};
-    
+
     /**
      * The manager of clients TCP connections.
      */
     private final CommTCPClientsManager comm;
-    
+
     /**
      * Map containing the connections and respective IDs.
      */
     private final Map<ConnectionID, CommTCPClientWorker> connections;
 
     /**
-     * The files list.
+     * The connections list.
      */
-    private final List<InetAddress> list;
+    private final List<ConnectionID> list;
 
     /**
      * The constructor of the controller.
@@ -50,11 +51,9 @@ public class InstanceTableController extends AbstractTableModel {
         comm = CommTCPClientsManager.getManager();
         connections = comm.getClients();
         Set<ConnectionID> ids = connections.keySet();
-        for (ConnectionID id : ids){
-            this.list.add(id.getAddress());
+        for (ConnectionID id : ids) {
+            this.list.add(id);
         }
-//        this.list.add("195.168.0.1");
-//        this.list.add("195.168.0.2");
     }
 
     /**
@@ -121,20 +120,14 @@ public class InstanceTableController extends AbstractTableModel {
      * @param index The index of the instance to retrieve.
      * @return It returns the instance or null if the index is not valid.
      */
-    public InetAddress provideInstance(int index) {
+    public ConnectionID provideInstance(int index) {
         if (index < 0 || index >= list.size()) {
             return null;
         }
         return list.get(index);
     }
-    
-    public void searchWorbook(String workbookName, InetAddress ip){
-        Collection<CommTCPClientWorker> comms = connections.values();
-        while (connections.keySet().iterator().hasNext()){
-            if (connections.keySet().iterator().next().getAddress().equals(ip)){
 
-            }
-        }
+    public Workbook searchWorbook(String workbookName, ConnectionID id) {
+        return comm.searchWorkbookIn(id, workbookName);
     }
-
 }

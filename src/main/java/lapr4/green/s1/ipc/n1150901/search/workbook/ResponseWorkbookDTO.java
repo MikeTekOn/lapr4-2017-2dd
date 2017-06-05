@@ -13,13 +13,13 @@ import csheets.core.Workbook;
  */
 public class ResponseWorkbookDTO {
 
-    private final Workbook workbook;
+    private final String workbookName;
 
-    public ResponseWorkbookDTO(Workbook wb) {
-        workbook = wb;
+    public ResponseWorkbookDTO(String wbName) {
+        workbookName = wbName;
     }
 
-    public Workbook getWorkbook() {
-        return workbook;
+    public String getWorkbookName() {
+        return workbookName;
     }
 }

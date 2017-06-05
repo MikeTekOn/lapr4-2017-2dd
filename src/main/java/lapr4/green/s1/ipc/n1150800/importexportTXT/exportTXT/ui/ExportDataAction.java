@@ -45,7 +45,7 @@ public class ExportDataAction extends BaseAction {
         
         File fileToWrite = fileChooser.getFileToSave();
         if (fileToWrite != null) {
-            if (FileData.validateFileExtension(fileToWrite) && fileToWrite.isFile()) {
+            if (FileData.validateFileExtension(fileToWrite)) {
                 ExportDataUI ui = new ExportDataUI(uiController, fileToWrite);
             } else {
                 JOptionPane.showMessageDialog(fileChooser, "Chosen file is not valid!", "Error", JOptionPane.ERROR_MESSAGE);
