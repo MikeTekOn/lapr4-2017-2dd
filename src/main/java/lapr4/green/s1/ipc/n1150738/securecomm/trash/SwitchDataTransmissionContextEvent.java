@@ -1,6 +1,7 @@
-package lapr4.green.s1.ipc.n1150738.securecomm;
+package lapr4.green.s1.ipc.n1150738.securecomm.trash;
 
 import eapli.framework.domain.DomainEvent;
+import lapr4.green.s1.ipc.n1150738.securecomm.DataTransmissionContext;
 
 import java.net.Socket;
 

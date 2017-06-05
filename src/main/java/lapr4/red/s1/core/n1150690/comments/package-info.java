@@ -20,13 +20,6 @@
  * persisted with the workbook.
  *
  * <p>
- * <b>Use Case "Tooltip and User Associated to Comment":</b> The user selects
- * the cell where he/she wants to enter a comment. The system displays the
- * current comment of that cell. The user enter the text of the comment (or
- * alters the existing one) or adds a new comment. The system saves the comment
- * of the cell. When the user's mouse pointer is hovering above a cell and the
- * cell has comments then the system will display these comments in a form
- * similar to a "tooltip". Comments should be persisted with the workbook.
  *
  * <h2>3. Analysis</h2>
  * <p>

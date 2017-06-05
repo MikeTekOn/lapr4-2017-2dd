@@ -8,10 +8,13 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import lapr4.green.s1.ipc.n1150532.comm.CommExtension;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
 import lapr4.green.s1.ipc.n1150532.startSharing.ShareCellsAction;
+import lapr4.green.s1.ipc.n1150657.chat.ControllerConnection;
+import lapr4.green.s1.ipc.n1150657.chat.ui.ChatAction;
 
 /**
  * The UI for the CommExtension's side bar.
@@ -59,6 +62,11 @@ public class UICommExtensionSideBar extends JPanel {
      * The button to share cells.
      */
     private JButton btShareCells;
+
+    /**
+     * The button to share messages
+     */
+    private JButton btMessage;
 
     /**
      * A table with the available instances within the network.
@@ -207,7 +215,13 @@ public class UICommExtensionSideBar extends JPanel {
         final JPanel p1 = new JPanel(new FlowLayout(allignment));
         btShareCells = new JButton(shareCellsBtText);
         p1.add(btShareCells);
+        final String message = "New Message";
+        final JPanel p2 = new JPanel(new FlowLayout(allignment));
+        btMessage = new JButton(message);
+        p2.add(btMessage);
+
         panel.add(p1);
+        panel.add(p2);
         return panel;
     }
 
@@ -222,6 +236,7 @@ public class UICommExtensionSideBar extends JPanel {
         btSearch.addActionListener(new SearchAction());
         btConnect.addActionListener(new ConnectAction());
         btShareCells.addActionListener(new ShareCellsWithAction());
+        btMessage.addActionListener(new NewMessageAction());
     }
 
     /**
@@ -243,6 +258,7 @@ public class UICommExtensionSideBar extends JPanel {
         btSearch.setEnabled(false);
         btConnect.setEnabled(false);
         btShareCells.setEnabled(false);
+        btMessage.setEnabled(false);
     }
 
     /**
@@ -255,6 +271,7 @@ public class UICommExtensionSideBar extends JPanel {
         btSearch.setEnabled(true);
         btConnect.setEnabled(true);
         btShareCells.setEnabled(true);
+        btMessage.setEnabled(true);
     }
 
     /**
@@ -325,6 +342,23 @@ public class UICommExtensionSideBar extends JPanel {
 
         }
 
+    }
+
+    /**
+     * The action listener for the new message.
+     */
+    private class NewMessageAction implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            ConnectionID connection = peersTable.getSelectedRowFile();
+            if (connection != null) {
+                ControllerConnection.setChatController(connection);
+                (new ChatAction(connection, theController)).actionPerformed(e);
+            } else {
+                JOptionPane.showMessageDialog(null, "Connect with someone.");
+            }
+        }
     }
 
 }

@@ -29,8 +29,20 @@ public interface DataTransmissionContext {
      */
     public ObjectOutputStream outputStream(OutputStream socketOutStream) throws IOException;
 
-    public WiretappedStream wiretapInput();
+//    public WiretappedStream wiretapInput();
+//
+//    public WiretappedStream wiretapOutput();
 
-    public WiretappedStream wiretapOutput();
+    /**
+     * Returns the security description of the transmission context. ex. Unsecured, Secured (Algorithmxxx)
+     * @return the security description
+     */
+    public String securityDesc();
+
+    /**
+     * Returns if the data transmission context is secured with some encryption or not
+     * @return if is secure or not.
+     */
+    public boolean isSecure();
 
 }

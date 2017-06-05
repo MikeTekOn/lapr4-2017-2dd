@@ -3,7 +3,9 @@ package lapr4.green.s1.ipc.n1150532.comm.ui;
 import csheets.ext.Extension;
 import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.UIExtension;
-import javax.swing.JComponent;
+import lapr4.green.s1.ipc.n1150738.securecomm.ui.IncomingOutgoingCommsMenu;
+
+import javax.swing.*;
 
 /**
  * The UI for the CommExtension. It provides a side bar.
@@ -41,4 +43,8 @@ public class UICommExtension extends UIExtension {
         return sideBar;
     }
 
+    @Override
+    public JMenu getMenu() {
+        return new IncomingOutgoingCommsMenu(uiController);
+    }
 }

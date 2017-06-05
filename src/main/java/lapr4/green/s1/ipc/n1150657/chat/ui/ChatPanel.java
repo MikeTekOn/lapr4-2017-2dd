@@ -10,10 +10,13 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.TitledBorder;
@@ -46,7 +49,7 @@ public class ChatPanel extends JPanel {
      * The height for the dimension of the panel.
      */
     private static final int DIMENSION_HEIGHT = 336;
-    
+
     /**
      * The name for the border.
      */
@@ -55,8 +58,10 @@ public class ChatPanel extends JPanel {
     /**
      * The controller.
      */
-    private ChatController controller;
-
+    public static Vector listMessage;
+    
+    public static Map<String,List> map = new HashMap<>();
+    
     //private JTextArea textField = new JTextArea();
     /**
      * The ChatPanel constructor.
@@ -65,9 +70,8 @@ public class ChatPanel extends JPanel {
      */
     public ChatPanel(UIController uiController) {
         super(new BorderLayout());
-        controller = new ChatController(uiController, this);
-        changeComponentName(ChatExtension.CHAT_NAME);
         buildPanel();
+        changeComponentName(ChatExtension.CHAT_NAME);
     }
 
     /**
@@ -101,15 +105,16 @@ public class ChatPanel extends JPanel {
         chatPanel.setPreferredSize(new Dimension(DIMENSION_WIDTH, DIMENSION_HEIGHT));
         chatPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 
-        String[] items = {"TEST1", "TEST2"}; //FIX ME, put the correct list
+        listMessage = new Vector();
 
-        JList list = new JList(items);
+        JList list = new JList(listMessage);
+        
         list.addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseClicked(MouseEvent e) {
                 JList list = (JList) e.getSource();
                 if (e.getClickCount() == CLICKING_NUM) {
-                    //FIXME, put the correct option when double clicking the message
-                    JOptionPane.showMessageDialog(null, "OK");
+                    ChatFormatFrame chatFormatFrame = new ChatFormatFrame(getConversation(list.getSelectedValue().toString()));
                 }
             }
         });
@@ -117,6 +122,11 @@ public class ChatPanel extends JPanel {
         JScrollPane scrollPane = new JScrollPane(list);
         chatPanel.add(scrollPane);
         return chatPanel;
+    }
+    
+    private Vector getConversation(String component){
+        List list = map.get(component);
+        return new Vector(list);
     }
 
     /**

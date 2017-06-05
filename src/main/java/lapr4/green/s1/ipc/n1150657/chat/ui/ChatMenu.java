@@ -22,6 +22,6 @@ public class ChatMenu extends JMenu {
      */
     public ChatMenu(UIController uiController) {
         super("Chat");
-        add(new ChatAction(uiController));
+        //add(new ChatAction(uiController));
     }
 }

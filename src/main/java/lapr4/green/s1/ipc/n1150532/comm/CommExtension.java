@@ -1,10 +1,15 @@
 package lapr4.green.s1.ipc.n1150532.comm;
 
 import csheets.core.Spreadsheet;
+import csheets.core.Workbook;
 import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.ext.Extension;
 import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.UIExtension;
+import java.net.InetAddress;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.CellDTO;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.RequestSharedCellsDTO;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.ResponseSharedCellsDTO;
@@ -21,6 +26,17 @@ import java.util.Observer;
 import java.util.SortedSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+import lapr4.green.s1.ipc.n1150657.chat.ControllerConnection;
+import lapr4.green.s1.ipc.n1150657.chat.HandlerRequestMessageDTO;
+import lapr4.green.s1.ipc.n1150657.chat.MessageEvent;
+import lapr4.green.s1.ipc.n1150657.chat.RequestMessageDTO;
+import lapr4.green.s1.ipc.n1150657.chat.ServerMessage;
+import lapr4.green.s1.ipc.n1150901.search.workbook.HandlerRequestWorkbookDTO;
+import lapr4.green.s1.ipc.n1150901.search.workbook.HandlerResponseWorkbookDTO;
+import lapr4.green.s1.ipc.n1150901.search.workbook.RequestWorkbookDTO;
+import lapr4.green.s1.ipc.n1150901.search.workbook.ResponseWorkbookDTO;
+import lapr4.green.s1.ipc.n1150901.search.workbook.SearchWorkbookEvent;
 
 /**
  * The Communication extension. It manages all the servers and clients of the
@@ -82,11 +98,14 @@ public class CommExtension extends Extension implements Observer {
      */
     private UIController uiController;
 
+    private Map<InetAddress, ServerMessage> threadsList;
+
     /**
      * The extension constructor.
      */
     public CommExtension() {
         super(NAME);
+        threadsList = new HashMap<>();
     }
 
     /**
@@ -120,6 +139,15 @@ public class CommExtension extends Extension implements Observer {
     }
 
     /**
+     * It stops the threads messages.
+     */
+    public void stopMessages() {
+        for (InetAddress address : threadsList.keySet()) {
+            threadsList.get(address).stopThread();
+        }
+    }
+
+    /**
      * It provides the UI Extension to render.
      *
      * @param uiController The UI Controller.
@@ -141,9 +169,12 @@ public class CommExtension extends Extension implements Observer {
         HandlerRequestSharedCellsDTO h2 = new HandlerRequestSharedCellsDTO();
         h2.addObserver(this);
         tcpServer.addHandler(RequestSharedCellsDTO.class, h2);
-        TransmissionContextRequestHandler h3 = new TransmissionContextRequestHandler();
+        HandlerRequestWorkbookDTO h3 = new HandlerRequestWorkbookDTO();
         h3.addObserver(this);
-        tcpServer.addHandler(TransmissionContextRequestDTO.class, h3);
+        tcpServer.addHandler(RequestWorkbookDTO.class, h3);
+        HandlerRequestMessageDTO h4 = new HandlerRequestMessageDTO();
+        h4.addObserver(this);
+        tcpServer.addHandler(RequestMessageDTO.class, h4);
         //TODO 
     }
 
@@ -166,10 +197,12 @@ public class CommExtension extends Extension implements Observer {
         tcpClientsManager.addHandler(ConnectionResponseDTO.class, h1);
         HandlerResponseSharedCellsDTO h2 = new HandlerResponseSharedCellsDTO();
         tcpClientsManager.addHandler(ResponseSharedCellsDTO.class, h2);
-        TransmissionContextResponseHandler h3 = new TransmissionContextResponseHandler();
-        h3.addObserver(this);
-        tcpServer.addHandler(TransmissionContextResponseDTO.class, h3);
-        //TODO 
+        HandlerResponseWorkbookDTO h3 = new HandlerResponseWorkbookDTO();
+        tcpClientsManager.addHandler(ResponseWorkbookDTO.class, h3);
+        //HandlerResponseMessageDTO h4 = new HandlerResponseMessageDTO();
+        //tcpClientsManager.addHandler(ResponseMessageDTO.class,h4);
+        //tcpServer.addHandler(RequestMessageDTO.class, h4);
+        //TODO
     }
 
     /**
@@ -249,34 +282,49 @@ public class CommExtension extends Extension implements Observer {
                     }
                 }
             }
-            if(arg instanceof SwitchDataTransmissionContextEvent) {
-                SwitchDataTransmissionContextEvent event = (SwitchDataTransmissionContextEvent) arg;
-                CommTCPClientWorker cliWorker = tcpClientsManager.workerBySocket(event.getSocket());
-                if(cliWorker != null){
-                    cliWorker.switchDataTransmissionContext(event.getTransmissionContext());
-                } else {
-                    CommTCPServerWorker svWorker = tcpServer.workerBySocket(event.getSocket());
-                    if(svWorker != null){
-                        svWorker.switchDataTransmissionContext(event.getTransmissionContext());
-                    } else {
-                        Logger.getLogger(CommTCPClientWorker.class.getName()).log(Level.SEVERE, "Non existing socket to switch data transmission context");
+            if (arg instanceof SearchWorkbookEvent) {
+                SearchWorkbookEvent event = (SearchWorkbookEvent) arg;
+                Workbook w = uiController.getActiveWorkbook();
+                Iterator<Spreadsheet> ss = w.iterator();
+                while (ss.hasNext()) {
+                    try {
+                        ss.next().getTitle();
+                    } catch (Exception ex) {
+                        Logger.getLogger(CommExtension.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             }
+            if (arg instanceof MessageEvent) {
 
-            if(arg instanceof IllegalDataTransmissionContextEvent) {
-                IllegalDataTransmissionContextEvent event = (IllegalDataTransmissionContextEvent) arg;
-                CommTCPClientWorker cliWorker = tcpClientsManager.workerBySocket(event.getSocket());
-                if(cliWorker != null){
-                    //TODO
+                MessageEvent event = (MessageEvent) arg;
+                String m = event.getMessage();
+                InetAddress adress = event.getSocket().getInetAddress();
+
+                ConnectionID connection = new ConnectionIDImpl(adress, event.getSocket().getPort());
+                //@FIXME quick fix, explained in class Controller Connection
+                ControllerConnection.setChatController(connection);
+                //@FIXME popup with time
+                JOptionPane.showMessageDialog(null, "New message from " + adress.getHostName());
+                //creates threads server for each conversation.
+                Thread server;
+                if (threadsList.containsKey(adress)) {
+                    ServerMessage serverMessage = threadsList.get(adress);
+                    serverMessage.addMessage(m, adress);
+                    //It notifies the server for the new message.
+                    //@FIXME, notify ins't doin it well
+                    synchronized (serverMessage) {
+                        serverMessage.notify();
+                    }
                 } else {
-                    CommTCPServerWorker svWorker = tcpServer.workerBySocket(event.getSocket());
-                    if(svWorker != null){
-                        //TODO
-                    } else {
-                        Logger.getLogger(CommTCPClientWorker.class.getName()).log(Level.SEVERE, "Non existing socket to terminate");
+                    ServerMessage serverMessage = new ServerMessage(m, adress);
+                    threadsList.put(adress, serverMessage);
+                    server = new Thread(serverMessage);
+                    server.start();
+                    synchronized (serverMessage) {
+                        serverMessage.notify();
                     }
                 }
+
             }
         }
     }
