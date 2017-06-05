@@ -38,8 +38,8 @@ public class HandlerRequestWorkbookDTO extends Observable implements CommHandler
         RequestWorkbookDTO request = (RequestWorkbookDTO) receivedDTO.getDTO();
 
         lastReceivedDTO = request;
-        notifyObservers(new SearchWorkbookEvent(request.getWorkbook()));
-        ResponseWorkbookDTO reply = new ResponseWorkbookDTO(request.getWorkbook());
+        notifyObservers(new SearchWorkbookEvent(request.getWorkbookName()));
+        ResponseWorkbookDTO reply = new ResponseWorkbookDTO(request.getWorkbookName());
 
         try {
             outStream.writeObject(reply);

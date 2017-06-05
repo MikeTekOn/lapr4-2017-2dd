@@ -5,6 +5,10 @@
  */
 package lapr4.green.s1.ipc.n1150901.search.workbook.ui.table;
 
+import csheets.core.Address;
+import csheets.core.Cell;
+import csheets.core.Spreadsheet;
+import csheets.core.Workbook;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -13,8 +17,11 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.InetAddress;
+import java.util.Iterator;
+import java.util.Set;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -23,6 +30,7 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
 
 /**
  *
@@ -134,12 +142,47 @@ public class InstanceTableUI extends JFrame {
         return scrollPane;
     }
 
+    private void buildSummaryTable(Workbook wbFound) {
+        JDialog dialog = new JDialog();
+        String[] columnNames = {"SpreadSheet Name", "Cell 1", "Cell 2", "Cell 3"};
+        String[][] data = new String[50][50];
+
+        Iterator<Spreadsheet> it = wbFound.iterator();
+        int i = 0;
+        int j = 0;
+        while (it.hasNext()) {
+            data[0][i] = it.next().getTitle();
+            i++;
+            Address address1 = new Address(0, 0);
+            Address address2 = new Address(52, 106);
+            Set<Cell> cells = it.next().getCells(address1, address2);
+            for (Cell c : cells){
+                if (!c.getContent().isEmpty()){
+                    data[j][i] = c.getContent();
+                    j++;
+                    if (j == 3){
+                        break;
+                    }
+                }
+            }
+        }
+
+        JTable summaryTable = new JTable(data, columnNames);
+        JScrollPane scroll = new JScrollPane(summaryTable);
+        dialog.add(scroll);
+        dialog.setLocationRelativeTo(null);
+        dialog.setMinimumSize(new Dimension(getWidth(), getHeight()));
+        dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        dialog.setVisible(true);
+        dialog.setAlwaysOnTop(true);
+    }
+
     /**
      * It provides the instance matching the selected row.
      *
      * @return It returns the instance associated with the selected row.
      */
-    public InetAddress getSelectedRowFile() {
+    public ConnectionID getSelectedRowFile() {
         return theController.provideInstance(table.getSelectedRow());
     }
 
@@ -150,13 +193,19 @@ public class InstanceTableUI extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            JFrame frame = new JFrame("Search Workbook");
+            JFrame frame = new JFrame();
             frame.setLocationRelativeTo(null);
             frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             frame.setVisible(true);
             frame.setAlwaysOnTop(true);
             String name = JOptionPane.showInputDialog(frame, "What is the name of the workbook that you want to search?");
-            theController.searchWorbook(name, getSelectedRowFile());
+            Workbook wbFound = theController.searchWorbook(name, getSelectedRowFile());
+            if (wbFound != null) {
+                buildSummaryTable(wbFound);
+            } else {
+                JOptionPane.showMessageDialog(frame, "The workbook was not found!", "Information",
+                        JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
