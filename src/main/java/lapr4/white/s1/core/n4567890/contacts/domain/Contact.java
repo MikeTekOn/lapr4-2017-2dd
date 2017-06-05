@@ -181,4 +181,5 @@ public class Contact implements AggregateRoot<Long>, Serializable {
     public Long id() {
         return this.pk;
     }
+
 }

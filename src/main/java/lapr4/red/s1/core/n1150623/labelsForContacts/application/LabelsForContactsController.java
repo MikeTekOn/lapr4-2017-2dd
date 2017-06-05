@@ -46,7 +46,7 @@ public class LabelsForContactsController {
      * @throws DataConcurrencyException
      * @throws DataIntegrityViolationException
      */
-    public boolean addLabel(String name, String photo, String email, String address, String phoneNumber) throws DataConcurrencyException, DataIntegrityViolationException {
+    private boolean addLabel(String name, String photo, String email, String address, String phoneNumber) throws DataConcurrencyException, DataIntegrityViolationException {
         Label createdLabel = labelFactory.construct(name, photo, email, address, phoneNumber);
         return labelList.addLabel(createdLabel);
     }
@@ -59,12 +59,32 @@ public class LabelsForContactsController {
         return this.contactsRepository.findAll();
     }
 
+    /**
+     * All contacts of the user that matches the given regex
+     * @param regexPattern - the regex patter used to find users
+     * @return list of users found
+     */
+    public List<Contact> getContactByRegex(String regexPattern) {
+        List<Contact> list =this.contactsRepository.findByRegex(regexPattern);
+        return list;
+    }
+
+    public boolean toExportContacts(List<Contact> toExport) {
+        for (Contact c : toExport) {
+            try {
+                //addLabel(c.name(), c.photo(), c.email(), c.address(), c.phoneNumber());
+            } catch (Exception e) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public void limitEvents(Calendar endDate) {
         labelList.limitEvents(endDate);
     }
 
-    public boolean doExport(String path){
-        labelList.choosePath(path);
+    public boolean doExport(){
         return labelList.exportPDF();
     }
 

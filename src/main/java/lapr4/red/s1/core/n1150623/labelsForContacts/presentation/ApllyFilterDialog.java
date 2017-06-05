@@ -3,7 +3,7 @@ package lapr4.red.s1.core.n1150623.labelsForContacts.presentation;
 import javax.swing.*;
 import java.awt.event.*;
 
-public class ApplyFilterDialog extends JDialog {
+public class ApllyFilterDialog extends JDialog {
 
     private JButton buttonOK;
     private JButton buttonCancel;
@@ -19,7 +19,7 @@ public class ApplyFilterDialog extends JDialog {
     private JPanel filterPanel;
 
 
-    public ApplyFilterDialog(String regex) {
+    public ApllyFilterDialog(String regex) {
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
@@ -98,7 +98,7 @@ public class ApplyFilterDialog extends JDialog {
     }
 
     public static void main(String[] args) {
-        ApplyFilterDialog dialog = new ApplyFilterDialog("");
+        ApllyFilterDialog dialog = new ApllyFilterDialog("");
         dialog.pack();
         dialog.setVisible(true);
         System.exit(0);
