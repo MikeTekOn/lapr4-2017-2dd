@@ -40,25 +40,26 @@ public class LabelsToPDFTest {
         Event d = new Event("Evento4", Calendar.getInstance());
         List<Event> e = new ArrayList<>();
         Label lab1 = new Label();
-        lab1.fillLabel("name1", "address1", "email1", "phoneNumber1", "photo1");
+
+        lab1.fillLabel("name1", "C:\\Users\\guima\\Desktop\\default_img.png", "email1", "phoneNumber1", "photo1");
         e.add(a);
         e.add(d);
         lab1.addEvents(e);
         Label lab2 = new Label();
-        lab2.fillLabel("name2", "address2", "email2", "phoneNumber2", "photo2");
+        lab2.fillLabel("name2", "C:\\Users\\guima\\Desktop\\default_img.png", "email2", "phoneNumber2", "photo2");
         List<Event> z = new ArrayList<>();
         z.add(b);
         z.add(d);
         lab1.addEvents(z);
 
         Label lab3 = new Label();
-        lab3.fillLabel("name3", "address3", "email3", "phoneNumber3", "photo3");
+        lab3.fillLabel("name3", "C:\\Users\\guima\\Desktop\\default_img.png", "email3", "phoneNumber3", "photo3");
         List<Event> w = new ArrayList<Event>();
         w.add(b);
         lab1.addEvents(w);
 
         Label lab4 = new Label();
-        lab4.fillLabel("name4", "default_image.png", "email4", "phoneNumber4", "address");
+        lab4.fillLabel("name4", "C:\\Users\\guima\\Desktop\\default_img.png", "email4", "phoneNumber4", "address");
         List<Event> q = new ArrayList<>();
         q.add(a);
         q.add(c);
@@ -73,6 +74,7 @@ public class LabelsToPDFTest {
 
     @Test
     public void ensurePDFIsPrinted() {
+        lista.choosePath("C:\\Users\\guima\\Desktop\\ficheiro.pdf");
         assertTrue(lista.exportPDF());
     }
 
