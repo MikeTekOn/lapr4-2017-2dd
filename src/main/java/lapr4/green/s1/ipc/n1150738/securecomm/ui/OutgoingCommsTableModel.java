@@ -3,8 +3,7 @@ package lapr4.green.s1.ipc.n1150738.securecomm.ui;
 import lapr4.green.s1.ipc.n1150532.comm.CommTCPClientWorker;
 import lapr4.green.s1.ipc.n1150532.comm.CommTCPClientsManager;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
-import lapr4.green.s1.ipc.n1150532.comm.connection.NewConnectionMadeEvent;
-import lapr4.green.s1.ipc.n1150738.securecomm.NewConnectionOnMangerEvent;
+import lapr4.green.s1.ipc.n1150738.securecomm.NewConnectionOnManagerEvent;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.LinkedList;
@@ -40,6 +39,10 @@ public class OutgoingCommsTableModel extends AbstractTableModel  implements Obse
         return COLUMNS[column];
     }
 
+    public CommTCPClientWorker getWorker(int i){
+        return workers.get(i);
+    }
+
     @Override
     public int getColumnCount() {
         return COLUMNS.length;
@@ -62,7 +65,7 @@ public class OutgoingCommsTableModel extends AbstractTableModel  implements Obse
 
     @Override
     public void update(Observable o, Object arg) {
-        if(arg instanceof NewConnectionOnMangerEvent){
+        if(arg instanceof NewConnectionOnManagerEvent){
             workers.clear();
             manager.getClients().forEach((ConnectionID id, CommTCPClientWorker wk)->{workers.add(wk);});
             fireTableDataChanged();
