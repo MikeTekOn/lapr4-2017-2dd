@@ -32,7 +32,7 @@
     
     loop for Spreadsheet s : listSpreadsheets
     loop for Cells c : listCells
-    util -> cll : getContent()
+    util -> cll : getValue()
     util -> util : checkIfMatches(String cellContent)
    
     alt : if true

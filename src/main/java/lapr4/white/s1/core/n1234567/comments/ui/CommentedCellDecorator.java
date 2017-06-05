@@ -63,23 +63,4 @@ public class CommentedCellDecorator extends CellDecorator {
             }
         }
     }
-
-    @Override
-    public boolean hasTooltip(Cell cell) {
-        CommentableCellWithMultipleUsers c = (CommentableCellWithMultipleUsers) cell.getExtension(CommentsExtension.NAME);
-        return c.hasComments();
-    }
-
-    @Override
-    public void applyTooltip(CellRenderer c, Cell cell) {
-        String text = "<html>";
-        CommentableCellWithMultipleUsers cellWithComments = (CommentableCellWithMultipleUsers) cell.getExtension(CommentsExtension.NAME);
-        for (Map.Entry<User, List<String>> entry : cellWithComments.comments().entrySet()) {
-            for (String comment : entry.getValue()) {
-                text += "<b>" + entry.getKey().name() + "</b>: " + comment + "<br>";
-            }
-        }
-        text += "</html>";
-        c.setToolTipText(text);
-    }
 }

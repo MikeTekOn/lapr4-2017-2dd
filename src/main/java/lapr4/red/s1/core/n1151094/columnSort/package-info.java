@@ -1,5 +1,5 @@
 /**
-* Technical documentation regarding the user story Core03.1 Column Sort
+* Technical documentation regarding the user story Core03.1 Column Sort.
 * <p>
 *
 * <b>Scrum Master: -(yes/no)- no</b>
