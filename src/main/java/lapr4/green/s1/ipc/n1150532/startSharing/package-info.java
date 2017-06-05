@@ -9,7 +9,7 @@
  * of a range of cells to another instance of Cleansheets. The other instance
  * should display the received contents in the same cell address as the original
  * cells.
- * <p/>
+ * <p>
  * It should be possible to configure the port to be used for network
  * connections. It should be possible to find other instances of Cleansheets
  * available in the local network. These instances should be listed in a new
@@ -34,17 +34,17 @@
  * many to expect, a timeout can be set in order for it to terminate after a
  * while without replies. For this purpose, the User Datagram Protocol (UDP)
  * seems to be adequate.
- * <p/>
+ * <p>
  * Afterwards, a reliable connection is required to transfer data between the
  * applications. A client for each connection request is needed, as well as a
  * server to handle the requests. The server should be dedicated to accept the
  * requests. The request processing should be delegated to a worker which will
  * use handlers to manage any kind of data. For this purpose, the Transmission
  * Control Protocol (TCP) seems to be adequate.
- * <p/>
+ * <p>
  * The handler may vary depending on the object to be transfered. This allow for
  * a common communication base classes.
- * <p/>
+ * <p>
  * The requirements also request the application to allow the port number to be
  * configured. The changes to the configuration should be persistent.
  *
@@ -55,28 +55,28 @@
  * {@link csheets.core.Address} and {@link csheets.core.Value} are to be sent.
  * The application which receives the cells should place the value at the
  * correct address (for the time being).
- * <p/>
+ * <p>
  * <b>Main flow</b>
- * <p/>
+ * <p>
  * <img src="ipc_01_1_analysis1.png" alt="image">
  *
  * <h2>Concepts</h2>
  *
  * <b>Server</b> is responsible for receiving requests and assigned a worker to
  * that client. There will be a UDP server and a TCP server.
- * <p/>
+ * <p>
  * <b>Server Worker</b> is responsible for interpreting a client's request and
  * send the response.
- * <p/>
+ * <p>
  * <b>Client Worker</b> is responsible for sending the request to a server and
  * interpreting the response. There will be a UDP client and a TCP client.
- * <p/>
+ * <p>
  * <b>Data Transfer Object</b> is responsible for transmitting the data through
  * the network connection (also known as DTO).
- * <p/>
+ * <p>
  * <b>Handler</b> is responsible for interpreting the Data Transfer Object
  * received and perform any action needed.
- * <p/>
+ * <p>
  * <img src="ipc_01_1_analysis2.png" alt="image">
  *
  * <h2>Special Notes</h2>
@@ -94,11 +94,11 @@
  * <b>Configure port numbers</b>: The user changes the configuration and
  * restarts the application. The user tries to change it again and the values
  * are set to his last change.
- * <p/>
+ * <p>
  * <b>Find peers in local network</b>: One instance should be able to broadcast
  * connection details request and find all other connected instances within the
  * local network.
- * <p/>
+ * <p>
  * <b>Share a range of cells</b>: One instance should be able to send a range of
  * cells to the other instance, which in turn should show them at the right
  * address and the correct value. For the time being, it is only necessary to
@@ -109,14 +109,14 @@
  * <b>UDP Echo Request</b>: A broadcast can be sent to the local network. The
  * instance's server must receive the echo request and the instance's client the
  * server's response.
- * <p/>
+ * <p>
  * <b>TCP Echo Request</b>: A simple echo request can be sent from one instance
  * to another (simulated). The client shall connect to the server and request it
  * an echo. The client must receive the echo response.
- * <p/>
+ * <p>
  * <b>Unit Testing</b>: The main methods involved must be tested individually to
  * assure their result is as expected.
- * <p/>
+ * <p>
  * <b>Attention!</b> The port numbers used in the tests must be different since
  * they may run in parallel.
  *
@@ -159,13 +159,13 @@
  * reply should trigger the user interface to add that peer. Note that, since
  * the datagram will be sent to the broadcast, it will receive its own response.
  * This one must be ignored.
- * <p/>
+ * <p>
  * <b>Client Side</b>
- * <p/>
+ * <p>
  * <img src="ipc_01_1_design_udp_client.png" alt="image">
- * <p/>
+ * <p>
  * <b>Server Side</b>
- * <p/>
+ * <p>
  * <img src="ipc_01_1_design_udp_server.png" alt="image">
  *
  * <h2>Connect Two Instances</h2>
@@ -175,13 +175,13 @@
  * Connection Response DTO informing the success of the operation. Also, when
  * the server receives the request, it will check if that instance already has a
  * client to communicate back. If not, it will use a client to request it.
- * <p/>
+ * <p>
  * <b>Client Side</b>
- * <p/>
+ * <p>
  * <img src="ipc_01_1_design_tcp_client.png" alt="image">
- * <p/>
+ * <p>
  * <b>Server Side</b>
- * <p/>
+ * <p>
  * <img src="ipc_01_1_design_tcp_server.png" alt="image">
  *
  * <h2>Maintain TPC Connections</h2>
