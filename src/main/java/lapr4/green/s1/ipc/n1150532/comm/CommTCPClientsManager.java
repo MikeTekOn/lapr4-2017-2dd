@@ -86,13 +86,10 @@ public class CommTCPClientsManager implements Serializable {
      */
     public void requestConnectionTo(ConnectionID theConnection, boolean secure) {
         if (clients.get(theConnection) == null) {
-            CommTCPClientWorker worker = new CommTCPClientWorker(this, theConnection.getAddress(), theConnection.getPortNumber());
+            CommTCPClientWorker worker = new CommTCPClientWorker(this, theConnection.getAddress(), theConnection.getPortNumber(), secure);
             ConnectionRequestDTO request = new ConnectionRequestDTO(CommTCPServer.getServer().provideConnectionPort(), theConnection.getAddress(), theConnection.getPortNumber(), secure);
             worker.start();
             try {
-                if(secure){
-                    worker.getObjectOutputStream().writeObject(new TransmissionContextRequestDTO(SecureAESDataTransmissionContext.class.getName()));
-                }
                 worker.getObjectOutputStream().writeObject(request);
             } catch (IOException ex) {
                 Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -143,13 +140,13 @@ public class CommTCPClientsManager implements Serializable {
         clients.put(connection, worker);
     }
 
-    public CommTCPClientWorker workerBySocket(Socket s){
-        for(Map.Entry<ConnectionID, CommTCPClientWorker> entry : clients.entrySet()){
-            if(entry.getValue().hasSocket(s)){
-                return entry.getValue();
-            }
-        }
-        return null;
-    }
+//    public CommTCPClientWorker workerBySocket(Socket s){
+//        for(Map.Entry<ConnectionID, CommTCPClientWorker> entry : clients.entrySet()){
+//            if(entry.getValue().hasSocket(s)){
+//                return entry.getValue();
+//            }
+//        }
+//        return null;
+//    }
 
 }

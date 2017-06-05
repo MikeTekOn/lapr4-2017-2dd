@@ -29,8 +29,8 @@ public interface DataTransmissionContext {
      */
     public ObjectOutputStream outputStream(OutputStream socketOutStream) throws IOException;
 
-    public WiretappedStream wiretapInput();
-
-    public WiretappedStream wiretapOutput();
+//    public WiretappedStream wiretapInput();
+//
+//    public WiretappedStream wiretapOutput();
 
 }

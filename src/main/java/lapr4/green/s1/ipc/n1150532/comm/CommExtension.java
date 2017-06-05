@@ -141,9 +141,6 @@ public class CommExtension extends Extension implements Observer {
         HandlerRequestSharedCellsDTO h2 = new HandlerRequestSharedCellsDTO();
         h2.addObserver(this);
         tcpServer.addHandler(RequestSharedCellsDTO.class, h2);
-        TransmissionContextRequestHandler h3 = new TransmissionContextRequestHandler();
-        h3.addObserver(this);
-        tcpServer.addHandler(TransmissionContextRequestDTO.class, h3);
         //TODO 
     }
 
@@ -166,9 +163,6 @@ public class CommExtension extends Extension implements Observer {
         tcpClientsManager.addHandler(ConnectionResponseDTO.class, h1);
         HandlerResponseSharedCellsDTO h2 = new HandlerResponseSharedCellsDTO();
         tcpClientsManager.addHandler(ResponseSharedCellsDTO.class, h2);
-        TransmissionContextResponseHandler h3 = new TransmissionContextResponseHandler();
-        h3.addObserver(this);
-        tcpServer.addHandler(TransmissionContextResponseDTO.class, h3);
         //TODO 
     }
 
@@ -246,35 +240,6 @@ public class CommExtension extends Extension implements Observer {
                         ss.getCell(cell.getAddress()).setContent(cell.getContent());
                     } catch (FormulaCompilationException ex) {
                         Logger.getLogger(CommExtension.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-            if(arg instanceof SwitchDataTransmissionContextEvent) {
-                SwitchDataTransmissionContextEvent event = (SwitchDataTransmissionContextEvent) arg;
-                CommTCPClientWorker cliWorker = tcpClientsManager.workerBySocket(event.getSocket());
-                if(cliWorker != null){
-                    cliWorker.switchDataTransmissionContext(event.getTransmissionContext());
-                } else {
-                    CommTCPServerWorker svWorker = tcpServer.workerBySocket(event.getSocket());
-                    if(svWorker != null){
-                        svWorker.switchDataTransmissionContext(event.getTransmissionContext());
-                    } else {
-                        Logger.getLogger(CommTCPClientWorker.class.getName()).log(Level.SEVERE, "Non existing socket to switch data transmission context");
-                    }
-                }
-            }
-
-            if(arg instanceof IllegalDataTransmissionContextEvent) {
-                IllegalDataTransmissionContextEvent event = (IllegalDataTransmissionContextEvent) arg;
-                CommTCPClientWorker cliWorker = tcpClientsManager.workerBySocket(event.getSocket());
-                if(cliWorker != null){
-                    //TODO
-                } else {
-                    CommTCPServerWorker svWorker = tcpServer.workerBySocket(event.getSocket());
-                    if(svWorker != null){
-                        //TODO
-                    } else {
-                        Logger.getLogger(CommTCPClientWorker.class.getName()).log(Level.SEVERE, "Non existing socket to terminate");
                     }
                 }
             }
