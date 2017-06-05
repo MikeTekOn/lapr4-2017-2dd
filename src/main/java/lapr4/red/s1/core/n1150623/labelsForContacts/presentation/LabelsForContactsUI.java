@@ -14,8 +14,8 @@ import java.util.regex.Pattern;
 public class LabelsForContactsUI extends JDialog {
 
 
-    private JList selectedContactsList;
-    private JList contactList;
+    private JList selectedContactsList = new JList<>();
+    private JList contactList= new JList<>();
 
     private DefaultListModel<Contact> selected;
     private DefaultListModel<Contact> contacts;
@@ -32,54 +32,58 @@ public class LabelsForContactsUI extends JDialog {
     private LabelsForContactsController controller;
 
     public LabelsForContactsUI(LabelsForContactsController controller) {
-        setContentPane(contentPane);
+        //setContentPane(this);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
 
         this.controller = controller;
-        selectedContactsList = new JList();
-        contactList = new JList();
+
+
         selected = new DefaultListModel<>();
         contacts = new DefaultListModel<>();
+
+        selectedContactsList.setModel(selected);
+        contactList.setModel(contacts);
         Iterable<Contact> it = controller.allContacts();
         for (Contact c : it) {
             contacts.addElement(c);
         }
-        selectedContactsList.setModel(selected);
-        contactList.setModel(contacts);
-
+        buttonOK=new JButton("Ok");
         buttonOK.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 onOK();
             }
         });
+        buttonCancel=new JButton("Cancel");
         buttonCancel.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 onCancel();
             }
         });
+        applyRegexButton = new JButton("regex");
         applyRegexButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 applyRegex();
             }
         });
-
+        addAllContactsButton = new JButton("add all contacts");
         addAllContactsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 addAllContacts();
             }
         });
-
+        addSelectedContactsButton = new JButton("add sel contacts");
         addSelectedContactsButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 addSelected();
             }
         });
+        removeSelectedContactButton = new JButton("rem selected contact");
 
         removeSelectedContactButton.addActionListener(new ActionListener() {
             @Override
@@ -96,12 +100,14 @@ public class LabelsForContactsUI extends JDialog {
             }
         });
 
-        // call onCancel() on ESCAPE
+        /*// call onCancel() on ESCAPE
         contentPane.registerKeyboardAction(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onCancel();
             }
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+*/
+        setVisible(true);
     }
 
     private void addSelected() {
@@ -130,7 +136,9 @@ public class LabelsForContactsUI extends JDialog {
 
     private void applyRegex() {
         String regex = "";
-        new ApllyFilterDialog(regex);
+        ApplyFilterDialog a = new ApplyFilterDialog(regex);
+        a.pack();
+        a.setVisible(true);
 
         List<Contact> foundContacts = new ArrayList<>();
         Pattern p = Pattern.compile(regex);
@@ -149,29 +157,44 @@ public class LabelsForContactsUI extends JDialog {
 
     private void onOK() {
 
-        if (JOptionPane.showConfirmDialog(null, "Label Exportation", "Label Exportation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-            /**
-             * Add events
-             * */
-            Calendar endDate = Calendar.getInstance();
+        if(selected.size() > 0) {
+            Contact c = null;
+            for (int i = 0; i < selected.size();i++) {
+                c = selected.getElementAt(i);
+                try {
+                    if(c != null)
+                        controller.addLabel(c.name(), c.photo(), c.email(), c.address(), c.phone());
+                } catch (Exception e) {
+                }
+            }
 
-            new ChooseEndDateEventsDialog(endDate);
+            if (JOptionPane.showConfirmDialog(null, "Export Events?", "Label Exportation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
 
-            /**
-             * Limit Events
-             */
-            controller.limitEvents(endDate);
-        } else {
-            controller.removeEvents();
+                Calendar endDate = Calendar.getInstance();
+
+                ChooseEndDateEventsDialog ch = new ChooseEndDateEventsDialog(endDate);
+                ch.pack();
+                ch.setVisible(true);
+                System.exit(0);
+                /**
+                 * Limit Events
+                 */
+                controller.limitEvents(endDate);
+            } else {
+                controller.removeEvents();
+            }
+
+            choosePath();
+
+            String export = "Success";
+            if (!controller.doExport()) {
+                export = "Failed";
+            }
+            JOptionPane.showConfirmDialog(null, "Exportation: " + export, "Information", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+            onCancel();
+        }else{
+            JOptionPane.showMessageDialog(null, "Must select at least one contact", "ERROR", JOptionPane.ERROR_MESSAGE);
         }
-
-
-        String export = "Success";
-        if (!controller.doExport()) {
-            export = "Failed";
-        }
-        JOptionPane.showConfirmDialog(null, "Exportation: " + export, "Information", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
-        onCancel();
     }
 
     private void onCancel() {
@@ -186,17 +209,19 @@ public class LabelsForContactsUI extends JDialog {
     }
 
     private void updateAllContactsList() {
-        contactList.setModel(contacts);
+        contactList = new JList(contacts);
     }
 
     private void updateSelectedContactsList() {
-        selectedContactsList.setModel(selected);
+        selectedContactsList = new JList(selected);
     }
 
     private void removeFromContacts(List<Contact> toRemove) {
         for (Contact c : toRemove) {
             contacts.removeElement(c);
         }
+        updateAllContactsList();
+        updateSelectedContactsList();
     }
 
     private void addToContacts(List<Contact> toAdd) {
@@ -204,6 +229,8 @@ public class LabelsForContactsUI extends JDialog {
             if (!contacts.contains(c))
                 contacts.addElement(c);
         }
+        updateAllContactsList();
+        updateSelectedContactsList();
     }
 
     private void addAllContacts() {
@@ -222,14 +249,57 @@ public class LabelsForContactsUI extends JDialog {
 
     private void addToSelectedContacts(List<Contact> toAdd) {
         for (Contact c : toAdd) {
-            if (!selected.contains(c))
-                selected.addElement(c);
+            selected.addElement(c);
         }
+        updateAllContactsList();
+        updateSelectedContactsList();
     }
 
     private void removeFromSelectedContacts(List<Contact> toRemove) {
         for (Contact c : toRemove) {
             selected.removeElement(c);
         }
+        updateAllContactsList();
+        updateSelectedContactsList();
     }
+
+
+    private JButton button;
+    private String path;
+    private String name;
+    private JFileChooser picker;
+    private String pickertitle;
+
+    private void choosePath(){
+        name = JOptionPane.showInputDialog("Name of File? \n(ex:\"nome_ficheiro\")");
+        name += ".pdf";
+
+        JDialog d = new JDialog();
+        JPanel p = new JPanel();
+        d.add(p);
+
+        button = new JButton("Path Chooser");
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                picker = new JFileChooser();
+                picker.setCurrentDirectory(new java.io.File("."));
+                picker.setDialogTitle(pickertitle);
+                picker.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY); //only directories - cant choose files
+
+                picker.setAcceptAllFileFilterUsed(false);
+                if (picker.showOpenDialog(p) == JFileChooser.APPROVE_OPTION) {
+                    path = picker.getSelectedFile().getPath();
+                    path+="\\";
+                    path+=name;
+                    d.dispose();
+                } else {
+                    //nothing
+                }
+            }
+        });
+        d.add(button);
+
+    }
+
 }
