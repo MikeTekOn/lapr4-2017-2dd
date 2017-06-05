@@ -230,11 +230,11 @@ public class CommTCPClientWorker extends Thread implements Serializable {
         return socket == s;
     }
 
-    /**
-     * @author Henrique Oliveira [1150738@isep.ipp.pt]
-     *
-     * @param ctx
-     */
+//    /**
+//     * @author Henrique Oliveira [1150738@isep.ipp.pt]
+//     *
+//     * @param ctx
+//     */
 //    public void switchDataTransmissionContext(DataTransmissionContext ctx) {
 //        this.transmissionContext.wiretapInput().transferTappers(ctx.wiretapInput());
 //        this.transmissionContext.wiretapOutput().transferTappers(ctx.wiretapOutput());
@@ -248,4 +248,10 @@ public class CommTCPClientWorker extends Thread implements Serializable {
 //            e.printStackTrace();
 //        }
 //    }
+
+
+    public DataTransmissionContext getTransmissionContext() {
+        return transmissionContext;
+    }
+
 }

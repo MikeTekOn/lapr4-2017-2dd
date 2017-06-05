@@ -88,4 +88,15 @@ public class SecureAESDataTransmissionContext implements DataTransmissionContext
 //        return outputTap;
 //    }
 
+    @Override
+    public boolean isSecure() {
+        return true;
+    }
+
+
+    @Override
+    public String securityDesc() {
+        return "Secure (AES)";
+    }
+
 }

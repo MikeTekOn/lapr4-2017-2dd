@@ -129,14 +129,14 @@
  *
  * <p>
  * <h2>5. Implementation</h2>
- * <p/>
+ * <p>
  * It was decided that the list that the exportPDF would receive should only
  * contain the cells that were selected, in order to remove that resposability
  * of the class. To do so, a class specialized in that task was created:
  * WorkbookHandler. The class has three metods, one for each user selection
  * (workbook, worksheet and cell range) that return a list containing only the
  * cells in that range.
- * <p/>
+ * <p>
  * Also, since the Strategy interface and context, are
  * common to two use cases of two diferente areas (Core and Lang), upon
  * discussion with the IPC and Core teacher, both of them were placed in the

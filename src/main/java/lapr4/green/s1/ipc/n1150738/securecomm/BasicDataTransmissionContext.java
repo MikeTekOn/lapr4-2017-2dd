@@ -51,4 +51,15 @@ public class BasicDataTransmissionContext implements DataTransmissionContext {
 //    public WiretappedStream wiretapOutput() {
 //        return outputTap;
 //    }
+
+
+    @Override
+    public String securityDesc() {
+        return "Unsecure";
+    }
+
+    @Override
+    public boolean isSecure() {
+        return false;
+    }
 }

@@ -2,16 +2,11 @@ package lapr4.white.s1.core.n1234567.comments.ui;
 
 import csheets.core.Cell;
 import csheets.ui.ext.CellDecorator;
-import csheets.ui.sheet.CellRenderer;
-import lapr4.red.s1.core.n1150690.comments.CommentableCellWithMultipleUsers;
-import lapr4.red.s1.core.n1150690.comments.domain.User;
 import lapr4.white.s1.core.n1234567.comments.CommentableCell;
 import lapr4.white.s1.core.n1234567.comments.CommentsExtension;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
-import java.util.Map;
 
 /**
  * A decorator for commented cells.

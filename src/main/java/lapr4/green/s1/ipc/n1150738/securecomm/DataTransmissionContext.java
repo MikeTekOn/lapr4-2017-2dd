@@ -33,4 +33,8 @@ public interface DataTransmissionContext {
 //
 //    public WiretappedStream wiretapOutput();
 
+    public String securityDesc();
+
+    public boolean isSecure();
+
 }
