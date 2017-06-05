@@ -32,7 +32,7 @@ public class TextAreaCellRendererIncoming extends JScrollPane implements TableCe
         if(stream == null){
             stream = new TextAreaOutputStream(textarea);
             CommTCPServerWorker wk = (CommTCPServerWorker) model.getWorker(row);
-            wk.getTransmissionContext().wiretapOutput().attach(stream);
+          //  wk.getTransmissionContext().wiretapOutput().attach(stream);
         }
         if (isSelected) {
             setForeground(table.getSelectionForeground());
