@@ -1,8 +1,6 @@
 package lapr4.green.s1.ipc.n1150738.securecomm.ui;
 
 import lapr4.green.s1.ipc.n1150532.comm.*;
-import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
-import lapr4.green.s1.ipc.n1150738.securecomm.NewConnectionOnMangerEvent;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.LinkedList;
@@ -56,6 +54,10 @@ public class IncommingCommsTableModel extends AbstractTableModel  implements Obs
         return null;
     }
 
+
+    public CommTCPServerWorker getWorker(int i){
+        return workers.get(i);
+    }
 
     @Override
     public void update(Observable o, Object arg) {

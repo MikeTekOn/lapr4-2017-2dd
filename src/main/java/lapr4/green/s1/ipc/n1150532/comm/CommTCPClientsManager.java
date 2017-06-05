@@ -6,13 +6,10 @@ import csheets.core.Workbook;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.RequestSharedCellsDTO;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionRequestDTO;
-import lapr4.green.s1.ipc.n1150738.securecomm.NewConnectionOnMangerEvent;
-import lapr4.green.s1.ipc.n1150738.securecomm.SecureAESDataTransmissionContext;
-import lapr4.green.s1.ipc.n1150738.securecomm.TransmissionContextRequestDTO;
+import lapr4.green.s1.ipc.n1150738.securecomm.NewConnectionOnManagerEvent;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
@@ -164,7 +161,7 @@ public class CommTCPClientsManager extends Observable implements Serializable {
     private void addClient(ConnectionID connection, CommTCPClientWorker worker) {
         clients.put(connection, worker);
         setChanged();
-        notifyObservers(new NewConnectionOnMangerEvent());
+        notifyObservers(new NewConnectionOnManagerEvent());
     }
 
 //    public CommTCPClientWorker workerBySocket(Socket s){

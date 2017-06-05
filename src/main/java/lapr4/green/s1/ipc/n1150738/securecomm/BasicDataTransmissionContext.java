@@ -45,7 +45,7 @@ public class BasicDataTransmissionContext implements DataTransmissionContext {
 //    @Override
 //    public WiretappedStream wiretapInput() {
 //        return inputTap;
-//    }
+//   }
 //
 //    @Override
 //    public WiretappedStream wiretapOutput() {
@@ -53,11 +53,19 @@ public class BasicDataTransmissionContext implements DataTransmissionContext {
 //    }
 
 
+    /**
+     * Returns the security description of the transmission context. ex. Unsecured, Secured (Algorithmxxx)
+     * @return the security description
+     */
     @Override
     public String securityDesc() {
         return "Unsecure";
     }
 
+    /**
+     * Returns if the data transmission context is secured with some encryption or not
+     * @return if is secure or not.
+     */
     @Override
     public boolean isSecure() {
         return false;

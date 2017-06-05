@@ -47,6 +47,7 @@ public class SecureAESDataTransmissionContext implements DataTransmissionContext
             Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
             IvParameterSpec iv = new IvParameterSpec(raw);
             cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
+            //return new ObjectInputStream(new CipherInputStream(new TeeInputStream(socketInStream, inputTap), cipher));
             return new ObjectInputStream(new CipherInputStream(socketInStream, cipher));
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException | InvalidKeyException e) {
             Logger.getLogger(SecureAESDataTransmissionContext.class.getName()).log(Level.SEVERE, "Crypto Setup Failed", e);
@@ -70,6 +71,7 @@ public class SecureAESDataTransmissionContext implements DataTransmissionContext
             Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
             IvParameterSpec iv = new IvParameterSpec(raw);
             cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
+            //return new ObjectOutputStream(new CipherOutputStream(new TeeOutputStream(socketOutStream, outputTap), cipher));
             return new ObjectOutputStream(new CipherOutputStream(socketOutStream, cipher));
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException | InvalidKeyException e) {
             Logger.getLogger(SecureAESDataTransmissionContext.class.getName()).log(Level.SEVERE, "Crypto Setup Failed", e);
@@ -88,12 +90,21 @@ public class SecureAESDataTransmissionContext implements DataTransmissionContext
 //        return outputTap;
 //    }
 
+    /**
+     * Returns if the data transmission context is secured with some encryption or not
+     * @return if is secure or not.
+     */
     @Override
     public boolean isSecure() {
         return true;
     }
 
 
+
+    /**
+     * Returns the security description of the transmission context. ex. Unsecured, Secured (Algorithmxxx)
+     * @return the security description
+     */
     @Override
     public String securityDesc() {
         return "Secure (AES)";
