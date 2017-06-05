@@ -5,21 +5,19 @@
  */
 package lapr4.green.s1.ipc.n1150901.search.workbook;
 
-import csheets.core.Workbook;
-
 /**
  *
  * @author Miguel Silva - 1150901
  */
 public class RequestWorkbookDTO {
 
-    private final Workbook workbook;
+    private final String workbookName;
 
-    public RequestWorkbookDTO(Workbook wb) {
-        workbook = wb;
+    public RequestWorkbookDTO(String wbName) {
+        workbookName = wbName;
     }
 
-    public Workbook getWorkbook() {
-        return workbook;
+    public String getWorkbookName() {
+        return workbookName;
     }
 }

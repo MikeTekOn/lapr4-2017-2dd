@@ -133,33 +133,29 @@ public class CommTCPClientsManager extends Observable implements Serializable {
         }
     }
 
-    public void searchWorkbookIn(ConnectionID connection, Workbook workbook) {
+    /**
+     * Tries to search the workbook in the connection received by parameter.
+     *
+     * @param connection Id to search the workbook in.
+     * @param workbookName The workbook name to search.
+     * @return Returns true if it finds the workbook.
+     */
+    public Workbook searchWorkbookIn(ConnectionID connection, String workbookName) {
         CommTCPClientWorker worker = clients.get(connection);
+
         if (worker != null) {
-            RequestWorkbookDTO request = new RequestWorkbookDTO(workbook);
+            RequestWorkbookDTO request = new RequestWorkbookDTO(workbookName);
             try {
                 worker.getObjectOutputStream().writeObject(request);
+                //TODO return workbook object found and replace "return null"
+                return null;
             } catch (IOException ex) {
                 Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, ex);
+                return null;
             }
-        }
-    }
 
-    /**
-     * IT sends the message to the server
-     *
-     * @param connection The connection id.
-     * @param message The message.
-     */
-    public void sendMessageWith(ConnectionID connection, String message) {
-        CommTCPClientWorker worker = clients.get(connection);
-        if (worker != null) {
-            RequestMessageDTO dto = new RequestMessageDTO(message);
-            try {
-                worker.getObjectOutputStream().writeObject(dto);
-            } catch (IOException ex) {
-                Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        } else {
+            return null;
         }
     }
 
@@ -194,4 +190,22 @@ public class CommTCPClientsManager extends Observable implements Serializable {
 //        }
 //        return null;
 //    }
+    
+    /**
+     * IT sends the message to the server
+     *
+     * @param connection The connection id.
+     * @param message The message.
+     */
+    public void sendMessageWith(ConnectionID connection, String message) {
+        CommTCPClientWorker worker = clients.get(connection);
+        if (worker != null) {
+            RequestMessageDTO dto = new RequestMessageDTO(message);
+            try {
+                worker.getObjectOutputStream().writeObject(dto);
+            } catch (IOException ex) {
+                Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
 }

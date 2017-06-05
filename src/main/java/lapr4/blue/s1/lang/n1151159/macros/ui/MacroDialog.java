@@ -55,10 +55,10 @@ public class MacroDialog extends JDialog {
      * @param uiController the user interface controller
      */
     public MacroDialog(UIController uiController) {
-        setLocationRelativeTo(null);
         this.uiController = uiController;
         createComponents();
         pack();
+        setLocationRelativeTo(null);
     }
 
     /**
