@@ -101,6 +101,33 @@
  * itself, like formatting and precedents &#47; dependents. That information
  * must not only be kept as it should be updated when the sorting is performed.
  *
+ * <h1>Tests</h1>
+ *
+ * <h2>Acceptance Tests</h2>
+ *
+ * <b>Sort a range of cells in ascending order</b>: This test consists in
+ * verifying that given a range of cells, the sorting column, the sorting
+ * algorithm and the value types hierarchy, the output cells are correctly
+ * placed in ascending order. In order to be reliable, the given cells must
+ * contain all sortable value types more than once and mixed along.
+ * <p/>
+ * <b>Sort a range of cells in descending order</b>: This test consists in
+ * verifying that given a range of cells, the sorting column, the sorting
+ * algorithm and the value types hierarchy, the output cells are correctly
+ * placed in descending order. In order to be reliable, the given cells must
+ * contain all sortable value types more than once and mixed along.
+ *
+ * <h2>Other</h2>
+ *
+ * <b>Sorting Algorithms</b>: Each sorting algorithm should have its own tests.
+ * The test consists in providing an unsorted array of elements and check if the
+ * output matches the expected order. Both ascending and descending orders
+ * should be tested.
+ * <p/>
+ * <b>Comparison Methods</b>: Each comparison method should have its own tests.
+ * The test consists in providing two cells and check if the comparison result
+ * is the expected one. All possible combinations should be tested.
+ *
  * @author Manuel Meireles (1150532)
  */
 package lapr4.green.s2.core.n1150532.sort;
