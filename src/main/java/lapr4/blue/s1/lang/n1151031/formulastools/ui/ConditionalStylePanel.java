@@ -48,7 +48,7 @@ public class ConditionalStylePanel extends JPanel implements SelectionListener, 
      */
     private JTextField conditionField = new JTextField();
 
-    //dois atributos userStyle (true e para false)
+
     /**
      * Creates a new condition style panel.
      *
