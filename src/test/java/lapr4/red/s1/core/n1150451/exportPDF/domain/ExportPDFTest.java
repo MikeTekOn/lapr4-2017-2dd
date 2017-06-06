@@ -19,6 +19,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.io.FileUtils;
@@ -90,7 +91,7 @@ public class ExportPDFTest {
      * already in the disk and with a newly generated one.
      */
     @Test
-    public void testExport() throws FileNotFoundException {
+    public void testExportUsingBinary() throws FileNotFoundException {
         /*System.out.println("export");
         ExportPDF instance = new ExportPDF();
         instance.selectRange(listCells);
@@ -128,6 +129,34 @@ public class ExportPDFTest {
         } catch (IOException e) {
             //do nothing
         }
+         */
+    }
+
+    /**
+     * Functional test. The tested is based between a comparison with a pdf
+     * already in the disk and with a newly generated one.
+     */
+    @Test
+    public void testExportUsingString() throws FileNotFoundException {
+        /*System.out.println("export");
+        ExportPDF instance = new ExportPDF();
+        instance.selectRange(listCells);
+        instance.selectPath(".\\src\\test\\java\\lapr4\\red\\s1\\core\\n1150451\\exportPDF\\domain\\outputTest.pdf");
+        instance.export();
+
+        File file1 = new File(".\\src\\test\\java\\lapr4\\red\\s1\\core\\n1150451\\exportPDF\\domain\\outputTest.pdf");
+        File file2 = new File(".\\src\\test\\java\\lapr4\\red\\s1\\core\\n1150451\\exportPDF\\domain\\fixedTest.pdf");
+        String s1 = null, s2 = null;
+        try {
+            s1 = FileUtils.readFileToString(file1, "UTF-8");
+            s2 = FileUtils.readFileToString(file2, "UTF-8");
+        } catch (IOException ex) {
+            Logger.getLogger(ExportPDFTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        String s1WithoutID = s1.substring(0, s1.indexOf("<</Producer"));
+        String s2WithoutID = s2.substring(0, s2.indexOf("<</Producer"));
+        System.out.println(s1WithoutID.equals(s2WithoutID));
          */
     }
 
