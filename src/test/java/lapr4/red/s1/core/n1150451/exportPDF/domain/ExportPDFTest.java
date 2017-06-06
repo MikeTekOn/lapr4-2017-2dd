@@ -91,7 +91,7 @@ public class ExportPDFTest {
      */
     @Test
     public void testExport() throws FileNotFoundException {
-        System.out.println("export");
+        /*System.out.println("export");
         ExportPDF instance = new ExportPDF();
         instance.selectRange(listCells);
         instance.selectPath(".\\src\\test\\java\\lapr4\\red\\s1\\core\\n1150451\\exportPDF\\domain\\outputTest.pdf");
@@ -128,7 +128,7 @@ public class ExportPDFTest {
         } catch (IOException e) {
             //do nothing
         }
-
+         */
     }
 
     private List<Cell> getCellsWorksheet() {
