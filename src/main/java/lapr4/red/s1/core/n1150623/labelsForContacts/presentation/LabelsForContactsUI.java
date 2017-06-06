@@ -7,21 +7,10 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.*;
+
 import lapr4.red.s1.core.n1150623.labelsForContacts.application.LabelsForContactsController;
 import lapr4.white.s1.core.n4567890.contacts.domain.Contact;
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 /**
  *
@@ -39,16 +28,15 @@ public class LabelsForContactsUI extends javax.swing.JFrame {
      * @param controller
      */
     public LabelsForContactsUI(LabelsForContactsController controller) {
-        initComponents();
-        setup();
-        this.controller = controller;
         selected = new DefaultListModel<>();
         contacts = new DefaultListModel<>();
         Iterable<Contact> it = controller.allContacts();
         for(Contact c : it){
             contacts.addElement(c);
         }
-
+        initComponents();
+        setup();
+        this.controller = controller;
     }
         
     private void setup(){
@@ -94,11 +82,7 @@ public class LabelsForContactsUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        contactList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
+        contactList.setModel((ListModel)contacts);
         jScrollPane1.setViewportView(contactList);
 
         jLabel1.setText("Choose your contacts to export:");
@@ -159,11 +143,7 @@ public class LabelsForContactsUI extends javax.swing.JFrame {
                 .addContainerGap(55, Short.MAX_VALUE))
         );
 
-        selectedContactsList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
+        selectedContactsList.setModel((ListModel)selected);
         jScrollPane2.setViewportView(selectedContactsList);
 
         jButton6.setText("Remove Selected");
@@ -301,25 +281,20 @@ public class LabelsForContactsUI extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonCancelActionPerformed
 
     private void addSelected() {
-        int index[] = contactList.getSelectedIndices();
         List<Contact> list = new ArrayList<>();
-        for (int i : index) {
-            list.add(contacts.get(i));
-        }
+        list = contactList.getSelectedValuesList();
+
         addToSelectedContacts(list);
         removeFromContacts(list);
+
         updateAllContactsList();
         updateSelectedContactsList();
     }
 
     private void removeSelected() {
-        int index[] = selectedContactsList.getSelectedIndices();
-        List<Contact> list = new ArrayList<>();
-        for (int i : index) {
-            list.add(contacts.get(i));
-        }
-        removeFromSelectedContacts(list);
-        addToContacts(list);
+        List<Contact> toRemove = selectedContactsList.getSelectedValuesList();
+        addToContacts(toRemove);
+        removeFromSelectedContacts(toRemove);
         updateAllContactsList();
         updateSelectedContactsList();
     }
@@ -409,7 +384,6 @@ public class LabelsForContactsUI extends javax.swing.JFrame {
 
     private void addToContacts(List<Contact> toAdd) {
         for (Contact c : toAdd) {
-            if (!contacts.contains(c))
                 contacts.addElement(c);
         }
         updateAllContactsList();
@@ -420,9 +394,7 @@ public class LabelsForContactsUI extends javax.swing.JFrame {
         Contact c = null;
         for (int i = 0; i < contacts.size(); i++) {
             c = contacts.getElementAt(i);
-            if (!selected.contains(c)) {
                 selected.addElement(c);
-            }
         }
         contacts.removeAllElements();
         updateAllContactsList();
@@ -442,6 +414,7 @@ public class LabelsForContactsUI extends javax.swing.JFrame {
         for (Contact c : toRemove) {
             selected.removeElement(c);
         }
+        addToContacts(toRemove);
         updateAllContactsList();
         updateSelectedContactsList();
     }
@@ -493,7 +466,7 @@ public class LabelsForContactsUI extends javax.swing.JFrame {
     private javax.swing.JButton applyRegexButton;
     private javax.swing.JButton buttonCancel;
     private javax.swing.JButton buttonOK;
-    private javax.swing.JList<String> contactList;
+    private javax.swing.JList<Contact> contactList;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
@@ -504,6 +477,6 @@ public class LabelsForContactsUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JList<String> selectedContactsList;
+    private javax.swing.JList<Contact> selectedContactsList;
     // End of variables declaration//GEN-END:variables
 }

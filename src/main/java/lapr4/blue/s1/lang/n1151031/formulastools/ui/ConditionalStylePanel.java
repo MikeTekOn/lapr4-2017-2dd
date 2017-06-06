@@ -1,6 +1,7 @@
 package lapr4.blue.s1.lang.n1151031.formulastools.ui;
 
 import csheets.core.Cell;
+import csheets.ext.style.StylableCell;
 import csheets.ext.style.StyleExtension;
 import csheets.ext.style.ui.BorderChooser;
 import csheets.ext.style.ui.FontChooser;
@@ -48,7 +49,6 @@ public class ConditionalStylePanel extends JPanel implements SelectionListener, 
     private JTextField conditionField = new JTextField();
 
     //dois atributos userStyle (true e para false)
-
     /**
      * Creates a new condition style panel.
      *
@@ -384,7 +384,7 @@ public class ConditionalStylePanel extends JPanel implements SelectionListener, 
      * Applies the user style change.
      */
     private void styleChanged() {
-        if (cell != null) {
+        if (cell != null && cell.hasCondition()) {
             controller.setCondition(cell, conditionField.getText().trim());
         }
     }
@@ -416,6 +416,10 @@ public class ConditionalStylePanel extends JPanel implements SelectionListener, 
             // TODO Auto-generated method stub
             if (cell != null) {
                 try {
+                    if (conditionField.getText().isEmpty()) {
+                        StylableCell stylableCell = (StylableCell) cell.getDelegate().getExtension(StyleExtension.NAME);
+                        stylableCell.resetStyle();
+                    }
                     controller.setCondition(cell, conditionField.getText().trim());
                 } catch (RuntimeException ex) {
                     JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
