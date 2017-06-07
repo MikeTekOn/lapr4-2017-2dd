@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Represents a macro.
  *
- * @author IvoFerro
+ * @author IvoFerro and edited by Diogo Santos 1150451
  */
 public class Macro implements Expression {
 
@@ -19,6 +19,21 @@ public class Macro implements Expression {
      */
     private List<Expression> expressions;
 
+    /*
+    The Macro's name. This should be unique.
+    Created by Diogo Santos 1150451.
+    */
+    private String name;
+    
+    /**
+     * Creates a macro with the given expressions and name.
+     *
+     * @param expressions expressions of the macro
+     */
+    public Macro(List<Expression> expressions, String name) {
+        this.expressions = expressions;
+        this.name=name;
+    }
     /**
      * Creates a macro with the given expressions.
      *
