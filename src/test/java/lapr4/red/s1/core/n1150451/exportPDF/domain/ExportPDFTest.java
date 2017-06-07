@@ -156,8 +156,10 @@ public class ExportPDFTest {
 
         String s1WithoutID = s1.substring(0, s1.indexOf("<</Producer"));
         String s2WithoutID = s2.substring(0, s2.indexOf("<</Producer"));
-        System.out.println(s1WithoutID.equals(s2WithoutID));
-         */
+        if (!s1WithoutID.equals(s2WithoutID)) {
+            throw new IllegalStateException();
+        }*/
+
     }
 
     private List<Cell> getCellsWorksheet() {

@@ -121,6 +121,15 @@ public class UIController implements SpreadsheetAppListener, ExtensionStateListe
 	public Workbook getActiveWorkbook() {
 		return activeWorkbook;
 	}
+        
+        /**
+         * Returns the active workbooks.
+         * @return the active workbooks
+         */
+        public Stack<Workbook> getActiveWorkbooks() {
+		return workbooks;
+	}
+        
 
 	/**
 	 * Sets the given workbook of the application.
