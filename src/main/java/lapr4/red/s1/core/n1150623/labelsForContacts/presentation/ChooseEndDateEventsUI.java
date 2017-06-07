@@ -7,6 +7,7 @@ package lapr4.red.s1.core.n1150623.labelsForContacts.presentation;
 
 import eapli.util.DateTime;
 import java.util.Calendar;
+import java.util.Date;
 import javax.swing.JOptionPane;
 
 /**
@@ -15,15 +16,15 @@ import javax.swing.JOptionPane;
  */
 public class ChooseEndDateEventsUI extends javax.swing.JFrame {
 
-    
+    private ExportDetailsController ctrl;
     private Calendar chosenDate;
     /**
      * Creates new form ChooseEndDateEventsDialog1
-     * @param endDate
+     * @param ctrl
      */
-    public ChooseEndDateEventsUI(Calendar endDate) {
+    public ChooseEndDateEventsUI(ExportDetailsController ctrl) {
         initComponents();
-        endDate = this.chosenDate;
+        this.ctrl = ctrl;
     }
 
     /**
@@ -46,7 +47,7 @@ public class ChooseEndDateEventsUI extends javax.swing.JFrame {
 
         jLabel2.setText("Date: (dd-mm-yyyy)");
 
-        dateField.setText("jTextField1");
+        dateField.setText("");
 
         buttonOK.setText("OK");
         buttonOK.addActionListener(new java.awt.event.ActionListener() {
@@ -113,11 +114,20 @@ public class ChooseEndDateEventsUI extends javax.swing.JFrame {
         }
 
         if (validDate) {
-            chosenDate = DateTime.newCalendar(year, month, day);
-            if (chosenDate == null) {
+
+            chosenDate = Calendar.getInstance();
+
+            chosenDate.set(Calendar.DAY_OF_MONTH, day);
+            chosenDate.set(Calendar.MONTH, month);
+            chosenDate.set(Calendar.YEAR, year);
+
+            chosenDate = DateTime.newCalendar(year, month-1, day);
+            if (chosenDate == null || chosenDate.compareTo(DateTime.now())==-1) {
                 JOptionPane.showMessageDialog(null, "Invalid Date!", "ERROR", JOptionPane.ERROR_MESSAGE);
             } else {
+                ctrl.setDate(chosenDate);
                 dispose();
+                ctrl.runPathChooser();
             }
         } else {
             JOptionPane.showMessageDialog(null, "Invalid Date!", "ERROR", JOptionPane.ERROR_MESSAGE);

@@ -45,18 +45,10 @@ public class TemporaryVariable implements Expression {
         return this.name;
     }
     
-        public Expression getExpression() {
+    public Expression getExpression() {
         return this.expression;
     }
-    
-//    @Override
-//    public String toString() {
-//            if (expression.getType() == Value.Type.TEXT
-//             || expression.getType() == Value.Type.DATE)
-//                    return "\"" + expression.toString() + "\"";
-//            else
-//                    return expression.toString();
-//    }
+ 
     
     @Override
      public boolean equals(Object other){
@@ -80,5 +72,10 @@ public class TemporaryVariable implements Expression {
     public Object accept(ExpressionVisitor visitor) {
     
         return this.expression.accept(visitor);
+    }
+    
+    @Override
+    public String toString(){
+        return this.getName() + this.expression.toString();
     }
 }

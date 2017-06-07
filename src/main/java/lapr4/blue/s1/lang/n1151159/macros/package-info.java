@@ -2,7 +2,7 @@
  * <p>Technical documentation regarding the user story Lang05.1: Macro Window.</p>
  *
  * <p><b>Scrum Master: no</b></p>
- * <p><b>Team Leader: yes</b></p>
+ * <p><b>Team Leader: no</b></p>
  *
  *
  *
