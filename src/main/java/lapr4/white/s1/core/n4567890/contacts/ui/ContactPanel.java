@@ -413,7 +413,7 @@ public class ContactPanel extends JPanel implements ActionListener {
             case ContactPanel.applyFilterAction: {
 
                 /**
-                 * Faciltated chossing contacts
+                 * Faciltated choosing contacts
                  *
                  * @author Gulherme Ferreira 1150623 - Filter feature added.
                  *
