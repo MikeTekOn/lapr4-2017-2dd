@@ -1,0 +1,15 @@
+@startuml core02_03_design3.png
+
+    participant "CommentsWithHistoryUI" as ui
+    participant "CommentsWithHistoryController" as ctrl
+    
+    create ctrl
+    ui -> ctrl : create(uic)
+
+    ui -> ctrl : searchCommentWith(textPattern)
+    activate ctrl
+    ctrl -> ctrl : searchInCommentsAndHistoryWith(textPattern)
+    ui <-- ctrl : showResult()
+    deactivate ctrl
+
+@enduml
