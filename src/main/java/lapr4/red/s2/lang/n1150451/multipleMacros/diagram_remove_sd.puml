@@ -1,0 +1,13 @@
+@startuml
+actor User
+User -> AddMacroUI : Initiates Functionality
+create AddMacroController
+AddMacroUI->AddMacroController : create
+AddMacroController -> Workbook : getMacroList()
+Workbook -> MacroList : getMacroList()
+User -> AddMacroUI : Selects Macro
+AddMacroUI->AddMacroController : selectedMacro(m)
+
+AddMacroController -> Workbook : deleteMacro(m)
+Workbook -> MacroList : deleteMacro(m)
+@enduml

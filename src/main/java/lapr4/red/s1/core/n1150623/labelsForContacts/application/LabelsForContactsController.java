@@ -5,6 +5,7 @@ import eapli.framework.persistence.DataIntegrityViolationException;
 import lapr4.red.s1.core.n1150623.labelsForContacts.LabelList;
 import lapr4.red.s1.core.n1150623.labelsForContacts.domain.Label;
 import lapr4.white.s1.core.n4567890.contacts.ExtensionSettings;
+import lapr4.white.s1.core.n4567890.contacts.domain.Agenda;
 import lapr4.white.s1.core.n4567890.contacts.domain.Contact;
 import lapr4.white.s1.core.n4567890.contacts.persistence.ContactRepository;
 import lapr4.white.s1.core.n4567890.contacts.persistence.PersistenceContext;
@@ -43,11 +44,11 @@ public class LabelsForContactsController {
      * @param address
      * @param phoneNumber
      * @return
-     * @throws DataConcurrencyException
-     * @throws DataIntegrityViolationException
      */
-    public boolean addLabel(String name, String photo, String email, String address, String phoneNumber) throws DataConcurrencyException, DataIntegrityViolationException {
+    public boolean addLabel(String name, String photo, String email, String address, String phoneNumber, Agenda agenda) {
         Label createdLabel = labelFactory.construct(name, photo, email, address, phoneNumber);
+
+        createdLabel.addEvents(agenda.events());
         return labelList.addLabel(createdLabel);
     }
 
@@ -57,16 +58,6 @@ public class LabelsForContactsController {
      */
     public Iterable<Contact> allContacts() {
         return this.contactsRepository.findAll();
-    }
-
-    /**
-     * All contacts of the user that matches the given regex
-     * @param regexPattern - the regex patter used to find users
-     * @return list of users found
-     */
-    public List<Contact> getContactByRegex(String regexPattern) {
-        List<Contact> list =this.contactsRepository.findByRegex(regexPattern);
-        return list;
     }
 
 
@@ -85,4 +76,6 @@ public class LabelsForContactsController {
     public void setPath(String path) {
         labelList.choosePath(path);
     }
+
+
 }

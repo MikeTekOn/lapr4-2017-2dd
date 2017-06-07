@@ -84,18 +84,15 @@
  *   <li>testAssignmentOperatorWithTemporary() -&gt; example "_Var:=A1"</li>
  *   <li>testFunctionExpressionWithTemporary() -&gt; example "_Var:= sum(A2:A4)"</li>
 *    <li>testFormulaBlocksWithTemporary() -&gt; ex: "= {A=1+2; _Var:= 1+A ;"
-*   <li>testFormulaManyTemporaryVariables() -&gt; ex: "={_Var1:=2; _Var2:=3; _Var3:=_Var1+_Var2; A= _Var+3]"
-*   <li>testItSelfCall() -&gt; ex: 
-*   <li>formulaWithTemporaryVariable()</li>
-*   <li>addTemporaryVariableToContentorFirstTime()</li>
- *   <li>addTemporaryVariableToContentorAlreadyExists</li>
+*    <li>testFormulaManyTemporaryVariables() -&gt; ex: "={_Var1:=2; _Var2:=3; _Var3:=_Var1+_Var2; A= _Var+3]"
+*   < li>testItSelfCall() -&gt; ex:"={_a:=1);(_a:=_a+1);_a }"
+*   < li>formulaWithTemporaryVariable() -&gt; ex:"={(_Var1:=2);( _Var2:=1); MAX(_Var1, _Var2)}" </li
  * </ol> 
  *
  *  <b>Functional Tests </b>
  * <p>
  * <ol>
- * <li>Insert a temporary variable with the same name in two cells but with different values "={(A1:=(_Var1:=1));(A2:=_Var1=2); (A3:=_Var1+2}"</li>
- * <li>The following cells should have the different values: A1 = 1; A2 = 2; and the A3 should throws an illegal exception.</li>
+    * <li>Insert a temporary variable with the same name in two cells but with different values.</li>
  * </ol>
  *
  * <h3>4.2. UC Realization</h3>
@@ -114,11 +111,19 @@
  * We will continue the best practices and implement this use case using the same patterns.
  *
  * <h2>5. Implementation</h2>
- *
- * <h2>6. Integration/Demonstration</h2>
- *
- * <h2>7. Final Remarks</h2>
- *
+ * <p>
+ * The class TemporaryVariable (@link lapr4.blue.s1.lang.1151088.temporaryVariables) was created to handle the temporary variables 
+ * domain rules. The TemporaryVariableContentor allows to manage the temporary variables in formula (by updating temporary
+ * variable if it was already used or adding if not).
+ * 
+ * <p>
+ * As referred before this use case is closely related to Formula use case (@link lapr4.blue.s1.lang.n1151452.formula). So the blue team 
+ * created some class for shared use: the grammar (@lapr4\blue\s1\lang\n1151452\formula\compiler\BlueFormula.g4), FormulaEvalVisitor (@link lapr4.blue.s1.lang.n1151452.formula.compiler)
+ * and related classes (p.e. BlueFormulaParser).
+ * 
+ * <p>
+ * To add the temporary variable support to formula it was necessary to do some modifications in some core classes: ExpressionBuilder,
+ * ExpressionVisitor, AbstractExpressionVisitor. The temporary variable it´s an object that stores the variable name and the expression assigned.
  *
  * <h2>8. Work Log</h2> 
  *
@@ -156,12 +161,21 @@
  *    <li>Update design</li>
  *    <li>Implementation</li>
  * </ol>
- * <b>Monday</b>
+ * <b>Sunday</b>
  * <ol>
- *     <li>Update test implementation</li>
  *    <li>Update implementation due to Assign modifications</li>
  * </ol>
+ * <b>Monday</b>
+ * <ol>
+ *  <li>New sprint planning</li>
+ *  <li>Update javadoc</li>
+ * </ol>
  *
+ * <b>Tuesday</b>
+ * <ol>
+ *  <li>Sprint demonstration and review;</li>
+ * </ol>
+ * 
  * @author Diana Silva - 1151088@isep.ipp.pt - 2DD - 2016/17
  */
 

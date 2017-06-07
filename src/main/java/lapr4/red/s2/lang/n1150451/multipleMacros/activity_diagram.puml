@@ -1,0 +1,13 @@
+@startuml
+(*) --> "Process symbol"
+
+if "Is it between { }?" then
+  -->[true] "Execute macro"
+  --> "Places result"
+  -right--> "Process symbol"
+else
+  ->[false] "Process symbol"
+  -->[Ending process] (*)
+endif
+
+@enduml

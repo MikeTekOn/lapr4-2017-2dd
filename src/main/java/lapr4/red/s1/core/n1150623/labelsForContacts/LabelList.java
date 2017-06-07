@@ -37,7 +37,11 @@ public class LabelList {
      */
     public boolean addLabel(Label label){
         boolean valid = false;
-        if(!wantedLabels.contains(label)){
+        if(!wantedLabels.contains(label) || label == null){
+            System.err.println("name: " + label.name()
+                                + "\nphoto" + label.photo()
+                                + "\naddress" + label. address()
+                                + "\nphoneNumber" + label.phoneNumber());
             valid = wantedLabels.add(label);
         }
         return valid;
@@ -54,7 +58,7 @@ public class LabelList {
      */
     public boolean exportPDF(){
         boolean canExport = true;
-        if(wantedLabels.isEmpty() || path.trim().length() == 0 || path == null){
+        if(wantedLabels.isEmpty() || path.trim().length() == 0 || path == null || wantedLabels.contains(null)){
             canExport = false;
         }else{
             exp = new LabelsToPDF();

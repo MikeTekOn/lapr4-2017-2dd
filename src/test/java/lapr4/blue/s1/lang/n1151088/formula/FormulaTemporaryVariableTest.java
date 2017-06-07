@@ -144,34 +144,5 @@ public class FormulaTemporaryVariableTest {
 
         String content = "={_2:=2";
         cellA1.setContent(content);
-    }
-    
-    /*
-    @Test
-    public void addTemporaryVariableToContentorFirstTime() throws FormulaCompilationException, IllegalValueTypeException {
-         Introducing expression
-        BlueCell cellTest = (BlueCell) app.getWorkbooks()[0].getSpreadsheet(0).getCell(new Address(0, 0));
-        String content= "=_Var1:=2";
-        cellTest.setContent(content);
-        
-        Test temporary variable
-        boolean result=cellTest.getBlueFormula().getTemporaryVarContentor().getTemporaryVariables().containsKey("_Var1");
-        assertEquals(true, result);
-    }
-    
-    @Test
-    public void addTemporaryVariableToContentorAlreadyExists() throws FormulaCompilationException, IllegalValueTypeException {
-        // Introducing expression
-        BlueCell cellTest = (BlueCell) app.getWorkbooks()[0].getSpreadsheet(0).getCell(new Address(0, 0));
-        String content= "=_Var1:=2; _Var2:=1; _Var1:=3";
-        cellTest.setContent(content);
-        
-        //Test temporary variable
-        TemporaryVariable tempVar=(TemporaryVariable) cellTest.getBlueFormula().getTemporaryVarContentor().getTemporaryVariables().get("_Var1");
-        Double result = tempVar.evaluate().toDouble();
-        Double expResult = 3d;
-        assertEquals(true, result);
-    }
-*/
-    
+    }    
 }
