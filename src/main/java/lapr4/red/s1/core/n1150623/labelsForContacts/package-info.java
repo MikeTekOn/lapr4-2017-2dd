@@ -38,7 +38,7 @@
  *
  * Now that we now what a label is in this case, we noticed that it's required for the contact to have additional information (<i>"Labels must include at least the name, photograph, addresses, emails and telephone numbers of the contact"</i>).
  * the contact already contain a <b>name</b>, a <b>photo</b> and an <b>agenda</b> (with the list of <b>events</b>), so we only have to add the address, phone number and email information.
- * - Since address, phoneNumber and email are in plural ("addresses", "phone numbers", "emails"), there may be more than one. This will be taken into account.
+ *
  *
  * To export the contact's information, there is a need to know how to access it, how it's persisted and where.
  * The sequence diagrams of the use case 10.1 that is responsible for contact information and related events persistence, tells us that:
@@ -57,7 +57,7 @@
  *
  * All information can be found in the repositories and can easily be accessed.
  * Only the requested information will be taken from the repositories.
- * Now the problem lays on getting the exportation to pdf done and to solve that problem, as it's said in the manual, we will use the external library <b><i>"iText"</i></b> (added to the dependencies on build.gradle).
+ * Now the problem lays on getting the exportation to pdf done and to solve that problem, as it's said in the manual, we will use the external library "<b><i>iText</i></b>" (added to the dependencies on build.gradle).
  *
  *
  * <h2>4. Design</h2>
@@ -72,14 +72,14 @@
  *
  * <h3>4.2. UC Realization</h3>
  *
- * To realize this user story we will need to create a class that can transform information into a well structured .pdf file. We will also need to create a Controller class that shall pull from the repositories all the information needed. We also will have to add a JButton to the existing contact and events window that will initiate this Use Case.
+ * To realize this user story we will need to create a class that can transform information into a well structured PDF file. We will also need to create a Controller class that shall pull from the repositories all the information needed. We also will have to add a JButton to the existing contact and events window that will initiate this Use Case.
  * The following diagrams illustrate core aspects of the design of the solution for this use case.
  * <p>
  * 
  *
  * <h3>User Selects Contact Information Exportation</h3>
  *
- * The following diagram illustrates what happens when the user selects, in the contact's page, the exportation button, witch send de contact information and the even list of each one of them to a PDF file. The idea is that when this happens the data will be retrieved from the repositories and is send to a parser to be converted into a pdf file.
+ * The following diagram illustrates what happens when the user selects, in the contact's page, the exportation button, witch send de contact information and the event list of each one of them to a PDF file. The idea is that when this happens the data will be retrieved from the repositories and is send to a pdf constructor to be converted into a PDF file.
  * (The classes related to the application of a strategy pattern for exportation are omitted since there will be a diagram for only that.)
  * <p>
  *

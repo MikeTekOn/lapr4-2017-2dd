@@ -80,5 +80,15 @@ public class ConnectionIDImpl implements ConnectionID {
         hash = 23 * hash + Objects.hashCode(this.address);
         return hash;
     }
+    
+    /**
+     * Returns a descriptive message
+     * 
+     * @return 
+     */
+    @Override
+    public String toString() {
+        return String.format("%s", address.getHostAddress());
+    }
 
 }

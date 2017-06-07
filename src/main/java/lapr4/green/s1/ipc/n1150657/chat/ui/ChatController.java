@@ -5,7 +5,8 @@
  */
 package lapr4.green.s1.ipc.n1150657.chat.ui;
 
-import csheets.ui.ctrl.UIController;
+import lapr4.green.s1.ipc.n1150532.comm.CommTCPClientsManager;
+import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
 
 /**
  * It represents the controller for the chat.
@@ -14,25 +15,42 @@ import csheets.ui.ctrl.UIController;
  */
 public class ChatController {
 
-    /**
-     * The controller.
-     */
-    private UIController uiController;
-
-    /**
-     * The chat panel.
-     */
-    private ChatPanel uiPanel;
+    private ConnectionID connection;
 
     /**
      * The constructor for the ChatController.
      *
-     * @param uiController The controller.
-     * @param uiPanel The ui panel.
+     * @param connection
      */
-    public ChatController(UIController uiController, ChatPanel uiPanel) {
-        this.uiController = uiController;
-        this.uiPanel = uiPanel;
+    public ChatController(ConnectionID connection) {
+        this.connection = connection;
+    }
+
+    /**
+     * It sets the connection for the new one.
+     *
+     * @param connection The connection.
+     */
+    public void setConnection(ConnectionID connection) {
+        this.connection = connection;
+    }
+
+    /**
+     * It gets the connection.
+     *
+     * @return It returns the connection.
+     */
+    public ConnectionID getConnection() {
+        return connection;
+    }
+
+    /**
+     * It sends the message.
+     *
+     * @param message The message to be sent.
+     */
+    public void sendMessage(String message) {
+        CommTCPClientsManager.getManager().sendMessageWith(connection, message);
     }
 
 }

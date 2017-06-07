@@ -2,8 +2,9 @@ package lapr4.green.s1.ipc.n1150738.securecomm;
 
 import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
 import lapr4.green.s1.ipc.n1150532.comm.connection.SocketEncapsulatorDTO;
+import lapr4.green.s1.ipc.n1150738.securecomm.trash.IllegalDataTransmissionContextEvent;
+import lapr4.green.s1.ipc.n1150738.securecomm.trash.SwitchDataTransmissionContextEvent;
 
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.Observable;

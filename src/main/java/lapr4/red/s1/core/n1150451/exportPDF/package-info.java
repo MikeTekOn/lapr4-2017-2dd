@@ -1,6 +1,6 @@
 /**
- * Technical documentation regarding the user story Core08.1: Basic PDF Export
- *
+ * Technical documentation regarding the user story Core08.1: Basic PDF Export.
+ * <p>
  * <p>
  * <b>Scrum Master: -(yes/no)- no</b>
  *
@@ -75,7 +75,7 @@
  *
  * <p>
  * In terms of the interaction between the user and the software, it was
- * developed an System Sequence Siagram to aid in its better interpretation.
+ * developed an System Sequence Diagram to aid in its better interpretation.
  * <p>
  * Also, since there will be no new domain concepts, that will not be unit
  * tests.
@@ -136,6 +136,11 @@
  * WorkbookHandler. The class has three metods, one for each user selection
  * (workbook, worksheet and cell range) that return a list containing only the
  * cells in that range.
+ * <p>
+ * Also, since the Strategy interface and context, are
+ * common to two use cases of two diferente areas (Core and Lang), upon
+ * discussion with the IPC and Core teacher, both of them were placed in the
+ * lapr4.s1.export package.
  *
  * <h2>6. Integration/Demonstration</h2>
  * <p>
@@ -164,17 +169,17 @@
  * <p>
  * <b>Thursday 1/06/2017 </b>
  * <p>
- * Yesterday:
+ * Yesterday: Started the design but not yet completed.
  * <p>
- * Today:
+ * Today: Finishing the design and begin with the test planning.
  * <p>
  * Blocking:
  * <p>
  * <b>Friday 2/06/2017</b>
  * <p>
- * Yesterday:
+ * Yesterday: Design and test planning finished.
  * <p>
- * Today:
+ * Today: Implementation.
  * <p>
  * Blocking:
  * <p>

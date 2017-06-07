@@ -2,17 +2,12 @@
  * Technical documentation regarding the user story LANG08.1: Comments on Cells.
  *
  * <p>
- * <b>-Note: this is a template/example of the individual documentation that
- * each team member must produce each sprint. Suggestions on how to build this
- * documentation will appear between '-' like this one. You should remove these
- * suggestions in your own technical documentation. You may also define a
- * different template for your team to use with the agreement of your
- * supervisor-</b>
+ * <b></b>
  * <p>
- * <b>Scrum Master: -(yes/no)- no</b>
+ * <b>Scrum Master: no</b>
  *
  * <p>
- * <b>Area Leader: -(yes/no)- no</b>
+ * <b>Area Leader: no</b>
  *
  * <h2>2. Requirement</h2>
  * It should be possible to export the contents of an workbook, worksheet or

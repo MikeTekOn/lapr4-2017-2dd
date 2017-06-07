@@ -105,8 +105,7 @@ public class ConditionStylableCell extends CellExtension {
                         }
                     }
                 }
-            } catch (FormulaCompilationException e) {
-                e.printStackTrace();
+            } catch (FormulaCompilationException e) {                
                 throw new IllegalConditionException("The entered condition is not valid!");
             }
             try {
@@ -123,13 +122,9 @@ public class ConditionStylableCell extends CellExtension {
                     stylableCell.setBackgroundColor(this.userStyle.getFalseStyleBackgroundColor());
                     stylableCell.setBorder(this.userStyle.getFalseStyleBorder());
                 }
-            } catch (IllegalValueTypeException e) {
-                e.printStackTrace();
+            } catch (IllegalValueTypeException e) {                
                 throw new IllegalConditionException("Invalid cell value: " + e.toString());
-            }
-        } else {
-            StylableCell stylableCell = (StylableCell) getDelegate().getExtension(StyleExtension.NAME);
-            stylableCell.resetStyle();
+            }        
         }
     }
 

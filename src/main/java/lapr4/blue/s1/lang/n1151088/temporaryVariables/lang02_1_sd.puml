@@ -1,4 +1,4 @@
-@startuml
+@startuml lang02_1_sd.png
 
 actor User
 participant "UI"

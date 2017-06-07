@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /**
+ * Class responsible for the PDF Exportation.
  *
  * @author Diogo Santos
  */
@@ -84,11 +85,13 @@ public class ExportPDF implements ExportStrategy {
                     for (int j = minColumn; j < maxColumn + 1; j++) {
                         if (j == minColumn) {
                             if (i == minRow) {
-                                table.addCell(new PdfPCell(new Phrase(lines[0][0], fontSpecial)));
+                                table.addCell(new PdfPCell(new Phrase(lines[0][0], fontSpecial))); //If it is the upper left cell, adds empty string
                             } else {
+                                //else, adds the left column containing the row identifications.
                                 table.addCell(new PdfPCell(new Phrase(lines[i][0], fontSpecial)));
                             }
                         } else if (i == minRow) {
+                            //Adds the top row containing the column indentifications
                             table.addCell(new PdfPCell(new Phrase(lines[0][j], fontSpecial)));
 
                         } else {
@@ -118,6 +121,11 @@ public class ExportPDF implements ExportStrategy {
         return true;
     }
 
+    /**
+     * Initializes an instance of a Document ready to be printed.
+     *
+     * @return Document
+     */
     private Document initiatePrinter() {
         Document document = null;
 
@@ -132,6 +140,10 @@ public class ExportPDF implements ExportStrategy {
 
     }
 
+    /*
+     * Returns an hashmap containing all the cells organized by their spreadsheet.
+     * @return 
+     */
     private Map<Spreadsheet, Set<Cell>> getMapBySpreadSheet() {
         Map<Spreadsheet, Set<Cell>> map = new HashMap<>();
         for (Cell c : list) {
@@ -150,6 +162,11 @@ public class ExportPDF implements ExportStrategy {
         return map;
     }
 
+    /**
+     * Removes cells from the set that are beyond the spreadsheet limit.
+     *
+     * @param cells
+     */
     private void removeHiddenCells(Set<Cell> cells) {
         Set<Cell> toBeRemoved = new HashSet<>();
         for (Cell c : cells) {
@@ -161,6 +178,12 @@ public class ExportPDF implements ExportStrategy {
         cells.removeAll(toBeRemoved);
     }
 
+    /**
+     * Returns the area that the user selected filled with the cell values.
+     *
+     * @param cells Cells of the spreadsheet to be placed in the matrix.
+     * @return
+     */
     private String[][] getLinesSheet(Set<Cell> cells) {
         String[][] alCells = new String[128][53];
         for (int i = 0; i < 128; i++) {
@@ -181,6 +204,10 @@ public class ExportPDF implements ExportStrategy {
         return alCells;
     }
 
+    /*
+     * Fills the first row of the matrix with the column identification letters, from A to AZ. 
+     * @param lines First line of the matrix.
+     */
     private void fillFirstRow(String[] lines) {
         for (int i = 1; i < 27; i++) {
             lines[i] = "" + (char) ('A' + (i - 1));
@@ -197,6 +224,13 @@ public class ExportPDF implements ExportStrategy {
         this.maxColumn = maxColumn + 1;
     }
 
+    /**
+     * Creates the page with the table of contents (sheets) containing internet
+     * links.
+     *
+     * @param doc Document where the table of contents is to be placed.
+     * @param map Map containing the Spreadsheet list.
+     */
     private void createFrontPage(Document doc, Map<Spreadsheet, Set<Cell>> map) {
         PdfPTable table = new PdfPTable(1);
         table.setWidthPercentage(50);

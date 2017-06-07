@@ -28,7 +28,7 @@
  *  <li>The system displays the formula result</li>
  * </ol>
  *
- * <img src="lang02.1_ssd.png" alt="image">
+ * <img src="lang02_1_ssd.png" alt="image">
  * <p>
  * <b>Open Questions</b>
  * <p>Should it be possible to introduce more than one temporary variable?
@@ -97,11 +97,11 @@
  *
  * <h3>4.2. UC Realization</h3>
  *
- * <img src="lang02.1_sd.png" alt="image">
+ * <img src="lang02_1_sd.png" alt="image">
  *
  * <h3>4.3. Classes</h3>
  *
- * <img src="lang02_1cd.png" alt="image">
+ * <img src="lang02_1_cd.png" alt="image">
  *
  * <h3>4.4. Design Patterns and Best Practices</h3>
  *

@@ -19,17 +19,19 @@ public class NewConnectionMadeEvent {
      * The new connection's TCP server port number.
      */
     private final int serverPortNumber;
+    private boolean secure;
 
     /**
      * The full constructor of the event.
-     *
-     * @param theNewConnectionIPAddress The address of the new connection's TCP
+     *  @param theNewConnectionIPAddress The address of the new connection's TCP
      * server.
      * @param thePortNumber The port number of the new connection's TCP server.
+     * @param secure
      */
-    public NewConnectionMadeEvent(InetAddress theNewConnectionIPAddress, int thePortNumber) {
+    public NewConnectionMadeEvent(InetAddress theNewConnectionIPAddress, int thePortNumber, boolean secure) {
         serverIPAddress = theNewConnectionIPAddress;
         serverPortNumber = thePortNumber;
+        this.secure = secure;
     }
 
     /**
@@ -59,5 +61,9 @@ public class NewConnectionMadeEvent {
      */
     public ConnectionID getConnectionID(){
         return new ConnectionIDImpl(serverIPAddress,serverPortNumber);
+    }
+
+    public boolean isSecure() {
+        return secure;
     }
 }

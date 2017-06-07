@@ -94,7 +94,7 @@ public class Agenda implements Serializable {
      * @return
      */
     public List<Event> events(){
-        ArrayList<Event>events=new ArrayList<>(this.events);
+        List<Event>events=new ArrayList<>(this.events);
         return events;
     }
 
@@ -145,6 +145,15 @@ public class Agenda implements Serializable {
                 events.add(event);
         }
         return events;
+    }
+
+    /**
+     * Created by Guilherme Ferreira- 1150623
+     * @param e - event to remove
+     * @return true if romovale was successful
+     */
+    public boolean remove(Event e){
+        return this.events.remove(e);
     }
 
 }

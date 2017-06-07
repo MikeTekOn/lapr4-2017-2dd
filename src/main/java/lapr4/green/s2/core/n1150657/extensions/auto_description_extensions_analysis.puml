@@ -1,0 +1,11 @@
+@startuml auto_description_extensions_analysis.png
+
+actor User
+participant System
+
+    User -> System : starts the cleansheet app
+    User <-- System : request which extensions he want to load
+    User -> System : choose the extensions and the respective version
+    User <-- System : loads the cleansheet app
+
+@enduml

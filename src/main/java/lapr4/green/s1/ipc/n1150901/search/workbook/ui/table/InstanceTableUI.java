@@ -5,30 +5,38 @@
  */
 package lapr4.green.s1.ipc.n1150901.search.workbook.ui.table;
 
-import java.awt.BorderLayout;
+import csheets.core.Address;
+import csheets.core.Cell;
+import csheets.core.Spreadsheet;
+import csheets.core.Workbook;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.InetAddress;
+import java.util.Iterator;
+import java.util.Set;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
 
 /**
  *
  * @author Miguel Silva - 1150901
  */
-public class InstanceTable extends JFrame {
+public class InstanceTableUI extends JFrame {
 
     /**
      * The table itself.
@@ -43,7 +51,12 @@ public class InstanceTable extends JFrame {
     /**
      * The "Select" button.
      */
-    private JButton button;
+    private JButton button1;
+
+    /**
+     * The "Cancel" button.
+     */
+    private JButton button2;
 
     /**
      * The controller of the table.
@@ -53,7 +66,7 @@ public class InstanceTable extends JFrame {
     /**
      * The constructor of the table UI.
      */
-    public InstanceTable() {
+    public InstanceTableUI() {
         super();
         theController = new InstanceTableController();
         createUserInterface();
@@ -88,16 +101,25 @@ public class InstanceTable extends JFrame {
         setAlwaysOnTop(true);
     }
 
-    private JButton createButtonPanel() {
+    private JPanel createButtonPanel() {
+        JPanel panel = new JPanel();
+        Dimension dim = new Dimension(50, 30);
 
-        button = new JButton("Select");
+        button1 = new JButton("Select");
+        button1.setPreferredSize(dim);
+        button1.addActionListener(new Select());
+        button1.setEnabled(false);
+        button1.setMargin(new Insets(0, 0, 0, 0));
 
-        button.setPreferredSize(new Dimension(50, 30));
-        button.addActionListener(new Select());
-        button.setEnabled(false);
-        button.setMargin(new Insets(0, 0, 0, 0));
+        button2 = new JButton("Cancel");
+        button2.setPreferredSize(dim);
+        button2.addActionListener(new Exit());
+        button2.setMargin(new Insets(0, 0, 0, 0));
 
-        return button;
+        panel.add(button1);
+        panel.add(button2);
+
+        return panel;
     }
 
     /**
@@ -120,12 +142,47 @@ public class InstanceTable extends JFrame {
         return scrollPane;
     }
 
+    private void buildSummaryTable(Workbook wbFound) {
+        JDialog dialog = new JDialog();
+        String[] columnNames = {"SpreadSheet Name", "Cell 1", "Cell 2", "Cell 3"};
+        String[][] data = new String[50][50];
+
+        Iterator<Spreadsheet> it = wbFound.iterator();
+        int i = 0;
+        int j = 0;
+        while (it.hasNext()) {
+            data[0][i] = it.next().getTitle();
+            i++;
+            Address address1 = new Address(0, 0);
+            Address address2 = new Address(52, 106);
+            Set<Cell> cells = it.next().getCells(address1, address2);
+            for (Cell c : cells){
+                if (!c.getContent().isEmpty()){
+                    data[j][i] = c.getContent();
+                    j++;
+                    if (j == 3){
+                        break;
+                    }
+                }
+            }
+        }
+
+        JTable summaryTable = new JTable(data, columnNames);
+        JScrollPane scroll = new JScrollPane(summaryTable);
+        dialog.add(scroll);
+        dialog.setLocationRelativeTo(null);
+        dialog.setMinimumSize(new Dimension(getWidth(), getHeight()));
+        dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        dialog.setVisible(true);
+        dialog.setAlwaysOnTop(true);
+    }
+
     /**
      * It provides the instance matching the selected row.
      *
      * @return It returns the instance associated with the selected row.
      */
-    public String getSelectedRowFile() {
+    public ConnectionID getSelectedRowFile() {
         return theController.provideInstance(table.getSelectedRow());
     }
 
@@ -136,7 +193,30 @@ public class InstanceTable extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            
+            JFrame frame = new JFrame();
+            frame.setLocationRelativeTo(null);
+            frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            frame.setVisible(true);
+            frame.setAlwaysOnTop(true);
+            String name = JOptionPane.showInputDialog(frame, "What is the name of the workbook that you want to search?");
+            Workbook wbFound = theController.searchWorbook(name, getSelectedRowFile());
+            if (wbFound != null) {
+                buildSummaryTable(wbFound);
+            } else {
+                JOptionPane.showMessageDialog(frame, "The workbook was not found!", "Information",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    /**
+     * An inner class that implements the action listener for the select button.
+     */
+    private class Exit implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            dispose();
         }
     }
 
@@ -147,7 +227,7 @@ public class InstanceTable extends JFrame {
 
         @Override
         public void valueChanged(ListSelectionEvent lse) {
-            button.setEnabled(true);
+            button1.setEnabled(true);
         }
     }
 

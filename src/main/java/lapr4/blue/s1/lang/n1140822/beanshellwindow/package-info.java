@@ -2,17 +2,15 @@
  * Technical documentation regarding the user story Lang07.1: Bean Shell Window.
  * 
  *
- * <b>Scrum Master: -(yes/no)- no</b>
+ * <b>Scrum Master: no</b>
  * 
  * <p>
- * <b>Area Leader: -(yes/no)- no</b>
+ * <b>Area Leader: no</b>
  * 
  * <h2>1. Notes</h2>
  * 
  * 
  * <p>
- * -In this section you should register important notes regarding your work during the sprint.
- * For instance, if you spend significant time helping a colleague or if you work in more than a feature.-
  *
  * <h2>2. Requirement</h2>
  * It is required to add support for bean shell scripts. At this moment, only a default script that follows a certain work flow should be added for execution. The result of the script execution should be the result of the last executed instruction.
@@ -89,7 +87,7 @@
  * Sequence Diagram 1 - Generic class loading and script executing
  * <p>
  * <p>
- * <img src="design_generic_sd.png" alt="image"> 
+ * <img src="design.png" alt="image">
  * <p>
  * Sequence Diagram 2 - Default script class loading and executing
  * <p>

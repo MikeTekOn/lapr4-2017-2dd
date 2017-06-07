@@ -1,4 +1,4 @@
-@startuml
+@startuml analysis_simple_sd.png
 actor User
 User -> System : Selects beanshell script option
 System -> System : Fills window with default script

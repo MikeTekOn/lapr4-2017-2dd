@@ -8,6 +8,8 @@ package lapr4.green.s1.ipc.n1150657.chat.ui;
 import csheets.ui.ctrl.BaseAction;
 import csheets.ui.ctrl.UIController;
 import java.awt.event.ActionEvent;
+import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
+import lapr4.green.s1.ipc.n1150657.chat.ext.ChatExtension;
 
 /**
  * It represents the action for the chat.
@@ -22,13 +24,26 @@ public class ChatAction extends BaseAction {
     private UIController uiController;
 
     /**
+     * The connection.
+     */
+    private ConnectionID connection;
+
+    /**
      * The constructor for the ChatAction
+     *
+     * @param connection
      * @param uiController The controller.
      */
-    public ChatAction(UIController uiController) {
+    public ChatAction(ConnectionID connection, UIController uiController) {
         this.uiController = uiController;
+        this.connection = connection;
     }
 
+    /**
+     * It gets the name
+     *
+     * @return The String name.
+     */
     @Override
     protected String getName() {
         return "Chat";
@@ -41,7 +56,7 @@ public class ChatAction extends BaseAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        //TODO
+        new NewMessageFrame(uiController, connection);
     }
 
 }

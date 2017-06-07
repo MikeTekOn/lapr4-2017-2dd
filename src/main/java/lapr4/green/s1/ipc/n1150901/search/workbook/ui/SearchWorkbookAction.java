@@ -4,8 +4,7 @@ import java.awt.event.ActionEvent;
 
 import csheets.ui.ctrl.BaseAction;
 import csheets.ui.ctrl.UIController;
-import javax.swing.JFrame;
-import lapr4.green.s1.ipc.n1150901.search.workbook.ui.table.InstanceTable;
+import lapr4.green.s1.ipc.n1150901.search.workbook.ui.table.InstanceTableUI;
 
 /**
  * The action necessary for the user story IPC03.1 - Search in Another Instance.
@@ -41,6 +40,6 @@ public class SearchWorkbookAction extends BaseAction {
      */
     @Override
     public void actionPerformed(ActionEvent event) {
-        InstanceTable instanceTable = new InstanceTable();
+        InstanceTableUI instanceTable = new InstanceTableUI();
     }
 }

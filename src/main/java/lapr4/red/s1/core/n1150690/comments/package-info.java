@@ -20,13 +20,6 @@
  * persisted with the workbook.
  *
  * <p>
- * <b>Use Case "Tooltip and User Associated to Comment":</b> The user selects
- * the cell where he/she wants to enter a comment. The system displays the
- * current comment of that cell. The user enter the text of the comment (or
- * alters the existing one) or adds a new comment. The system saves the comment
- * of the cell. When the user's mouse pointer is hovering above a cell and the
- * cell has comments then the system will display these comments in a form
- * similar to a "tooltip". Comments should be persisted with the workbook.
  *
  * <h2>3. Analysis</h2>
  * <p>
@@ -114,6 +107,22 @@
  *
  * <h2>5. Implementation</h2>
  * <p>
+ * We were told to try if possible to extend the existing classes to add
+ * features.
+ * <p>
+ * So I created a class called CommentableCellWithMultipleUsers that extends the
+ * CommentableCell class, which will have the necessary methods and attributes
+ * for this use case, related to the business domain.
+ * <p>
+ * From my point of view, it would not make sense to extend the controller or
+ * the user interface of the previous use case since you would not need to use
+ * any method.
+ * <p>
+ * In order to realize the functionality of the tooltip in cells, I had to add
+ * lines of code in the CellRenderer class, add two methods to the CellDecorator
+ * class, and create a class that extended the CommentedCellDecorator class and
+ * override the methods added to the CellDecorator class to be able to run the
+ * use case.
  *
  * <h2>6. Integration/Demonstration</h2>
  * <p>
@@ -151,11 +160,11 @@
  * <p>
  * <b>Friday 2/06/2017</b>
  * <p>
- * Yesterday:
+ * Yesterday: I created the controller and ui classes
  * <p>
- * Today:
+ * Today: I will finished, if possible the use case.
  * <p>
- * Blocking:
+ * Blocking:--
  * <p>
  * <b>Monday 5/06/2017</b>
  * <p>
