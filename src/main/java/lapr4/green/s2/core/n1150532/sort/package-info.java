@@ -143,6 +143,105 @@
  * The test consists in providing two cells and check if the comparison result
  * is the expected one. All possible combinations should be tested.
  *
+ * <h1>Design</h1>
+ *
+ * <h2>Generic Sorting Algorithm</h2>
+ * There are many sorting algorithms already studied and examined. We will use
+ * both Merge and Quick Sort due to their good overall complexity. These
+ * algorithms should be generic in order to allow the reuse of its code for all
+ * kinds of sorting. Despite the mention to generic, the Java Generics does not
+ * necessarily need to be used. A suitable DTO can be used to provide the
+ * algorithm the right data at the right time. This approach is specially useful
+ * since what is being sorted are not the objects themselves but the values they
+ * possess. Also, since the user may change the comparison results by altering
+ * the value types hierarchies, a suitable comparator can be provided to the
+ * algorithm. The algorithms can be defined through the following pseudo-code:
+ * <p/>
+ * <b>Merge Sort</b>
+ * <blockquote>
+ * <pre>
+ * {@code
+ * Algorithm void mergeSort (T S[], int n) {
+ *      if ( n >= 2 ) {
+ *          int	mid = n / 2
+ *          T S1[] = S[ 0 , ... , mid ]
+ *          T S2[] = S[ mid , ... , n ]
+ *          mergeSort( S1 , n1 );
+ *          mergeSort( S2 , n2 );
+ *          merge( S1 , S2 , S )
+ *      }
+ *  }
+ * }
+ * </pre>
+ * </blockquote>
+ * <b>Quick Sort</b>
+ * <blockquote>
+ * <pre>
+ * {@code
+ * Algorithm void quickSort (T S[], int left, int right) {
+ *      pivot = S[ ( left + righ t) / 2 ]
+ *      i = left
+ *      j = right
+ *      while ( i <= j ){
+ *          while ( S[i] < pivot )
+ *              i++
+ *          while ( S[j] > pivot )
+ *              j--
+ *          if ( i <= j ){
+ *              swap( S[i] , S[j] )
+ *              i++
+ *              j--
+ *          }
+ *          if ( left < j )
+ *              quickSort( S , left , j )
+ *          if ( right > i )
+ *              quickSort( S , i , right )
+ *      }
+ *  }
+ * }
+ * </pre>
+ * </blockquote>
+ *
+ * <h2>Comparator</h2>
+ *
+ * A {@link java.util.Comparator} can be provided to the sorting algorithm for
+ * it to assess the greatness of the objects that it is sorting. This allows the
+ * same type of objects to have different comparison evaluations depending on
+ * the provided comparator. Due to the ascending and descending order demand and
+ * since the comparison itself is the same (the result is inverted) a boolean
+ * can be provided to the comparator to change accordingly. In our case, this is
+ * useful to permit the user to define the value types hierarchy. One last note
+ * to mention that the comparator should provide a description.
+ *
+ * <h2>Sortable Data Transmission Object</h2>
+ *
+ * The proposed DTO must be able to provide the comparing element, as well as
+ * the ability to swap its encapsulated data with the one of another DTO. In
+ * this specific case, the DTO holds the range row and provides the comparing
+ * cell's value. The swap will consist in exchanging the content of each and
+ * every cell of the range rows.
+ *
+ * <h2>Block Cell Range</h2>
+ *
+ * For this operation, listeners could be used to ensure that only those
+ * specific cells are blocked. However, that solution implies that the remaining
+ * cells does not affect the cells being sorted, which is not true since these
+ * can contain references to those. Plus, the listeners represent a higher
+ * system burden which can easily be replaced by a
+ * {@link javax.swing.JDialog#modal} activation on the pop-up menu.
+ *
+ * <h2>Sequence Diagram</h2>
+ *
+ * <img src="core_03_2_design_1.png" alt="image">
+ *
+ * <h2>Alternatives</h2>
+ *
+ * An alternative, rather simple, would be to duplicate the selected cells
+ * matrix. Then, it could be sorted by simply exchanging the rows order within
+ * the matrix. At last, the content of the sorted matrix could be set on the
+ * content of the original matrix. Although this is a simpler alternative, the
+ * prof. PRP specifically asked for it not to be used.
+ *
  * @author Manuel Meireles (1150532)
  */
 package lapr4.green.s2.core.n1150532.sort;
