@@ -37,7 +37,9 @@
  *
  * <b>Tests</b><p>
  * <ul>
- *     <li></li>
+ *     <li>CompanyContactService::ensureAllRelatedContactsAreFound</li>
+ *     <li>CompanyContactService::ensureAllRelatedContactsEventsAreInCompanyAgenda</li>
+ *     <li>CompanyContactService::ensureCompanyAgendaIsReadOnly</li>
  * </ul>
  *
  * <b>Design</b><p>
