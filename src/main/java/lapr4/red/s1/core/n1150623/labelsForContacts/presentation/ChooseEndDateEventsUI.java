@@ -121,9 +121,7 @@ public class ChooseEndDateEventsUI extends javax.swing.JFrame {
             chosenDate.set(Calendar.MONTH, month);
             chosenDate.set(Calendar.YEAR, year);
 
-            JOptionPane.showMessageDialog(null, "toString: " + chosenDate.toString(), "Debbug", JOptionPane.INFORMATION_MESSAGE);
-
-            chosenDate = DateTime.newCalendar(year, month+1, day);
+            chosenDate = DateTime.newCalendar(year, month-1, day);
             if (chosenDate == null || chosenDate.compareTo(DateTime.now())==-1) {
                 JOptionPane.showMessageDialog(null, "Invalid Date!", "ERROR", JOptionPane.ERROR_MESSAGE);
             } else {

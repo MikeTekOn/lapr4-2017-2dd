@@ -62,7 +62,6 @@ public class Label {
         if(events == null || events.contains(null)){
             throw new IllegalArgumentException("Invalid Event");
         }
-
         for(Event e : events){
             contact_agenda.add(e);
         }
@@ -108,13 +107,13 @@ public class Label {
             if(remove){
                 toRemove.add(e);
             }
-
+            remove = false;
         }
 
         for(Event e : toRemove){
             contact_agenda.remove(e);
         }
-        remove = false;
+
     }
 
     public void removeEvents() {

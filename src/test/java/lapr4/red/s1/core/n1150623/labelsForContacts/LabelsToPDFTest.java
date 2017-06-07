@@ -34,7 +34,7 @@ public class LabelsToPDFTest {
     @Before
     public void setUp() {
 
-       /*
+
         Event a = new Event("Evento1", Calendar.getInstance());
         Event b = new Event("Evento2", Calendar.getInstance());
         Event c = new Event("Evento3", Calendar.getInstance());
@@ -42,41 +42,50 @@ public class LabelsToPDFTest {
         List<Event> e = new ArrayList<>();
         Label lab1 = new Label();
 
-        lab1.fillLabel("name1", "C:\\Users\\guima\\Desktop\\default_img.png", "email1", "phoneNumber1", "photo1");
+        lab1.fillLabel("name1", "C:\\Users\\guima\\Desktop\\default_img.png", "email1", "phoneNumber1", "phone1");
         e.add(a);
         e.add(d);
         lab1.addEvents(e);
         Label lab2 = new Label();
-        lab2.fillLabel("name2", "C:\\Users\\guima\\Desktop\\default_img.png", "email2", "phoneNumber2", "photo2");
+        lab2.fillLabel("name2", "C:\\Users\\guima\\Desktop\\default_img.png", "email2", "phoneNumber2", "phone2");
         List<Event> z = new ArrayList<>();
         z.add(b);
         z.add(d);
-        lab1.addEvents(z);
+        lab2.addEvents(z);
 
         Label lab3 = new Label();
-        lab3.fillLabel("name3", "C:\\Users\\guima\\Desktop\\default_img.png", "email3", "phoneNumber3", "photo3");
+        lab3.fillLabel("name3", "default_img.png", "email3", "phoneNumber3", "phone3");
         List<Event> w = new ArrayList<Event>();
         w.add(b);
-        lab1.addEvents(w);
+        lab3.addEvents(w);
 
         Label lab4 = new Label();
-        lab4.fillLabel("name4", "C:\\Users\\guima\\Desktop\\default_img.png", "email4", "phoneNumber4", "address");
+        lab4.fillLabel("name4", "\\default_img.png", "email4", "phoneNumber4", "phone4");
         List<Event> q = new ArrayList<>();
         q.add(a);
         q.add(c);
-        lab1.addEvents(q);
+        lab4.addEvents(q);
 
         lista.addLabel(lab1);
         lista.addLabel(lab2);
         lista.addLabel(lab3);
         lista.addLabel(lab4);
-*/
+        System.out.println("..........................................");
+        for(Label l : lista.labels()){
+
+            for(Event v : l.events())
+            System.out.println(v.description());
+            System.out.println("..........................................");
+        }
+
+
+        lista.choosePath("C:\\Users\\guima\\Desktop\\labels.pdf");
+
     }
 
     @Test
     public void ensurePDFIsPrinted() {
-        //lista.choosePath("C:\\Users\\guima\\Desktop\\ficheiro.pdf");
-        //assertTrue(lista.exportPDF());
+        assertTrue(lista.exportPDF());
     }
 
 }
