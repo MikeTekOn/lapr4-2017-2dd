@@ -86,11 +86,11 @@
  * the others for comparing different value types.
  *
  * <h2>Identified issues</h2>
- * <b>Values Comparison</b>: The textual values are sorted by the alphabetic
- * order. The numeric values are sorted by their mathematical greatness. The
- * date values are sorted by chronological order. The true issue emerges when
- * comparing different value types. In this case, the value types hierarchy is
- * considered.
+ * <b>Values Comparison</b>: How are the values itself compared? The textual
+ * values are sorted by the alphabetic order; The numeric values are sorted by
+ * their mathematical greatness; The date values are sorted by chronological
+ * order. The true issue emerges when comparing different value types. In this
+ * case, the value types hierarchy is considered.
  * <p/>
  * <b>Value Types Hierarchy</b>: The value types comparison is currently
  * performed by enumeration order. However, should it be allowed the user to be
@@ -100,7 +100,17 @@
  * <b>Exchanging Cells</b>: The cells has more information than the content
  * itself, like formatting and precedents &#47; dependents. That information
  * must not only be kept as it should be updated when the sorting is performed.
- *
+ * However, the original implementation of the application makes this operation
+ * extremely hard and complex. After many hours of studying the issue, a
+ * feasible solution was not reached. The major problem is the reference sharing
+ * system whose is bullet-proofed within the classes. The issue has been
+ * discussed with the product owner and it was settled that only the values
+ * itself must be exchanged.
+ * <p/>
+ * <b>Exchanging Rows</b>: The range row should be swapped based on the
+ * comparison of the cell from the sorting column. How will the algorithm
+ * perform this if only a cell is compared?
+ * 
  * <h1>Tests</h1>
  *
  * <h2>Acceptance Tests</h2>
