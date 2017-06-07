@@ -1,0 +1,41 @@
+@startuml sd2_insert_function_basic_wizard.png
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor User 
+
+participant "FunctionWizardUI" as UI
+participant "FunctionWizardController" as CRTL
+participant "ActiveCell" as cell
+
+
+
+User -> UI : Begin
+create UI
+activate UI
+create CRTL
+
+
+UI -> CRTL : create()
+activate CRTL
+ 
+deactivate CRTL
+UI --> User : Asks for parameters 
+deactivate UI
+
+loop : while(actualParams < neededParams)
+User -> UI : Inserts parameter
+activate UI
+UI -> CRTL : calculateResult()
+CRTL -> CRTL : calculateFunction()
+CRTL -> cell : setActiveCellContent()
+CRTL --> UI : return result
+UI --> User : show result
+activate CRTL
+end
+
+
+@enduml
