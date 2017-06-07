@@ -20,7 +20,8 @@
  * whole column.</li>
  * <li>It could sort {@link csheets.core.Value.Type#NUMERIC} and/or
  * {@link csheets.core.Value.Type#TEXT} {@link csheets.core.Value}s.</li>
- * <li>It used Merge Sort Algorithm.</li>
+ * <li>It used Merge Sort Algorithm
+ * ({@link lapr4.red.s1.core.n1151094.columnSort.ColumnSort#sort}).</li>
  * <li>It sorted in both
  * {@link lapr4.red.s1.core.n1151094.columnSort.application.ColumnSortController#sortAscending}
  * or
@@ -29,15 +30,16 @@
  * <li>It used two menu options
  * ({@link lapr4.red.s1.core.n1151094.columnSort.presentation.ColumnSortUI}),
  * one for each sorting order.</li>
- * <li>It used the selected {@link csheets.core.Cell} to determine the column to
- * sort.</li>
+ * <li>It used the selected cell
+ * ({@link csheets.ui.sheet.SpreadsheetTable#getSelectedCell} and
+ * {@link csheets.core.Cell}) to determine the column to sort.</li>
  * <li>It exchanges the {@link csheets.core.CellImpl#content} only.
  * </ul>
  *
  * <h2>What needs fixing?</h2>
  * <ul>
- * <li>The Merge Sort Algorithm could be generic. It should not be a specific
- * responsibility of the
+ * <li>The Merge Sort Algorithm could be more generic. It should not be a
+ * specific responsibility of the
  * {@link lapr4.red.s1.core.n1151094.columnSort.ColumnSort}.</li>
  * <li>The algorithm contains hard-coded values (a.k.a. "Magic Numbers" -
  * {@link lapr4.red.s1.core.n1151094.columnSort.ColumnSort#merge}) used by the
@@ -52,8 +54,8 @@
  * <li>This Feature Increment must sort rows by comparing the values of one
  * column.</li>
  * <li>It must only sort a specific number of columns within each row.</li>
- * <li>It must only sort a specific number of rows within each column.</li>
- * <li>It must also sort {@link java.util.Date} type
+ * <li>It must only sort a specific number of rows within the columns.</li>
+ * <li>It must also sort {@link csheets.core.Value.Type#DATE} type
  * {@link csheets.core.Value}s.</li>
  * <li>It must use a pop-up window.</li>
  * </ul>
@@ -63,7 +65,9 @@
  * <li>The user may choose the sorting algorithm.</li>
  * <li>The cells being sorted should be locked for further changes until the
  * task is finished.</li>
- * <li>The sorting could also compare boolean types</li>
+ * <li>The sorting could also compare
+ * {@link csheets.core.Value.Type#BOOLEAN}, {@link csheets.core.Value.Type#ERROR}, {@link csheets.core.Value.Type#MATRIX}
+ * and {@link csheets.core.Value.Type#UNDEFINED}.</li>
  * </ul>
  *
  * <h2>Concepts</h2>
@@ -80,7 +84,7 @@
  * within the sorting operation.
  * <p/>
  * <b>Value Type</b>: It represents the value content. It can be a numeric,
- * textual, date or boolean content.
+ * textual or date content.
  * <p/>
  * <b>Value Type Hierarchy</b>: It represents which value type is greater than
  * the others for comparing different value types.
@@ -97,20 +101,21 @@
  * able define which value type is greater than the other? This will require
  * different comparison methods to suit all possible combinations.
  * <p/>
- * <b>Exchanging Cells</b>: The cells has more information than the content
+ * <b>Exchanging Cells</b>: The cell has more information than the content
  * itself, like formatting and precedents &#47; dependents. That information
  * must not only be kept as it should be updated when the sorting is performed.
  * However, the original implementation of the application makes this operation
  * extremely hard and complex. After many hours of studying the issue, a
  * feasible solution was not reached. The major problem is the reference sharing
- * system whose is bullet-proofed within the classes. The issue has been
- * discussed with the product owner and it was settled that only the values
- * itself must be exchanged.
+ * system which is bullet-proofed within the classes. This issue has been
+ * discussed with the both prof. ATB and PRP and it was settled that only the
+ * values itself must be exchanged.
  * <p/>
  * <b>Exchanging Rows</b>: The range row should be swapped based on the
  * comparison of the cell from the sorting column. How will the algorithm
- * perform this if only a cell is compared?
- * 
+ * perform this if only a cell is compared? Plus, the cell objects can not be
+ * moved, only their content can be exchanged.
+ *
  * <h1>Tests</h1>
  *
  * <h2>Acceptance Tests</h2>
