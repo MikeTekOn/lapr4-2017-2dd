@@ -6,12 +6,16 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import lapr4.red.s1.core.n1150623.labelsForContacts.domain.Label;
 import lapr4.white.s1.core.n4567890.contacts.domain.Event;
+import org.bouncycastle.util.test.Test;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Calendar;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -71,26 +75,40 @@ public class LabelsToPDF implements GenericExport<LabelList>{
     public boolean export(LabelList list){
         this.list = list;
         boolean valid = true;
+
+        System.out.println("+---------+" +"Path: " + list.path + "+-----------+");
+        List<Label> l = list.labels();
+
+        for(Label lab : l){
+            System.out.println(l.toString());
+        }
+
+
+
         labels = list.labels();
         Document doc = null;
         doc = initiatePrinter();
         doc.open();
-        Font fontSpecial = new Font(Font.FontFamily.COURIER, 6, Font.BOLD); //Used in the first line and first column
-        Font font = new Font(Font.FontFamily.COURIER, 6, Font.NORMAL);
+        Font fontSpecial = new Font(Font.FontFamily.COURIER, 16, Font.BOLD); //Used in the first line and first column
+        Font font = new Font(Font.FontFamily.COURIER, 14, Font.NORMAL);
 
         int contLabels = 1;
-        Paragraph p1 = new Paragraph();
         String info[][];
         for (Label label : list.labels()) {
-            doc.addTitle("Label " + contLabels + ":");
+            Paragraph p1 = new Paragraph("\n\n\t\tLabel" + contLabels + ":\n", fontSpecial);
+
 
             //ADDS IMAGE
             try {
                 Image image2 = Image.getInstance(new URL(label.photo()));
-                doc.add(p1);
                 doc.add(image2);
+                doc.add(p1);
             } catch (Exception e){
-                System.out.println("ERRO LOADING IMG");
+                try {
+                    Image image2 = Image.getInstance("default_img.png");
+                } catch (Exception ex){
+                    System.out.println("ERRO LOADING IMG");
+                }
             }
 
 
@@ -98,7 +116,7 @@ public class LabelsToPDF implements GenericExport<LabelList>{
             PdfPTable table = new PdfPTable(2);
             info = generateTableInformation(label);
 
-            table.setWidthPercentage(90);
+            table.setWidthPercentage(50);
 
             for (int i = 0; i < 4; i++) {
                 for (int j = 0; j < 2; j++) {
@@ -110,44 +128,43 @@ public class LabelsToPDF implements GenericExport<LabelList>{
                 }
             }
 
-            Paragraph p = new Paragraph();
+
             try {
-                doc.add(p);
                 doc.add(table);
             } catch (DocumentException e) {
                 e.printStackTrace();
                 valid = false;
             }
-            Paragraph p2 = new Paragraph("Events:");
+            Paragraph p2 = new Paragraph("\n\n\t\tEvents:", fontSpecial);
 
             PdfPTable events = new PdfPTable(2);
             String [][]eventInfo = generateEventTableInformation(label);
             if(eventInfo!=null) {
-                events.setWidthPercentage(90);
+                events.setWidthPercentage(50);
 
                 for (int i = 0; i < eventInfo.length; i++) {
                     for (int j = 0; j < eventInfo[0].length; j++) {
                         if (i == 0) {
-                            events.addCell(new PdfPCell(new Phrase(info[i][j], fontSpecial)));
+                            events.addCell(new PdfPCell(new Phrase(eventInfo[i][j], fontSpecial)));
                         } else {
-                            events.addCell(new PdfPCell(new Phrase(info[i][j], font)));
+                            events.addCell(new PdfPCell(new Phrase(eventInfo[i][j], font)));
                         }
                     }
                 }
 
 
-                Paragraph p3 = new Paragraph();
                 try {
                     doc.add(p2);
                     doc.add(events);
-                    doc.add(p3);
+                    doc.newPage();
+                    doc.setMargins(30, 30, 20, 20);
                 } catch (DocumentException e) {
                     e.printStackTrace();
                     valid = false;
                 }
             }
-            doc.newPage();
-            contLabels++;
+                    contLabels++;
+
         }
         doc.close();
         return valid;
@@ -156,14 +173,16 @@ public class LabelsToPDF implements GenericExport<LabelList>{
     private String[][] generateEventTableInformation(Label label) {
         List<Event> events = label.events();
         if(events.size() > 0) {
-            String[][] info = new String[events.size()][2];
+            String[][] info = new String[events.size()+1][2];
 
             info[0][0] = "Date";
             info[0][1] = "Description";
-            for (int i = 0; i < events.size(); i++) {
-                Event e = events.get(i);
-                info[i][0] = e.dueDate().toString();
+            int cont = 0;
+            for (int i = 1; i < info.length; i++) {
+                Event e = events.get(cont);
+                info[i][0] = e.dueDate().get(Calendar.DAY_OF_MONTH) + "/" + e.dueDate().get(Calendar.MONTH) + "/" + e.dueDate().get(Calendar.YEAR);
                 info[i][1] = e.description();
+                cont++;
             }
 
             return info;
@@ -171,19 +190,18 @@ public class LabelsToPDF implements GenericExport<LabelList>{
         return null;
     }
 
-    File file;
     String path;
 
     private Document initiatePrinter() {
         Document document = null;
         selectPath(list.path());
         try {
-            document = new Document(PageSize.A4.rotate());
+            document = new Document(PageSize.A4);
             PdfWriter.getInstance(document, new FileOutputStream(path));
             document.open();
-            document.setMargins(1, 1, 1, 1);
+            document.setMargins(30, 30, 20, 20);
         } catch (DocumentException | FileNotFoundException e) {
-            return null;
+            //return null;
         }
         return document;
 

@@ -11,38 +11,39 @@ import javax.swing.*;
 
 import lapr4.red.s1.core.n1150623.labelsForContacts.application.LabelsForContactsController;
 import lapr4.white.s1.core.n4567890.contacts.domain.Contact;
+import sun.awt.dnd.SunDragSourceContextPeer;
 
 /**
  *
- * @author guima
+ * @author Guilherme Ferreira 1150623
  */
 public class LabelsForContactsUI extends javax.swing.JFrame {
 
-    
     private DefaultListModel<Contact> selected;
     private DefaultListModel<Contact> contacts;
     private LabelsForContactsController controller;
-    
+
     /**
      * Creates new form FilterUI
+     *
      * @param controller
      */
     public LabelsForContactsUI(LabelsForContactsController controller) {
         selected = new DefaultListModel<>();
         contacts = new DefaultListModel<>();
         Iterable<Contact> it = controller.allContacts();
-        for(Contact c : it){
+        for (Contact c : it) {
             contacts.addElement(c);
         }
         initComponents();
         setup();
         this.controller = controller;
     }
-        
-    private void setup(){
-        
+
+    private void setup() {
+
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -61,10 +62,11 @@ public class LabelsForContactsUI extends javax.swing.JFrame {
         addAllContactsButton = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         applyRegexButton = new javax.swing.JButton();
+        regexExpressionField = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
+        jButton6 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         selectedContactsList = new javax.swing.JList<>();
-        jButton6 = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         buttonOK = new javax.swing.JButton();
         buttonCancel = new javax.swing.JButton();
@@ -82,7 +84,7 @@ public class LabelsForContactsUI extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        contactList.setModel((ListModel)contacts);
+        contactList.setModel(contacts);
         jScrollPane1.setViewportView(contactList);
 
         jLabel1.setText("Choose your contacts to export:");
@@ -108,43 +110,58 @@ public class LabelsForContactsUI extends javax.swing.JFrame {
             }
         });
 
+        regexExpressionField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                regexExpressionFieldActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(53, 53, 53)
+                        .addContainerGap()
+                        .addComponent(jLabel1))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(addAllContactsButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(applyRegexButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(jLabel1))
-                .addContainerGap(77, Short.MAX_VALUE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(applyRegexButton, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(regexExpressionField))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(addAllContactsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jButton2))))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(jLabel1)
-                .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(22, 22, 22)
+                        .addGap(40, 40, 40)
                         .addComponent(addAllContactsButton)
                         .addGap(18, 18, 18)
                         .addComponent(jButton2)
-                        .addGap(18, 18, 18)
-                        .addComponent(applyRegexButton)))
-                .addContainerGap(55, Short.MAX_VALUE))
+                        .addGap(147, 147, 147))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(regexExpressionField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(applyRegexButton))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        selectedContactsList.setModel((ListModel)selected);
-        jScrollPane2.setViewportView(selectedContactsList);
+
+        regexExpressionField.setColumns(25);
 
         jButton6.setText("Remove Selected");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
@@ -153,27 +170,31 @@ public class LabelsForContactsUI extends javax.swing.JFrame {
             }
         });
 
+        selectedContactsList.setModel(selected);
+        jScrollPane2.setViewportView(selectedContactsList);
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton6)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(29, 29, 29)
-                .addComponent(jScrollPane2)
-                .addContainerGap())
-            .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(39, 39, 39)
-                .addComponent(jButton6)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(34, 34, 34)
+                        .addComponent(jButton6)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         buttonOK.setText("OK");
@@ -195,9 +216,9 @@ public class LabelsForContactsUI extends javax.swing.JFrame {
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
-                .addContainerGap(116, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(buttonCancel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(buttonOK, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -219,21 +240,22 @@ public class LabelsForContactsUI extends javax.swing.JFrame {
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(35, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(21, 21, 21))))
+                        .addGap(11, 11, 11))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(29, 29, 29)
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(24, 24, 24)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -246,7 +268,7 @@ public class LabelsForContactsUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(25, 25, 25))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -277,8 +299,12 @@ public class LabelsForContactsUI extends javax.swing.JFrame {
     }//GEN-LAST:event_applyRegexButtonActionPerformed
 
     private void buttonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCancelActionPerformed
-         onCancel();
+        onCancel();
     }//GEN-LAST:event_buttonCancelActionPerformed
+
+    private void regexExpressionFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regexExpressionFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_regexExpressionFieldActionPerformed
 
     private void addSelected() {
         List<Contact> list = new ArrayList<>();
@@ -300,64 +326,67 @@ public class LabelsForContactsUI extends javax.swing.JFrame {
     }
 
     private void applyRegex() {
-        String regex = "";
-        ApplyFilterUI a = new ApplyFilterUI(regex);
-        a.pack();
-        a.setVisible(true);
+        String regex = regexExpressionField.getText().trim();
+        if (regex.length() > 0) {
+            List<Contact> fullList = new ArrayList<>();
+            Iterable<Contact> it = controller.allContacts();
 
-        List<Contact> foundContacts = new ArrayList<>();
-        Pattern p = Pattern.compile(regex);
-        Contact c = null;
-        for (int i = 0; i < contacts.size(); i++) {
-            c = contacts.getElementAt(i);
-            Matcher m = p.matcher(c.name());
-            if (m.matches()) {
-                foundContacts.add(c);
+            for(Contact c: it){
+                if(!selected.contains(c)) {
+                    fullList.add(c);
+                }
             }
+
+            List<Contact> foundContacts = new ArrayList<>();
+            Pattern p = Pattern.compile(regex);
+            Contact c = null;
+            for (int i = 0; i < fullList.size(); i++) {
+                c = fullList.get(i);
+                Matcher m = p.matcher(c.name());
+                if (m.matches()) {
+                    foundContacts.add(c);
+                }
+            }
+            contacts.removeAllElements();
+            addToContacts(foundContacts);
+            updateAllContactsList();
+        } else {
+            //Filter is removed
+            List<Contact> fullList = new ArrayList<>();
+            Iterable<Contact> it = controller.allContacts();
+
+            for(Contact c: it){
+                if(!selected.contains(c)) {
+                    fullList.add(c);
+                }
+            }
+
+            contacts.removeAllElements();
+            addToContacts(fullList);
         }
-        contacts.removeAllElements();
-        addToContacts(foundContacts);
-        updateAllContactsList();
     }
 
     private void onOK() {
 
-        if(selected.size() > 0) {
+        if (selected.size() > 0) {
             Contact c = null;
-            for (int i = 0; i < selected.size();i++) {
+            for (int i = 0; i < selected.size(); i++) {
                 c = selected.getElementAt(i);
-                try {
-                    if(c != null)
-                        controller.addLabel(c.name(), c.photo(), c.email(), c.address(), c.phone());
-                } catch (Exception e) {
-                }
+                    if (c != null) {
+                        controller.addLabel(c.name(), c.photo(), c.email(), c.address(), c.phone(), c.agenda());
+                    }
             }
 
+            ExportDetailsController ctrl = new ExportDetailsController(controller, this);
+            
             if (JOptionPane.showConfirmDialog(null, "Export Events?", "Label Exportation", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
+                ctrl.runDateChooser();
 
-                Calendar endDate = Calendar.getInstance();
-
-                ChooseEndDateEventsUI ch = new ChooseEndDateEventsUI(endDate);
-                ch.setVisible(true);
-
-
-                /**
-                 * Limit Events
-                 */
-                controller.limitEvents(endDate);
             } else {
-                controller.removeEvents();
+                ctrl.runPathChooser();
             }
 
-            choosePath();
-
-            String export = "Success";
-            if (!controller.doExport()) {
-                export = "Failed";
-            }
-            JOptionPane.showConfirmDialog(null, "Exportation: " + export, "Information", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
-            onCancel();
-        }else{
+        } else {
             JOptionPane.showMessageDialog(null, "Must select at least one contact", "ERROR", JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -367,25 +396,25 @@ public class LabelsForContactsUI extends javax.swing.JFrame {
     }
 
     private void updateAllContactsList() {
-        contactList = new JList(contacts);
+        contactList.setModel(contacts);
     }
 
     private void updateSelectedContactsList() {
-        selectedContactsList = new JList(selected);
+        selectedContactsList.setModel(selected);
     }
 
     private void removeFromContacts(List<Contact> toRemove) {
-        for (Contact c : toRemove) {
+        toRemove.stream().forEach((c) -> {
             contacts.removeElement(c);
-        }
+        });
         updateAllContactsList();
         updateSelectedContactsList();
     }
 
     private void addToContacts(List<Contact> toAdd) {
-        for (Contact c : toAdd) {
-                contacts.addElement(c);
-        }
+        toAdd.stream().forEach((c) -> {
+            contacts.addElement(c);
+        });
         updateAllContactsList();
         updateSelectedContactsList();
     }
@@ -394,74 +423,31 @@ public class LabelsForContactsUI extends javax.swing.JFrame {
         Contact c = null;
         for (int i = 0; i < contacts.size(); i++) {
             c = contacts.getElementAt(i);
-                selected.addElement(c);
+            selected.addElement(c);
         }
         contacts.removeAllElements();
         updateAllContactsList();
         updateSelectedContactsList();
     }
 
-
     private void addToSelectedContacts(List<Contact> toAdd) {
-        for (Contact c : toAdd) {
+        toAdd.stream().forEach((c) -> {
             selected.addElement(c);
-        }
+        });
         updateAllContactsList();
         updateSelectedContactsList();
     }
 
     private void removeFromSelectedContacts(List<Contact> toRemove) {
-        for (Contact c : toRemove) {
+        toRemove.stream().forEach((c) -> {
             selected.removeElement(c);
-        }
-        addToContacts(toRemove);
+        });
         updateAllContactsList();
         updateSelectedContactsList();
     }
 
-    private JButton button;
-    
-    private String path, name;
-    private JFileChooser picker;
-    private String pickertitle;
 
-    private void choosePath(){
-        
-        name = JOptionPane.showInputDialog("Name of File? \n(ex:\"nome_ficheiro\")");
-        name += ".pdf";
-
-        JDialog d = new JDialog();
-        JPanel p = new JPanel();
-        d.add(p);
-
-        button = new JButton("Path Chooser");
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                picker = new JFileChooser();
-                picker.setCurrentDirectory(new java.io.File("."));
-                picker.setDialogTitle(pickertitle);
-                picker.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY); //only directories - cant choose files
-
-                picker.setAcceptAllFileFilterUsed(false);
-                if (picker.showOpenDialog(p) == JFileChooser.APPROVE_OPTION) {
-                    path = picker.getSelectedFile().getPath();
-                    path+="\\";
-                    path+=name;
-                    controller.setPath(path);
-                    d.dispose();
-                } else {
-                    //nothing
-                }
-            }
-        });
-        d.add(button);
-
-    }
-    
-    
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
+    // Variables declaration - do not modify                     
     private javax.swing.JButton addAllContactsButton;
     private javax.swing.JButton applyRegexButton;
     private javax.swing.JButton buttonCancel;
@@ -477,6 +463,6 @@ public class LabelsForContactsUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextField regexExpressionField;
     private javax.swing.JList<Contact> selectedContactsList;
-    // End of variables declaration//GEN-END:variables
 }
