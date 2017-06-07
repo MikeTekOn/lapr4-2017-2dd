@@ -44,21 +44,27 @@
  * 1. Make defaultTableModel cells editable so they can turn into edit boxes to insert function parameters.
  * <p>
  * 2. Add listener to know when the text box is updated and refresh the result
- * of the formula through a method yet to be implemented that returns the formula result.
+ * of the formula through a controller method yet to be implemented that returns the formula result
+ * each time one parameter is inserted.
  * <p>
- * 3. Change main method from Language class to update function list
+ * 3. Change main method from Language class to update function list by importing operators and functions
+ * from java.lang.Math.
  * <p>
- * 4 & 5. Simple changes in UI
+ * 4 & 5. Simple changes in UI.
  * <p>
+ * 
+ * <img src="ssd_insert_function_intermediate_wizard.png" alt="image">
  *
  * <h2>4. Design</h2>
  * <p>
+ * 
+ * 
  * <h3>4.1. Functional Tests</h3>
  * <p>
  * <h3>4.2. UC Realization</h3>
  * Sequence Diagram
  *
- *
+ *  <img src="sd2_insert_function_intermediate_wizard.png" alt="image">
  * <p>
  *
  * <h3>4.3. Classes</h3>
