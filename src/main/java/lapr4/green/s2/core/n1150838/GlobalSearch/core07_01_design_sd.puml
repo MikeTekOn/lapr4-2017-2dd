@@ -1,0 +1,48 @@
+@startuml 
+
+    actor User 
+    participant "GlobalSearchSideBar" as UI
+    participant "Filter" as ft
+    participant "UIController" as UIctrl
+    participant "WorkbookSearchCtrl" as ctrl
+    participant "Workbook" as WBOOK
+    participant "Spreadsheet" as sheet
+    participant "Cell" as cll
+    participant "RegexUtilExtended" as util
+    
+    User -> System: Selects the cell types to include in the search
+    User <-- System: Ask for the formulas to include in the search
+    User -> System: Insert the formulas
+    User <-- System: Asks for the regular expression to search
+    User -> System: Inserts the regular expression
+    User <-- System: Displays search results
+
+
+    User -> UI : Press filters button
+    UI -> UIctrl : Workbook w : getActiveWorkbooks()
+    User <-- UI : Show the available cell types
+    create 
+    User -> UI : Inserts regular expression
+    UI -> ctrl : checkIfValid(String regex)
+   
+    ctrl -> util : isRegexValid(regex)
+
+    UI -> ctrl : searchWorkbook(String regex)
+    ctrl -> util : searchInWorkbook(w)
+    activate util    
+    loop for Spreadsheet s : listSpreadsheets
+    loop for Cells c : listCells
+    util -> cll : getValue()
+    util -> util : checkIfMatches(String cellContent)
+   
+    alt : if true
+    util -> util : searchResults.add()
+    end
+    end
+    end
+    util -> ctrl : return searchResults
+    UI <-- ctrl : return searchResults
+    UI -> UI : showInfo()
+
+    
+@enduml

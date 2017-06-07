@@ -36,12 +36,6 @@ public class Label {
         if (Strings.isNullOrEmpty(name) || Strings.isNullOrWhiteSpace(name)) {
             throw new IllegalArgumentException("The name mas not be null or empty!");
         }
-        if (Strings.isNullOrEmpty(photo) || Strings.isNullOrWhiteSpace(photo)) {
-            throw new IllegalArgumentException("The photo must contain something!");
-        }
-        if (address == null) {
-            throw new IllegalArgumentException("The addresses can't be null!");
-        }
         if (Strings.isNullOrEmpty(email) || Strings.isNullOrWhiteSpace(email)) {
             throw new IllegalArgumentException("The email mas not be null or empty!");
         }
@@ -76,15 +70,51 @@ public class Label {
 
     public void deleteEventsOutsideBoundaries(Calendar endDate){
         List<Event> toRemove = new ArrayList<>();
+        boolean remove = false;
         for(Event e : contact_agenda){
-            if(e.dueDate().compareTo(endDate) == 1){ // se data evento > endDate
+
+            int year = e.dueDate().get(Calendar.YEAR);
+            int month = e.dueDate().get(Calendar.MONTH);
+            int day = e.dueDate().get(Calendar.DAY_OF_MONTH);
+
+            int my_year = endDate.get(Calendar.YEAR);
+            int my_month = endDate.get(Calendar.MONTH);
+            int my_day = endDate.get(Calendar.DAY_OF_MONTH);
+
+
+            if(year <= my_year){
+                if(year == my_year){
+                    if(month <= my_month){
+                        //keep
+                        if(month == my_month){
+                            if(day <= my_day){
+                                //keep
+                            }else{
+                                remove = true;
+                            }
+                        }else{
+                            //keep
+                        }
+                    }else{
+                        remove = true;
+                    }
+                }else{
+                    //keep
+                }
+            }else{
+                remove = true;
+            }
+
+            if(remove){
                 toRemove.add(e);
             }
+
         }
 
         for(Event e : toRemove){
             contact_agenda.remove(e);
         }
+        remove = false;
     }
 
     public void removeEvents() {
@@ -111,5 +141,14 @@ public class Label {
     }
     public List<Event> events(){
         return this.contact_agenda;
+    }
+
+    @Override
+    public String toString(){
+        return "Name -> " + name()
+                + "\nAddress -> " + address()
+                + "\nPhoto -> " + photo()
+                + "\nPhoneNumber -> " + phoneNumber();
+
     }
 }

@@ -48,7 +48,7 @@
  * <ol>
  * <li>The style and format should be applied after the comment is already
  * registered, during the process of add the comment to the cell or in both
- * cases?</li>
+ * cases?</li><p>
  * <li>What does it mean when it says that the user is allowed to make a new
  * version of a comment?</li>
  * </ol>
@@ -65,7 +65,7 @@
  * <h2>6. Assumptions</h2>
  * <ol>
  * <li>The history of a comment is persisted with all the comments of each
- * cell.</li>
+ * cell.</li><p>
  * <li>In the search of a comment the capitalization should not be ignored.</li>
  * <p>
  *
@@ -75,31 +75,47 @@
  * <p>
  * There should be a way to verify if the history of a comment updates correctly
  * and saves every changes.
- * <p>
+ * <p><p>
  *
  * <b>Test2:</b> searchOnlyNeedsTextPatternsTest
  * <p>
  * There should be a way to verify if the search feature actually works with
  * only text patterns and doesn't need full words.
- * <p>
+ * <p><p>
  *
  * <b>Test3:</b> formatIsAppliedToCommentTest
  * <p>
  * There should be a way to verify if the format is correctly applied to the
  * comment selected.
- * <p>
+ * <p><p>
  *
  * <b>Test4:</b> styleIsAppliedToCommentTest
  * <p>
  * There should be a way to verify if the style is correctly applied to the
  * comment selected.
- * <p>
+ * <p><p>
  *
  * <b>Test5:</b> oldCommentBecomesNewCommentTest<p>
  * There should be a way to verify that a comment from the history of changes
  * can become "a new version" and "come back" to the current comments of a cell.
- * <p>
+ * <p><p>
  *
+ * <h2>8. Design</h2>
+ * 
+ * From the 3 "parts" we get 3 diagrams that are the following:<p>
+ * 
+ * <b>Style and Format</b><p>
+ * <img src="us8_design_1.png" alt="design_1">
+ * <p>
+ * 
+ * <b>History of Comment</b><p>
+ * <img src="us8_design_2.png" alt="design_2">
+ * <p>
+ * 
+ * <b>Search Text Pattern</b><p>
+ * <img src="us8_design_3.png" alt="design_3">
+ * <p>
+ * 
  * @author Miguel Silva (1150901)
  */
 package lapr4.green.s2.core.n1150901.richCommentsAndHistory;

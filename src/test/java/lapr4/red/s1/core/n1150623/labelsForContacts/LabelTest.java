@@ -61,7 +61,7 @@ public class LabelTest {
     public void ensureNameCantBeEmpty(){
         label.fillLabel("", photo, address, email, phoneNumber);
     }
-
+/*
     @Test(expected = IllegalArgumentException.class)
     public void ensurePhotoCantBeNull(){
         label.fillLabel(name, null, address, email, phoneNumber);
@@ -71,7 +71,7 @@ public class LabelTest {
     public void ensurePhotoCantBeEmpty(){
         label.fillLabel(name, "", address, email, phoneNumber);
     }
-
+*/
     @Test(expected = IllegalArgumentException.class)
     public void ensureAddressesCantBeNull(){
         label.fillLabel(name, photo, null, email, phoneNumber);
