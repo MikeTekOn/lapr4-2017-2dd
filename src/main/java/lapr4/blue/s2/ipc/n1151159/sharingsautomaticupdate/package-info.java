@@ -23,7 +23,7 @@
  *
  * <p>After a connection is established, the updates made in one side must be seen in the other side.</p>
  * <p>The data shared must now include the style of the cells.</p>
- * <p>At the moment it is not required to share the cells with formulas</p>
+ * <p>At the moment it is not required to share the cells with formulas.</p>
  *
  *
  *
@@ -74,6 +74,45 @@
  * <p>
  *     To send the style of the cells, the CellDTO must be refactored to contain a the style of the cell.
  * </p>
+ *
+ *
+ *
+ *
+ * <h2>4. Tests</h2>
+ *
+ * <h3>4.1. Unit Tests</h3>
+ * <ol>
+ *     <li>ensureCellSetsTheStyleOfDTO</li>
+ * </ol>
+ *
+ * <h3>4.2. Functional Tests Plan</h3>
+ * <p>5.1.1. Test the real time sharing</p>
+ * <ol>
+ *     <li>Run two instances of CleanSheets in the same local network</li>
+ *     <li>Ensure the instances are reachable</li>
+ *     <li>In both instances, go to the Network sidebar and press the "Activate" button</li>
+ *     <li>
+ *         With one instance, select the address of the other instance and press the "Connect" button
+ *         <ul>
+ *             <li>Either choose to make a safe connection or not (it's not relevant to test this functionality)</li>
+ *         </ul>
+ *     </li>
+ *     <li>
+ *         With one instance, fill the cells from B2 to to D4
+ *         <ul>
+ *             <li>Give a style to that cells</li>
+ *             <li>
+ *                 In the list of the connected hosts, select the other instance address and press the "Share Cells"
+ *                 button
+ *             </li>
+ *         </ul>
+ *     </li>
+ *     <li>On the other instance, check if the shared cells appear in the worksheet</li>
+ *     <li>
+ *         with both instances, side by side, try to change the cells and make sure that it is updating on the other
+ *         side
+ *     </li>
+ * </ol>
  *
  *
  *
