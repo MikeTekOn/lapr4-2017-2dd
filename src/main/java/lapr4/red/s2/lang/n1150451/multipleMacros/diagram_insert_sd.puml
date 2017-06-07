@@ -1,0 +1,12 @@
+@startuml
+actor User
+User -> AddMacroUI : Initiates Functionality
+create AddMacroController
+AddMacroUI->AddMacroController : create
+User -> AddMacroUI : Inserts Macro name
+User -> AddMacroUI : Inserts Macro code
+AddMacroUI->AddMacroController : setMacroData
+AddMacroController->Workbook : insertMacro(m)
+Workbook -> MacroList : insertMacro(m)
+MacroList->MacroList : compileMacro
+@enduml
