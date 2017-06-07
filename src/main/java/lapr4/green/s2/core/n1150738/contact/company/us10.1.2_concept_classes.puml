@@ -1,0 +1,36 @@
+@startuml us10.1.2_concept_classes.png
+
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam shadowing false
+
+hide methods
+
+class Profession <<valueobject>>
+class CompanyContact <<aggregate root>>{
+    companyName
+}
+interface Contact
+class PersonContact <<aggregate root>> {
+    firstName
+    lastName
+    photo
+}
+
+class Agenda {
+}
+
+class Event {
+    description
+    dueDate
+}
+
+Contact <.. CompanyContact
+Contact <.. PersonContact
+CompanyContact <-  PersonContact
+PersonContact *--> Profession
+PersonContact *--> "1" Agenda
+Agenda *--> "*" Event
+
+
+@enduml
