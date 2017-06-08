@@ -133,7 +133,7 @@
  * <h2>4. Tests</h3>
  * <h3>4.1. Unit Tests</h3>
  * <ul>
- * <li>ensureExchangeIsProperlyDone</li>
+ * <li>test convertions between coins</li>
  * <li>ensureCalculesAreMadeWithTheSameTypeOfCoin</li>
  * <li>ensureExpressionIsNotMalformed</li>
  * </ul>
