@@ -25,6 +25,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.LinkedList;
 
@@ -200,6 +201,21 @@ public class SpreadsheetTable extends Grid implements SelectionListener {
 			for (int column = 0; column < range[row].length; column++)
 				range[row][column] = spreadsheet.getCell(columns[column], rows[row]);
 		return range;
+	}
+
+	/**
+	 * Created by João Cardoso - 1150943
+	 * @return list of selected cells
+	 */
+	public ArrayList<Cell> getSelectedCellsList(){
+		ArrayList<Cell> selectedCells = new ArrayList<>();
+		int[] rows = getSelectedRows();
+		int[] columns = getSelectedColumns();
+		Cell[][] range = new Cell[rows.length][columns.length];
+		for (int row = 0; row < range.length; row++)
+			for (int column = 0; column < range[row].length; column++)
+				selectedCells.add(spreadsheet.getCell(columns[column], rows[row]));
+		return selectedCells;
 	}
 
 	/**

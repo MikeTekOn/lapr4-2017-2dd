@@ -1,0 +1,20 @@
+@startuml core02_03_design1.png
+
+    participant "CommentsWithHistoryUI" as ui
+    participant "CommentsWithHistoryController" as ctrl
+    
+    create ctrl
+    ui -> ctrl : create(uic)
+
+    ui -> ctrl : changeFormat()
+    activate ctrl
+    ctrl -> ctrl : changeFormat()
+    ui <-- ctrl
+    deactivate ctrl
+
+    ui -> ctrl : changeStyle()
+    activate ctrl
+    ctrl -> ctrl : changeStyle()
+    ui <-- ctrl
+    deactivate ctrl
+@enduml

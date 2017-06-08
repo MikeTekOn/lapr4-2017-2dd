@@ -55,16 +55,16 @@ public class UIChatExtension extends UIExtension {
         return sideBar;
     }
 
-    /**
-     * It returns the menu.
-     *
-     * @return It returns the Chat Menu.
-     */
-    @Override
-    public JMenu getMenu() {
-        if (menu == null) {
-            menu = new ChatMenu(uiController);
-        }
-        return menu;
-    }
+//    /**
+//     * It returns the menu.
+//     *
+//     * @return It returns the Chat Menu.
+//     */
+//    @Override
+//    public JMenu getMenu() {
+//        if (menu == null) {
+//            menu = new ChatMenu(uiController);
+//        }
+//        return menu;
+//    }
 }
