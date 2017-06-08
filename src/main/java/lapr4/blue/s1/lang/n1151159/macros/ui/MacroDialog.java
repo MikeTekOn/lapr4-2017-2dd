@@ -202,7 +202,7 @@ public class MacroDialog extends JDialog {
                 if (!macroText.trim().isEmpty()) {
                     if (macroLanguageRadioButton.isSelected()) {
                         try {
-                            Value value = macroController.executeMacro(uiController.getActiveSpreadsheet(), macroText);
+                            Value value = macroController.executeMacro(uiController.getActiveSpreadsheet(), uiController, macroText);
                             macroOutputTextField.setText(value.toString());
                         } catch (MacroCompilationException | IllegalValueTypeException e) {
                             JOptionPane.showMessageDialog(null,

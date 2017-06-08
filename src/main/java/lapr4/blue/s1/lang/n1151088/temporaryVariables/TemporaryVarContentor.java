@@ -10,6 +10,7 @@ import lapr4.blue.s1.lang.n1151452.formula.compiler.BlueFormulaBaseVisitor;
 /**
  * An expression visitor that collects the temporary variables from an expression.
  *
+ * @author Ricardo Catalão (1150385)
  * @author Diana Silva (1151088@isep.ipp.pt)
  *         on 02/06/2017
  */
@@ -42,5 +43,9 @@ public class TemporaryVarContentor extends BlueFormulaBaseVisitor<Expression> {
         } else {
             return contentorTempVar.add(tempVar);
         }
+   }
+
+   public Set<TemporaryVariable> getVariablesSet(){
+       return contentorTempVar;
    }
 }
