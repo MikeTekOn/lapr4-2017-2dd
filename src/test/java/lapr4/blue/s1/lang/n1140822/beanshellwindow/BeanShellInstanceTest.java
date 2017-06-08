@@ -50,19 +50,17 @@ public class BeanShellInstanceTest {
     @Test(expected = EvalError.class)
     public void  ensureBeanShellScriptFailsIfBadCode() throws EvalError, MacroCompilationException, IllegalValueTypeException {
         System.out.println("ensureBeanShellScriptFailsIfBadCode");
-         UIController controller = new UIController(new CleanSheets());
         LinkedList<Instruction> list = new LinkedList<>();
         list.add(new Instruction("print(\"test\")asd;", Instruction.Type.BEANSHELL));
-        BeanShellInstance instance = new BeanShellInstance(list, controller, null);
+        BeanShellInstance instance = new BeanShellInstance(list, null, null);
         instance.executeScript();
     }
 
      public void  ensureBeanShellScriptExecutes() throws EvalError, MacroCompilationException, IllegalValueTypeException {
         System.out.println("ensureBeanShellScriptExecutes");
-         UIController controller = new UIController(new CleanSheets());
          LinkedList<Instruction> list = new LinkedList<>();
          list.add(new Instruction("print(\"test\");", Instruction.Type.BEANSHELL));
-         BeanShellInstance instance = new BeanShellInstance(list, controller, null);
+         BeanShellInstance instance = new BeanShellInstance(list, null, null);
         instance.executeScript();
         //if no exception then its sucessfull
     }

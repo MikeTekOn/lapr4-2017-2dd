@@ -54,7 +54,6 @@ public class BeanShellLoaderTest {
      */
     @Test
     public void ensureBeanShellClassInstanceIsBuiltCorrectly() throws Exception {
-        UIController controller = new UIController(new CleanSheets());
         System.out.println(" ensureBeanShellClassInstanceIsBuiltCorrectly");
         String code = "print(\"test\");\n";
         
@@ -62,8 +61,8 @@ public class BeanShellLoaderTest {
         BeanShellLoader instance = new BeanShellLoader();
         LinkedList<Instruction> list = new LinkedList<>();
         list.add(new Instruction("print(\"test\");", Instruction.Type.BEANSHELL));
-        BeanShellInstance expResult = new BeanShellInstance(list, controller, null);
-        BeanShellInstance result = instance.create(code, controller, null);
+        BeanShellInstance expResult = new BeanShellInstance(list, null, null);
+        BeanShellInstance result = instance.create(code, null, null);
 
         assertEquals(expResult, result);
 
@@ -74,15 +73,14 @@ public class BeanShellLoaderTest {
      */
     @Test(expected = IllegalStateException.class)
     public void ensureBeanShellClassInstanceIsNotBuiltIfNoCode() throws Exception {
-        UIController controller = new UIController(new CleanSheets());
         System.out.println(" ensureBeanShellClassInstanceIsBuiltCorrectly");
         String code = "";
      
         BeanShellLoader instance = new BeanShellLoader();
         LinkedList<Instruction> list = new LinkedList<>();
         list.add(new Instruction("print(\"test\");", Instruction.Type.BEANSHELL));
-        BeanShellInstance expResult = new BeanShellInstance(list, controller, null);
-        BeanShellInstance result = instance.create(code, controller, null);
+        BeanShellInstance expResult = new BeanShellInstance(list, null, null);
+        BeanShellInstance result = instance.create(code, null, null);
         assertEquals(expResult, result);
 
     }
