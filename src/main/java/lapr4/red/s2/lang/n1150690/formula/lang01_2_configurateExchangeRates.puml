@@ -1,0 +1,18 @@
+@startuml core02_01_design3.png
+    actor User
+       
+    participant "ConfigurateExchangeRatesUI" as ui
+    participant "ConfigurateExchangeRatesController" as ctrl
+    participant "util.Files" as file
+
+    activate ui
+    User -> ui : initiates the configuration 
+    create ctrl
+    ui -> ctrl : create()
+    User -> ui : changes the desired exchange rate
+    
+    ui -> ctrl : changeExchangeRate(nameExchangeRate, newValue)
+    
+    ctrl -> file : changeProperty(nameExchangeRate, newValue)
+    
+@enduml

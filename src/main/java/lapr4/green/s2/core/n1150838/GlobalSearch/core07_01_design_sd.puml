@@ -2,47 +2,57 @@
 
     actor User 
     participant "GlobalSearchSideBar" as UI
-    participant "Filter" as ft
+    participant "f : Filter" as ft
     participant "UIController" as UIctrl
-    participant "WorkbookSearchCtrl" as ctrl
-    participant "Workbook" as WBOOK
+    participant "GlobalSearchCtrl" as ctrl
     participant "Spreadsheet" as sheet
     participant "Cell" as cll
     participant "RegexUtilExtended" as util
+    participant "SearchPublisher" <<Singleton>>
     
-    User -> System: Selects the cell types to include in the search
-    User <-- System: Ask for the formulas to include in the search
-    User -> System: Insert the formulas
-    User <-- System: Asks for the regular expression to search
-    User -> System: Inserts the regular expression
-    User <-- System: Displays search results
-
 
     User -> UI : Press filters button
-    UI -> UIctrl : Workbook w : getActiveWorkbooks()
+    UI -> ctrl: List<Value.types> types=getTypes()
     User <-- UI : Show the available cell types
-    create 
+    User -> UI : Selects the cell types to include in the search
+    UI -> ctrl: insertTypes(List<Value.Type> types)
+    loop
+    User <-- UI : Ask for the formula to include in the search
+    User -> UI : Insert the formula
+    UI->ctrl: Formula formula = validateFormula(String formula) 
+    UI -> ctrl: insertFormula(formula)
+    end
+    User <-- UI : Ask if the comments are to be included
+    User -> UI : Activate comments in the search
+    UI->ctrl : activateComments()
+    create ft
+    ctrl-->ft: create(formulas,types,true)
     User -> UI : Inserts regular expression
     UI -> ctrl : checkIfValid(String regex)
-   
+    ctrl -> UIctrl : Stack<Workbook> stackWorkbooks : getActiveWorkbooks()
+    create util 
+    ctrl -> util: create(f,stackWorkbooks)
     ctrl -> util : isRegexValid(regex)
-
-    UI -> ctrl : searchWorkbook(String regex)
-    ctrl -> util : searchInWorkbook(w)
-    activate util    
+    ctrl -> util : setRegex(regex)
+    ctrl -> util : searchInWorkbooks()
+    loop for Workbooks b :  stackWorkbooks
     loop for Spreadsheet s : listSpreadsheets
     loop for Cells c : listCells
     util -> cll : getValue()
+    alt : if comments activated
     util -> util : checkIfMatches(String cellContent)
-   
+    util -> util : checkIfCommentMatches(String commentContent)
+    else : case comments are desactivated
+    util -> util : checkIfMatches(String cellContent)
+    end
     alt : if true
-    util -> util : searchResults.add()
+    util-> SearchPublisher : notifyObservers(TODO)
     end
     end
     end
-    util -> ctrl : return searchResults
-    UI <-- ctrl : return searchResults
-    UI -> UI : showInfo()
+    end
+    UI -> UI : update()
+    UI-->User: Show search results
 
     
 @enduml

@@ -64,20 +64,22 @@ public class ServerMessage implements Runnable {
         while (isRunning) {
             try {
                 synchronized (this) {
+                    if (!ChatPanel.listMessage.contains(address.getHostName())) {
+                        ChatPanel.listMessage.add(address.getHostName());
+                        List<String> list = new ArrayList<>();
+                        list.add(address.getHostName() + ": " + message);
+                        ChatPanel.map.put(address.getHostName(), list);
+                        
+                    } else {
+                        ChatPanel.map.get(address.getHostName()).add(address.getHostName() + ": " + message);
+                       
+                    }
                     wait();
                 }
             } catch (InterruptedException e) {
                 //does nothing
             }
 
-            if (!ChatPanel.listMessage.contains(address.getHostName())) {
-                ChatPanel.listMessage.add(address.getHostName());
-                List<String> list = new ArrayList<>();
-                list.add(address.getHostName() + ": " + message);
-                ChatPanel.map.put(address.getHostName(), list);
-            } else {
-                ChatPanel.map.get(address.getHostName()).add(address.getHostName() + ": " + message);
-            }
         }
     }
 

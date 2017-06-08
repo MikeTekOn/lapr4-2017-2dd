@@ -1,0 +1,21 @@
+@startuml cells_state_diagram.png
+
+'http://plantuml.com/skinparam.html'
+skinparam handwritten true
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+state unlocked {
+}
+state locked {
+}
+state aborted {
+}
+
+[*] -> unlocked
+unlocked -> locked : starts editing the cell
+locked -> unlocked : sends the changes
+locked -> aborted : receives a lock request from the other instance
+aborted -> unlocked : restores value before changes
+
+@enduml
