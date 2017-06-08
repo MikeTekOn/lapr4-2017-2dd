@@ -63,6 +63,16 @@
  * Although it is not stated, it was decided that an option for editing should
  * exist the Macro list window.
  * <h2>4. Design</h2>
+ *
+ * Unit tests: <br/>
+ * testAddMacroTwice: Ensures that it is not possible to add a macro that
+ * already exists on the list. <br/>
+ * testRemoveMacroWithoutExistence: Ensures that it
+ * is not possible to remove a macro that doesn't existe on the list. <br/>
+ * testRemoveMacroThatExists: Ensures that the removal on a macro that exists
+ * can be made. <br/>
+ * testUpdateMacro: Ensures that the macro is updated by testing
+ * the removal of the old one.
  * <p>
  * <h3>4.1. Functional Tests</h3>
  * <p>

@@ -1,5 +1,7 @@
 package lapr4.blue.s1.lang.n1151031.formulastools;
 
+import lapr4.red.s1.core.n1150690.comments.domain.User;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;

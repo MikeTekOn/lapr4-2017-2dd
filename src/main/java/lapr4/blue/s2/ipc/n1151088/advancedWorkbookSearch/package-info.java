@@ -10,7 +10,7 @@
  * <h2>1. Notes</h2>
  *
  * <p>This functional increment is the continuation of the <b>IPC02.1: Workbook Search</b>
- * 2017/06/06 - started analysing the user story
+ * 2017/06/05- started analysing the user story
  * </p>
  * 
  * <h2>2. Requirements</h2>
@@ -28,9 +28,11 @@
  *      <li>The user selects "Advanced Workbook Search" option</li>
  *      <li>The system provides a new sidebar window for searching with a textbox for
  * the user enter a regular expression and a preview area of contents.</li>
- *      <li>The user enters the desired regular expression and launches the search</li>
- *      <li>The system displays the search results and displays the first non-empty
- * cells of the workbook on preview area</li>
+ *      <li>The user enters the path rooth and launches the search</li>
+ *      <li>The system displays the search results</li>
+ *      <li>The user clicks on workbook to preview</li>
+ *      <li>The systyem displays the first non-empty cells of the workbook on 
+ * preview area</li>
  * </ol>
  * 
  * <img src="ipc02_2_ssd.png" alt="image"></img>
@@ -45,22 +47,73 @@
  * </p>
  * 
  * <h3>3. Analysis</h3>
+ * 
+ * <h3>Identified Problems</h3>
  *
+ * <b>Class UIPreviewWorkbookExtension:</b>
  * <p>
  * It´s necessary to create a display area at sidebar window. This display area 
- * will be a preview image of cells (JPanel with some cells). This is will be an 
- * extension (SearchPreviewExtension).
+ * will be a preview image of cells (JPanel containning Spreadsheet impemented 
+ * class). It will be there an  * extension (SearchPreviewExtension). In order 
+ * to don´t block the application the fill preview area actions will be buit-in 
+ * thread.
  * </p>
+ * <b>Class ControllerFindWorkbooks</b>
+ * <p> The controller will be updated with the new preview functionality and
+ * search by pattern. It must be included the buildPreview thread and the stop building
+ * method (p.e. if user clicks on search again, the current preview and search thread
+ * must be stopped.</p>
+ * <b>Class PreviewWorkbookPublisher</b>
  * <p>
- * It will be possible to execute this advanced search by an action that will call
- * the uiController of this use case. The class SearchMenu will be updated with 
- * this new action.
- * </p> 
- * <p>
- * The controller will be update with the preview functionality. To open the preview
- * are it´s necessary to create cell´s to include the expressions included in the
- * original one. 
+ * This class will notify observers about preview action starting. 
  * </p>
+ * <b>Class PreviewWorkbookBuilder</b>
+ * <p>
+ * * This class will be responsible to build and display the first non-empty cells. 
+ * </p>
+ * <b>Classes Directory and SearchFile</b>
+ * <p>
+ * The search is now based in a patter instead of file name extension. This class will
+ * implement the RegexFileFilter and Pattern java class. The java.nio.file package
+ * provides the feature to list files within condition expressions. (p.e.: "%ls *.html"
+ * lists all the files in the current directory that end in .html. Each file system 
+ * implementation provides a PathMatcher (getPathMatcher(String) in FileSystem class.
+ * We also can use regular expressions (regex) syntax.
+ * </p>
+ * 
+ * <b>FindWorkbooksSideBar</b>
+ * <p>In the UI must be included a preview area content with "mini" workbook and the
+ * mouse clicked event will be updated to this new functionality.
+ * 
+ * <h2>4. Design</h2>
+ * 
+ * <h3>4.1. Tests </h3>
+ * <p>Domain Test</p>
+ * <ol>
+ *    <li>ensureIsRegexValid</li>
+ *    <li>testCheckIfMatches</li>
+ *    <li>ensurePathIsValidPattern</li>
+ *    <li>ensureFindFirstFilledCells</li>
+ *    <li>ensurePreviewWithFirstFilledCells</li>
+ *    <li>ensureSearchByPattern</li>
+ *    <li>testSearchWorkbookByPartialName</li>
+ * </ol>
+ * <p>Functional Tests</p>
+ * <ol>
+ *  <li>A new area will be displayed to show a preview of workbook</li>
+ *  <li>Fill preview area after click on workbook with the first filled cells of 
+ * workbook clicked</li>
+ *  <li>Worksheet isn´t open in the user interface</li>
+ * </ol>
+ * 
+ * <h3>4.2. UC Realization</h3>
+ * 
+ * <img src="ipc02_2_sd.png" alt="image">
+ *
+ * <h3>4.3. Classes</h3>
+ *
+ * <img src="ipc02_2_cd.png" alt="image">
+ * 
  * 
  * <h2>8. Work Log</h2> 
  *
@@ -81,6 +134,12 @@
  * <ol>
  *     <li>Update analysis</li>
  *      <li>Start funcional/domain tests</li>
+ * </ol>
+ * 
+ *  <b>Thursday</b>
+ * <ol>
+ *     <li>Design</li>
+ *      <li>Start tests implementation</li>
  * </ol>
  * 
  * @author Diana Silva - 1151088@isep.ipp.pt - 2DD - 2016/17
