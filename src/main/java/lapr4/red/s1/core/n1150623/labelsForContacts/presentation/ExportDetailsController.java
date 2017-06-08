@@ -2,6 +2,7 @@ package lapr4.red.s1.core.n1150623.labelsForContacts.presentation;
 
 import com.itextpdf.text.pdf.PdfName;
 import lapr4.red.s1.core.n1150623.labelsForContacts.application.LabelsForContactsController;
+import ui.DatePicker;
 
 import javax.swing.*;
 import java.util.Calendar;
@@ -57,8 +58,17 @@ public class ExportDetailsController {
     }
     
     public void runDateChooser(){
+
+        JFrame j = new JFrame();
+        JPanel p = new JPanel();
+        j.add(p);
+        Calendar pickedDueDate = new DatePicker(p).getPickedDate();;
+        this.date = pickedDueDate;
+        runPathChooser();
+        /*
         ChooseEndDateEventsUI a = new ChooseEndDateEventsUI(this);
         a.setVisible(true);
+        */
     }
 
     public void  finish(){
@@ -73,7 +83,7 @@ public class ExportDetailsController {
         if (!controller.doExport()) {
             export = "Failed";
         }
-        JOptionPane.showConfirmDialog(null, "Exportation: " + export, "Information", JOptionPane.OK_OPTION, JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, "Exportation: " + export, "Information", JOptionPane.INFORMATION_MESSAGE);
         ui.dispose();
     }
 }

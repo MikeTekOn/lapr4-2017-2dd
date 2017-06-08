@@ -99,6 +99,7 @@ public class ContactPanel extends JPanel implements ActionListener {
      */
     private void setupContactsWidgets() {
 
+
         labelContacts = new JLabel("Filtro: ");
 
         // First Pane: The "filter", FlowLayout (from left to right)

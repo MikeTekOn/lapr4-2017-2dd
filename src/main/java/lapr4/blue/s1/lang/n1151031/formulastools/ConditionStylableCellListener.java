@@ -6,7 +6,7 @@ package lapr4.blue.s1.lang.n1151031.formulastools;
 public interface ConditionStylableCellListener {
 
     /**
-     * Invoked when a comment is added to or removed from a cell.
+     * Invoked when a condition is added or removed from a cell.
      *
      * @param cell the cell that was modified
      */

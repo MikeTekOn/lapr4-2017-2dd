@@ -1,0 +1,13 @@
+@startuml ipc02_2_ssd.png
+
+
+actor User
+participant "System" as S
+User -> S : Selects "Workbook Search" option
+S --> User : Provides a sidebar window for searching and a new empty preview area.
+S --> User : Asks to insert a root path.
+User --> S : Enters the path and launches the search
+S --> User : Displays the search results
+User --> S : Clicks on workbook to preview
+S --> User : Display preview area filled with first non-empty cells
+@enduml
