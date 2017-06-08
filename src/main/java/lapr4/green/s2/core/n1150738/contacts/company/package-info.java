@@ -25,14 +25,21 @@
  * external XML file or an existing configuration file of Cleansheets.
  * <p>
  * <i>Company Contact Window:</i>
- *     <ul>
- *         <li>Contact Info</li>
- *         <li>Person contacts related to</li>
- *         <li>Agenda (Company events are the aggregate of all it's related person contacts events</li>
- *     </ul>
+ * <ul>
+ *     <li>Contact Info</li>
+ *     <li>Person contacts related to</li>
+ *     <li>Agenda (Company events are the aggregate of all it's related person contacts events</li>
+ * </ul>
  *
  *
  * <i>Concept Classes:</i> CompanyContact, PersonContact, Agenda, Event, Profession<p>
+ *     <i>Refactoring:</i>
+ * <ul>
+ *     <li>Contact interface</li>
+ *     <li>Contact to PersonalContact</li>
+ *     <li>Add Profession and Company to PersonalContact (optional atributes?)</li>
+ *
+ * </ul>
  *
  *
  * <b>Tests</b><p>
@@ -43,8 +50,10 @@
  * </ul>
  *
  * <b>Design</b><p>
+ * <img src="us10.1.2_comp_contacts_window.png" alt="image">
+ *
  * <p>
  * @author Henrique Oliveira [1150738@isep.ipp.pt]
  */
-package lapr4.green.s2.core.n1150738.contact.company;
+package lapr4.green.s2.core.n1150738.contacts.company;
 
