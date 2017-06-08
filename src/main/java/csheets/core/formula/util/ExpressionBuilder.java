@@ -24,7 +24,7 @@ import csheets.core.formula.*;
 import csheets.core.formula.compiler.IllegalFunctionCallException;
 import csheets.core.formula.lang.CellReference;
 import csheets.core.formula.lang.ReferenceOperation;
-import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVariable;
+import lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable;
 import lapr4.blue.s1.lang.n1151159.macros.Macro;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperation;
 
@@ -35,7 +35,7 @@ import lapr4.gray.s1.lang.n3456789.formula.NaryOperation;
  */
 public class ExpressionBuilder implements ExpressionVisitor {
 
-       // private Set<TemporaryVariable> temp_contentor;
+       // private Set<Variable> temp_contentor;
 
 	/**
 	 * Creates a new expression builder.
@@ -123,10 +123,10 @@ public class ExpressionBuilder implements ExpressionVisitor {
         }
 
     @Override
-    public Object visitTemporaryVariable(TemporaryVariable tempVar) {
+    public Object visitTemporaryVariable(Variable tempVar) {
     
         Expression expression = (Expression) tempVar.getExpression().accept(this);    
-        return new TemporaryVariable(tempVar.getName(), expression);
+        return new Variable(tempVar.getName(), expression);
     }
 
      

@@ -14,10 +14,10 @@
  * <h2>2. Requirement</h2>
  * <p>
  * Add support for temporary variables. The name of temporary variables must start with the '_' sign.
- * When a variable is referred in a formula for the first time it is created. 
- * To set the value of a variable it must be used on the left of the assign operator (':='). 
+ * When a variable is referred in a formula for the first time it is created.
+ * To set the value of a variable it must be used on the left of the assign operator (':=').
  * Temporary variables are variables that only exist in the context of the execution of a formula.
- * Therefore, it is possible for several formulas to use temporary variables with the same name and they will be different instances. 
+ * Therefore, it is possible for several formulas to use temporary variables with the same name and they will be different instances.
  * <p>
  *
  *
@@ -112,7 +112,7 @@
  *
  * <h2>5. Implementation</h2>
  * <p>
- * The class TemporaryVariable (@link lapr4.blue.s1.lang.1151088.temporaryVariables) was created to handle the temporary variables 
+ * The class Variable (@link lapr4.blue.s1.lang.1151088.temporaryVariables) was created to handle the temporary variables
  * domain rules. The TemporaryVariableContentor allows to manage the temporary variables in formula (by updating temporary
  * variable if it was already used or adding if not).
  * 

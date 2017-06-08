@@ -1,9 +1,7 @@
 package lapr4.red.s1.core.n1150623.labelsForContacts.presentation;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,7 +9,6 @@ import javax.swing.*;
 
 import lapr4.red.s1.core.n1150623.labelsForContacts.application.LabelsForContactsController;
 import lapr4.white.s1.core.n4567890.contacts.domain.Contact;
-import sun.awt.dnd.SunDragSourceContextPeer;
 
 /**
  *

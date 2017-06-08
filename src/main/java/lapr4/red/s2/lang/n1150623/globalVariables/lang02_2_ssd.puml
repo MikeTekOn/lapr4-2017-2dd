@@ -1,0 +1,8 @@
+@startuml lang02.2_ssd.png
+
+title \n\tLang02.2 - Global Variables - Short Sequence Diagram\n
+actor User
+participant "System" as S
+User -> S : Introduces a formula containing global variable(s)
+S --> User : Saves variable and displays the formula result
+@enduml
