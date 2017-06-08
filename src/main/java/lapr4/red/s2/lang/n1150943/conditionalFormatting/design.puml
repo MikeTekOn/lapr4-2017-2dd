@@ -51,7 +51,6 @@
              ctrl -> csc : setCondition(null)
              ctrl -> csc : resetStyle()
         else else
-            ctrl -> ctrl : String verifiedCondition = <b>verifyCondition(conditionString,cell.getAddress().toString())</b> - <b><u>REFERENCE 1</u></b>
             ctrl -> csc : setUserCondition(verifiedCondition)
         end
     end
