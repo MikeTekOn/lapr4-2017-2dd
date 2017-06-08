@@ -1,0 +1,27 @@
+@startuml transmission_strategy.png
+
+interface TransmissionStrategy {
+
+    + getInputStream(InputStream in) : InputStream
+    + getOutputStream(OutputStream out) : OutputStream
+    + isSecure()
+}
+
+class SecuredTransmission {
+
+    + getInputStream(InputStream in) : CipherInputStream
+    + getOutputStream(OutputStream out) : CipherOutputStream
+    + isSecure()
+}
+
+class UnsecuredTransmission {
+
+    + getInputStream(InputStream in) : ObjectInputStream
+    + getOutputStream(OutputStream out) : ObjectOutputStream
+    + isSecure()
+}
+
+TransmissionStrategy <|-- SecuredTransmission
+TransmissionStrategy <|-- UnsecuredTransmission
+
+@enduml
