@@ -10,6 +10,8 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.*;
 import java.util.Set;
+
+import csheets.ui.ctrl.UIController;
 import lapr4.blue.s1.lang.n1151159.macros.Macro;
 
 /**
@@ -19,9 +21,11 @@ import lapr4.blue.s1.lang.n1151159.macros.Macro;
 public class MacroList implements Serializable{
 
     List<MacroWithName> macroList;
+    private UIController uiController;
 
-    public MacroList() {
+    public MacroList(UIController uiController) {
         macroList = new ArrayList<MacroWithName>();
+        this.uiController = uiController;
     }
 
     public List<MacroWithName> getMacroList() {
@@ -29,7 +33,7 @@ public class MacroList implements Serializable{
     }
 
     public boolean addMacro(String name, String code, Spreadsheet s){
-        return addMacro(new MacroWithName(name, code, s));
+        return addMacro(new MacroWithName(name, code, s, uiController));
     }
     
     public boolean addMacro(MacroWithName m) {

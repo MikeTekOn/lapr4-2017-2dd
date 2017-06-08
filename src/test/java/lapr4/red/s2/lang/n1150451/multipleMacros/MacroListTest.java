@@ -48,8 +48,8 @@ public class MacroListTest {
     @Test
     public void testAddMacroTwice() {
         System.out.println("addMacro");
-        MacroWithName m = new MacroWithName("macro", "macro", new Workbook(1).getSpreadsheet(0));
-        MacroList instance = new MacroList();
+        MacroWithName m = new MacroWithName("macro", "macro", new Workbook(1).getSpreadsheet(0), null);
+        MacroList instance = new MacroList(null);
         instance.addMacro(m);
         boolean res = instance.addMacro(m);
         assertEquals(res, false);
@@ -61,7 +61,7 @@ public class MacroListTest {
     @Test
     public void testRemoveMacroWithoutExistence() {
         System.out.println("removeMacro");
-        MacroList instance = new MacroList();
+        MacroList instance = new MacroList(null);
         assertEquals(instance.removeMacro("macroName"), false);
     }
 
@@ -71,8 +71,8 @@ public class MacroListTest {
     @Test
     public void testRemoveMacroThatExists() {
         System.out.println("removeMacro");
-        MacroWithName m = new MacroWithName("macro", "macro", new Workbook(1).getSpreadsheet(0));
-        MacroList instance = new MacroList();
+        MacroWithName m = new MacroWithName("macro", "macro", new Workbook(1).getSpreadsheet(0), null);
+        MacroList instance = new MacroList(null);
         instance.addMacro(m);
         instance.removeMacro("macro");
     }
@@ -83,9 +83,9 @@ public class MacroListTest {
     @Test
     public void testUpdateMacro() {
         System.out.println("updateMacro");
-        MacroWithName m1 = new MacroWithName("macro", "macro", new Workbook(1).getSpreadsheet(0));
-        MacroWithName m2 = new MacroWithName("macro2", "macro", new Workbook(1).getSpreadsheet(0));
-        MacroList instance = new MacroList();
+        MacroWithName m1 = new MacroWithName("macro", "macro", new Workbook(1).getSpreadsheet(0), null);
+        MacroWithName m2 = new MacroWithName("macro2", "macro", new Workbook(1).getSpreadsheet(0), null);
+        MacroList instance = new MacroList(null);
         instance.addMacro(m1);
         instance.updateMacro("macro", "macro2", "macro", new Workbook(1).getSpreadsheet(0));
         instance.removeMacro("macro");

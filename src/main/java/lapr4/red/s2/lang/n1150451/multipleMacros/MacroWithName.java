@@ -14,6 +14,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import csheets.ui.ctrl.UIController;
 import lapr4.blue.s1.lang.n1151159.macros.Macro;
 import lapr4.blue.s1.lang.n1151159.macros.MacroController;
 import lapr4.blue.s1.lang.n1151159.macros.compiler.MacroCompilationException;
@@ -27,8 +29,9 @@ public class MacroWithName implements Expression, Serializable {
     private String name;
     private String macroCode;
     private Spreadsheet s;
+    private UIController uiController;
 
-    public MacroWithName(String name, String macroCode, Spreadsheet s) {
+    public MacroWithName(String name, String macroCode, Spreadsheet s, UIController uiController) {
         if (name.trim().isEmpty()) {
             throw new IllegalArgumentException("Name can't be empty");
         }
@@ -38,6 +41,7 @@ public class MacroWithName implements Expression, Serializable {
         }
         this.name = name;
         this.s=s;
+        this.uiController = uiController;
     }
 
     public String getName() {
@@ -52,7 +56,7 @@ public class MacroWithName implements Expression, Serializable {
     public Value evaluate() throws IllegalValueTypeException {
         MacroController c = new MacroController();
         try {
-            return c.executeMacro(s, macroCode);
+            return c.executeMacro(s, uiController, macroCode);
         } catch (MacroCompilationException ex) {
             Logger.getLogger(MacroWithName.class.getName()).log(Level.SEVERE, null, ex);
         }

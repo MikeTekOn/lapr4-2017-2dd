@@ -30,7 +30,7 @@ concatenation
         ;
 
 script
-    : ( SPECIAL_CHAR | 'macro_start' | 'macro_end' | (( '<![SHELL[' | '<[SHELL[' ) script ']]>') | ~(']]>'))*
+    : ( SPECIAL_CHAR | 'macro_start' | 'macro_end' | (( '<![SHELL[' | '<[SHELL[' ) script ']]>') | ~( '<![SHELL[' | '<[SHELL['  | ']]>'))*
     ;
 
 shellscript

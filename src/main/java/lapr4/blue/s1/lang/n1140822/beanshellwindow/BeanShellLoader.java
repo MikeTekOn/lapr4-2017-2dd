@@ -48,14 +48,20 @@ public class BeanShellLoader {
             String codeLine = scan.nextLine().trim();
             if (codeLine.equals("macro_start")) {
                 if(macroBlock == 0){
-                    macroBlock++;
                     builder = new StringBuilder();
+                }else{
+                    builder.append(codeLine);
+                    builder.append('\n');
                 }
+                macroBlock++;
             }else if (codeLine.equals("macro_end")) {
                 if(macroBlock != 0){
                     macroBlock--;
                     if(macroBlock == 0){
                         code.add(new Instruction(builder.toString(), Instruction.Type.MACRO));
+                    }else{
+                        builder.append(codeLine);
+                        builder.append('\n');
                     }
                 }
             } else {
