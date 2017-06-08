@@ -1,0 +1,22 @@
+@startuml
+actor User
+User -> AddMacroUI : Initiates Functionality
+create AddMacroController
+AddMacroUI->AddMacroController : create
+AddMacroController -> MacroList : getMacroList()
+User -> AddMacroUI : Selects Macro
+AddMacroUI->AddMacroController : selectedMacro
+group opt
+User -> AddMacroUI : Edit name
+AddMacroUI->AddMacroController : changeName
+AddMacroController->Macro : changeName
+end
+group opt
+User -> AddMacroUI : Edit Macro code
+AddMacroUI->AddMacroController : changeMacroCode
+AddMacroController->Macro : changeMacroCode
+end
+AddMacroController->Macro : compileMacro
+AddMacroController->MacroList : updateMacro(m)
+
+@enduml

@@ -1,0 +1,6 @@
+@startuml
+actor User
+User -> UI: Starts the text link
+UI --> User: Asks firstly, to import or export data
+User <-- UI: Informs about the sucess of the operation
+@enduml

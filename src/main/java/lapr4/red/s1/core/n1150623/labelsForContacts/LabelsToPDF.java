@@ -7,8 +7,10 @@ import com.itextpdf.text.pdf.PdfWriter;
 import lapr4.red.s1.core.n1150623.labelsForContacts.domain.Label;
 import lapr4.white.s1.core.n4567890.contacts.domain.Event;
 import org.bouncycastle.util.test.Test;
+import ui.ImageUtils;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -76,14 +78,6 @@ public class LabelsToPDF implements GenericExport<LabelList>{
         this.list = list;
         boolean valid = true;
 
-        System.out.println("+---------+" +"Path: " + list.path + "+-----------+");
-        List<Label> l = list.labels();
-
-        for(Label lab : l){
-            System.out.println(l.toString());
-        }
-
-
 
         labels = list.labels();
         Document doc = null;
@@ -97,17 +91,20 @@ public class LabelsToPDF implements GenericExport<LabelList>{
         for (Label label : list.labels()) {
             Paragraph p1 = new Paragraph("\n\n\t\tLabel" + contLabels + ":\n", fontSpecial);
 
-
+            System.out.println("photo URL -> " + label.photo());
             //ADDS IMAGE
             try {
-                Image image2 = Image.getInstance(new URL(label.photo()));
-                doc.add(image2);
+
+                Image i = Image.getInstance(new File(label.photo()).toURI().toURL());
+                doc.add(i);
                 doc.add(p1);
             } catch (Exception e){
                 try {
-                    Image image2 = Image.getInstance("default_img.png");
+                    Image image2 = Image.getInstance("default_img.jpg");
+                    doc.add(image2);
+                    doc.add(p1);
                 } catch (Exception ex){
-                    System.out.println("ERRO LOADING IMG");
+                    System.out.println("ERROR LOADING IMG");
                 }
             }
 
@@ -139,11 +136,15 @@ public class LabelsToPDF implements GenericExport<LabelList>{
 
             PdfPTable events = new PdfPTable(2);
             String [][]eventInfo = generateEventTableInformation(label);
+
+            printMatrix(eventInfo);
+
             if(eventInfo!=null) {
                 events.setWidthPercentage(50);
 
                 for (int i = 0; i < eventInfo.length; i++) {
                     for (int j = 0; j < eventInfo[0].length; j++) {
+                        System.out.println("info: " + eventInfo[i][j]);
                         if (i == 0) {
                             events.addCell(new PdfPCell(new Phrase(eventInfo[i][j], fontSpecial)));
                         } else {
@@ -157,7 +158,6 @@ public class LabelsToPDF implements GenericExport<LabelList>{
                     doc.add(p2);
                     doc.add(events);
                     doc.newPage();
-                    doc.setMargins(30, 30, 20, 20);
                 } catch (DocumentException e) {
                     e.printStackTrace();
                     valid = false;
@@ -168,6 +168,15 @@ public class LabelsToPDF implements GenericExport<LabelList>{
         }
         doc.close();
         return valid;
+    }
+
+    private void printMatrix(String[][] eventInfo) {
+        for(int i = 0; i< eventInfo.length;i++){
+            for(int j = 0; j < eventInfo[0].length; j++){
+                System.out.print(eventInfo[i][0] + " | " + eventInfo[i][1]);
+                System.out.print("\n");
+            }
+        }
     }
 
     private String[][] generateEventTableInformation(Label label) {
@@ -187,7 +196,10 @@ public class LabelsToPDF implements GenericExport<LabelList>{
 
             return info;
         }
-        return null;
+        String[][] info = new String[1][2];
+        info[0][0] = "Date";
+        info[0][1] = "Description";
+        return info;
     }
 
     String path;

@@ -12,12 +12,15 @@ import javax.swing.*;
  * abstract class.
  *
  * @author Tiago Correia - 1151031@isep.ipp.pt
+ * Edited by João Cardoso - 1150943
+ *  - Corrected Javadocs
+ *
  * @see UIExtension
  */
 public class ConditionalStyleUIExtension extends UIExtension {
 
     /**
-     * A side bar that provides editing of comments
+     * A side bar that provides editing of conditional formatting
      */
     private JComponent sideBar;
 
@@ -35,7 +38,7 @@ public class ConditionalStyleUIExtension extends UIExtension {
     }
 
     /**
-     * Returns a side bar that provides editing of comments.
+     * Returns a side bar that provides editing of conditional formatting.
      *
      * @return a side bar
      */

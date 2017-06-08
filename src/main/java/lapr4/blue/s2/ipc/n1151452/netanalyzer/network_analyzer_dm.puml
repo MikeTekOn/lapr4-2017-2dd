@@ -1,0 +1,142 @@
+@startuml network_analyzer_dm.png
+
+Enum TrafficType {
+
+    ~ incoming
+    ~ outgoing
+}
+
+class TrafficEvent <<Value Object>> extends Observable {
+
+    - type : TrafficType
+    - secured : Boolean
+    - address : InetAddress
+    - port : int
+    - byteCount : Long
+    /' **** Behaviour **** '/
+    + isSecured()
+    + isType(type : TrafficType)
+    + address()
+    + port()
+    + byteCount()
+}
+
+TrafficEvent *-> TrafficType
+
+interface Observer {
+    +**update**
+}
+
+note left of TrafficWatchDog: concurrent\naccess
+abstract TrafficWatchDog implements Observer {
+
+    - on : Boolean
+    /' **** Behaviour **** '/
+    + getInstance()
+    + isOn()
+    + start()
+    + stop()
+}
+
+class TrafficCount <<Value Object>> {
+
+    - securedIncoming : Long
+    - unsecuredIncoming : Long
+    - securedOutgoing : Long
+    - unsecuredOutgoing : Long
+}
+
+interface TrafficCounterListener <implements EventListener> {
+
+    + newTrafficCount(count : TrafficCount)
+}
+
+class TrafficCounter <<Singleton>> extends TrafficWatchDog {
+
+    - securedIncoming : Long
+    - unsecuredIncoming : Long
+    - securedOutgoing : Long
+    - unsecuredOutgoing : Long
+
+    /' Behaviour '/
+    + incrementSecIn(count)
+    + incrementUnsecIn(count)
+    + incrementSecOut(count)
+    + incrementUnsecOut(count)
+    - synchronized **flush()**
+}
+note right of TrafficCounter
+sync with increments
+(higher priority)
+end note
+
+TrafficCounter --> TrafficCounterListener  : flush()
+(TrafficCounter, TrafficCounterListener) . TrafficCount
+note on link: sync with increments\n(higher priority)
+
+interface TrafficLogListener <implements EventListener> {
+
+    + newTrafficEvent(event : TrafficEvent)
+}
+
+class TrafficLogger <<Singleton>> extends TrafficWatchDog {
+
+    - logQueue : ConcurrentLinkedQueue<TrafficEvent>
+    /' *** Behaviour *** '/
+    - insertLog(event)
+    /' *** Doesn't store (in memory) logs *** '/
+    - **consumeLog()**
+    + addTrafficLogListener(listener)
+    + removeTrafficLogListener(listener)
+}
+note left of TrafficLogger
+sync (ex. Producer/Consumer)
+end note
+
+TrafficLogger --> TrafficLogListener  : consumeLog()
+(TrafficLogger, TrafficLogListener) . TrafficEvent
+note on link: sync with increments\n(higher priority)
+
+
+abstract Observable {
+    + addObserver(observer)
+    + deleteObserver(observer)
+    + notifyObservers(Object)
+}
+
+class PublishTrafficEvent implements runnable {
+    - event : TrafficEvent
+    + run()
+}
+
+class TrafficOutputStream {
+
+    - transmission : TransmissionStrategy
+    - stream : ObjectInputStream
+
+    /' Behaviour '/
+    + write(Object)
+}
+
+class TrafficInputStream {
+
+    - transmission : TransmissionStrategy
+    - stream : ObjectInputStream
+
+    /' Behaviour '/
+    + read() : Object
+
+}
+
+note right of PublishTrafficEvent
+notifies & sends
+Traffic Events to
+Traffic Watch Dogs
+end note
+
+TrafficOutputStream +-- PublishTrafficEvent
+TrafficInputStream +-- PublishTrafficEvent
+
+PublishTrafficEvent *-- TrafficEvent
+
+@enduml

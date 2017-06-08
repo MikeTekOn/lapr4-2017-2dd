@@ -1,0 +1,58 @@
+@startuml
+
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor "User"
+participant "SortCellRangeAction"
+participant "SpreadsheetTable"
+participant "SortCellRangeUI"
+participant "SortCellRangeController"
+participant "RangeRowDTO"
+participant "ComparatorService"
+participant "SortingComparator" << interface >>
+participant "AlgorithmService"
+participant "SortingAlgorithm" << interface >>
+
+User -> SortCellRangeAction : choose action
+SortCellRangeAction -> SpreadsheetTable : selectedCells = getSelectedCells()
+create SortCellRangeUI
+SortCellRangeAction -> SortCellRangeUI : new( selectedCells )
+create SortCellRangeController
+SortCellRangeUI -> SortCellRangeController : new()
+create ComparatorService
+SortCellRangeController -> ComparatorService : new
+create AlgorithmService
+SortCellRangeController -> AlgorithmService : new
+SortCellRangeUI -> SortCellRangeController : getComparators()
+SortCellRangeController -> ComparatorService : getSortingComparators()
+loop
+create SortingComparator
+ComparatorService -> SortingComparator : comp = new()
+ComparatorService -> ComparatorService : add( comp )
+end loop
+SortCellRangeUI -> SortCellRangeController : getAlgorithms()
+SortCellRangeController -> AlgorithmService : getSortingAlgorithms()
+loop
+create SortingAlgorithm
+AlgorithmService -> SortingAlgorithm : algorithm = new
+AlgorithmService -> AlgorithmService : add( algorithm )
+end loop
+SortCellRangeUI -> SortCellRangeUI : render()
+SortCellRangeUI -> User : show options
+User -> SortCellRangeUI : set options
+SortCellRangeUI -> SortCellRangeController : sort( selectedCells , sortingColumn , algorithm , comparator , isDescending )
+loop
+create RangeRowDTO
+SortCellRangeController -> RangeRowDTO : rrDTO = new( row , sortingColumn )
+SortCellRangeController -> SortCellRangeController : rangeRowsArray[ i ] = rrDTO;
+end loop
+SortCellRangeController -> SortingComparator : setDescending( isDescending )
+SortCellRangeController -> SortingAlgorithm : sort( rangeRowsArray , comparator )
+SortingAlgorithm -> SortingComparator : compare( rangeRowsArray[i] , rangeRowsArray[j] )
+SortingAlgorithm -> SortingComparator : swap( rangeRowsArray[i] , rangeRowsArray[j] )
+
+@enduml

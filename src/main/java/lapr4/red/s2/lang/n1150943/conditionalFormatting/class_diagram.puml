@@ -1,0 +1,28 @@
+@startuml class_diag.png
+
+class UserStyle
+abstract class Cell
+class ConditionStylableCell
+class SpreadsheetTable
+class ConditionalStylePanel
+class ConditionalStyleController
+
+ConditionalStyleController <- ConditionalStylePanel
+
+Cell <- ConditionalStyleController
+
+UserStyle "1" --* "1" ConditionStylableCell
+
+Cell --* SpreadsheetTable
+
+ConditionStylableCell <|-- Cell
+
+ConditionStylableCell "*" <-- "1" ConditionStylableCell : contains dependents
+
+class ConditionStylableCell{
+    condition
+    userstyle
+    dependents
+}
+
+@enduml

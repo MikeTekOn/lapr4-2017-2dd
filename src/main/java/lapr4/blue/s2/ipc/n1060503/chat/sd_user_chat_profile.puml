@@ -1,0 +1,45 @@
+@startuml sd_user_chat_profile.png
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor UserChat 
+participant "ChangeUserChatProfileUI" as UI
+participant "ChangeUserChatProfileController" as CRTL
+participant "UserChatRepository" as REPO
+
+participant "ucp : UserChatProfile" as UCP
+UserChat -> UI : select change profile configuration
+activate UI
+create CRTL
+UI --> CRTL : create
+activate CRTL
+CRTL -> REPO : ucp = getUserChatProfile()
+activate REPO
+create UCP
+REPO -> UCP: create
+REPO --> CRTL :
+deactivate REPO
+CRTL --> UI :
+deactivate CRTL
+UI --> UserChat : show user chat info
+UserChat -> UI : change info
+UI -> CRTL : changeInfo(nickname, image, etc..)
+activate CRTL
+CRTL -> UCP : boolean : changeInfo(nickname, image, etc..)
+activate UCP
+UCP --> CRTL
+deactivate UCP
+CRTL -> REPO : update(ucp)
+activate REPO
+REPO -> REPO : save(ucp)
+REPO --> CRTL :
+deactivate REPO
+CRTL --> UI
+deactivate CRTL
+UI --> UserChat : confirm submission and reports operation success
+deactivate UI
+
+@enduml
