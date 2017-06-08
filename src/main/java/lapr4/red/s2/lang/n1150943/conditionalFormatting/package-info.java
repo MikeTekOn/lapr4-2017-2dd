@@ -59,7 +59,7 @@
  * <b>UC3.2</b>
  *
  * Alternative and Exception Scenarios<br>
- * Exception 1: -
+ * Exception 1: - The user selects an invalid
  *
  * <p>
  *
@@ -89,18 +89,13 @@
  * <img src="ssd.png" alt="image">
  * <p>
  *
- * <h3></h3>
+ * <h3>Detailed Sequence Diagram</h3>
  * <p>
- * <img src="" alt="image">
+ * <img src="design.png" alt="image">
  * <p>
- *
- * <h3></h3>
+ * <h4>Reference 1</h4>
  * <p>
- * <img src="" alt="image">
- * <p>
- * <h4></h4>
- * <p>
- * <img src="" alt="image">
+ * <img src="ref1.png" alt="image">
  * <p>
  * <b>Class Diagram</b>
  * <p>
@@ -123,6 +118,7 @@
  * <p>
  * 1. -nothing-
  * <p>
+ *
  * <b>Day 2 - 07/06/2017</b>
  * <p>
  * Yesterday I worked on:
@@ -137,6 +133,23 @@
  * <p>
  * 1. -nothing-
  * <h2>6. Self Assessment</h2>
+ * <p>
+ *
+ * <b>Day 3 - 08/06/2017</b>
+ * <p>
+ * Yesterday I worked on:
+ * <p>
+ * 1. Use case analysis, design and implementation
+ * <p>
+ * Today
+ * <p>
+ * 1. Complete design and check if there are any necessary unit tests to implement
+ * <p>
+ * Blocking:
+ * <p>
+ * 1. -nothing-
+ * <h2>6. Self Assessment</h2>
+ *
  *
  /**
  * Created by Joao Cardoso - 1150943 on 06-06-2017.
