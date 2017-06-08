@@ -121,15 +121,70 @@
  * <p>
  * <h2>4. Tests</h2>
  * <p>
- *
  * <p>
  * <h3>4.1. Unit Tests</h3>
  * <p><ol>
- * <li>
+ * <li>TrafficEvent
+  * <ul>
+  *  <li>ensureAddressIsNotNull</li>
+  *  <li>ensurePortIsNotNull</li>
+  *  <li>ensureByteCountIsNotNull</li>
+  *  <li>ensureByteCountIsNotNegative</li>
+  * </ul>
+ * </li>
+ * <li>TrafficCount
+  * <ul>
+  *  <li>ensureSecuredIncomingCountIsNotNull</li>
+  *  <li>ensureSecuredIncomingCountIsNotNegative</li>
+  *  <li>ensureUnsecuredIncomingCountIsNotNull</li>
+  *  <li>ensureUnsecuredIncomingCountIsNotNegative</li>
+  *  <li>ensureSecuredOutgoingCountIsNotNull</li>
+  *  <li>ensureSecuredOutgoingCountIsNotNegative</li>
+  *  <li>ensureUnsecuredOutgoingCountIsNotNull</li>
+  *  <li>ensureUnsecuredOutgoingCountIsNotNegative</li>
+  * </ul>
+  * </li>
+ * <li>TrafficLogger
+  * <ul>
+  *  <li>ensureAllEventsAreConsumed</li>
+  *  <li>ensureLoggerStoresAPublishedEvent</li>
+  * </ul>
+ * </li>
+ * <li>TrafficCounter
+  * <ul>
+  *  <li>ensureOnlySecuredIncomingCounterIsIncremented</li>
+  *  <li>ensureOnlyUnsecuredIncomingCounterIsIncremented</li>
+  *  <li>ensureOnlySecuredOutgoingCountIsIncremented</li>
+  *  <li>ensureOnlyUnsecuredOutgoingCounterIsIncremented</li>
+  *  <li>ensureAfterFlushThatCountersAreResetToZero</li>
+  * </ul>
+ * </li>
+ * <li>PublishTrafficEvent
+  * <ul>
+  *  <li>ensureEventIsPublished</li>
+  * </ul>
+ * </li>
+ * <li>TrafficInputStream
+  * <ul>
+  *  <li>ensureAfterReadingThatAnEventIsPublished</li>
+  * </ul>
+ * </li>
+ * <li>TrafficOutputStream
+  * <ul>
+  *  <li>ensureAfterWritingThatAnEventIsPublished</li>
+  * </ul>
+ * </li>
  * </ol><p>
- * <h3>4.2. Functional Tests</h3>
- * <p>
- *
+ * <h3>4.2. Acceptance Tests</h3>
+  * <p><ol>
+  * <li>EnsureTrafficIsPlottedInGraph
+  * <ol>
+  *  <li>Simulate a traffic event by reading an object through a TrafficInputStream</li>
+  *  <li>Simulate a traffic event by writing an object through a TrafficOutputStream</li>
+  *  <li>Verify if graph has plotted any event.</li>
+  *  <li>Verify log ui.</li>
+  * </ol>
+  * </li>
  * <p>
  * <p>
  * <h2>5. Design</h2>
