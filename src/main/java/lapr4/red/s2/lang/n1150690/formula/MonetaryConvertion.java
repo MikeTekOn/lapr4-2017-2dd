@@ -27,9 +27,19 @@ public class MonetaryConvertion {
      * @param exchangeFactor the factor to multiplicate the value
      * @return the new monetary value
      */
-    public BigDecimal convertTo(double valueToConvert, BigDecimal exchangeFactor) {
+    public BigDecimal convertTo(String valueToConvert, BigDecimal exchangeFactor) {
         BigDecimal value = new BigDecimal(valueToConvert);
         return value.multiply(exchangeFactor);
+    }
+    
+    /**
+     * 
+     * @param exchangeValue
+     * @return 
+     */
+    public BigDecimal dependentExchangeRate(BigDecimal exchangeValue){
+        BigDecimal one = new BigDecimal(1);
+        return one.divide(exchangeValue);
     }
 
 }
