@@ -51,7 +51,7 @@ function_call
 	;
 
 reference
-	:	CELL_REF ( ( COLON ) CELL_REF )?
+	:	CELL_REF ( ( COLON ) CELL_REF )? | CELL
 	;
 
 literal
@@ -73,6 +73,8 @@ CELL_REF
 		( ABS )? LETTER ( LETTER )?
 		( ABS )? ( DIGIT )+
 	;
+
+CELL : '#' 'CELL';
 
 VARIABLE_NAME 
         : UNDERSCORE LETTER (DIGIT|LETTER)*
