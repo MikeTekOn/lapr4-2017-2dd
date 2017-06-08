@@ -19,6 +19,10 @@
  * <b>Use Case "Auto-description of Extensions":</b><p>
  * When the user starts the cleansheet, an window will display the existing extensions. The extension will have (now) a metadata associated and a version, name and description.<p>
  * The user will select which extensions he want do load and one version of it (if there are more than one).<p>
+ * <p>
+ * After understanding how the loading of extensions properties work and the extension it self, the ideia would be
+ * loading the properties of the extensions first, show to the user the information and after he chooses what extensions he want or not, 
+ * the extensions are loaded.
  * 
  * <p>
  * <img src="auto_description_extensions_analysis.png" alt="image">
@@ -40,8 +44,12 @@
  * TODO
  *
  * <h2>4. Design</h2>
- * 
- *
+ * After the cleanshet starts, instead of loading the extension properties and loading the extensions into the the app,
+ * he creates a new frame with the extensions the user wants, only then is it loaded.
+ *  
+ * <p>
+ * <img src="auto_description_extensions_design1.png" alt="image">
+ * <p>
  *
  * <h2>5. Code</h2>
  * 
