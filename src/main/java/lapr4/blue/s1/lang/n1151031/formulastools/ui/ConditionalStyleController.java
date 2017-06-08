@@ -86,10 +86,23 @@ class ConditionalStyleController {
         }
         // Stores the condition
         for(ConditionStylableCell cell : selectedCells) {
-            cell.setUserCondition(conditionString);
+            String verifiedCondition = verifyCondition(conditionString,cell.getAddress().toString());
+            cell.setUserCondition(verifiedCondition);
             uiController.setWorkbookModified(cell.getSpreadsheet().getWorkbook());
         }
         return true;
+    }
+
+    /**
+     * Created by João Cardoso - 1150943
+     * Verifies if the condition has the variable _cell that refers to the cell itself
+     * if it has it, this method replaces it with the Cell coordinates
+     * @param condition
+     * @param cell
+     * @return
+     */
+    private String verifyCondition(String condition,String cell) {
+        return condition.replaceAll("_cell",cell);
     }
 
     /**
