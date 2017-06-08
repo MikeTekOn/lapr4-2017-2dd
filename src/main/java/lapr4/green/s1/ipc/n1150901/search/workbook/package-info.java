@@ -2,10 +2,10 @@
  * Technical documentation regarding the user story IPC03.1- Search in Another Instance.
  *
  * <p>
- * <b>Scrum Master: -(yes/no)- no</b>
+ * <b>Scrum Master;-no</b>
  *
  * <p>
- * <b>Area Leader: -(yes/no)- no</b>
+ * <b>Area Leader: no</b>
  * <p>
  *
  * <h2>1. Notes</h2>

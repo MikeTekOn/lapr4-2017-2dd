@@ -6,6 +6,7 @@
 package lapr4.blue.s1.lang.n1151452.formula.compiler;
 
 import csheets.core.Cell;
+import csheets.core.IllegalValueTypeException;
 import csheets.core.Value;
 import csheets.core.formula.*;
 import csheets.core.formula.compiler.FormulaCompilationException;
@@ -25,7 +26,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVarContentor;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import jdk.nashorn.internal.codegen.types.Type;
 import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVariable;
 
 /**
@@ -41,18 +44,18 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
     private Cell cell = null;
     private int numberOfErrors;
     private final StringBuilder errorBuffer;
+    
     /**The starter lexical rule for temporary variables*/
     private static final char TEMP_VAR_STARTER='_';
+    
     /**The temporary variables manager*/
-    private TemporaryVarContentor contentorTempVar;
-    private Set<TemporaryVariable> temp_contentor;
+    private final Set<TemporaryVariable> temp_contentor;
 
     public FormulaEvalVisitor(Cell cell) {
         this.cell = cell;
         numberOfErrors = 0;
         errorBuffer = new StringBuilder();
         temp_contentor = new HashSet<>();
-        contentorTempVar=new TemporaryVarContentor();
     }
 
     public int getNumberOfErrors() {
@@ -141,8 +144,7 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
             String tempVarName=ctx.VARIABLE_NAME().getText();
             
             try {
-                //contentorTempVar.getExpressionTemporaryVariable(tempVarName);
-                
+               
                 Iterator it=temp_contentor.iterator();
                 TemporaryVariable tempVar;
                 while(it.hasNext()){
@@ -151,28 +153,25 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
                         return tempVar.getExpression();
                     }
                 }
+                throw new UnknownElementException("Invalid expression. Variable it wasn´t assigned yet.");
 
-            
-            } catch (IllegalArgumentException ex) {
-                addVisitError(ex.getMessage());
+            } catch (UnknownElementException ex) {
+                addVisitError(ex.getLocalizedMessage());
             }
          
         }
         else if(ctx.assignment() != null) {
             //it´s a temporary variable
             if (ctx.assignment().VARIABLE_NAME() != null) { 
-                
                 TemporaryVariable temp_var = (TemporaryVariable)visit(ctx.assignment());
-                
-                //contentorTempVar.update(temp_var);
-                
+                //verifies if variable was already used in formula
                 if(temp_contentor.contains(temp_var)) {
                     temp_contentor.remove(temp_var);
                     temp_contentor.add(temp_var);
                 } else {
                     temp_contentor.add(temp_var);
                 }
-            }
+            }      
         }
 
         return visitChildren(ctx);
@@ -266,10 +265,10 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
             
             //it´s a temporary variable
             } else if (ctx.VARIABLE_NAME() != null) {
-
+             
                 String name = ctx.VARIABLE_NAME().getText();
-                
                 return new TemporaryVariable(name, visit(ctx.comparison()));
+                   
             }
         }
 

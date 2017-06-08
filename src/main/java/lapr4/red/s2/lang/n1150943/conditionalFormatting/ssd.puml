@@ -1,0 +1,10 @@
+@startuml ssd.png
+User -> System: Selects one or more cells
+User -> System: Selects in the sidebar "Conditional Formatting"
+System -> User: Updates the current condition of the selected cells
+User -> System: Changes the condition
+User -> System: Changes formatting options
+User -> System: Selects the button Apply changes
+System -> User: Updates cells' condition and conditional formatting style
+
+@enduml

@@ -4,9 +4,11 @@ import csheets.core.Cell;
 import csheets.ext.style.StyleExtension;
 import csheets.ext.style.ui.BorderChooser;
 import csheets.ext.style.ui.FontChooser;
+import csheets.ui.ctrl.FocusOwnerAction;
 import csheets.ui.ctrl.SelectionEvent;
 import csheets.ui.ctrl.SelectionListener;
 import csheets.ui.ctrl.UIController;
+import csheets.ui.sheet.SpreadsheetTable;
 import lapr4.blue.s1.lang.n1151031.formulastools.ConditionStylableCell;
 import lapr4.blue.s1.lang.n1151031.formulastools.ConditionStylableCellListener;
 import lapr4.blue.s1.lang.n1151031.formulastools.ConditionalStyleExtension;
@@ -18,11 +20,12 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+import java.util.ArrayList;
 
 /**
  * @author Tiago Correia - 1151031@isep.ipp.pt
+ * Edited by João Cardoso - 1150943
+ *  - Moved UserStyle from Panel to respetive cells
  */
 public class ConditionalStylePanel extends JPanel implements SelectionListener, ConditionStylableCellListener {
 
@@ -37,9 +40,9 @@ public class ConditionalStylePanel extends JPanel implements SelectionListener, 
     private ConditionStylableCell cell;
 
     /**
-     * The user's selected styling options.
+     * The selected cells user's selected styling options.
      */
-    private UserStyle userStyle;
+    private UserStyle currentUserStyle;
 
     /**
      * The condition field in which the condition of the cell should be
@@ -47,7 +50,10 @@ public class ConditionalStylePanel extends JPanel implements SelectionListener, 
      */
     private JTextField conditionField = new JTextField();
 
-    //dois atributos userStyle (true e para false)
+    /**
+     * Created by João Cardoso - 1150943
+     */
+    private JLabel cellsChanged=null;
 
     /**
      * Creates a new condition style panel.
@@ -55,6 +61,7 @@ public class ConditionalStylePanel extends JPanel implements SelectionListener, 
      * @param uiController the user interface controller
      */
     public ConditionalStylePanel(UIController uiController) {
+
 
         // Configures panel
         super(new BorderLayout());
@@ -64,16 +71,12 @@ public class ConditionalStylePanel extends JPanel implements SelectionListener, 
         controller = new ConditionalStyleController(uiController, this);
         uiController.addSelectionListener(this);
 
-        // Creates condition components
-        ApplyAction applyAction = new ApplyAction();
+        currentUserStyle = new UserStyle();
 
-        userStyle = new UserStyle();
 
-        //Condition Panel
         JPanel conditionPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JLabel conditionLabel = new JLabel("Condition:");
         conditionField.setPreferredSize(new Dimension(150, 25)); // width, height
-        conditionField.addFocusListener(applyAction);
         conditionPanel.add(conditionLabel);
         conditionPanel.add(conditionField);
 
@@ -111,6 +114,18 @@ public class ConditionalStylePanel extends JPanel implements SelectionListener, 
         resetPanel.add(resetLabel);
         resetPanel.add(createResetButton());
 
+        // Apply changes panel
+        cellsChanged = new JLabel();
+        JPanel applyPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        JLabel applyLabel = new JLabel("Apply Conditional Formatting:");
+        JButton applyConditionButton = new JButton("Apply Conditions");
+
+        //Condition Panel - Created by João Cardoso - 1150943
+        applyConditionButton.addActionListener(new addConditionsToSelectionAction());
+        applyPanel.add(cellsChanged);
+        applyPanel.add(applyLabel);
+        applyPanel.add(applyConditionButton);
+
         JPanel stylesPanel = new JPanel(new BorderLayout());
         stylesPanel.add(selectStylePanel, BorderLayout.NORTH);
         stylesPanel.add(buttonsPanel, BorderLayout.CENTER);
@@ -133,6 +148,7 @@ public class ConditionalStylePanel extends JPanel implements SelectionListener, 
         JPanel northPanel = new JPanel(new BorderLayout());
         northPanel.add(conditionalStylePanel, BorderLayout.NORTH);
         add(northPanel, BorderLayout.NORTH);
+        add(applyPanel, BorderLayout.CENTER);
     }
 
     /**
@@ -151,8 +167,8 @@ public class ConditionalStylePanel extends JPanel implements SelectionListener, 
                 Font font = FontChooser.showDialog(
                         null,
                         "Choose Font",
-                        userStyle.getTrueStyleFont());
-                userStyle.setTrueStyleFont(font);
+                        currentUserStyle.getTrueStyleFont());
+                currentUserStyle.setTrueStyleFont(font);
                 styleChanged();
 
             }
@@ -176,8 +192,8 @@ public class ConditionalStylePanel extends JPanel implements SelectionListener, 
                 Color color = JColorChooser.showDialog(
                         null,
                         "Choose Foreground Color",
-                        userStyle.getTrueStyleForegroundColor());
-                userStyle.setTrueStyleForegroundColor(color);
+                        currentUserStyle.getTrueStyleForegroundColor());
+                currentUserStyle.setTrueStyleForegroundColor(color);
                 styleChanged();
             }
         });
@@ -199,8 +215,8 @@ public class ConditionalStylePanel extends JPanel implements SelectionListener, 
                 Color color = JColorChooser.showDialog(
                         null,
                         "Choose Background Color",
-                        userStyle.getTrueStyleBackgroundColor());
-                userStyle.setTrueStyleBackgroundColor(color);
+                        currentUserStyle.getTrueStyleBackgroundColor());
+                currentUserStyle.setTrueStyleBackgroundColor(color);
                 styleChanged();
             }
         });
@@ -223,8 +239,8 @@ public class ConditionalStylePanel extends JPanel implements SelectionListener, 
                 Border border = BorderChooser.showDialog(
                         null,
                         "Choose Border",
-                        userStyle.getTrueStyleBorder());
-                userStyle.setTrueStyleBorder(border);
+                        currentUserStyle.getTrueStyleBorder());
+                currentUserStyle.setTrueStyleBorder(border);
                 styleChanged();
             }
         });
@@ -247,8 +263,8 @@ public class ConditionalStylePanel extends JPanel implements SelectionListener, 
                 Font font = FontChooser.showDialog(
                         null,
                         "Choose Font",
-                        userStyle.getFalseStyleFont());
-                userStyle.setFalseStyleFont(font);
+                        currentUserStyle.getFalseStyleFont());
+                currentUserStyle.setFalseStyleFont(font);
                 styleChanged();
 
             }
@@ -272,8 +288,8 @@ public class ConditionalStylePanel extends JPanel implements SelectionListener, 
                 Color color = JColorChooser.showDialog(
                         null,
                         "Choose Foreground Color",
-                        userStyle.getFalseStyleForegroundColor());
-                userStyle.setFalseStyleForegroundColor(color);
+                        currentUserStyle.getFalseStyleForegroundColor());
+                currentUserStyle.setFalseStyleForegroundColor(color);
                 styleChanged();
 
             }
@@ -296,8 +312,8 @@ public class ConditionalStylePanel extends JPanel implements SelectionListener, 
                 Color color = JColorChooser.showDialog(
                         null,
                         "Choose Background Color",
-                        userStyle.getFalseStyleBackgroundColor());
-                userStyle.setFalseStyleBackgroundColor(color);
+                        currentUserStyle.getFalseStyleBackgroundColor());
+                currentUserStyle.setFalseStyleBackgroundColor(color);
                 styleChanged();
             }
         });
@@ -320,8 +336,8 @@ public class ConditionalStylePanel extends JPanel implements SelectionListener, 
                 Border border = BorderChooser.showDialog(
                         null,
                         "Choose Border",
-                        userStyle.getFalseStyleBorder());
-                userStyle.setFalseStyleBorder(border);
+                        currentUserStyle.getFalseStyleBorder());
+                currentUserStyle.setFalseStyleBorder(border);
                 styleChanged();
             }
         });
@@ -340,7 +356,7 @@ public class ConditionalStylePanel extends JPanel implements SelectionListener, 
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                userStyle = new UserStyle();
+                controller.resetStyle();
                 styleChanged();
             }
         });
@@ -368,6 +384,7 @@ public class ConditionalStylePanel extends JPanel implements SelectionListener, 
         }
         if (cell != null) {
             ConditionStylableCell activeCell = (ConditionStylableCell) cell.getExtension(ConditionalStyleExtension.NAME);
+            currentUserStyle = activeCell.userStyle();
             activeCell.addConditionStylableCellListener(this);
             conditionChanged(activeCell);
         } else {
@@ -384,8 +401,8 @@ public class ConditionalStylePanel extends JPanel implements SelectionListener, 
      * Applies the user style change.
      */
     private void styleChanged() {
-        if (cell != null) {
-            controller.setCondition(cell, conditionField.getText().trim());
+        if (cell != null && cell.hasCondition()) {
+            controller.setCondition(conditionField.getText().trim());
         }
     }
 
@@ -399,28 +416,43 @@ public class ConditionalStylePanel extends JPanel implements SelectionListener, 
     public void conditionChanged(ConditionStylableCell cell) {
         // Stores the cell for use when applying conditions
         this.cell = cell;
-        cell.setStyle(userStyle);
         // The controller must decide what to do...
         controller.cellSelected(cell);
     }
 
-    protected class ApplyAction implements FocusListener {
+    protected class addConditionsToSelectionAction extends FocusOwnerAction implements ActionListener{
 
         @Override
-        public void focusGained(FocusEvent e) {
-            // TODO Auto-generated method stub
+        protected String getName() {
+            return "Selected cells";
         }
 
         @Override
-        public void focusLost(FocusEvent e) {
-            // TODO Auto-generated method stub
-            if (cell != null) {
+        public void actionPerformed(ActionEvent actionEvent) {
+            ArrayList<Cell>selectedCells = focusOwner.getSelectedCellsList();
+            int size = selectedCells.size();
+            System.out.println(size);
+            if(controller.setSelectedCells(selectedCells)){
                 try {
-                    controller.setCondition(cell, conditionField.getText().trim());
+                    if (conditionField.getText().isEmpty()) {
+                        controller.setCondition("");
+                    }
+                    controller.setCondition(conditionField.getText().trim());
+                    controller.setStyle(currentUserStyle);
                 } catch (RuntimeException ex) {
                     JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
                 }
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append("Cells from ");
+                stringBuilder.append(selectedCells.get(0).getAddress().toString());
+                stringBuilder.append(" to ");
+                stringBuilder.append(selectedCells.get(size-1).getAddress().toString());
+                stringBuilder.append(" conditions were sucessfully updated");
+                cellsChanged.setText(stringBuilder.toString());
+            }else{
+                cellsChanged.setText("Error updating cells conditions");
             }
         }
     }
+
 }

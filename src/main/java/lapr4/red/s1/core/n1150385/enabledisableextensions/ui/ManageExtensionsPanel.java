@@ -8,6 +8,7 @@ import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 /**
  * Created by Ricardo Catalao (1150385) on 6/1/17.
@@ -64,11 +65,13 @@ public class ManageExtensionsPanel extends JDialog {
         btnEnableExtensions.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+                ArrayList<String> list = new ArrayList<>();
                 for(Extension extension : disabledExtensionJList.getSelectedValuesList()){
+                    list.add(extension.getName());
                     disabledExtensionsModel.removeExtension(extension);
                     enabledExtensionsModel.addExtension(extension);
-                    ExtensionManager.getInstance().enableExtension(extension.getName());
                 }
+                ExtensionManager.getInstance().enableExtensions(list);
             }
         });
 
@@ -76,11 +79,13 @@ public class ManageExtensionsPanel extends JDialog {
         btnDisableExtensions.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+                ArrayList<String> list = new ArrayList<>();
                 for(Extension extension : enabledExtensionJList.getSelectedValuesList()){
+                    list.add(extension.getName());
                     enabledExtensionsModel.removeExtension(extension);
                     disabledExtensionsModel.addExtension(extension);
-                    ExtensionManager.getInstance().disableExtension(extension.getName());
                 }
+                ExtensionManager.getInstance().disableExtensions(list);
             }
         });
 

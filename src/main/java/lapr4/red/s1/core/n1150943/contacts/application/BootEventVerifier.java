@@ -56,8 +56,16 @@ public class BootEventVerifier {
     private void checkEvents(Contact c){
         Agenda agenda = c.agenda();
         for(Event e : agenda.events()){
-            if(e.isToday()){
+            if(e.isToday() && e.notified()==false){
                 ShowAlertAction.showAlert(e.description(),e.dueDate());
+                e.notifyUser();
+                try {
+                    contactsRepository.save(c);
+                } catch (DataConcurrencyException e1) {
+                    e1.printStackTrace();
+                } catch (DataIntegrityViolationException e1) {
+                    e1.printStackTrace();
+                }
             }
         }
     }

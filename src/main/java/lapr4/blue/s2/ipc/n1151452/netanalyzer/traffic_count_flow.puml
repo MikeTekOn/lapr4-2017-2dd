@@ -1,0 +1,19 @@
+@startuml traffic_count_flow.png
+
+(*) --> "TrafficInputStream" as in
+in --> [run()] "incoming1" as i1
+in --> [run()] "incoming2" as i2
+
+(*) --> "TrafficOutputStream" as out
+out --> [run()] "outgoing1" as o1
+out --> [run()] "outgoing2" as o2
+
+i1 --> [increment] "TrafficCounter" as tc
+i2 --> [increment] tc
+o1 --> [increment] tc
+o2 --> [increment] tc
+note left: mutex access\nto counters
+--> [flush] "TrafficGraph" as ui
+ui --> [update graph] ui
+
+@enduml

@@ -15,8 +15,12 @@ import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -97,11 +101,15 @@ public class MacroDialog extends JDialog {
                     //@1140822 Renato
                     //ONLY FOR THE DEFAULT SCRIPT - TO BE REMOVED IN SECOND ITERATION
                     macroTextArea.setText("");
-                    Scanner scan = new Scanner(new File(MacroExtension.class.getResource("res/script/default_script.bsh").getFile()));
-                    while (scan.hasNextLine()) {
-                        macroTextArea.append(scan.nextLine() + "\n");
+                    InputStream is = MacroExtension.class.getResourceAsStream("res/script/default_script.bsh");
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+                    String line = "";
+                    while ((line = reader.readLine()) != null) {
+                        macroTextArea.append(line + "\n");
                     }
                 } catch (FileNotFoundException ex) {
+                    Logger.getLogger(MacroDialog.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
                     Logger.getLogger(MacroDialog.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }

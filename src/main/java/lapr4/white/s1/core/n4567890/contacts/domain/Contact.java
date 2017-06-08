@@ -12,19 +12,13 @@ package lapr4.white.s1.core.n4567890.contacts.domain;
 //import eapli.framework.domain.AggregateRoot;
 import eapli.framework.domain.AggregateRoot;
 
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
 import java.io.Serializable;
-import java.util.Objects;
-import javax.imageio.ImageIO;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
-import javax.swing.*;
 
 /**
  * Contact

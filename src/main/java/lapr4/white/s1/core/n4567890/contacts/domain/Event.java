@@ -28,6 +28,11 @@ public class Event {
     @Temporal(TemporalType.TIMESTAMP)
     private Calendar dueDate;
 
+    /**
+     * Ṽerification to avoid notifying the user of an event more than once
+     */
+    boolean userNotified = false;
+
     protected Event() {
         // for ORM
     }
@@ -64,6 +69,13 @@ public class Event {
         }else {
             throw new IllegalStateException();
         }
+    }
+
+    /**
+     * Checks that the user was already notified of the event
+     */
+    public void notifyUser(){
+        userNotified=true;
     }
 
     /**
@@ -116,4 +128,7 @@ public class Event {
         return dueDate.after(today);
     }
 
+    public boolean notified() {
+        return userNotified;
+    }
 }
