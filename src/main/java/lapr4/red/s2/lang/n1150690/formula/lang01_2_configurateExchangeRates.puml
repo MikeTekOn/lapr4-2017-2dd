@@ -4,6 +4,7 @@
     participant "ConfigurateExchangeRatesUI" as ui
     participant "ConfigurateExchangeRatesController" as ctrl
     participant "util.Files" as file
+    participant "MonetaryConvertion" as money
 
     activate ui
     User -> ui : initiates the configuration 
@@ -11,8 +12,28 @@
     ui -> ctrl : create()
     User -> ui : changes the desired exchange rate
     
+    activate ctrl
     ui -> ctrl : changeExchangeRate(nameExchangeRate, newValue)
-    
+    activate ctrl #Coral
     ctrl -> file : changeProperty(nameExchangeRate, newValue)
-    
+deactivate ctrl 
+    note right
+            the first call to the method 
+            updates the value changed by the user
+    end note
+    ui -> ctrl : updateDependentsExchangeRates(nameExchangeRate, newValue)
+    activate ctrl #Coral
+    create money
+    ctrl -> money : create()
+    ctrl -> money : dependentExchangeRate(newValue)
+
+    ctrl -> file : changeProperty(nameExchangeRate, newValue)
+    note right 
+            the second call to the method 
+            updates the value that is dependent 
+            from the value changed by the user
+            Ex: if the exchange rate EuroToDollar is modified
+            the exchange rate DollarToEuro needs to be updated
+    end note
+    deactivate ctrl 
 @enduml

@@ -23,7 +23,7 @@ concatenation
         ;
 
 script
-    : ( SPECIAL_CHAR | (( '<![SHELL[' | '<[SHELL[' ) script ']]>') | ~(']]>'))*
+    : ( SPECIAL_CHAR | (( '<![SHELL[' | '<[SHELL[' ) script ']]>') | ~('<[SHELL[' | '<![SHELL[' | ']]>'))*
     ;
 
 shellscript
@@ -60,7 +60,7 @@ function_call
 	;
 
 reference
-	:	CELL_REF ( ( COLON ) CELL_REF )?
+	:	CELL_REF ( ( COLON ) CELL_REF )? | CELL
 	;
 
 literal
@@ -83,7 +83,9 @@ CELL_REF
 		( ABS )? ( DIGIT )+
 	;
 
-VARIABLE_NAME
+CELL : '#' 'CELL';
+
+VARIABLE_NAME 
         : UNDERSCORE LETTER (DIGIT|LETTER)*
         ;
 

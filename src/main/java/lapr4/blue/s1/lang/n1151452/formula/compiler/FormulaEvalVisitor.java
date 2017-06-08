@@ -244,7 +244,11 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
                         new CellReference(cell.getSpreadsheet(), ctx.getChild(2).getText())
                 );
             } else {
-                return new CellReference(cell.getSpreadsheet(), ctx.getText());
+                if(ctx.getText().equals("#CELL")){
+                    return new CellReference(cell.getSpreadsheet(), cell.getAddress().toString());
+                }else{
+                    return new CellReference(cell.getSpreadsheet(), ctx.getText());
+                }
             }
         } catch (ParseException | UnknownElementException ex) {
             addVisitError(ex.getMessage());

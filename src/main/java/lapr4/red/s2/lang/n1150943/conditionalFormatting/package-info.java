@@ -16,7 +16,7 @@
  *
  * In this use case I will extend the functionality to add conditional formatting to cells. Currently it is only possible to add conditional formatting to each cell individually.
  * <p>
- * The extension will add the possibility to apply conditional formatting to multiple cells at the same time. Another improve is that the conditions may be relative to the cell itself with the use of a variable called "_cell"
+ * The extension will add the possibility to apply conditional formatting to multiple cells at the same time. Another improve is that the conditions may be relative to the cell itself with the use of a variable called "#CELL"
  *
  * <h2>3. Analysis</h2>
  * The previous and existing implementation of conditional formatting has a problem that needs to be solved, a "UserStyle" that is a style for a certain condition needs to be associated to the cell that has the condition.
@@ -25,10 +25,9 @@
  * <p>
  * I think that moving the style to each Cell will solve the problem.
  * <p>
- * After this problem is solved, I'll need to do some modifications on the functional UI, it must detect if there is one or more than one selected cells, and the panel should change accordingly.
- * If there is just one selected cell, it will show the current UI, if there are more it will show a new panel that will be created.
+ * The final step will be to implement the feature to add the possibility to use a variable called "#CELL" that will add the possibility for the user be able to create conditions for multiple cells, but that are affected by each of them individually.
  * <p>
- * The final step will be to implement the feature to add the possibility to use a variable called "_cell" that will add the possibility for the user be able to create conditions for multiple cells, but that are affected by each of them individually.
+ *  To implement the usage of the variable "#CELL" to invoke each cell in the conditions it is needed to add it to the already implemented grammar and in the class FormulaEvalVisitor verify if it appears in the condition. In this case it is converted to the address of the cell being visited at the moment.
  * <p>
  * As this use case will be an extension to what was already done and because I will have to make several changes in the already implemented code, most part of my work won't be on my package.
  * <p>
@@ -59,28 +58,17 @@
  * <b>UC3.2</b>
  *
  * Alternative and Exception Scenarios<br>
- * Exception 1: - The user selects an invalid
- *
+ * Exception 1: - The user selects an invalid condition
+ * The system shows an alert and doesn't save the condition in the cell
  * <p>
- *
- *
- *
  * <h3>3.4 Acceptance Tests</h3>
  *
  * <b>Exception 1</b><br>
  * <pre>
  * {@code
-
+    The user selects the condition =aa>32
+ *  The system shows the warning alert and sets the selected cells' conditions to null.
  * }
- *
- *  </pre>
- * <b>Exception 2</b><br>
- * <pre>
- * {@code
- *
- * }
- * </pre>
- *
  * <h2>4. Design</h2>
  *
  * <b>Sequence Diagrams</b><p>
@@ -92,10 +80,6 @@
  * <h3>Detailed Sequence Diagram</h3>
  * <p>
  * <img src="design.png" alt="image">
- * <p>
- * <h4>Reference 1</h4>
- * <p>
- * <img src="ref1.png" alt="image">
  * <p>
  * <b>Class Diagram</b>
  * <p>
@@ -143,7 +127,7 @@
  * <p>
  * Today
  * <p>
- * 1. Complete design and check if there are any necessary unit tests to implement
+ * 1. Complete design and implementation and check if there are any necessary unit tests to implement
  * <p>
  * Blocking:
  * <p>
