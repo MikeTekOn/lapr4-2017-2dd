@@ -47,6 +47,13 @@
  *     <li>CompanyContactService::ensureAllRelatedContactsAreFound</li>
  *     <li>CompanyContactService::ensureAllRelatedContactsEventsAreInCompanyAgenda</li>
  *     <li>CompanyContactService::ensureCompanyAgendaIsReadOnly</li>
+ *
+ *     <li>CompanyName::ensureNameIsNonNull</li>
+ *     <li>CompanyName::ensureNameIsNotEmpty</li>
+ *     <li>Profession::ensureProfessionIsNonNull</li>
+ *     <li>Profession::ensureProfessionIsNotEmpty</li>
+ *     <li>Image::ensureImageIsNonNull</li>
+ *     <li>Image::ensureDefaultImageCanBeConstructed</li>
  * </ul>
  *
  * <b>Design</b><p>
