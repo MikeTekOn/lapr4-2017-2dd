@@ -84,7 +84,7 @@ public class CellList extends AbstractListModel {
         sb.append("Spreadsheet: ");
         sb.append(cell.getSpreadsheetNumber());
         sb.append(" Cell location: ");
-        sb.append(cell.toString());
+        sb.append(cell.getCell().toString());
 
         return sb.toString();
     }

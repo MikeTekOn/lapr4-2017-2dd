@@ -9,6 +9,7 @@ import csheets.core.IllegalValueTypeException;
 import csheets.core.Value;
 import csheets.core.formula.Expression;
 import csheets.core.formula.util.ExpressionVisitor;
+import eapli.util.Strings;
 
 import java.util.Objects;
 
@@ -34,6 +35,10 @@ public class Variable implements Expression {
 
 
     public Variable(String name, Expression expression){
+
+        if(Strings.isNullOrEmpty(name) | expression == null){
+            throw new IllegalArgumentException("Name cant be empty or null and expression can't be null");
+        }
         this.name = name;
         this.expression = expression;
     }

@@ -12,8 +12,11 @@ import csheets.core.Workbook;
 import java.util.List;
 import java.util.Stack;
 import java.util.regex.Pattern;
+import lapr4.green.s2.core.n1150838.GlobalSearch.domain.CellInfoDTO;
 import lapr4.green.s2.core.n1150838.GlobalSearch.domain.Filter;
 import lapr4.red.s1.core.n1150613.workbookSearch.RegexUtil;
+import lapr4.red.s1.core.n1150690.comments.CommentableCellWithMultipleUsers;
+import lapr4.white.s1.core.n1234567.comments.CommentsExtension;
 
 /**
  *
@@ -24,7 +27,7 @@ public class RegexUtilExtended extends RegexUtil implements Runnable {
     private Stack<Workbook> workbooks;
     private Filter filter;
 
-    public RegexUtilExtended(Filter filter, String regex, Stack<Workbook> workbooks) {
+     public RegexUtilExtended(Filter filter, String regex, Stack<Workbook> workbooks) {
         super(regex);
         this.workbooks = workbooks;
         this.filter = filter;
@@ -33,30 +36,22 @@ public class RegexUtilExtended extends RegexUtil implements Runnable {
     @Override
     public void run() {
 
-        if (filter.isIncludeComments()) {
-            searchWorkbooksWithComments();
-        } else {
-            searchWorkbooksWithoutComments();
-        }
+        searchWorkbooks();
 
     }
 
-    public void searchWorkbooksWithComments() {
 
-    }
-
-    public void searchWorkbooksWithoutComments() {
+    public void searchWorkbooks() {
 
         for (Workbook workbook : workbooks) {
+              int spreadsheetNumber = 0 ;
             for (Spreadsheet spreadsheet : workbook) {
-                for (Cell cell : spreadsheet) {
-                    String cellContentFound;
-                    String comentContentFound;
-                    int spreadsheetNumber;
+                spreadsheetNumber++;
+                for (Cell cell : spreadsheet) {                  
                     if(validateFilters(cell,filter.getTypesToInclude(),filter.getFormulasToInclude())){
-                      
                         if(checkIfMatches(cell)){
-                            System.out.println(cell);
+                            
+                            GlobalSearchPublisher.getInstance().notifyObservers(new CellInfoDTO(cell,spreadsheetNumber,workbook));
                         }
                     }
                 }
@@ -82,8 +77,24 @@ public class RegexUtilExtended extends RegexUtil implements Runnable {
          m = p.matcher(cell.getValue().toString());   
          test2 = m.matches();
         }
-    
+        if(!filter.isIncludeComments()){
+           return test1 ? true :  (test2 ? true : false); 
+        }
+        boolean test3 = false;
+        
+        for (List<String> comments : (( CommentableCellWithMultipleUsers)cell.getExtension(CommentsExtension.NAME)).comments().values()) {
+            for (String comment : comments) {
+                m = p.matcher(comment);
+                test3 = m.matches();      
+                if(test3 ==true){
+                    return true;
+                }
+            }
+        } 
+        
+        
         return test1 ? true :  (test2 ? true : false);
+        
     }
     
     public boolean containsFormulas(Cell cell,List<String> formulas){
