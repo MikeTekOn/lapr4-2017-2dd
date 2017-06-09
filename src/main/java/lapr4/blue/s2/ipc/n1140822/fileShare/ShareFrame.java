@@ -16,6 +16,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ScrollPaneConstants;
@@ -52,12 +53,13 @@ public class ShareFrame extends JFrame implements Observer {
     }
 
     private void createComponents() {
-        JScrollPane scrollPane = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+       
 
         String[] columnNames = {"File name", "Host", "File size"};
 
         table = new JTable();
-
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table.setSize(100, 100);
 
         listFiles = new JList();
@@ -68,11 +70,14 @@ public class ShareFrame extends JFrame implements Observer {
 
             }
         });
-        tableModel = new DefaultTableModel(columnNames, 3);
+        tableModel = new DefaultTableModel(columnNames, 0);
         table.setModel(tableModel);
         model = new DefaultListModel();
-        scrollPane.add(table);
-        add(scrollPane, BorderLayout.CENTER);
+
+        JScrollPane scrollPane = new JScrollPane(table);
+       
+
+        add(scrollPane);
         JButton downloadButton = createDownloadButton();
         add(downloadButton, BorderLayout.SOUTH);
     }
