@@ -134,7 +134,7 @@ public class Frame extends JFrame implements SelectionListener, ExtensionStateLi
 
         //Register configurations of exchange rates
         actionManager.registerAction("configurateExchangeRates", new ConfigurateExchangeRatesAction(app, uiController));
-        
+
         // Creates spreadsheet components
         workbookPane = new WorkbookPane(uiController, actionManager);
         cellEditor = new CellEditor(uiController);

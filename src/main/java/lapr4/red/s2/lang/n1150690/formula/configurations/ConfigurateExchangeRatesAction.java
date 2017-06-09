@@ -32,13 +32,13 @@ public class ConfigurateExchangeRatesAction extends FocusOwnerAction{
 
     public ConfigurateExchangeRatesAction(CleanSheets app, UIController uiController) {
         this.uiController = uiController;
-    }  
-    
+    }
+
     @Override
     protected String getName() {
         return "Configurate Exchange Rates";
     }
-    
+
     protected void defineProperties(){
         putValue(SMALL_ICON, new ImageIcon(CleanSheets.class.getResource("res/img/coin.png")));
     }
@@ -50,7 +50,7 @@ public class ConfigurateExchangeRatesAction extends FocusOwnerAction{
         }
         new ConfigurateExchangeRatesUI(uiController);
     }
-    
-    
-    
+
+
+
 }
