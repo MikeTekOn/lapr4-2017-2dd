@@ -1,0 +1,41 @@
+@startuml
+
+abstract InputStream {
+    + read()
+    .. more ..
+
+}
+
+class ObjectInputStream extends InputStream {
+
+    - InputStream <<wrappee>> : InputStream
+
+    + ObjectInputStream(inputStream : InputStream)
+    + readObject()
+}
+note left of ObjectInputStream
+wraps the superclass
+read() method in the
+readObject() method
+end note
+
+class TrafficInputStream extends ObjectInputStream {
+
+    - objectInputStream <<wrappee>> : ObjectInputStream
+
+    + TrafficInputStream(inputStream : ObjectInputStream, ...)
+    + readObject()
+    - sendTrafficEvent()
+}
+
+note left of TrafficInputStream
+calls the custom method in
+the <<overriden>> readObject()
+method, after the call to the
+super method.
+end note
+
+TrafficInputStream *--> ObjectInputStream
+
+
+@enduml

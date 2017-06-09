@@ -30,7 +30,7 @@ public class BeanShellClassLoaderController {
     public BeanShellResult createAndExecuteScript(String scriptName, UIController controller) throws FileNotFoundException, EvalError, MacroCompilationException, IllegalValueTypeException {
         BeanShellLoader loader = new BeanShellLoader();
         BeanShellResult result = null;
-        BeanShellInstance instance = loader.create(scriptName, controller);
+        BeanShellInstance instance = loader.create(scriptName, controller, null);
         result = new BeanShellResult(instance.executeScript());
         return result;
     }

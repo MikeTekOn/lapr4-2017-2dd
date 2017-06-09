@@ -1,0 +1,35 @@
+@startuml ipc02_2_sd.png
+
+actor User
+participant ControllerFindWorkbooks
+participant UIFindWorkbooksExtension
+participant UIPreviewWorkbookExtension
+participant Directory
+participant PreviewWorkbookBuilder
+participant SearchFiles
+participant PreviewWorkbook
+
+User->UIFindWorkbooksExtension:Insert the path and launches the search 
+UIFindWorkbooksExtension->ControllerFindWorkbooks:inserPath(String path)
+create Directory
+ControllerFindWorkbooks->Directory:new()
+Directory->SearchFiles:searchFilesByPattern()
+loop
+Directory->Directory:Workbook w=loadFile(String pattern)
+Directory->FindWorkbooksPublisher:notifyObservers(Object w)
+end
+User<--UIFindWorkbooksExtension: Displays the search results
+User->UIPreviewWorkbookExtension: Choose workbook to preview
+UIPreviewWorkbookExtension->ControllerFindWorkbooks:buildWorkbookPreview(Workbook workbook)
+create PreviewWorkbookBuilder
+ControllerFindWorkbooks->PreviewWorkbookBuilder:new()
+PreviewWorkbookBuilder->PreviewWorkbook: buildPreview(Workbook workbook)
+loop
+PreviewWorkbookBuilder->PreviewWorkbookBuilder:Workbook wpreview=findFirstFilledCells()
+PreviewWorkbookBuilder->PreviewWorkbookBuilder:buildPreviewArea()
+PreviewWorkbookBuilder->PreviewWorkbookPublisher: notifyObservers(Object w)
+end
+UIFindWorkbooksExtension-->User: Display preview area filled with first non-empty cells
+
+
+@enduml

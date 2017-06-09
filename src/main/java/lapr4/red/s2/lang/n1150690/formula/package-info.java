@@ -40,11 +40,12 @@
  * the client, this one said that he can only enter amounts in Euro, Dollar or
  * Pounds.
  * <p>
- * The <u>exchange rates</u> are previous defined in the system, although the
- * user can configure them to a new value. This exchange rates will be persisted
- * in properties file. Whenever a new instance of the application is started,
- * these rates will be loaded into memory for use in conversions. Thus the
- * properties file will have six lines corresponding to the exchange rates:  
+ * <b>Exchange Rates</b> - The <u>exchange rates</u> are previous defined in the
+ * system, although the user can configure them to a new value. This exchange
+ * rates will be persisted in properties file. Whenever a new instance of the
+ * application is started, these rates will be loaded into memory for use in
+ * conversions. Thus the properties file will have six lines corresponding to
+ * the exchange rates:  
  * <code>
  * <p>
  * EuroToDollar=1.12749
@@ -63,7 +64,8 @@
  * The values were taken from a website of exchange rates:
  * <a href="http://www.xe.com/">XE - The World's Trusted Currency Authority</a>
  * <p>
- * Regarding the problem of using numbers in floating point, in the
+ * <p>
+ * Regarding the problem of using numbers in <b>floating point</b>, in the
  * implementation i will use numbers defined as BigDecimal. A BigDecimal
  * consists of an arbitrary precision integer unscaled value and a 32-bit
  * integer scale. The BigDecimal class provides operations for arithmetic, scale
@@ -74,7 +76,7 @@
  * of BigDecimal.
  * <p>
  * <p>
- * The previous use case has several information about how the parser and
+ * The <b>previous use case</b> has several information about how the parser and
  * executer work together, how to convert a parser tree to Expressions, how to
  * load the language properties and several referencies about important methods
  * use in this use case. Please go checkout the information of the package
@@ -106,7 +108,7 @@
  * <p>
  * POUND: 'pound' ;
  * <p>
- * NUMBER: [0-9]+\.[0-9]{2} ;
+ * NUMBER: [0-9]+\.[0-9][0-9] ;
  * <p>
  * COIN: '€' | '$' | '£' ;
  * <p>
@@ -128,16 +130,48 @@
  * <img src="domain_model.png" alt="image">
  * <i>Not a definitive model</i>
  * <p>
- * <h2>4. Design</h2>
+ * <h2>4. Tests</h3>
+ * <h3>4.1. Unit Tests</h3>
+ * <ul>
+ * <li>test convertions between coins</li>
+ * <li>ensureCalculesAreMadeWithTheSameTypeOfCoin</li>
+ * <li>ensureExpressionIsNotMalformed</li>
+ * </ul>
  * <p>
- *
- * <h3>4.1. Functional Tests</h3>
+ * <h3>4.2. Functional Tests</h3>
  * <p>
- *
- * <h3>4.2. UC Realization</h3>
+ * <ul>
+ * <li>Test for the calculation with the same currency
+ * <ol>
+ * <li>Insert in the cell A1 the following expression: "#euro{12.36€ -
+ * 9.06€}</li>
+ * <li>The cell A1 should have the value: 3.30</li>
+ * </ol>
+ * </li>
  * <p>
+ * <li>Test for the calculation with the diferent currencies
+ * <ol>
+ * <li>Insert in the cell A1 the following expression: "#euro{12.36$ -
+ * 5.06£}</li>
+ * <li>The system must convert the 12.36$ value to euros, and the value must be:
+ * 10.96€</li>
+ * <li>The system must convert the 5.06£ value to euros, and the value must be:
+ * 5.79€€</li>
+ * <li>The cell A1 should have the value: 5.17</li>
+ * </ol>
+ * </li>
+ * </ul>
  *
- * <h3>4.3. Classes</h3>
+ * <h2>5. Design</h2>
+ * <h3>5.1. UC Realization</h3>
+ * <p>
+ * <b>Load Property (Exchange Rate) and Convert Monetary value</b>
+ * <img src="lang01_2_convert.png" alt="image">
+ * <p>
+ * <b>Configuration of Exchange Rates</b>
+ * <img src="lang01_2_configurateExchangeRates.png" alt="image">
+ *
+ * <h3>5.2. Classes</h3>
  * <p>
  * <h2>5. Implementation</h2>
  * <p>
@@ -162,9 +196,9 @@
  * <p>
  * <b>Wednesday 07/06/2017</b>
  * <p>
- * Yesterday:
+ * Yesterday:I finished the analysis process.
  * <p>
- * Today:
+ * Today:I will make a plan to the funcional tests and start the design.
  * <p>
  * Blocking:---
  * <p>

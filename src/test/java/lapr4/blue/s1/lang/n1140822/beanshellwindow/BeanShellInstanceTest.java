@@ -11,6 +11,7 @@ import csheets.core.IllegalValueTypeException;
 import csheets.ui.ctrl.UIController;
 import java.util.LinkedList;
 import lapr4.blue.s1.lang.n1151159.macros.compiler.MacroCompilationException;
+import lapr4.red.s2.lang.n1150385.beanshell.Instruction;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -49,19 +50,17 @@ public class BeanShellInstanceTest {
     @Test(expected = EvalError.class)
     public void  ensureBeanShellScriptFailsIfBadCode() throws EvalError, MacroCompilationException, IllegalValueTypeException {
         System.out.println("ensureBeanShellScriptFailsIfBadCode");
-         UIController controller = new UIController(new CleanSheets());
-        LinkedList<String> list = new LinkedList<>();
-        list.add("print(\"test\")asd;");
-        BeanShellInstance instance = new BeanShellInstance(list,list,controller);
+        LinkedList<Instruction> list = new LinkedList<>();
+        list.add(new Instruction("print(\"test\")asd;", Instruction.Type.BEANSHELL));
+        BeanShellInstance instance = new BeanShellInstance(list, null, null);
         instance.executeScript();
     }
-    
+
      public void  ensureBeanShellScriptExecutes() throws EvalError, MacroCompilationException, IllegalValueTypeException {
         System.out.println("ensureBeanShellScriptExecutes");
-         UIController controller = new UIController(new CleanSheets());
-        LinkedList<String> list = new LinkedList<>();
-        list.add("print(\"test\");");
-        BeanShellInstance instance = new BeanShellInstance(list,list,controller);
+         LinkedList<Instruction> list = new LinkedList<>();
+         list.add(new Instruction("print(\"test\");", Instruction.Type.BEANSHELL));
+         BeanShellInstance instance = new BeanShellInstance(list, null, null);
         instance.executeScript();
         //if no exception then its sucessfull
     }

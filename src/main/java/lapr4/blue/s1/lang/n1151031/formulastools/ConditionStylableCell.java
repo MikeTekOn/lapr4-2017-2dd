@@ -7,10 +7,11 @@ import csheets.core.formula.Expression;
 import csheets.core.formula.Reference;
 import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.core.formula.util.ReferenceFetcher;
-import csheets.ext.CellExtension;
 import csheets.ext.style.StylableCell;
 import csheets.ext.style.StyleExtension;
 
+import javax.swing.border.Border;
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,7 @@ import java.util.TreeSet;
 /**
  * @author Tiago Correia - 1151031@isep.ipp.pt
  */
-public class ConditionStylableCell extends CellExtension {
+public class ConditionStylableCell extends StylableCell {
 
     /**
      * The unique version identifier used for serialization
@@ -43,11 +44,12 @@ public class ConditionStylableCell extends CellExtension {
     private transient List<ConditionStylableCellListener> listeners = new ArrayList<ConditionStylableCellListener>();
 
     public ConditionStylableCell(Cell cell) {
-        super(cell, ConditionalStyleExtension.NAME);
-
-        // user styles new userstyle()
+        super(cell);
+        userStyle=new UserStyle();
         dependents = new TreeSet<Cell>();
     }
+
+    public UserStyle userStyle(){ return userStyle; }
 
     /**
      * Get the cell's user condition.
@@ -87,7 +89,6 @@ public class ConditionStylableCell extends CellExtension {
         if (getUserCondition() != null) {
             if (cell.getValue().isOfType(Value.Type.TEXT)) {
                 StylableCell stylableCell = (StylableCell) getDelegate().getExtension(StyleExtension.NAME);
-                stylableCell.resetStyle();
                 return;
             }
             try {
@@ -105,7 +106,9 @@ public class ConditionStylableCell extends CellExtension {
                         }
                     }
                 }
-            } catch (FormulaCompilationException e) {                
+            } catch (FormulaCompilationException e) {
+                ConditionStylableCell c = (ConditionStylableCell) cell.getExtension(ConditionalStyleExtension.NAME);
+                c.setUserCondition(null);
                 throw new IllegalConditionException("The entered condition is not valid!");
             }
             try {
@@ -125,16 +128,18 @@ public class ConditionStylableCell extends CellExtension {
             } catch (IllegalValueTypeException e) {                
                 throw new IllegalConditionException("Invalid cell value: " + e.toString());
             }        
+        }else{
+            StylableCell stylableCell = (StylableCell) getDelegate().getExtension(StyleExtension.NAME);
+            stylableCell.resetStyle();
         }
     }
 
     /**
-     * Sets the user defined style options.
-     *
-     * @param userStyle the user defined style
+     * Implemented by João Cardoso - 1150943
+     * Restores the Cell Stye
      */
-    public void setStyle(UserStyle userStyle) {
-        this.userStyle = userStyle;
+    public void restoreDefaultStyle() {
+        userStyle= new UserStyle();
     }
 
     /**
@@ -183,5 +188,40 @@ public class ConditionStylableCell extends CellExtension {
             throws java.io.IOException, ClassNotFoundException {
         stream.defaultReadObject();
         listeners = new ArrayList<ConditionStylableCellListener>();
+    }
+
+    public void setTrueStyleFont(Font trueStyleFont) {
+        userStyle.setTrueStyleFont(trueStyleFont);
+    }
+
+    public void setTrueStyleForegroundColor(Color trueStyleForegroundColor) {
+        userStyle.setTrueStyleForegroundColor(trueStyleForegroundColor);
+    }
+    public void setTrueStyleBackgroundColor(Color trueStyleBackgroundColor) {
+        userStyle.setTrueStyleBackgroundColor(trueStyleBackgroundColor);
+    }
+
+    public void setTrueStyleBorder(Border trueStyleBorder) {
+        userStyle.setTrueStyleBorder(trueStyleBorder);
+    }
+
+    public void setFalseStyleFont(Font falseStyleFont) {
+        userStyle.setFalseStyleFont(falseStyleFont);
+    }
+
+    public void setFalseStyleBorder(Border falseStyleBorder) {
+        userStyle.setFalseStyleBorder(falseStyleBorder);
+    }
+
+    public void setFalseStyleBackgroundColor(Color falseStyleBackgroundColor) {
+        userStyle.setFalseStyleBackgroundColor(falseStyleBackgroundColor);
+    }
+
+    public void setFalseStyleForegroundColor(Color falseStyleForegroundColor) {
+        userStyle.setFalseStyleForegroundColor(falseStyleForegroundColor);
+    }
+
+    public void setStyle(UserStyle style) {
+        this.userStyle = style;
     }
 }

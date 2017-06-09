@@ -4,6 +4,7 @@ import csheets.core.IllegalValueTypeException;
 import csheets.core.Spreadsheet;
 import csheets.core.Value;
 import csheets.core.formula.Expression;
+import csheets.ui.ctrl.UIController;
 import lapr4.blue.s1.lang.n1151159.macros.compiler.MacroCompilationException;
 import lapr4.blue.s1.lang.n1151159.macros.compiler.MacroCompiler;
 
@@ -23,8 +24,8 @@ public class MacroController {
      * @throws MacroCompilationException macro compilation exception
      * @throws IllegalValueTypeException illegal value type exception
      */
-    public Value executeMacro(Spreadsheet spreadsheet, String macroText) throws MacroCompilationException, IllegalValueTypeException {
-        Expression macro = MacroCompiler.getInstance().compile(spreadsheet, macroText);
+    public Value executeMacro(Spreadsheet spreadsheet, UIController uiController, String macroText) throws MacroCompilationException, IllegalValueTypeException {
+        Expression macro = MacroCompiler.getInstance().compile(spreadsheet, uiController, macroText);
         return macro.evaluate();
     }
 

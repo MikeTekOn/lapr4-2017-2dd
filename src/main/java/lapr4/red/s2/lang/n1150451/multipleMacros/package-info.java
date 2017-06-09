@@ -27,8 +27,7 @@
  *
  * <h3>3.1. Where will the macro be saved?</h3>
  *
- * It is said that each workbook should have their own list of macros. Analysing
- * that, In a first analysis a workbook should have its own list of macros.
+ * It is said that each workbook should have their own list of macros.
  *
  * <p/>
  * <img src="class_diagram_analysis.png" alt="image"/>
@@ -44,29 +43,74 @@
  *
  * <h3>3.3. What is the consequence in the previous grammar?</h3>
  * <p>
- * Since macros can be invoked inside a macro, there has to be a new rule:<br/>
- * ref_macro :  
- * LPARRET FUNCTION RPARRET; <br/>
+ * Since macros can be invoked inside a macro, there has to be a new
+ * rule.Although it is not stated in the requirement, after a small discussion
+ * with the client it was decided that the macro name should be within "[" and
+ * "]" in order to make the Macro easier to right and to be read.
  *
- * Being LPARRET and RPARRET the token corresponding to the char '[' and ']',
- * respectively. Although it is not stated in the requirement, after a small
- * discussion with the client it was decided that the macro name should be
- * within Brackets in order to make the Macro easier to right and to be read.
- *
- * <h3>3.4. What should happen if a macro is called withing the same macro?</h3>
+ * <h3>3.4. What should happen if a macro is called within the same macro?</h3>
  * Since there is a possibility for this to happen, in the context of a grammar,
  * the recursivity can't be avoided. Having that in mind, the solution should
  * reside in the Java code. There should be a mechanism to detect if the macro
  * has the same name of the one being analised, <b>before</b> the user runs it,
  * and if so, a warning message should be displayed and the user can't run the
  * macro unless that situation is corrected.
+ * <p/>
+ *
+ * Although it is not stated, it was decided that an option for editing should
+ * exist the Macro list window.
  * <h2>4. Design</h2>
+ *
+ * Unit tests: <br/>
+ * testAddMacroTwice: Ensures that it is not possible to add a macro that
+ * already exists on the list. <br/>
+ * testRemoveMacroWithoutExistence: Ensures that it is not possible to remove a
+ * macro that doesn't existe on the list. <br/>
+ * testRemoveMacroThatExists: Ensures that the removal on a macro that exists
+ * can be made. <br/>
+ * testUpdateMacro: Ensures that the macro is updated by testing the removal of
+ * the old one.
  * <p>
  * <h3>4.1. Functional Tests</h3>
  * <p>
  * <h3>4.2. UC Realization</h3>
  * Sequence Diagram
+ *
+ * Since this UC has two main parts, this section will be dividied into two sub
+ * sections.
+ *
+ * <h3>Create/Update/Delete Macro</h3>
+ *
+ * Since there will be needed more functionalities that the ones provided in the
+ * default Java Collection classes, it was decided that a "Macro List" class
+ * should be created. Having that in consideration, the following sequence
+ * diagrams were made:
  * <p>
+ * <img src="diagram_insert_sd.png" alt="image"/>
+ * <p>
+ * <img src="diagram_remove_sd.png" alt="image"/>
+ * <p>
+ * <img src="diagram_edit_sd.png" alt="image"/>
+ * <p>
+ * <h3>Macro Invocation</h3>
+ *
+ * To support the Invocation of Macros, the previous grammar must be changed.
+ * With that, a new rule has to be created to support their "detection". Having
+ * decided that the macros needs to be inside "[ ]", the rule should be: <br/><br/>
+ * <code>
+ * macro_invoked : LPAR_SQUARE (~(LPAR_SQUARE | RPAR_SQUARE))+ RPAR_SQUARE ;
+ * </code><br/><br/> This means that the macro should be between a LPAR_SQUARE ("[") and a
+ * RPAR_SQUARE ("]"), and, its name, can be anything except the delimiter
+ * chars.<br/>
+ *
+ * Also, a new visitor for the rule should be created. The visitor should be
+ * base in the next excerpt of code: <br/> <br/><code>
+ * s = new StringBuilder();
+ * for (i=0 until childNumber)
+ * if (i!=0 and i!=childNumber-1) s.append(child(i));
+ * </code> <br/><br/>It is needed to use the cicle, and not just child(1), since the macro
+ * name could be a combination of letters and numbers and, in that case, more
+ * than one token would be detected.
  *
  * <h3>4.3. Classes</h3>
  * <p>
@@ -92,11 +136,12 @@
  * <p>
  * Blocking:---
  * <p>
- * <b>Wednesday 31/05/2017</b>
+ * <b>Wednesday 07/06/2017</b>
  * <p>
- * Yesterday:
+ * Yesterday: I ifinshed the analysis for the first part of the UC.
  * <p>
- * Today: 
+ * Today: Finish the design, tests and if possible the implementation for the
+ * first part
  * <p>
  * Blocking:
  * <p>
@@ -104,15 +149,15 @@
  * <p>
  * Yesterday:
  * <p>
- * Today: 
+ * Today:
  * <p>
  * Blocking:
  * <p>
  * <b>Friday 2/06/2017</b>
  * <p>
- * Yesterday: 
+ * Yesterday:
  * <p>
- * Today: 
+ * Today:
  * <p>
  * Blocking:
  * <p>

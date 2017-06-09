@@ -1,0 +1,24 @@
+@startuml us025_design_workbook_handler_sd.png
+
+participant ExportPDFUI as UI
+participant ExportStylePDFController as Controller
+participant WorkbookWithStylesHandler as Handler
+
+activate UI
+UI -> Controller : new(configurations)
+note right of UI
+    Range is apart of 
+    these configurations
+end note
+activate Controller
+Controller -> Handler : getStylableCellsFromRange(range)
+activate Handler
+deactivate Handler
+note right of Controller
+    Management of other 
+    export configurations
+end note
+UI <-- Controller : Requests confirmation
+deactivate Controller
+
+@enduml us025_design_workbook_handler_sd.png

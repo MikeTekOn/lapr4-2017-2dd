@@ -87,7 +87,7 @@
 *    <li>testFormulaManyTemporaryVariables() -&gt; ex: "={_Var1:=2; _Var2:=3; _Var3:=_Var1+_Var2; A= _Var+3]"</li>
 *   <li>testItSelfCall() -&gt; ex:"={_a:=1);(_a:=_a+1);_a }"</li>
 *   <li>formulaWithTemporaryVariable() -&gt; ex:"={(_Var1:=2);( _Var2:=1); MAX(_Var1, _Var2)}" </li>
- * </ol> 
+ * </ol>
  *
  *  <b>Functional Tests </b>
  * <p>

@@ -94,7 +94,7 @@ public class StylableCell extends CellExtension {
 	 * Creates a stylable cell extension for the given cell.
 	 * @param cell the cell to extend
 	 */
-	StylableCell(Cell cell) {
+	protected StylableCell(Cell cell) {
 		super(cell, StyleExtension.NAME);
 		resetStyle();
 	}

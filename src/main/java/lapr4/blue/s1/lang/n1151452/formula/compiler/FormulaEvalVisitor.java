@@ -16,6 +16,8 @@ import csheets.core.formula.lang.ReferenceOperation;
 import csheets.core.formula.lang.UnknownElementException;
 import csheets.ui.ctrl.UIController;
 import lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable;
+import lapr4.blue.s1.lang.n1140822.beanshellwindow.BeanShellInstance;
+import lapr4.blue.s1.lang.n1140822.beanshellwindow.BeanShellLoader;
 import lapr4.blue.s1.lang.n1151452.formula.lang.Language;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperation;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperator;
@@ -31,13 +33,17 @@ import java.util.List;
  *
  * @author Diana Silva {1151088@isep.ipp.pt]} on 03/06/17
  * @author Daniel Gonçalves [1151452@isep.ipp.pt] on 01/06/17.
+ *
  * @author Guilherme Ferreira 1150623 corrected to work with 'Variable' class and VarContentor
- */
+ * @author Ricardo Catalão (1150385) on 08/06/2017
+ * @author jrt
+*/
 @SuppressWarnings("Duplicates")
 public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
     private Cell cell = null;
     private int numberOfErrors;
     private final StringBuilder errorBuffer;
+    private final UIController uiController;
 
     /**The starter lexical rule for temporary variables*/
     private static final char TEMP_VAR_STARTER='_';
@@ -45,8 +51,9 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
     /**The temporary variables manager*/
     private final VarContentor temp_contentor;
 
-    public FormulaEvalVisitor(Cell cell) {
+    public FormulaEvalVisitor(Cell cell, UIController uiController) {
         this.cell = cell;
+        this.uiController = uiController;
         numberOfErrors = 0;
         errorBuffer = new StringBuilder();
         temp_contentor = new VarContentor();
@@ -194,7 +201,11 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
                         new CellReference(cell.getSpreadsheet(), ctx.getChild(2).getText())
                 );
             } else {
-                return new CellReference(cell.getSpreadsheet(), ctx.getText());
+                if(ctx.getText().equals("#CELL")){
+                    return new CellReference(cell.getSpreadsheet(), cell.getAddress().toString());
+                }else{
+                    return new CellReference(cell.getSpreadsheet(), ctx.getText());
+                }
             }
         } catch (ParseException | UnknownElementException ex) {
             addVisitError(ex.getMessage());

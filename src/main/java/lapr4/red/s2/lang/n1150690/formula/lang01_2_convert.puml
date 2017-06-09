@@ -1,0 +1,21 @@
+@startuml core02_01_design3.png
+    participant "MoneyLanguageVisitor" as som
+    participant "util.Files" as files
+    participant "Properties" as prop
+    participant "input : InputStream" as input
+    participant "MonetaryConvertion" as mon
+    
+    activate som
+    som -> files : value = getPropertyValue(fileName, property)
+    
+    create prop
+    files -> prop : create()
+    
+    create input
+    files -> input : input = getClass().getClassLoader().getResourceAsStream(filename)
+    prop -> prop : load(input)
+    files -> prop : value = getProperty(property)
+
+    activate mon
+    som -> mon : convertTo(amount, value)
+@enduml
