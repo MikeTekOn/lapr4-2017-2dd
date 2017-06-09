@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import lapr4.blue.s2.ipc.n1140822.fileShare.FileNameDTO;
+import lapr4.blue.s2.ipc.n1140822.fileShare.FileNameListDTO;
 import lapr4.green.s1.ipc.n1150657.chat.RequestMessageDTO;
 import lapr4.green.s1.ipc.n1150901.search.workbook.RequestWorkbookDTO;
 
@@ -187,7 +189,6 @@ public class CommTCPClientsManager extends Observable implements Serializable {
 //        }
 //        return null;
 //    }
-    
     /**
      * IT sends the message to the server
      *
@@ -205,4 +206,17 @@ public class CommTCPClientsManager extends Observable implements Serializable {
             }
         }
     }
+
+    public void requestFile(ConnectionID connection, String fileName) {
+        CommTCPClientWorker worker = clients.get(connection);
+        if (worker != null) {
+            try {
+                FileNameDTO nameDTO = new FileNameDTO(fileName);
+                worker.getObjectOutputStream().writeObject(nameDTO);
+            } catch (IOException ex) {
+                Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
 }

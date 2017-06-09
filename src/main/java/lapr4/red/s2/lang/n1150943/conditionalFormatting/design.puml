@@ -1,0 +1,71 @@
+@startuml design.png
+    participant "focusOwner : SpreadsheetTable" as st
+    participant "uic: UIController" as uic
+    participant "currentUserStyle : UserStyle" as us
+    participant "uiExtension : ConditionalStyleUIExtension" as UIExt
+    participant "ConditionalStylePanel : JPanel" as crp
+    participant "ConditionalStyleController" as ctrl
+    participant "selectedCells : ArrayList<ConditionStylableCell>" as csc
+    participant "event: SelectionEvent" as event
+    participant "cell: Cell" as cell
+    participant "activeCell: ConditionStylableCell" as activeCell
+
+    create crp
+    UIExt -> crp :  new(uic)
+
+    create ctrl
+    crp -> ctrl : new(uic)
+    crp -> uic : addSelectionListener(this)
+
+    note right of uic
+        The user selects one or more cells...
+    end note
+
+    uic -> crp : selectionChanged(SelectionEvent event)
+    crp -> event : cell=getCell()
+    crp -> cell : activeCell=getExtension(ConditionalStyleExtension.NAME)
+
+    crp -> ctrl : cellSelected(cell);
+    ctrl -> activeCell : txt = cell.getUserCondition()
+    ctrl -> crp : setConditionText(txt)
+
+    note left of crp
+        The user changes the formatting style (background color, text color...)
+        For exemple: changes the background colors for true and false condition
+    end note
+
+    crp -> us : setTrueStyleBackgroundColor(color);
+    crp -> us : setTrueStyleBackgroundColor(color);
+
+
+    note right of crp
+    User clicks button Apply Changes
+    end note
+
+    crp -> st : selectedCells=getSelectedCellsList()
+    crp -> ctrl : setSelectedCells(selectedCells)
+    crp -> ctrl : setCondition("text from condition field")
+
+    loop each conditionStylableCell in selectedCells
+        alt condition is empty or invalid
+             ctrl -> csc : setCondition(null)
+             ctrl -> csc : resetStyle()
+        else else
+            ctrl -> csc : setUserCondition(verifiedCondition)
+        end
+    end
+
+    crp -> ctrl : setStyle(currentUserStyle)
+
+    loop each conditionStylableCell in selectedCells
+        ctrl -> csc : setTrueStyleFont(userStyle.getTrueStyleFont());
+        ctrl -> csc : setTrueStyleForegroundColor(userStyle.getTrueStyleForegroundColor());
+        ctrl -> csc : setTrueStyleBackgroundColor(userStyle.getTrueStyleBackgroundColor());
+        ctrl -> csc : setTrueStyleBorder(userStyle.getTrueStyleBorder());
+        ctrl -> csc : setFalseStyleFont(userStyle.getFalseStyleFont());
+        ctrl -> csc : setFalseStyleForegroundColor(userStyle.getFalseStyleForegroundColor());
+        ctrl -> csc : setFalseStyleBackgroundColor(userStyle.getFalseStyleBackgroundColor());
+        ctrl -> csc : setFalseStyleBorder(userStyle.getFalseStyleBorder());
+    end
+
+@enduml

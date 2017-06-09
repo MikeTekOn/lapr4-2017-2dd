@@ -27,7 +27,7 @@ public class WorkbookSearchController {
      * Utilities from Regex
      */
     private RegexUtil util;
-    private UIController ctrl;
+   protected UIController ctrl;
 
     /**
      * Active workbook at the moment

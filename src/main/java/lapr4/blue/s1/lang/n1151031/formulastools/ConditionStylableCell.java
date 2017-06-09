@@ -106,7 +106,9 @@ public class ConditionStylableCell extends StylableCell {
                         }
                     }
                 }
-            } catch (FormulaCompilationException e) {                
+            } catch (FormulaCompilationException e) {
+                ConditionStylableCell c = (ConditionStylableCell) cell.getExtension(ConditionalStyleExtension.NAME);
+                c.setUserCondition(null);
                 throw new IllegalConditionException("The entered condition is not valid!");
             }
             try {

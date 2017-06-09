@@ -1,5 +1,7 @@
 package lapr4.blue.s1.lang.n1151159.macros.compiler;
 
+import bsh.EvalError;
+import csheets.core.IllegalValueTypeException;
 import csheets.core.Spreadsheet;
 import csheets.core.Value;
 import csheets.core.formula.*;
@@ -9,9 +11,14 @@ import csheets.core.formula.lang.CellReference;
 import csheets.core.formula.lang.RangeReference;
 import csheets.core.formula.lang.ReferenceOperation;
 import csheets.core.formula.lang.UnknownElementException;
+import csheets.ui.ctrl.UIController;
+import lapr4.blue.s1.lang.n1140822.beanshellwindow.BeanShellInstance;
+import lapr4.blue.s1.lang.n1140822.beanshellwindow.BeanShellLoader;
+import lapr4.blue.s1.lang.n1140822.beanshellwindow.BeanShellResult;
 import lapr4.blue.s1.lang.n1151452.formula.lang.Language;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperation;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperator;
+import lapr4.red.s2.lang.n1150385.beanshell.BeanShellAsyncRunner;
 import org.antlr.v4.runtime.Token;
 
 import java.text.ParseException;
@@ -21,6 +28,7 @@ import java.util.List;
 /**
  * @author jrt
  * @author Ivo Ferro
+ * @author Ricardo Catalao (1150385)
  */
 @SuppressWarnings("Duplicates")
 public class MacroEvalVisitor extends MacroBaseVisitor<Expression> {
@@ -29,6 +37,11 @@ public class MacroEvalVisitor extends MacroBaseVisitor<Expression> {
      * The spreadsheet.
      */
     private final Spreadsheet spreadsheet;
+
+    /**
+     * The UIController
+     */
+    private final UIController uiController;
 
     /**
      * A buffer for the errors.
@@ -45,10 +58,48 @@ public class MacroEvalVisitor extends MacroBaseVisitor<Expression> {
      *
      * @param spreadsheet the spreadsheet
      */
-    public MacroEvalVisitor(Spreadsheet spreadsheet) {
+    public MacroEvalVisitor(Spreadsheet spreadsheet, UIController uiController) {
         numberOfErrors = 0;
         errorBuffer = new StringBuilder();
         this.spreadsheet = spreadsheet;
+        this.uiController = uiController;
+    }
+
+    @Override
+    public Expression visitScript(MacroParser.ScriptContext ctx) {
+        super.visitScript(ctx);
+
+        StringBuilder builder = new StringBuilder();
+        for(int i=0; i<ctx.getChildCount(); i++){
+            builder.append(ctx.getChild(i).getText());
+            builder.append(" "); // WhiteSpace seems to always be ignored so... to not break things up, this was placed
+        }
+
+        return new Literal(new Value(builder.toString()));
+    }
+
+    /**
+     * Handles the behaviour of visiting the ShellScript grammar node. The shellScript node will have the information
+     * needed for what code the beanShell should execute, but also how to execute it.
+     *
+     * The node can start with 2 headers. (1) "<![SHELL[" or (2) "<[SHELL[".
+     * If (1) is chosen, the bean shell code should be run asynchronously and the result of visiting this node is
+     * null. If (2) is chosen, the code should be run synchronously and the result of visiting this node is the return
+     * value of visiting the bean shell code (normally, the value of the last instruction executed).
+     */
+    @Override
+    public Expression visitShellscript(MacroParser.ShellscriptContext ctx) {
+        BeanShellLoader loader = new BeanShellLoader();
+
+        Literal literal = (Literal)visit(ctx.getChild(1));
+        String code = literal.toString().substring(1, literal.toString().length() - 1);
+        BeanShellInstance shell = loader.create(code, uiController, null);
+
+        if(ctx.getChild(0).getText().charAt(1) == '!'){ // It should run asynchronously
+            shell.setAsynchronous();
+        }
+
+        return shell;
     }
 
     /**

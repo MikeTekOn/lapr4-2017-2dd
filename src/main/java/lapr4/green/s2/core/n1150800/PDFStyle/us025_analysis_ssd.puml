@@ -1,0 +1,33 @@
+@startuml us025_analysis_ssd.png
+
+@startuml
+actor User
+participant System
+
+User -> System : Starts the PDF exportation
+User <-- System : Asks the range of the desired output
+
+note right 
+The range is either a 
+Workbook, a SpreadSheet or Cells
+end note
+
+User -> System : Selects the desired range
+User <-- System : Asks if the output should contain headers
+
+User -> System : Selects the option
+User <-- System : Requests a configuration of the output cell delimitation
+
+note right
+For this iteration, this is the only
+part that's different from the previous one
+end note
+
+User -> System : Configures the requested configuration
+User <-- System : Asks the destination path of the output file
+
+User -> System : Selects the output path
+User <-- System : Informs about the sucess of the operation
+@enduml
+
+@enduml us025_analysis_ssd.png

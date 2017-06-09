@@ -1,5 +1,6 @@
 package lapr4.green.s1.ipc.n1150532.comm.connection;
 
+import java.io.Serializable;
 import java.net.InetAddress;
 import java.util.Objects;
 
@@ -8,7 +9,7 @@ import java.util.Objects;
  *
  * @author Manuel Meireles (1150532@isep.ipp.pt)
  */
-public class ConnectionIDImpl implements ConnectionID {
+public class ConnectionIDImpl implements ConnectionID, Serializable {
 
     /**
      * The connection address.

@@ -19,7 +19,6 @@ import lapr4.green.s1.ipc.n1150532.comm.ui.UICommExtensionSideBar;
 import lapr4.green.s1.ipc.n1150532.startSharing.HandlerRequestSharedCellsDTO;
 import lapr4.green.s1.ipc.n1150532.startSharing.HandlerResponseSharedCellsDTO;
 import lapr4.green.s1.ipc.n1150532.startSharing.SharedCellsEvent;
-import lapr4.green.s1.ipc.n1150738.securecomm.*;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -27,6 +26,12 @@ import java.util.SortedSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import lapr4.blue.s2.ipc.n1140822.fileShare.FileDTO;
+import lapr4.blue.s2.ipc.n1140822.fileShare.FileNameDTO;
+import lapr4.blue.s2.ipc.n1140822.fileShare.FileNameListDTO;
+import lapr4.blue.s2.ipc.n1140822.fileShare.HandlerFileDTO;
+import lapr4.blue.s2.ipc.n1140822.fileShare.HandlerFileNameDTO;
+import lapr4.blue.s2.ipc.n1140822.fileShare.HandlerFileNameListDTO;
 import lapr4.green.s1.ipc.n1150657.chat.ControllerConnection;
 import lapr4.green.s1.ipc.n1150657.chat.HandlerRequestMessageDTO;
 import lapr4.green.s1.ipc.n1150657.chat.MessageEvent;
@@ -175,6 +180,10 @@ public class CommExtension extends Extension implements Observer {
         HandlerRequestMessageDTO h4 = new HandlerRequestMessageDTO();
         h4.addObserver(this);
         tcpServer.addHandler(RequestMessageDTO.class, h4);
+        HandlerFileNameDTO h5 = new HandlerFileNameDTO();
+        tcpServer.addHandler(FileNameDTO.class, h5);
+        HandlerFileDTO h6 = new HandlerFileDTO();
+        tcpServer.addHandler(FileDTO.class, h6);
         //TODO 
     }
 
@@ -184,6 +193,8 @@ public class CommExtension extends Extension implements Observer {
     private void addAllAvailableHandlersToUDPServer() {
         HandlerConnectionDetailsRequestDTO h1 = new HandlerConnectionDetailsRequestDTO();
         udpServer.addHandler(ConnectionDetailsRequestDTO.class, h1);
+        HandlerFileNameListDTO  h2 = new HandlerFileNameListDTO();
+        udpServer.addHandler(FileNameListDTO.class, h2);
         //TODO 
     }
 
@@ -199,6 +210,8 @@ public class CommExtension extends Extension implements Observer {
         tcpClientsManager.addHandler(ResponseSharedCellsDTO.class, h2);
         HandlerResponseWorkbookDTO h3 = new HandlerResponseWorkbookDTO();
         tcpClientsManager.addHandler(ResponseWorkbookDTO.class, h3);
+        HandlerFileDTO h6 = new HandlerFileDTO();
+        tcpClientsManager.addHandler(FileDTO.class, h6);
         //HandlerResponseMessageDTO h4 = new HandlerResponseMessageDTO();
         //tcpClientsManager.addHandler(ResponseMessageDTO.class,h4);
         //tcpServer.addHandler(RequestMessageDTO.class, h4);

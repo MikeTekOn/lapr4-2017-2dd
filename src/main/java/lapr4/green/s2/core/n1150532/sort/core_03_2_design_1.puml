@@ -12,9 +12,10 @@ participant "SpreadsheetTable"
 participant "SortCellRangeUI"
 participant "SortCellRangeController"
 participant "RangeRowDTO"
-participant "ComparatorService"
-participant "SortingComparator" << interface >>
-participant "AlgorithmService"
+participant "ComparatorFactory"
+participant "RangeRowDTOComparator"
+participant "TypeComparator"
+participant "AlgorithmFactory"
 participant "SortingAlgorithm" << interface >>
 
 User -> SortCellRangeAction : choose action
@@ -23,23 +24,25 @@ create SortCellRangeUI
 SortCellRangeAction -> SortCellRangeUI : new( selectedCells )
 create SortCellRangeController
 SortCellRangeUI -> SortCellRangeController : new()
-create ComparatorService
-SortCellRangeController -> ComparatorService : new
-create AlgorithmService
-SortCellRangeController -> AlgorithmService : new
+create ComparatorFactory
+SortCellRangeController -> ComparatorFactory : new
+create AlgorithmFactory
+SortCellRangeController -> AlgorithmFactory : new
 SortCellRangeUI -> SortCellRangeController : getComparators()
-SortCellRangeController -> ComparatorService : getSortingComparators()
+SortCellRangeController -> ComparatorFactory : buildAllRangeRowDTOComparators()
 loop
-create SortingComparator
-ComparatorService -> SortingComparator : comp = new()
-ComparatorService -> ComparatorService : add( comp )
+create TypeComparator
+ComparatorFactory -> TypeComparator : tc = new()
+create RangeRowDTOComparator
+ComparatorFactory -> RangeRowDTOComparator : rrc = new( tc )
+ComparatorFactory -> ComparatorFactory : add( rrc )
 end loop
 SortCellRangeUI -> SortCellRangeController : getAlgorithms()
-SortCellRangeController -> AlgorithmService : getSortingAlgorithms()
+SortCellRangeController -> AlgorithmFactory : getSortingAlgorithms()
 loop
 create SortingAlgorithm
-AlgorithmService -> SortingAlgorithm : algorithm = new
-AlgorithmService -> AlgorithmService : add( algorithm )
+AlgorithmFactory -> SortingAlgorithm : algorithm = new
+AlgorithmFactory -> AlgorithmFactory : add( algorithm )
 end loop
 SortCellRangeUI -> SortCellRangeUI : render()
 SortCellRangeUI -> User : show options
@@ -50,9 +53,10 @@ create RangeRowDTO
 SortCellRangeController -> RangeRowDTO : rrDTO = new( row , sortingColumn )
 SortCellRangeController -> SortCellRangeController : rangeRowsArray[ i ] = rrDTO;
 end loop
-SortCellRangeController -> SortingComparator : setDescending( isDescending )
+SortCellRangeController -> RangeRowDTOComparator : setDescending( isDescending )
 SortCellRangeController -> SortingAlgorithm : sort( rangeRowsArray , comparator )
-SortingAlgorithm -> SortingComparator : compare( rangeRowsArray[i] , rangeRowsArray[j] )
-SortingAlgorithm -> SortingComparator : swap( rangeRowsArray[i] , rangeRowsArray[j] )
+SortingAlgorithm -> RangeRowDTOComparator : compare( rangeRowsArray[i] , rangeRowsArray[j] )
+RangeRowDTOComparator -> TypeComparator : compare( type1 , type2 )
+SortingAlgorithm -> RangeRowDTO : rangeRowsArray[i].swap( rangeRowsArray[j] )
 
 @enduml

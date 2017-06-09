@@ -1,0 +1,29 @@
+@startuml lang07_02_design.png
+participant Visitor as Vis
+
+-> Vis : visitShellScript(ShellscriptContext ctx)
+create participant BeanShellLoader as loader
+Vis -> loader: loader = new BeanShellLoader();
+
+note right of Vis: (1) is the index of the script child node
+Vis->Vis: literal = (Literal)visit(ctx.getChild(1));
+
+note right of Vis
+We got a string representation, so we
+have to eliminate the quotation marks
+end note
+Vis->Vis: code = literal.toString().substring(1, literal.toString().length() - 1);
+
+Vis -> loader: shell = create(code, uiController, null);
+
+create participant "shell : BeanShellInstance" as shell
+... Parsing algorithm of the string to BeanShell Instructions ignored ...
+loader -> shell: new BeanShellInstance();
+
+alt if(ctx.getChild(0).getText().charAt(1) == '!')
+Vis->shell: setAsynchronous();
+end alt
+
+<- Vis: return shell;
+
+@enduml

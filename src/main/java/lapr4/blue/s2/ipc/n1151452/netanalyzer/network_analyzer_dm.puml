@@ -72,7 +72,7 @@ end note
 
 TrafficCounter --> TrafficCounterListener  : flush()
 (TrafficCounter, TrafficCounterListener) . TrafficCount
-note on link: sync with increments\n(higher priority)
+note on link: sends a TrafficCount\nobject
 
 interface TrafficLogListener <implements EventListener> {
 
@@ -95,7 +95,7 @@ end note
 
 TrafficLogger --> TrafficLogListener  : consumeLog()
 (TrafficLogger, TrafficLogListener) . TrafficEvent
-note on link: sync with increments\n(higher priority)
+note on link: Sends a TrafficEvent
 
 
 abstract Observable {
