@@ -41,6 +41,9 @@ public class VarContentor extends BlueFormulaBaseVisitor<Expression> implements 
     }
 
     public boolean update(Variable tempVar){
+        if(tempVar == null){
+            throw new IllegalArgumentException();
+        }
         if(variables.contains(tempVar)) {
             variables.remove(tempVar);
             return variables.add(tempVar);
