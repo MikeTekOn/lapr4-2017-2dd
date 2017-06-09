@@ -24,6 +24,7 @@ import java.io.InputStreamReader;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import lapr4.red.s2.lang.n1150451.multipleMacros.MacroWithName;
 
 /**
  * Represents a dialog to execute macros.
@@ -52,6 +53,7 @@ public class MacroDialog extends JDialog {
     private JTextArea macroTextArea;
     private JTextField macroOutputTextField;
     private Dimension BUTTON_SIZE = new Dimension(100, 30);
+    private JComboBox<Object> comboBox;
 
     /**
      * Creates an instance of macro dialog.
@@ -133,15 +135,28 @@ public class MacroDialog extends JDialog {
      * @return macro text area panel
      */
     private JPanel createMacroTextAreaPanel() {
-        JPanel macroTextAreaPanel = new JPanel();
-
+        JPanel macroTextAreaPanel = new JPanel(new BorderLayout());
+        
+        comboBox = new JComboBox<>();
+        
+        for (MacroWithName macroWithName : uiController.getActiveWorkbook().getMacroList().getMacroList()) {
+            comboBox.addItem(macroWithName);
+        }
+        comboBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                macroTextArea.setText(((MacroWithName)comboBox.getSelectedItem()).getMacroCode());
+            }
+        });
+        
         macroTextArea = new JTextArea(MACRO_TEXT_AREA_ROWS, MACRO_TEXT_AREA_COLUMNS);
         macroTextArea.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
         macroTextArea.setText(macroController.getDefaultMacro());
 
         JScrollPane macroTextAreaScrollPane = new JScrollPane(macroTextArea);
 
-        macroTextAreaPanel.add(macroTextAreaScrollPane);
+        macroTextAreaPanel.add(comboBox, BorderLayout.NORTH);
+        macroTextAreaPanel.add(macroTextAreaScrollPane, BorderLayout.CENTER);
 
         return macroTextAreaPanel;
     }

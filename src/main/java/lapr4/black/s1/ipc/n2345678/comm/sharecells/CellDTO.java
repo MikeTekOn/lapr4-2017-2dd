@@ -7,6 +7,11 @@ package lapr4.black.s1.ipc.n2345678.comm.sharecells;
 
 import csheets.core.Address;
 import csheets.core.Cell;
+import csheets.ext.style.StylableCell;
+import csheets.ext.style.StyleExtension;
+import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.StyleDTO;
+import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.util.Styles;
+
 import java.io.Serializable;
 import java.lang.Comparable;
 
@@ -19,6 +24,11 @@ import java.lang.Comparable;
  * @author alexandrebraganca
  */
 public class CellDTO implements Serializable, Comparable<CellDTO> {
+
+    /**
+     * A style DTO with the style to be applied to the cell.
+     */
+    private StyleDTO styleDTO;
     
     private Address address;
     private String content;
@@ -27,9 +37,33 @@ public class CellDTO implements Serializable, Comparable<CellDTO> {
         address=addr;
         content=cont;
     }
-    
+
+    /**
+     * Creates a cell DTO from a cell.
+     *
+     * @param aCell the cell with the information
+     * @return the created DTO
+     */
     public static CellDTO createFromCell(Cell aCell) {
-        return new CellDTO(aCell.getAddress(), aCell.getContent());
+        CellDTO cellDTO = new CellDTO(aCell.getAddress(), aCell.getContent());
+        StylableCell stylableCell = (StylableCell)aCell.getExtension(StyleExtension.NAME);
+        if (stylableCell != null) {
+            cellDTO.setStyleDTO(Styles.createStyleDtoFromCell(stylableCell));
+        }
+        return cellDTO;
+    }
+
+    public void setStyleDTO(StyleDTO styleDTO) {
+        this.styleDTO = styleDTO;
+    }
+
+    /**
+     * Gets the style DTO.
+     *
+     * @return style DTO
+     */
+    public StyleDTO getStyleDTO() {
+        return styleDTO;
     }
     
     public Address getAddress() {
