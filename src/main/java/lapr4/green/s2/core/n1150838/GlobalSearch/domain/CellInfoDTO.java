@@ -6,6 +6,7 @@
 package lapr4.green.s2.core.n1150838.GlobalSearch.domain;
 
 import csheets.core.Cell;
+import csheets.core.Workbook;
 import eapli.framework.dto.DTO;
 
 /**
@@ -15,14 +16,12 @@ import eapli.framework.dto.DTO;
 public class CellInfoDTO implements DTO {
 
     private Cell cell;
-    private String cellContentFound;
-    private String comentContentFound;
+    private Workbook workbook;
     private int spreadsheetNumber;
 
-    public CellInfoDTO(Cell cell, String cellContentFound, String comentContentFound,int spreadsheetNumber) {
+    public CellInfoDTO(Cell cell, int spreadsheetNumber,Workbook workbook) {
         this.cell = cell;
-        this.cellContentFound = cellContentFound;
-        this.comentContentFound = comentContentFound;
+        this.workbook=workbook;
         this.spreadsheetNumber= spreadsheetNumber;
              
 
@@ -34,20 +33,16 @@ public class CellInfoDTO implements DTO {
     public Cell getCell() {
         return cell;
     }
-
+    
+    
     /**
-     * @return the cellContentFound
+     * @return the workbookName
      */
-    public String getCellContentFound() {
-        return cellContentFound;
+    public Workbook getWorkbookName() {
+        return workbook;
     }
 
-    /**
-     * @return the comentContentFound
-     */
-    public String getComentContentFound() {
-        return comentContentFound;
-    }
+
     
     /**
      * @return the spreadCheetNumber
@@ -63,7 +58,7 @@ public class CellInfoDTO implements DTO {
      */
     @Override
     public CellInfoDTO clone() {
-        return new CellInfoDTO(cell, cellContentFound, getComentContentFound(), getSpreadsheetNumber());
+        return new CellInfoDTO(cell,  getSpreadsheetNumber(), getWorkbookName());
     }
 
 

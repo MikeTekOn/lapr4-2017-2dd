@@ -99,9 +99,14 @@ public class ModifyMacroUI extends JDialog {
         updateList();
 
         JScrollPane pane = new JScrollPane(macroList);
-        pane.setSize(300, 300);
+        pane.setPreferredSize(new Dimension(300, 300));
+        
+        JLabel label = new JLabel("Macro list:");
         grid.gridx = 0;
         grid.gridy = 0;
+        panel.add(label, grid);
+        
+        grid.gridy = 1;
         panel.add(pane, grid);
         return panel;
     }
@@ -146,6 +151,7 @@ public class ModifyMacroUI extends JDialog {
                     JOptionPane.showMessageDialog(rootPane, "You must select a macro first.");
                 } else {
                     ModifyMacroListController c = new ModifyMacroListController();
+                    c.getMacroList(uiController.getActiveWorkbook(), uiController);
                     c.deleteMacro((String) macroList.getSelectedValue());
                     updateList();
                 }
