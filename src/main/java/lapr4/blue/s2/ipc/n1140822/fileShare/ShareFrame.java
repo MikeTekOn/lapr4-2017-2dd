@@ -54,12 +54,10 @@ public class ShareFrame extends JFrame implements Observer {
 
     private void createComponents() {
 
-       
-
         String[] columnNames = {"File name", "Host", "File size"};
 
         table = new JTable();
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         table.setSize(100, 100);
 
         listFiles = new JList();
@@ -75,7 +73,6 @@ public class ShareFrame extends JFrame implements Observer {
         model = new DefaultListModel();
 
         JScrollPane scrollPane = new JScrollPane(table);
-       
 
         add(scrollPane);
         JButton downloadButton = createDownloadButton();
@@ -87,14 +84,17 @@ public class ShareFrame extends JFrame implements Observer {
         if (o instanceof HandlerFileNameListDTO) {
 
             for (String fileName : ((FileNameListDTO) arg).filesMap().keySet()) {
+                if (!tableModel.getValueAt(table.getSelectedRow(), 0).equals(fileName)&& tableModel.getValueAt(table.getSelectedRow(), 1).equals( ((FileNameListDTO) arg).connID())) {
 //                if (!tableModel.(fileName + "-> " + ((FileNameListDTO) arg).getConnectionOwner())) {
-                Object[] rowData = new Object[3];
-                rowData[0] = fileName;
-                rowData[1] = ((FileNameListDTO) arg).connID();
-                rowData[2] = (((FileNameListDTO) arg).filesMap().get(fileName)) + " bytes";
-                tableModel.addRow(rowData);
-                //model.addElement(fileName + "-> " + ((FileNameListDTO) arg).getConnectionOwner());
-                //  }
+                    Object[] rowData = new Object[3];
+                    rowData[0] = fileName;
+                    rowData[1] = ((FileNameListDTO) arg).connID();
+                    rowData[2] = (((FileNameListDTO) arg).filesMap().get(fileName)) + " bytes";
+                    tableModel.addRow(rowData);
+                    
+                    //model.addElement(fileName + "-> " + ((FileNameListDTO) arg).getConnectionOwner());
+                    //  }
+                }
             }
             table.setModel(tableModel);
         }
