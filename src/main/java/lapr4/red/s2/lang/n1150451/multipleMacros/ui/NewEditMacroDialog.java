@@ -96,10 +96,10 @@ public class NewEditMacroDialog extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 ModifyMacroListController c = new ModifyMacroListController();
                 if (macro != null) {
-                    c.getMacroList(uiController.getActiveWorkbook());
+                    c.getMacroList(uiController.getActiveWorkbook(), uiController);
                     c.updateMacro(macro.getName(), fieldName.getText(), codeArea.getText(), uiController.getActiveSpreadsheet());
                 } else {
-                    c.getMacroList(uiController.getActiveWorkbook());
+                    c.getMacroList(uiController.getActiveWorkbook(), uiController);
                     c.addMacro(fieldName.getText(), codeArea.getText(), uiController.getActiveSpreadsheet());
                 }
                 mmUI.updateList();
