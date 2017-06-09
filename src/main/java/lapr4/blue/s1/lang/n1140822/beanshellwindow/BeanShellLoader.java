@@ -4,11 +4,9 @@
 package lapr4.blue.s1.lang.n1140822.beanshellwindow;
 
 import csheets.ui.ctrl.UIController;
-import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVarContentor;
 import lapr4.red.s2.lang.n1150385.beanshell.Instruction;
+import lapr4.red.s2.lang.n1150623.globalVariables.VarContentor;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.LinkedList;
 import java.util.Scanner;
 
@@ -38,7 +36,7 @@ public class BeanShellLoader {
      * @param script the script
      * @return the class instance
      */
-    public BeanShellInstance create(String script, UIController controller, TemporaryVarContentor tempVarContentor) {
+    public BeanShellInstance create(String script, UIController controller, VarContentor tempVarContentor) {
         this.script = script;
         LinkedList<Instruction> code = new LinkedList<>();
         StringBuilder builder = null;

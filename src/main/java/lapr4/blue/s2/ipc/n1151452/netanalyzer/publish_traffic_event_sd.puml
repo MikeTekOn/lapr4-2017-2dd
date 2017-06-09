@@ -1,0 +1,33 @@
+@startuml publish_traffic_event_sd.png
+
+box "Connection Thread" #FFDC75
+	participant "a TCP worker" as worker <<Thread>>
+	participant TrafficInputStream as tis
+	participant TransmissionStrategy as ts <<Strategy>>
+	participant "ois : ObjectInputStream" as ois
+
+	worker -> tis : readObject()
+	tis -> ts : getInputStream(myStream) : ois
+	tis -> ois : readObject() : obj
+
+	create "pte : PublishTrafficEvent" <<Runnable>>
+    tis -> "pte : PublishTrafficEvent" : create(obj, port, ..., type)
+end box
+box "Publisher Thread" #A8DBA8
+    participant Util as ut
+    participant "pte : PublishTrafficEvent" as pte <<Runnable>>
+
+    tis -> pte : run()
+    tis --> worker : returns the\nread object
+    pte -> ut : getSize(obj) : Long
+    ut --> pte : return byte count
+    create "ev : TrafficEvent" as ev
+    pte -> ev : create(byteCount, ..., type)
+    pte -> pte : notifyObservers(ev)
+    note over pte
+    all observers will be notified.
+    end note
+    pte -> pte : terminate()
+end box
+
+@enduml

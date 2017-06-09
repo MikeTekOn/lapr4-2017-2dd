@@ -12,7 +12,7 @@ import org.junit.Test;
  * @author Diana Silva [1151088@isep.ipp.pt]
  *         on 02/06/17
  */
-public class FormulaTemporaryVariableTest {
+public class FormulaVariableTest {
 
     private CleanSheets app;
     Cell cellA1;

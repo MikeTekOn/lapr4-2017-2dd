@@ -12,13 +12,12 @@ import csheets.core.Value;
 import csheets.core.formula.Expression;
 import csheets.core.formula.util.ExpressionVisitor;
 import csheets.ui.ctrl.UIController;
-import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVarContentor;
-import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVariable;
+import lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable;
 import lapr4.blue.s1.lang.n1151159.macros.MacroController;
 import lapr4.blue.s1.lang.n1151159.macros.compiler.MacroCompilationException;
 import lapr4.red.s2.lang.n1150385.beanshell.BeanShellAsyncRunner;
 import lapr4.red.s2.lang.n1150385.beanshell.Instruction;
-import org.bouncycastle.util.Strings;
+import lapr4.red.s2.lang.n1150623.globalVariables.VarContentor;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -48,7 +47,7 @@ public class BeanShellInstance implements Expression {
 
     private UIController controller;
 
-    private TemporaryVarContentor tempVarContainer;
+    private VarContentor tempVarContainer;
 
     private boolean asynchronous = false;
 
@@ -57,7 +56,7 @@ public class BeanShellInstance implements Expression {
      */
     private MacroController macroController = new MacroController();
 
-    public BeanShellInstance(LinkedList<Instruction> instructions, UIController controller, TemporaryVarContentor tempVarContentor) {
+    public BeanShellInstance(LinkedList<Instruction> instructions, UIController controller, VarContentor tempVarContentor) {
         this.bshInterpreter = new Interpreter();
         this.code = instructions;
         results = new LinkedHashMap<>();
@@ -80,7 +79,7 @@ public class BeanShellInstance implements Expression {
         }else{
             bshInterpreter.set("uiController", controller);
             if(tempVarContainer != null){
-                for(TemporaryVariable var : tempVarContainer.getVariablesSet()){
+                for(Variable var : tempVarContainer.variables()){
                     bshInterpreter.set(var.getName(), var.getExpression().evaluate().toAny());
                 }
             }
