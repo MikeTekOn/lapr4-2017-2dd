@@ -143,8 +143,9 @@ public class ConfigPane extends JDialog {
                 if(selectedType!=null){
                     modelAvailableTypes.addElement(selectedType);
                     modelSelectedTypes.removeElement(selectedType);
+                                        selectedTypes.updateUI();
                     availableTypes.updateUI();
-                    selectedTypes.updateUI();
+                    
                 }else{
                      JOptionPane.showMessageDialog(null,
                             "Select a type to remove",

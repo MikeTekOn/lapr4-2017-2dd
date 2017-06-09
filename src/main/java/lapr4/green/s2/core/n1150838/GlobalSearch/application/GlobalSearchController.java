@@ -21,6 +21,8 @@ import lapr4.red.s1.core.n1150613.workbookSearch.application.WorkbookSearchContr
  */
 public class GlobalSearchController extends WorkbookSearchController implements Controller {
     
+    protected Thread t ;
+    
     public GlobalSearchController(UIController ctrl) {
         super(ctrl);
     }
@@ -32,9 +34,15 @@ public class GlobalSearchController extends WorkbookSearchController implements 
         return true;
     }
     
-    public void  start(Filter filter,String regex){
-        Thread t = new Thread(new RegexUtilExtended(filter,regex,ctrl.getActiveWorkbooks()));
+     public void  start(Filter filter,String regex){
+        t = new Thread(new RegexUtilExtended(filter,regex,ctrl.getActiveWorkbooks()));
         t.start();
+    }
+    
+    public void stop(){
+        if(t!=null){
+            t.stop();
+        }
     }
     
     
