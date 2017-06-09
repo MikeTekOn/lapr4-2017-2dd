@@ -26,6 +26,7 @@ package lapr4.blue.s1.lang.n1151159.macros.compiler;
 
 import csheets.core.Spreadsheet;
 import csheets.core.formula.Expression;
+import csheets.ui.ctrl.UIController;
 import lapr4.blue.s1.lang.n1151159.macros.Macro;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
@@ -57,7 +58,7 @@ public class MacroCompiler {
         return instance;
     }
 
-    public Macro compile(Spreadsheet spreadsheet, String source) throws MacroCompilationException {
+    public Macro compile(Spreadsheet spreadsheet, UIController uiController, String source) throws MacroCompilationException {
         // Creates the lexer and parser
         // Although the ANTLRInputStream is deprecated, the core is
         // already using it. Mixing both makes the performance worse.
@@ -80,7 +81,7 @@ public class MacroCompiler {
         }
 
         // Visit the expression and returns it
-        MacroEvalVisitor eval = new MacroEvalVisitor(spreadsheet);
+        MacroEvalVisitor eval = new MacroEvalVisitor(spreadsheet, uiController);
 
         List<Expression> expressions = new LinkedList<>();
         for (int i = 0; i < tree.getChildCount(); i++) {

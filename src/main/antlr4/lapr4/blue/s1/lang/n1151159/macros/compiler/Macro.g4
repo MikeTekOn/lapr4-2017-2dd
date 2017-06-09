@@ -4,7 +4,7 @@ grammar Macro;
 }
 
 macro
-    : NEWLINE* expression* EQ? comparison NEWLINE* EOF
+    : NEWLINE* (SEMI (~NEWLINE)* NEWLINE+| expression)* (SEMI (~NEWLINE)* NEWLINE+ | EQ? comparison) NEWLINE* EOF
     ;
 
 expression
@@ -20,7 +20,6 @@ comparison
 		( ( EQ | NEQ | GT | LT | LTEQ | GTEQ ) concatenation )?
 	;
 
-
 concatenation
         : ( MINUS )? atom
         | concatenation PERCENT
@@ -30,6 +29,14 @@ concatenation
         | concatenation AMP concatenation
         ;
 
+script
+    : ( SPECIAL_CHAR | 'macro_start' | 'macro_end' | (( '<![SHELL[' | '<[SHELL[' ) script ']]>') | ~( '<![SHELL[' | '<[SHELL['  | ']]>'))*
+    ;
+
+shellscript
+    :   ( '<![SHELL[' | '<[SHELL[' ) script ']]>'
+    ;
+
 atom
 	:	function_call
 	|	reference
@@ -37,6 +44,7 @@ atom
 	|	LPAR comparison RPAR
 	|	block
 	|	assignment
+	|   shellscript
 	;
 
 assignment
@@ -127,4 +135,5 @@ NEWLINE : PARAGRAPH;
 
 /* Items to be ignored */
 WHITESPACE   : (' ' | '\t')         -> skip;
-LINE_COMMENT : (';' .*? PARAGRAPH+) -> skip;
+
+SPECIAL_CHAR : [.!?_] ;

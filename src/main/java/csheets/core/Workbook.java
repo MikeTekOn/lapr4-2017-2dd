@@ -20,6 +20,8 @@
  */
 package csheets.core;
 
+import lapr4.red.s2.lang.n1150623.globalVariables.VarContentor;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
@@ -30,6 +32,7 @@ import java.util.List;
 /**
  * A workbook which can contain several spreadsheets.
  * @author Einar Pehrson
+ *
  */
 public class Workbook implements Iterable<Spreadsheet>, Serializable {
 
@@ -38,6 +41,12 @@ public class Workbook implements Iterable<Spreadsheet>, Serializable {
 
 	/** The spreadsheets of which the workbook consists */
 	private List<Spreadsheet> spreadsheets = new ArrayList<Spreadsheet>();
+
+	/**
+	 * The global variables associated to this workbook
+	 *  @author Guilherme Ferreira 1150623
+	 * */
+	private VarContentor globalVariables = new VarContentor();
 
 	/** The cell listeners that have been registered on the cell */
 	private transient List<WorkbookListener> listeners

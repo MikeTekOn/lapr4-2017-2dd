@@ -21,7 +21,7 @@
 package csheets.core.formula.util;
 
 import csheets.core.formula.*;
-import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVariable;
+import lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperation;
 
 /**
@@ -88,7 +88,7 @@ public class ExpressionTreePrinter extends AbstractExpressionVisitor {
         }
 
     @Override
-    public Object visitTemporaryVariable(TemporaryVariable tempVar) {
+    public Object visitTemporaryVariable(Variable tempVar) {
         print(tempVar);
         return tempVar;
     }

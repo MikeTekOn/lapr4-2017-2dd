@@ -23,7 +23,7 @@ package csheets.core.formula.util;
 import csheets.core.formula.*;
 import java.util.HashSet;
 import java.util.Set;
-import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVariable;
+import lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable;
 import lapr4.blue.s1.lang.n1151159.macros.Macro;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperation;
 
@@ -77,18 +77,18 @@ public abstract class AbstractExpressionVisitor implements ExpressionVisitor {
         public Object visitNaryOperation(NaryOperation operation) {
             Expression[] operands=operation.getOperands();
         
-            Set<TemporaryVariable> tempVars = new HashSet<>();
+            Set<Variable> tempVars = new HashSet<>();
             
             for (Expression expr: operands) {
                 
-                if (expr instanceof TemporaryVariable) {
+                if (expr instanceof Variable) {
                     
                 
                 if(tempVars.contains(expr)) {
                     tempVars.remove(expr);
-                    tempVars.add((TemporaryVariable)expr);
+                    tempVars.add((Variable)expr);
                 } else {
-                    tempVars.add((TemporaryVariable) expr);
+                    tempVars.add((Variable) expr);
                 }
                 }
                 
@@ -104,7 +104,7 @@ public abstract class AbstractExpressionVisitor implements ExpressionVisitor {
 	}
         
         @Override
-        public Object visitTemporaryVariable(TemporaryVariable tempVar) {
+        public Object visitTemporaryVariable(Variable tempVar) {
             return tempVar.accept(this);
         }
 }

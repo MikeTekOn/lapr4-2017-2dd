@@ -85,7 +85,7 @@ public class ConsoleV2 {
                 try {
                     ParseTree tree = parser.expression();
 
-                    FormulaEvalVisitor eval = new FormulaEvalVisitor(cell);
+                    FormulaEvalVisitor eval = new FormulaEvalVisitor(cell, null);
                     Expression expression = eval.visit(tree);
                     printer.println("Formula: " + expression + " = " + expression.evaluate());
                 } catch (RecognitionException e) {

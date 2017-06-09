@@ -1,0 +1,9 @@
+@startuml
+User -> System: Activates file sharing
+System->System: getConnection(selected connection)
+System -> System_2: Send file names list
+System_2->User_2: Updates available files list
+User_2 -> System_2: Selects file
+System_2 -> System :Sends file request
+System -> System_2: Sends file
+@enduml

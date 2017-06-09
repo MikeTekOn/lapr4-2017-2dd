@@ -4,12 +4,14 @@
 package lapr4.blue.s1.lang.n1140822.beanshellwindow;
 
 import csheets.ui.ctrl.UIController;
-import java.io.File;
-import java.io.FileNotFoundException;
+import lapr4.red.s2.lang.n1150385.beanshell.Instruction;
+import lapr4.red.s2.lang.n1150623.globalVariables.VarContentor;
+
 import java.util.LinkedList;
 import java.util.Scanner;
 
 /**
+ * @author Ricardo Catalao (1150385)
  * @author Renato Oliveira 1140822@isep.ipp.pt
  */
 public class BeanShellLoader {
@@ -17,7 +19,7 @@ public class BeanShellLoader {
     /**
      * String that has the script name information to build - the script.
      */
-    private String scriptName;
+    private String script;
 
     /**
      * The newly built beanshell instance.
@@ -31,36 +33,48 @@ public class BeanShellLoader {
     /**
      * Creates the class using the given script.
      *
-     * @param scriptName the script
+     * @param script the script
      * @return the class instance
-     * @throws java.io.FileNotFoundException if script file is not found
      */
-    public BeanShellInstance create(String scriptName, UIController controller) throws FileNotFoundException {
-        this.scriptName = scriptName;
-        LinkedList<String> code = new LinkedList<>();
-        LinkedList<String> macro = new LinkedList<>();
-        Scanner scan = new Scanner(scriptName);
-        boolean macroFlag = false;
+    public BeanShellInstance create(String script, UIController controller, VarContentor tempVarContentor) {
+        this.script = script;
+        LinkedList<Instruction> code = new LinkedList<>();
+        StringBuilder builder = null;
+        Scanner scan = new Scanner(script);
+        int macroBlock = 0;
         while (scan.hasNextLine()) {
-            String codeLine = scan.nextLine();
+            String codeLine = scan.nextLine().trim();
             if (codeLine.equals("macro_start")) {
-                macroFlag = true;
-                continue;
-            }
-            if (codeLine.equals("macro_end")) {
-                macroFlag = false;
-                continue;
-            }
-            if (!macroFlag) {
-                code.add(codeLine);
+                if(macroBlock == 0){
+                    builder = new StringBuilder();
+                }else{
+                    builder.append(codeLine);
+                    builder.append('\n');
+                }
+                macroBlock++;
+            }else if (codeLine.equals("macro_end")) {
+                if(macroBlock != 0){
+                    macroBlock--;
+                    if(macroBlock == 0){
+                        code.add(new Instruction(builder.toString(), Instruction.Type.MACRO));
+                    }else{
+                        builder.append(codeLine);
+                        builder.append('\n');
+                    }
+                }
             } else {
-                macro.add(codeLine);
+                if(macroBlock == 0){
+                    code.add(new Instruction(codeLine, Instruction.Type.BEANSHELL));
+                }else{
+                    builder.append(codeLine);
+                    builder.append('\n');
+                }
             }
         }
         if (code.isEmpty()) {
             throw new IllegalStateException("Cannot create script without any code.");
         }
-        instance = new BeanShellInstance(code, macro,controller);
+        instance = new BeanShellInstance(code, controller, tempVarContentor);
         return instance;
     }
 

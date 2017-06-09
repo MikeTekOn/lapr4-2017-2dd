@@ -10,6 +10,8 @@ import csheets.ui.ctrl.UIController;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.LinkedList;
+
+import lapr4.red.s2.lang.n1150385.beanshell.Instruction;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -52,16 +54,15 @@ public class BeanShellLoaderTest {
      */
     @Test
     public void ensureBeanShellClassInstanceIsBuiltCorrectly() throws Exception {
-        UIController controller = new UIController(new CleanSheets());
         System.out.println(" ensureBeanShellClassInstanceIsBuiltCorrectly");
-        String code = "print(\"test\");";
+        String code = "print(\"test\");\n";
         
       
         BeanShellLoader instance = new BeanShellLoader();
-        LinkedList<String> list = new LinkedList<>();
-        list.add("print(\"test\");");
-        BeanShellInstance expResult = new BeanShellInstance(list,list, controller);
-        BeanShellInstance result = instance.create(code, controller);
+        LinkedList<Instruction> list = new LinkedList<>();
+        list.add(new Instruction("print(\"test\");", Instruction.Type.BEANSHELL));
+        BeanShellInstance expResult = new BeanShellInstance(list, null, null);
+        BeanShellInstance result = instance.create(code, null, null);
 
         assertEquals(expResult, result);
 
@@ -72,15 +73,14 @@ public class BeanShellLoaderTest {
      */
     @Test(expected = IllegalStateException.class)
     public void ensureBeanShellClassInstanceIsNotBuiltIfNoCode() throws Exception {
-        UIController controller = new UIController(new CleanSheets());
         System.out.println(" ensureBeanShellClassInstanceIsBuiltCorrectly");
         String code = "";
      
         BeanShellLoader instance = new BeanShellLoader();
-        LinkedList<String> list = new LinkedList<>();
-        list.add("print(\"test\");");
-        BeanShellInstance expResult = new BeanShellInstance(list,list, controller);
-        BeanShellInstance result = instance.create(code, controller);
+        LinkedList<Instruction> list = new LinkedList<>();
+        list.add(new Instruction("print(\"test\");", Instruction.Type.BEANSHELL));
+        BeanShellInstance expResult = new BeanShellInstance(list, null, null);
+        BeanShellInstance result = instance.create(code, null, null);
         assertEquals(expResult, result);
 
     }

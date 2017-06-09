@@ -1,0 +1,31 @@
+@startuml us025_design_cd.png
+
+class ExportStylePDFUI {
+    
+}
+
+class ExportStylePDFController {
+    manageConfigurations()
+    export()
+}
+
+class ExportContext {
+    ExportStrategy s
+    executeStrategy()
+}
+
+class ExportStylePDF {
+    export()
+}
+
+interface ExportStrategy {
+    export()
+}
+
+ExportStylePDFUI ..> ExportStylePDFController
+ExportStylePDFController ..> ExportStylePDF
+ExportStylePDFController ..> ExportContext
+ExportContext ..* ExportStrategy
+ExportStylePDF ..|> ExportStrategy
+
+@enduml us025_design_cd.png

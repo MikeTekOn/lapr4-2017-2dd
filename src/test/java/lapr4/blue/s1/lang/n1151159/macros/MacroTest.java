@@ -4,6 +4,7 @@ import csheets.CleanSheets;
 import csheets.core.IllegalValueTypeException;
 import csheets.core.Spreadsheet;
 import csheets.core.Value;
+import csheets.ui.ctrl.UIController;
 import lapr4.blue.s1.lang.n1151159.macros.compiler.MacroCompilationException;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +35,7 @@ public class MacroTest {
         Spreadsheet spreadsheet = app.getWorkbooks()[0].getSpreadsheet(0);
 
         final MacroController macroController = new MacroController();
-        final double result = macroController.executeMacro(spreadsheet, macroText).toDouble();
+        final double result = macroController.executeMacro(spreadsheet, null, macroText).toDouble();
 
         final double expectResult = new Value(10).toDouble();
 
@@ -49,7 +50,7 @@ public class MacroTest {
         Spreadsheet spreadsheet = app.getWorkbooks()[0].getSpreadsheet(0);
 
         final MacroController macroController = new MacroController();
-        macroController.executeMacro(spreadsheet, macroText).toDouble();
+        macroController.executeMacro(spreadsheet, null, macroText).toDouble();
 
         final double result = spreadsheet.getCell(1, 1).getValue().toDouble();
         final double expectResult = new Value(12).toDouble();
@@ -65,7 +66,7 @@ public class MacroTest {
         Spreadsheet spreadsheet = app.getWorkbooks()[0].getSpreadsheet(0);
 
         final MacroController macroController = new MacroController();
-        macroController.executeMacro(spreadsheet, macroText).toDouble();
+        macroController.executeMacro(spreadsheet, null, macroText).toDouble();
 
         final double resultA1 = spreadsheet.getCell(0, 0).getValue().toDouble();
         final double resultA2 = spreadsheet.getCell(0, 1).getValue().toDouble();

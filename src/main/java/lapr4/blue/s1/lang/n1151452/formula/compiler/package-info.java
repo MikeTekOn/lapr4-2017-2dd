@@ -83,11 +83,11 @@
  *   <li>testBasicExpressionWithTemporary() -&gt; example "_Var:=1+2"</li>
  *   <li>testAssignmentOperatorWithTemporary() -&gt; example "_Var:=A1"</li>
  *   <li>testFunctionExpressionWithTemporary() -&gt; example "_Var:= sum(A2:A4)"</li>
-*    <li>testFormulaBlocksWithTemporary() -&gt; ex: "= {A=1+2; _Var:= 1+A ;"
-*    <li>testFormulaManyTemporaryVariables() -&gt; ex: "={_Var1:=2; _Var2:=3; _Var3:=_Var1+_Var2; A= _Var+3]"
-*   < li>testItSelfCall() -&gt; ex:"={_a:=1);(_a:=_a+1);_a }"
-*   < li>formulaWithTemporaryVariable() -&gt; ex:"={(_Var1:=2);( _Var2:=1); MAX(_Var1, _Var2)}" </li
- * </ol> 
+*    <li>testFormulaBlocksWithTemporary() -&gt; ex: "= {A=1+2; _Var:= 1+A ;"</li>
+*    <li>testFormulaManyTemporaryVariables() -&gt; ex: "={_Var1:=2; _Var2:=3; _Var3:=_Var1+_Var2; A= _Var+3]"</li>
+*   <li>testItSelfCall() -&gt; ex:"={_a:=1);(_a:=_a+1);_a }"</li>
+*   <li>formulaWithTemporaryVariable() -&gt; ex:"={(_Var1:=2);( _Var2:=1); MAX(_Var1, _Var2)}" </li>
+ * </ol>
  *
  *  <b>Functional Tests </b>
  * <p>
@@ -112,7 +112,7 @@
  *
  * <h2>5. Implementation</h2>
  * <p>
- * The class TemporaryVariable (@link lapr4.blue.s1.lang.1151088.temporaryVariables) was created to handle the temporary variables 
+ * The class Variable (@link lapr4.blue.s1.lang.1151088.temporaryVariables) was created to handle the temporary variables
  * domain rules. The TemporaryVariableContentor allows to manage the temporary variables in formula (by updating temporary
  * variable if it was already used or adding if not).
  * 
