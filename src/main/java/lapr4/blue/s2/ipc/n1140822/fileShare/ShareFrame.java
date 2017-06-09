@@ -16,7 +16,9 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
@@ -40,7 +42,6 @@ public class ShareFrame extends JFrame implements Observer {
         this.setPreferredSize(new Dimension(400, 400));
         this.setSize(400, 400);
         this.controller = controller;
-     
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         createComponents();
@@ -51,7 +52,12 @@ public class ShareFrame extends JFrame implements Observer {
     }
 
     private void createComponents() {
-        table = new JTable(3, 3);
+        JScrollPane scrollPane = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+        String[] columnNames = {"File name", "Host", "File size"};
+
+        table = new JTable();
+
         table.setSize(100, 100);
 
         listFiles = new JList();
@@ -62,9 +68,11 @@ public class ShareFrame extends JFrame implements Observer {
 
             }
         });
-        tableModel = new DefaultTableModel(3,3);
+        tableModel = new DefaultTableModel(columnNames, 3);
+        table.setModel(tableModel);
         model = new DefaultListModel();
-        add(table, BorderLayout.CENTER);
+        scrollPane.add(table);
+        add(scrollPane, BorderLayout.CENTER);
         JButton downloadButton = createDownloadButton();
         add(downloadButton, BorderLayout.SOUTH);
     }
@@ -77,8 +85,8 @@ public class ShareFrame extends JFrame implements Observer {
 //                if (!tableModel.(fileName + "-> " + ((FileNameListDTO) arg).getConnectionOwner())) {
                 Object[] rowData = new Object[3];
                 rowData[0] = fileName;
-               rowData[1] = ((FileNameListDTO) arg).connID();
-                rowData[2] = (((FileNameListDTO) arg).filesMap().get(fileName).intValue()) +" bytes";
+                rowData[1] = ((FileNameListDTO) arg).connID();
+                rowData[2] = (((FileNameListDTO) arg).filesMap().get(fileName)) + " bytes";
                 tableModel.addRow(rowData);
                 //model.addElement(fileName + "-> " + ((FileNameListDTO) arg).getConnectionOwner());
                 //  }
@@ -92,8 +100,8 @@ public class ShareFrame extends JFrame implements Observer {
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                shareController = new FileSharingController((ConnectionID)tableModel.getValueAt(table.getSelectedRow(),1));
-                shareController.requestFile((String)tableModel.getValueAt(table.getSelectedRow(),0));
+                shareController = new FileSharingController((ConnectionID) tableModel.getValueAt(table.getSelectedRow(), 1));
+                shareController.requestFile((String) tableModel.getValueAt(table.getSelectedRow(), 0));
             }
 
         });
