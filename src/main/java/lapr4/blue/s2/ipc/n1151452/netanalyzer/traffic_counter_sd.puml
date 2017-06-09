@@ -1,0 +1,68 @@
+@startuml traffic_counter_sd.png
+box "Publisher Threads [Producers]" #79BD9A
+collections PublisherTrafficEvent as evs <<Runnable>>
+participant TrafficCounter as tc <<Singleton>>
+end box
+box "Shared Memory" #ADC6FD
+participant SecInCounter as si <<Atomic Long>>
+participant UnsecInCounter as ui <<Atomic Long>>
+participant SecOutCounter as so <<Atomic Long>>
+participant UnsecOutCounter as uo <<Atomic Long>>
+end box
+box "TimerTask Thread" #FFDC75
+participant Flusher as f <<TimerTask>>
+participant TrafficCounter as tc2 <<Singleton>>
+participant TrafficCount as c
+end box
+box "Main Thread"
+participant TrafficCounter as tc3 <<Singleton>>
+end box
+
+tc3 -> f : schedule()
+evs -> tc : update(ev)
+note over si,uo
+AtomicLong will sync the concurrent calls using a "wait-free" algorithm
+end note
+
+alt type = incoming
+alt isSecure
+tc -> si : increment(count)
+else
+tc -> ui : increment(count)
+end alt
+else type = outgoing
+alt !isSecure
+tc -> so : increment(count)
+else
+tc -> uo : increment(count)
+end alt
+end alt
+evs -> evs : terminate
+
+f -> tc2 : flush()
+group synchronized(this)
+hnote over si, tc2 : [lock]
+tc2 -> si : get()
+tc2 -> si : reset()
+... ...
+tc2 -> uo : get()
+tc2 -> uo : reset()
+
+create c
+tc2 -> c : create(si, ui, so, uo)
+tc2 --> f : returns the\nTrafficCount
+hnote over si, tc2 : [unlock]
+end
+
+f -> tc2 : notifyListeners(count)
+group synchronized(alertLock)
+hnote over tc2, tc3 : [lock]
+loop listener : listerners
+tc2 -> : receivedCount(count)
+end loop
+hnote over tc2, tc3 : [unlock]
+end
+
+f -> f : terminate
+
+@enduml

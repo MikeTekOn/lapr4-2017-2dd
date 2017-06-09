@@ -1,0 +1,29 @@
+@startuml us025_design_pattern.png
+
+interface ExportStrategy {
+    export()
+}
+
+class ExportPDF {
+    export()
+}
+
+class ExportStylePDF {
+    export()
+}
+
+class ExportXML {
+    export()
+}
+
+class ExportContext {
+    ExportStrategy s
+    executeStrategy()
+}
+
+ExportStrategy <|.. ExportPDF
+ExportStrategy <|.. ExportStylePDF
+ExportStrategy <|.. ExportXML
+ExportStrategy *-- ExportContext
+
+@enduml us025_design_pattern.png

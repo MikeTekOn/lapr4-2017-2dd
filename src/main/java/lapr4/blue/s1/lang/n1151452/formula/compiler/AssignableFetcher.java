@@ -42,6 +42,8 @@ public class AssignableFetcher extends AbstractExpressionVisitor {
      * @return the non-assignable nonAssignableRefs that have been fetched
      */
     public SortedSet<Reference> getNonAssignableReferences(Expression expression) {
+        if(expression == null)
+            return new TreeSet<>();
 
         nonAssignableRefs = new TreeSet<>();
         expression.accept(this); // Fetches & fills non-assignable references set

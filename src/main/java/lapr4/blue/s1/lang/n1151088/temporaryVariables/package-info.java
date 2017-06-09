@@ -2,7 +2,7 @@
  * Technical documentation regarding the user story Lang02.1: Temporary Variables.
  * <p>
  * JIRA issue: LAPR4E17DD-54
- * <p>
+ * </p>
 
  * <b>Scrum Master: no</b>
  * <b>Area Leader: no</b>
@@ -14,12 +14,11 @@
  * <h2>2. Requirement</h2>
  * <p>
  * Add support for temporary variables. The name of temporary variables must start with the '_' sign.
- * When a variable is referred in a formula for the first time it is created. 
- * To set the value of a variable it must be used on the left of the assign operator (':='). 
+ * When a variable is referred in a formula for the first time it is created.
+ * To set the value of a variable it must be used on the left of the assign operator (':=').
  * Temporary variables are variables that only exist in the context of the execution of a formula.
  * Therefore, it is possible for several formulas to use temporary variables with the same name and they will be different instances. 
- * <p>
- *
+ * </p>
  *
  * <b>Use Case "Temporary Variables":</b>
  *
@@ -33,7 +32,7 @@
  * <b>Open Questions</b>
  * <p>Should it be possible to introduce more than one temporary variable?
  *   Answer: Yes
- *
+ *</p>
  * <h2>3. Analysis</h2>
  *
  * <p>
@@ -44,7 +43,7 @@
  * It will be necessary to modificate the formula visitor, the formula parser, the formula listener, the formula base visitor, formula.g4 (ANTLR) and finally the formula lexer to include this new type of atribute in formula.
  * Blue team decided to create a "duplication" of existent code and rename with "blue" (p.e.: formulaParser is blueFormulaParser).
  * Due to similar tasks between formula section use cases and this use case, we will be working in some classes together in despite of packages destinated to each student. (BlueFormula, BlueParser, BlueFormulaEval).
- *
+ * </p>
  * <h3>3.1. Analysis details</h3>
  *
  * <b>3.1.1 storeContent</b>
@@ -52,20 +51,21 @@
  *      Executes formula=FormulaCompiler.getInstance().compile(content) = this will select the instance of ExpressionCompiler
  *      based on the "starter char". In this case we have "_".
  *
- * <p>
+ * </p>
  *
  * <b>3.1.2 Parser tree</b>
  *
  *  <p>
  *      Antlr will generate a parser tree including nodes and then is converted and an Expression is generated.
  *      Grammar rules:
+ * </p>
 *      <ul>
 *            <li>temporary variable start with _</li>
 *            <li>atributtion value with :=</li>
 *            <li>temporary variable name have a letter (after _) and then we can have letters/digits</li>
 *       </ul>
 * 
-*  * <img src="domain_model_temporary_variables.png" alt="image">
+ * <img src="domain_model_temporary_variables.png" alt="image">
  *
  * <h2>4. Design</h2>
  *
@@ -78,19 +78,18 @@
  *   <li>rejectNumberAfterUnderscore()</li>
  *   <li>acceptDigitsAndLettersName()</li>
  * </ol>
- * <p>Functional Tests
+ * <p>Functional Tests</p>
  * <ol>
  *   <li>testBasicExpressionWithTemporary() -&gt; example "_Var:=1+2"</li>
  *   <li>testAssignmentOperatorWithTemporary() -&gt; example "_Var:=A1"</li>
  *   <li>testFunctionExpressionWithTemporary() -&gt; example "_Var:= sum(A2:A4)"</li>
-*    <li>testFormulaBlocksWithTemporary() -&gt; ex: "= {A=1+2; _Var:= 1+A ;"
-*    <li>testFormulaManyTemporaryVariables() -&gt; ex: "={_Var1:=2; _Var2:=3; _Var3:=_Var1+_Var2; A= _Var+3]"
-*   < li>testItSelfCall() -&gt; ex:"={_a:=1);(_a:=_a+1);_a }"
-*   < li>formulaWithTemporaryVariable() -&gt; ex:"={(_Var1:=2);( _Var2:=1); MAX(_Var1, _Var2)}" </li
+*    <li>testFormulaBlocksWithTemporary() -&gt; ex: "= {A=1+2; _Var:= 1+A ;"</li>
+*    <li>testFormulaManyTemporaryVariables() -&gt; ex: "={_Var1:=2; _Var2:=3; _Var3:=_Var1+_Var2; A= _Var+3]"</li>
+*   <li>testItSelfCall() -&gt; ex:"={_a:=1);(_a:=_a+1);_a }"</li>
+*   <li>formulaWithTemporaryVariable() -&gt; ex:"={(_Var1:=2);( _Var2:=1); MAX(_Var1, _Var2)}" </li>
  * </ol> 
  *
  *  <b>Functional Tests </b>
- * <p>
  * <ol>
     * <li>Insert a temporary variable with the same name in two cells but with different values.</li>
  * </ol>
@@ -105,26 +104,29 @@
  *
  * <h3>4.4. Design Patterns and Best Practices</h3>
  *
- *  The cleansheets core implementation already uses the <b>visitor pattern</b> to interact with the ANTLR generated classes, as well
+ * <p> The cleansheets core implementation already uses the <b>visitor pattern</b> to interact with the ANTLR generated classes, as well
  * as the <b>decorator pattern</b> to design the expressions functionality.
+ * </p>
  * <p>
  * We will continue the best practices and implement this use case using the same patterns.
- *
+ * </p>
+ * 
  * <h2>5. Implementation</h2>
  * <p>
- * The class TemporaryVariable (@link lapr4.blue.s1.lang.1151088.temporaryVariables) was created to handle the temporary variables 
+ * The class Variable {@link lapr4.blue.s1.lang.1151088.temporaryVariables} was created to handle the temporary variables
  * domain rules. The TemporaryVariableContentor allows to manage the temporary variables in formula (by updating temporary
  * variable if it was already used or adding if not).
- * 
+ * </p>
  * <p>
  * As referred before this use case is closely related to Formula use case (@link lapr4.blue.s1.lang.n1151452.formula). So the blue team 
  * created some class for shared use: the grammar (@lapr4\blue\s1\lang\n1151452\formula\compiler\BlueFormula.g4), FormulaEvalVisitor (@link lapr4.blue.s1.lang.n1151452.formula.compiler)
  * and related classes (p.e. BlueFormulaParser).
- * 
+ * </p>
  * <p>
  * To add the temporary variable support to formula it was necessary to do some modifications in some core classes: ExpressionBuilder,
  * ExpressionVisitor, AbstractExpressionVisitor. The temporary variable it´s an object that stores the variable name and the expression assigned.
- *
+ * </p> 
+ * 
  * <h2>8. Work Log</h2> 
  *
  * <b>Monday</b>

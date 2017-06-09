@@ -23,12 +23,12 @@ import java.util.Map;
 public class FunctionWizardController {
     
     /** The user interface controller */
-    private final UIController uiController;
+    protected final UIController uiController;
     
-    private static final String EQUAL = "=";
-    private static final String LEFT_PAR = "(";
-    private static final String RIGHT_PAR = ")";
-    private static final String SEMICOLON = ";";
+    protected static final String EQUAL = "=";
+    protected static final String LEFT_PAR = "(";
+    protected static final String RIGHT_PAR = ")";
+    protected static final String SEMICOLON = ";";
     
     /**
      * function wizard controller

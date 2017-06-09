@@ -23,7 +23,7 @@ package csheets.core.formula.util;
 import csheets.core.Cell;
 import csheets.core.formula.Formula;
 import csheets.core.formula.Reference;
-import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVariable;
+import lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable;
 
 /**
  * An expression visitor that looks for circular references in a formula, i.e.
@@ -77,7 +77,7 @@ public class CircularReferenceFinder extends AbstractExpressionVisitor {
 	}
 
     @Override
-    public Object visitTemporaryVariable(TemporaryVariable tempVar) {
+    public Object visitTemporaryVariable(Variable tempVar) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

@@ -1,0 +1,27 @@
+@startuml auto_description_extensions_design1.png
+    participant CleanSheet as CS
+    participant ExtensionOptionFrame as EOF 
+    participant ExtensionOptionController as EOC
+    participant ExtensionManager as EM
+
+create CS
+    -> CS : new
+create EOF
+    CS -> EOF : create()
+note right : New frame  for the selection of the extensions
+create EOC
+    EOF -> EOC : create()
+    EOC -> EM : getInstance()
+note right : Only the extensions properties
+    U <-- EOF : show the extensions
+loop
+    U -> EOF : select the extension to be loaded
+end loop
+    EOF -> EOC : saveExtensionsToLoad()
+    EOC -> EM : load()
+
+    
+    
+
+
+@enduml

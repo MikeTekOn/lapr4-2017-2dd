@@ -1,0 +1,43 @@
+@startuml ipc04_02_design_import.png
+
+participant "ImportDataUI" as UI
+participant "FileChooser" as FileChooser
+participant "ImportDataController" as Controller
+participant "uic : UIController" as UIController
+participant "s : Spreadsheet" as Spreadsheet
+participant "cdto : CellDTO" as CellDTO
+participant "c : Cell" as Cell
+participant "LinkTxtController" as Controller
+participant "ReaderThread" as Thread
+
+activate UI
+create FileChooser
+UI -> FileChooser : new()
+UI -> FileChooser : getFileToOpen()
+activate FileChooser
+UI <-- FileChooser : file
+deactivate FileChooser
+create Controller
+UI -> Controller : new(uic, file, character, range)
+UI -> Controller : readData()
+activate Controller
+Controller -> UIController : getActiveSpreadsheet()
+activate UIController
+Controller <-- UIController : s
+deactivate UIController
+Controller -> Controller : cellList : getFileData()
+loop for (CellDTO cdto in cellList)
+    Controller -> CellDTO : getContent()
+    Controller -> Spreadsheet : c = getCell(address)
+    Controller -> Cell : setContent(content)
+end
+Controller -> LinkTxtController : fireReaderLinkThread()
+activate LinkTxtController
+LinkTxtController -> ReaderThread : new()
+activate ReaderThread
+LinkTxtController -> ReaderThread : run()
+UI <-- Controller : success
+deactivate Controller
+deactivate UI
+
+@enduml ipc04_02_design_import.png

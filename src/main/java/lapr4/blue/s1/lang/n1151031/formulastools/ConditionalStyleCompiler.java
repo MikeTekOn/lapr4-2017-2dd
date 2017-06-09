@@ -16,6 +16,7 @@ import java.util.List;
 /**
  * A compiler that generates Excel-style expressions from strings.
  *
+ * @author Ricardo Catalão (1150385)
  * @author Tiago Correia
  * @author Einar Pehrson
  */
@@ -72,7 +73,7 @@ public class ConditionalStyleCompiler implements ExpressionCompiler {
         }
 
         // Visit the expression and returns it
-        FormulaEvalVisitor eval = new FormulaEvalVisitor(cell);
+        FormulaEvalVisitor eval = new FormulaEvalVisitor(cell, null);
         Expression result = eval.visit(tree);
         if (eval.getNumberOfErrors() > 0) {
             throw new FormulaCompilationException(eval.getErrorsMessage());

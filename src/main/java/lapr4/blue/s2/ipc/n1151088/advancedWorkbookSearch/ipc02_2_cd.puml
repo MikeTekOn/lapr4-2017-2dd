@@ -1,0 +1,31 @@
+@startuml ipc02_2_cd.png
+
+class ControllerFindWorkbooks{
+    +insertPath(String path)
+    +buildWorkbookPreview(Workbook workbook)
+}
+
+class Directory{
+    +Workbook w= loadFile(String pattern)
+´   +notifyObservers(Object w)
+}
+
+class SearchFiles {
+	+searchFilesByPattern() 
+        +checkIfMatches()
+        +isRegexValid()
+}
+class PreviewWorkbookBuilder {
+	+Workbook wpreview=findFirstFilledCells(Workbook w)
+	+buildPreviewArea()
+        +notifyObservers(Object w)
+}
+
+ControllerFindWorkbooks -> Directory
+ControllerFindWorkbooks ->PreviewWorkbookBuilder
+PreviewWorkbookBuilder->PreviewWorkBook
+Directory -> SearchFiles
+
+
+
+@enduml
