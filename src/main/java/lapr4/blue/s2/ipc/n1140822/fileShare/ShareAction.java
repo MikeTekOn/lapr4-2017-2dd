@@ -15,6 +15,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import lapr4.green.s1.ipc.n1150532.comm.CommTCPClientsManager;
+import lapr4.green.s1.ipc.n1150532.comm.CommTCPServer;
 import lapr4.green.s1.ipc.n1150532.comm.CommUDPServer;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
 
@@ -34,8 +36,6 @@ public class ShareAction extends BaseAction {
      */
     private int port;
 
-    private ConnectionID connection;
-
     private FileNameListDTO fileDTO;
 
     /**
@@ -44,10 +44,10 @@ public class ShareAction extends BaseAction {
      * @param connection
      * @param uiController The controller.
      */
-    public ShareAction(int portNr, UIController uiController, ConnectionID connection) {
+    public ShareAction(int portNr, UIController uiController) {
         this.uiController = uiController;
         this.port = portNr;
-        this.connection = connection;
+
     }
 
     /**
@@ -74,22 +74,21 @@ public class ShareAction extends BaseAction {
         } catch (IOException ex) {
             Logger.getLogger(ShareAction.class.getName()).log(Level.SEVERE, null, ex);
         }
-      
 
-        fileDTO = new FileNameListDTO(map, connection);
+        fileDTO = new FileNameListDTO(map,CommTCPServer.getServer().provideConnectionPort());
 
-        ((HandlerFileNameListDTO) CommUDPServer.getServer().getHandler(fileDTO.getClass())).addObserver(new ShareFrame(uiController, connection));
+        ((HandlerFileNameListDTO) CommUDPServer.getServer().getHandler(fileDTO.getClass())).addObserver(new ShareFrame(uiController));
         CommUDPClient worker = new CommUDPClient(fileDTO, port, 55);
         worker.start();
 
     }
 
-    private  Map<String, Integer> fillListOfSharedfiles() throws IOException {
-         Map<String, Integer> tempMap = new LinkedHashMap<>();
+    private Map<String, Integer> fillListOfSharedfiles() throws IOException {
+        Map<String, Integer> tempMap = new LinkedHashMap<>();
         File folder = new File(ShareConfiguration.getSharedFolder());
         File[] files = folder.listFiles();
         for (File file : files) {
-               tempMap.put(file.getName(), Files.readAllBytes(file.toPath()).length);
+            tempMap.put(file.getName(), Files.readAllBytes(file.toPath()).length);
         }
         return tempMap;
     }

@@ -2,10 +2,10 @@
  * Technical documentation regarding the user story ICP04.2: Import/Export Text Link.
  * <p>
  * <p>
- * <b>Scrum Master: -(yes/no)- no</b>
+ * <b>Scrum Master: - no</b>
  *
  * <p>
- * <b>Area Leader: -(yes/no)- no</b>
+ * <b>Area Leader: - no</b>
  *
  * <h2>1. Notes</h2>
  * <p>
@@ -96,7 +96,7 @@
  * <h3>4.3. Classes</h3>
  * <h3>4.4. Design Patterns and Best Practices</h3>
  * <p>
- * As we know we have to link the source with the destination and we want to continue working on in other spreadsheet 
+ * As we know, we have to link the source with the destination and we want to continue working on in other spreadsheet 
  * of the application cleansheets we opt to use threads as a best practice.
  * Multithreading benefits a program in various ways:
  * Multithreaded GUI (graphical user interface) based programs remain responsive to users while performing other tasks, 
@@ -108,12 +108,9 @@
  * <p>
  * <h2>5. Implementation</h2>
  * <p>
- * Files are a common source or deto a destination it can be used FileInputStream or a FileReader depending
+ * Files are a common source or destination of data in Java applications. It can be used FileInputStream or a FileReader depending
  * on whether you want to read the file as binary or textual data. If you need to write a file to other destination
- * you can use a FileOutputStream or a FileWriter on whether you need to write binary data or characters. stination of data in Java applications.
- * If there is a need to read a file to a destination it can be used FileInputStream or a FileReader depending
- * on whether you want to read the file as binary or textual data. If you need to write a file to other destination
- * you can use a FileOutputStream or a FileWriter on whether you need to write binary data or characters. 
+ * you can use a FileOutputStream or a FileWriter on whether you need to write binary data or characters.
  * <h2>6. Integration/Demonstration</h2>
  * <p>
  *

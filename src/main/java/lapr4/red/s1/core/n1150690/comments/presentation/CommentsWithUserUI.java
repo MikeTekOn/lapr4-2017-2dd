@@ -25,28 +25,31 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Map;
+import lapr4.green.s2.core.n1150901.richCommentsAndHistory.application.CommentsWithHistoryController;
 
 /**
  * A panel for adding or editing comments for a cell.
  *
  * @author Sofia Silva [1150690@isep.ipp.pt]
+ * @edit Miguel Silva - 1150901 I've made some changes in this class to be able
+ * to implemet the comment's history.
  */
 public class CommentsWithUserUI extends JPanel implements SelectionListener, CommentableCellListener {
 
     /**
      * The assertion controller
      */
-    private AddCommentsWithUserController controller;
+    protected final CommentsWithHistoryController controller;
 
     /**
      * Panel with BorderLayout.
      */
-    private final JPanel panel = new JPanel();
+    protected final JPanel panel = new JPanel();
 
     /**
      * The list that will contain the comments.
      */
-    private JList panelComments;
+    protected JList panelComments;
 
     /**
      * The list model to save the comments.
@@ -68,6 +71,14 @@ public class CommentsWithUserUI extends JPanel implements SelectionListener, Com
      */
     private String selectedUser;
 
+    /* THIS IS A CHANGE MIGUEL MADE */
+    /**
+     * The cell where the listeners are applied.
+     */
+    protected CommentableCellWithMultipleUsers cell;
+
+    /* ----------------------- */
+
     /**
      * Creates a new comment panel.
      *
@@ -79,11 +90,13 @@ public class CommentsWithUserUI extends JPanel implements SelectionListener, Com
         setName(CommentsExtension.NAME);
 
         // Creates controller
-        controller = new AddCommentsWithUserController(uiController);
+        /* THIS IS A CHANGE MIGUEL MADE */
+        controller = new CommentsWithHistoryController(uiController);
+        /* ----------------------- */
         uiController.addSelectionListener(this);
 
         // Creates comment components
-        initComponents();
+        initComponents(uiController);
 
         //Adds borders
         TitledBorder border = BorderFactory.createTitledBorder("Comment");
@@ -93,12 +106,17 @@ public class CommentsWithUserUI extends JPanel implements SelectionListener, Com
 
     /**
      * Initiates the components.
+     *
+     * @edit Miguel Silva (1150901) Sprint 2 - I've edited this method to allow
+     * to add another UI to the side bar of the comments.
      */
-    private void initComponents() {
-        panel.setLayout(new BorderLayout());
+    private void initComponents(UIController uiController) {
+        /* THIS IS A CHANGE MIGUEL MADE */
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        /* ----------------------- */
 
         //adds to the main panel, the comments list panel
-        panel.add(commentsList(), BorderLayout.NORTH);
+        panel.add(commentsList());
 
         //adds to the main panel, the panel that contains the 
         //field to add and change the comments and the buttons
@@ -111,7 +129,10 @@ public class CommentsWithUserUI extends JPanel implements SelectionListener, Com
         p.add(buttonNewComment(), grid);
         grid.gridy = 2;
         p.add(buttonChangeComment(), grid);
-        panel.add(p, BorderLayout.CENTER);
+        /* THIS IS A CHANGE MIGUEL MADE */
+        p.setMaximumSize(p.getPreferredSize());
+        panel.add(p);
+        /* ----------------------- */
 
         super.add(panel);
     }
@@ -126,7 +147,7 @@ public class CommentsWithUserUI extends JPanel implements SelectionListener, Com
         panelComments = new JList();
         panelComments.setModel(model);
         panelComments.setBackground(this.getBackground());
-        panelComments.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        panelComments.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         panelComments.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "User: Comment"));
         panelComments.addMouseListener(new MouseAdapter() {
             @Override
@@ -206,8 +227,7 @@ public class CommentsWithUserUI extends JPanel implements SelectionListener, Com
             return;
         }
         if (c != null) {
-            CommentableCellWithMultipleUsers cell
-                    = (CommentableCellWithMultipleUsers) c.getExtension(CommentsExtension.NAME);
+            cell = (CommentableCellWithMultipleUsers) c.getExtension(CommentsExtension.NAME);
             controller.changeActiveCell(cell);
             cell.addCommentableCellListener(this);
         }
