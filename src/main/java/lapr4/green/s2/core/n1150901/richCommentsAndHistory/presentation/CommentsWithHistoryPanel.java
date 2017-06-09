@@ -7,6 +7,7 @@ import csheets.ext.style.ui.FontChooser;
 import csheets.ui.ctrl.SelectionEvent;
 import csheets.ui.ctrl.SelectionListener;
 import csheets.ui.ctrl.UIController;
+import eapli.util.Strings;
 import lapr4.blue.s1.lang.n1151031.formulastools.UserStyle;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -61,6 +62,11 @@ public class CommentsWithHistoryPanel extends CommentsWithUserUI implements Comm
      * The list model to save the history.
      */
     private DefaultListModel model;
+
+    /**
+     * The textfield for the user to search comments.
+     */
+    private JTextField searchText;
 
     /**
      * Creates a new condition style panel.
@@ -149,12 +155,11 @@ public class CommentsWithHistoryPanel extends CommentsWithUserUI implements Comm
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Font font = FontChooser.showDialog(
+                font = FontChooser.showDialog(
                         null,
                         "Choose Font",
                         userStyle.getTrueStyleFont());
-                renderer.getListCellRendererComponent(panelComments, font, panelComments.getSelectedIndex(), true, true);
-                panelComments.repaint();
+                flag = 1;
             }
         });
         return button;
@@ -172,12 +177,11 @@ public class CommentsWithHistoryPanel extends CommentsWithUserUI implements Comm
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Color color = JColorChooser.showDialog(
+                color = JColorChooser.showDialog(
                         null,
                         "Choose Foreground Color",
                         userStyle.getTrueStyleForegroundColor());
-                renderer.getListCellRendererComponent(panelComments, color, panelComments.getSelectedIndex(), true, true);
-                panelComments.repaint();
+                flag = 2;
             }
         });
         return button;
@@ -197,7 +201,6 @@ public class CommentsWithHistoryPanel extends CommentsWithUserUI implements Comm
             @Override
             public void actionPerformed(ActionEvent e) {
                 userStyle = new UserStyle();
-//                styleChanged();
             }
         });
 
@@ -209,8 +212,8 @@ public class CommentsWithHistoryPanel extends CommentsWithUserUI implements Comm
     private JPanel searchPanel() {
         JPanel subPanel = new JPanel(new FlowLayout());
 
-        JTextField searchText = new JTextField();
-        searchText.setPreferredSize(new Dimension(150, 30));
+        searchText = new JTextField();
+        searchText.setPreferredSize(new Dimension(150, 20));
         JButton searchButton = new JButton("Search");
         searchButton.setPreferredSize(new Dimension(50, 30));
         searchButton.addActionListener(new Search());
@@ -267,7 +270,42 @@ public class CommentsWithHistoryPanel extends CommentsWithUserUI implements Comm
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            //TODO
+            searchPartOfWord(searchText.getText());
         }
+    }
+
+    /**
+     * Search a partial word in the comments and the history of the comments,
+     * and if found, set the background to green.
+     *
+     * @param word Part of the word to search.
+     */
+    private void searchPartOfWord(String word) {
+        if (Strings.isNullOrEmpty(word) || Strings.isNullOrWhiteSpace(word)) {
+            throw new IllegalArgumentException("You have to enter something to search!");
+        }
+
+        for (List<String> commList : controller.comments().values()) {
+            for (String comm : commList) {
+                if (comm.contains(word)) {
+                    color = Color.green;
+                    flag = 3;
+                    panelComments.repaint();
+                }
+            }
+        }
+
+        for (Map<String, List<String>> historyMap : controller.history().values()) {
+            for (List<String> historyList : historyMap.values()) {
+                for (String s : historyList) {
+                    if (s.contains(word)) {
+                        color = Color.green;
+                        flag = 3;
+                        panelComments.repaint();
+                    }
+                }
+            }
+        }
+
     }
 }
