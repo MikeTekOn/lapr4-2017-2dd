@@ -16,8 +16,10 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
 
 /**
@@ -30,13 +32,15 @@ public class ShareFrame extends JFrame implements Observer {
     private JList listFiles;
     private FileSharingController shareController;
     private DefaultListModel model;
+    private DefaultTableModel tableModel;
+    private JTable table;
 
-    public ShareFrame(UIController controller, ConnectionID connection) {
+    public ShareFrame(UIController controller) {
         super("File share");
         this.setPreferredSize(new Dimension(400, 400));
         this.setSize(400, 400);
         this.controller = controller;
-        shareController = new FileSharingController(connection);
+     
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         createComponents();
@@ -47,6 +51,9 @@ public class ShareFrame extends JFrame implements Observer {
     }
 
     private void createComponents() {
+        table = new JTable(3, 3);
+        table.setSize(100, 100);
+
         listFiles = new JList();
         listFiles.setSize(100, 100);
         listFiles.addListSelectionListener(new ListSelectionListener() {
@@ -55,21 +62,28 @@ public class ShareFrame extends JFrame implements Observer {
 
             }
         });
+        tableModel = new DefaultTableModel(3,3);
         model = new DefaultListModel();
-        add(listFiles, BorderLayout.CENTER);
+        add(table, BorderLayout.CENTER);
         JButton downloadButton = createDownloadButton();
-        add(downloadButton,BorderLayout.SOUTH);
+        add(downloadButton, BorderLayout.SOUTH);
     }
 
     @Override
     public void update(Observable o, Object arg) {
         if (o instanceof HandlerFileNameListDTO) {
+
             for (String fileName : ((FileNameListDTO) arg).filesMap().keySet()) {
-                if (!model.contains(fileName)) {
-                    model.addElement(fileName + "-> "+ ((FileNameListDTO) arg).getConnectionOwner());
-                }
+//                if (!tableModel.(fileName + "-> " + ((FileNameListDTO) arg).getConnectionOwner())) {
+                Object[] rowData = new Object[3];
+                rowData[0] = fileName;
+               rowData[1] = ((FileNameListDTO) arg).connID();
+                rowData[2] = (((FileNameListDTO) arg).filesMap().get(fileName).intValue()) +" bytes";
+                tableModel.addRow(rowData);
+                //model.addElement(fileName + "-> " + ((FileNameListDTO) arg).getConnectionOwner());
+                //  }
             }
-            listFiles.setModel(model);
+            table.setModel(tableModel);
         }
     }
 
@@ -78,7 +92,8 @@ public class ShareFrame extends JFrame implements Observer {
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                shareController.requestFile((String)listFiles.getSelectedValue());
+                shareController = new FileSharingController((ConnectionID)tableModel.getValueAt(table.getSelectedRow(),1));
+                shareController.requestFile((String)tableModel.getValueAt(table.getSelectedRow(),0));
             }
 
         });

@@ -11,7 +11,16 @@ package lapr4.blue.s2.ipc.n1140822.fileShare;
  */
 public class ShareConfiguration {
     
-    public static String getSharedFolder()
+//    public static String getSharedFolder()
+//    {
+//        return "C:\\Users\\Renato\\Desktop\\Shared";
+//    }
+//      public static String getDownloadFolder()
+//    {
+//        return "C:\\Users\\Renato\\Desktop\\Download";
+//    }
+      
+        public static String getSharedFolder()
     {
         return "D:/Shared";
     }

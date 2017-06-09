@@ -10,19 +10,22 @@ import java.net.InetAddress;
 import java.util.Map;
 import java.util.Observable;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
+import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionIDImpl;
 
 /**
  *
  * @author Renato Oliveira 1140822@isep.ipp.pt
  */
-public class FileNameListDTO extends Observable implements Serializable{
+public class FileNameListDTO extends Observable implements Serializable {
 
     private Map<String, Integer> fileDataMap;
-   private ConnectionID connection;
+    private ConnectionID connection;
+    private int tcpPort;
 
-    public FileNameListDTO(Map<String, Integer> fileDataMap,ConnectionID connection) {
+    public FileNameListDTO(Map<String, Integer> fileDataMap, int tcpPort) {
         this.fileDataMap = fileDataMap;
-        this.connection= connection;
+        this.tcpPort = tcpPort;
+
     }
 
     public Map<String, Integer> filesMap() {
@@ -33,11 +36,16 @@ public class FileNameListDTO extends Observable implements Serializable{
         return connection.getAddress().toString();
     }
 
-   
-    
-    public boolean equals(Object otherObject)
-    {
-        FileNameListDTO otherFileList = (FileNameListDTO)otherObject;
+    public void buildConnectionID(InetAddress addr) {
+        this.connection = new ConnectionIDImpl(addr, tcpPort);
+    }
+
+    public ConnectionID connID() {
+        return connection;
+    }
+
+    public boolean equals(Object otherObject) {
+        FileNameListDTO otherFileList = (FileNameListDTO) otherObject;
         return this.fileDataMap.equals(otherFileList.fileDataMap);
     }
 }

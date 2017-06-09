@@ -208,6 +208,7 @@ public class CommTCPClientsManager extends Observable implements Serializable {
     }
 
     public void requestFile(ConnectionID connection, String fileName) {
+        requestConnectionTo(connection, false);
         CommTCPClientWorker worker = clients.get(connection);
         if (worker != null) {
             try {
