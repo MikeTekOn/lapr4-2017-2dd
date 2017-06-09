@@ -30,7 +30,9 @@ public class HandlerFileNameDTO implements CommHandler , Serializable {
         lastReceivedDTO = nameDTO;
         File fileToSend = findFile(nameDTO.fileName);
         try {
-            FileDTO fileDTO = new FileDTO(nameDTO.fileName, Files.readAllBytes(fileToSend.toPath()).length, Files.readAllBytes(fileToSend.toPath()));
+            byte[]fileData;
+            fileData= Files.readAllBytes(fileToSend.toPath());
+            FileDTO fileDTO = new FileDTO(nameDTO.fileName, fileData.length, fileData);
             outStream.writeObject(fileDTO);
         } catch (IOException ex) {
             Logger.getLogger(HandlerFileNameDTO.class.getName()).log(Level.SEVERE, null, ex);

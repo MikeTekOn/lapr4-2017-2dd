@@ -144,6 +144,6 @@ public class MonetaryLanguageBaseVisitorImpl extends MonetaryLanguageBaseVisitor
             exchange = currency + "ToPound";
         }
         InputStream in = this.getClass().getResourceAsStream(PROPERTIES_FILE);
-        return Files.getPropertyValue(in, exchange);
+        return "";/*Files.getPropertyValue(in, exchange);*/
     }
 }
