@@ -85,9 +85,9 @@ public class ConfigurateExchangeRatesUI extends JDialog {
     }
     
     private void createTablePanel() {
-        ImageIcon usaIcon = new ImageIcon(CleanSheets.class.getResource("res/img/usa.png"));
-        ImageIcon ukIcon = new ImageIcon(CleanSheets.class.getResource("res/img/uk.png"));
-        ImageIcon euroIcon = new ImageIcon(CleanSheets.class.getResource("res/img/euro.png"));
+        //ImageIcon usaIcon = new ImageIcon(CleanSheets.class.getResource("res/img/usa.png"));
+        //ImageIcon ukIcon = new ImageIcon(CleanSheets.class.getResource("res/img/uk.png"));
+        //ImageIcon euroIcon = new ImageIcon(CleanSheets.class.getResource("res/img/euro.png"));
         
         List<Pair<String, String>> exchangeRates = controller.getExchangeRates();
         
