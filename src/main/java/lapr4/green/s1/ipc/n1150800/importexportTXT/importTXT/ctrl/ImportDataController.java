@@ -32,7 +32,7 @@ public class ImportDataController implements Controller {
      * The Link Txt Controller
      */
     private LinkTxtController linkTxtController;
-    
+
     /**
      * The file that contains the data to be imported
      */
@@ -55,12 +55,14 @@ public class ImportDataController implements Controller {
      * the first line of the file is a line of headers
      *
      */
-    public ImportDataController(UIController uiController, File fileToRead, char separatorCharacter, CellRange cellRange, boolean firstLineRepresentsHeaders) {
+    public ImportDataController(UIController uiController, File fileToRead, char separatorCharacter, CellRange cellRange, boolean firstLineRepresentsHeaders, Spreadsheet spreadsheet) {
         FileData fileData = new FileData(fileToRead, separatorCharacter, cellRange, firstLineRepresentsHeaders);
-  
+
         this.uiController = uiController;
         this.fileToRead = fileData;
-        this.linkTxtController = new LinkTxtController(this);
+
+        this.linkTxtController = new LinkTxtController(fileToRead, separatorCharacter, cellRange, firstLineRepresentsHeaders, this.uiController, spreadsheet);
+        this.linkTxtController.fireLinkReaderThread();
     }
 
     /**
@@ -76,19 +78,6 @@ public class ImportDataController implements Controller {
         CellDTO cellList[][] = fileToRead.getFileData(activeSpreadsheet);
 
         fileToRead.fillCells(cellList);
-        
+
     }
-    
-    /**
-     * It starts the linking import.
-     * 
-     * @return true if linked, false otherwise.
-     */
-    public boolean startsLinkImport(){
-        this.linkTxtController.fireLinkReaderThread();
-        //TODO
-        return false;
-    }
-    
-   
 }
