@@ -1,9 +1,12 @@
 package lapr4.green.s1.ipc.n1150532.comm;
 
+import csheets.core.Cell;
 import csheets.core.Spreadsheet;
 import csheets.core.Workbook;
 import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.ext.Extension;
+import csheets.ext.style.StylableCell;
+import csheets.ext.style.StyleExtension;
 import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.UIExtension;
 import java.net.InetAddress;
@@ -13,6 +16,7 @@ import java.util.Map;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.CellDTO;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.RequestSharedCellsDTO;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.ResponseSharedCellsDTO;
+import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.util.Styles;
 import lapr4.green.s1.ipc.n1150532.comm.connection.*;
 import lapr4.green.s1.ipc.n1150532.comm.ui.UICommExtension;
 import lapr4.green.s1.ipc.n1150532.comm.ui.UICommExtensionSideBar;
@@ -285,11 +289,16 @@ public class CommExtension extends Extension implements Observer {
             }
             if (arg instanceof SharedCellsEvent) {
                 SharedCellsEvent event = (SharedCellsEvent) arg;
-                Spreadsheet ss = uiController.getActiveSpreadsheet();
-                SortedSet<CellDTO> cells = event.getCells();
-                for (CellDTO cell : cells) {
+                Spreadsheet aSpreadSheet = uiController.getActiveSpreadsheet();
+                SortedSet<CellDTO> cellsDTO = event.getCells();
+                for (CellDTO cellDTO : cellsDTO) {
                     try {
-                        ss.getCell(cell.getAddress()).setContent(cell.getContent());
+                        Cell cell = aSpreadSheet.getCell(cellDTO.getAddress());
+                        cell.setContent(cellDTO.getContent());
+                        StylableCell stylableCell = (StylableCell)cell.getExtension(StyleExtension.NAME);
+                        if (stylableCell != null && cellDTO.getStyleDTO() != null) {
+                            Styles.setStyleFromDTO(stylableCell, cellDTO.getStyleDTO());
+                        }
                     } catch (FormulaCompilationException ex) {
                         Logger.getLogger(CommExtension.class.getName()).log(Level.SEVERE, null, ex);
                     }
