@@ -150,28 +150,31 @@
  *
  * <h2>Generic Sorting Algorithm</h2>
  * There are many sorting algorithms already studied and examined. We will use
- * both Merge and Quick Sort due to their good overall complexity. These
+ * both Bubble and Quick Sort due to their good overall complexity. These
  * algorithms should be generic in order to allow the reuse of its code for all
- * kinds of sorting. Despite the mention to generic, the Java Generics does not
- * necessarily need to be used. A suitable DTO can be used to provide the
- * algorithm the right data at the right time. This approach is specially useful
- * since what is being sorted are not the objects themselves but the values they
- * possess. Also, since the user may change the comparison results by altering
- * the value types hierarchies, a suitable comparator can be provided to the
- * algorithm. The algorithms can be defined through the following pseudo-code:
+ * kinds of sorting. A suitable DTO can be used to provide the algorithm the
+ * right data at the right time. This approach is specially useful since what is
+ * being sorted are not the objects themselves but the values they possess. This
+ * makes the Merge Sort not functional, since it requires an auxiliary array to
+ * place the sorted elements. Also, since the user may change the comparison
+ * results by altering the value types hierarchies, a suitable comparator can be
+ * provided to the algorithm. The algorithms can be defined through the
+ * following pseudo-code:
  * <p/>
- * <b>Merge Sort</b>
+ * <b>Bubble Sort</b>
  * <blockquote>
  * <pre>
  * {@code
- * Algorithm void mergeSort (T S[], int n) {
- *      if ( n >= 2 ) {
- *          int	mid = n / 2
- *          T S1[] = S[ 0 , ... , mid ]
- *          T S2[] = S[ mid , ... , n ]
- *          mergeSort( S1 , n1 );
- *          mergeSort( S2 , n2 );
- *          merge( S1 , S2 , S )
+ * Algorithm void bubbleSort (T v[], int n) {
+ *      swap = true
+ *      for( i = 0 ; ( i < n-1 && swap ) ; i++ ){
+ *          swap = false
+ *          for ( j = n-1 ; j > i ; j-- ){
+ *              if( v[j-1] > v[j] ){
+ *                  swap( v[i] , v[j-1] )
+ *                  swap = true
+ *              }
+ *          }
  *      }
  *  }
  * }
@@ -212,9 +215,28 @@
  * same type of objects to have different comparison evaluations depending on
  * the provided comparator. Due to the ascending and descending order demand and
  * since the comparison itself is the same (the result is inverted) a boolean
- * can be provided to the comparator to change accordingly. In our case, this is
- * useful to permit the user to define the value types hierarchy. One last note
- * to mention that the comparator should provide a description.
+ * can be provided to the comparator to change accordingly.
+ * <p/>
+ * In our case
+ * ({@link lapr4.green.s2.core.n1150532.sort.comparators.RangeRowDTOComparator}).
+ * The used comparator uses the {@link csheets.core.Value#compareTo} method when
+ * both have the same {@link csheets.core.Value.Type}. Otherwise, it uses a
+ * {@link lapr4.green.s2.core.n1150532.sort.comparators.TypeComparator} whose
+ * specific implementation was chosen by the user. This is useful to permit the
+ * user to define the value types hierarchy.
+ * <p/>
+ * One last note to mention that the comparator should provide a description.
+ *
+ * <h2>Manage Available Algorithms and Comparators</h2>
+ *
+ * In order to provide all the available algorithms and comparators to the user,
+ * a factory must be created (one for algorithms and another to comparators). It
+ * will be their responsibility to know which classes to instantiate and provide
+ * (Factory Pattern).
+ * <p/>
+ * These objects will be presented to the user who will then select one of them.
+ * The chosen object will then be used to perform the operations. This is
+ * another easy but camouflaged way of using the Strategy Pattern.
  *
  * <h2>Sortable Data Transmission Object</h2>
  *
@@ -232,6 +254,12 @@
  * can contain references to those. Plus, the listeners represent a higher
  * system burden which can easily be replaced by a
  * {@link javax.swing.JDialog#modal} activation on the pop-up menu.
+ *
+ * <h2>Parse Value</h2>
+ *
+ * The value parsing method must start by checking if the string is empty and if
+ * it is, it should return a default Value, i.e. a value with empty content and
+ * undefined type.
  *
  * <h2>Sequence Diagram</h2>
  *
