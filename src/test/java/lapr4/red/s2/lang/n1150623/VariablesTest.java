@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr4.blue.s1.lang.n1151088.temporaryVariables;
+package lapr4.red.s2.lang.n1150623;
 
 import csheets.CleanSheets;
 import csheets.core.Address;
@@ -12,24 +12,26 @@ import csheets.core.IllegalValueTypeException;
 import csheets.core.Value;
 import csheets.core.formula.Expression;
 import csheets.core.formula.compiler.FormulaCompilationException;
+import lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  *
- * @author Guilherme Ferreira 1150623
+ * @author Diana Silva [1151088@isep.ipp.pt]
  */
-public class VariableTest {
-    
-    private CleanSheets app;
+public class VariablesTest {
 
+    private CleanSheets app;
+    Cell cellA1;
     Cell cellTest;
-    Expression expression1, expression2;
+    Expression exp1, exp2;
     Value value1, value2;
-    
-    public VariableTest() {
+
+    public VariablesTest() {
     }
 
     @Before
@@ -44,25 +46,25 @@ public class VariableTest {
         cellTest.setContent(content);
         value1= cellTest.getValue();
         //Test temporary variable
-        expression1 = cellTest.getFormula().getExpression();
-        
+        exp1 = cellTest.getFormula().getExpression();
+
         cellTest.setContent(content2);
-        expression2 =cellTest.getFormula().getExpression();
+        exp2=cellTest.getFormula().getExpression();
         value2=cellTest.getValue();
     }
-    
+
     @After
     public void tearDown() {
     }
 
     /**
      * Test of evaluate method, of class Variable.
-     * @throws java.lang.Exception
+     * @throws Exception
      */
     @Test
     public void testEvaluate() throws Exception {
         System.out.println("evaluate");
-        Variable instance = new Variable("@test", expression1);
+        Variable instance = new Variable("_test", exp1);
         Value expResult = value1;
         Value result = instance.evaluate();
         assertEquals(expResult, result);
@@ -74,21 +76,25 @@ public class VariableTest {
     @Test
     public void testGetName() {
         System.out.println("getName");
-        String test="@test";
-        Variable instance = new Variable(test, expression1);
+        String test="test";
+        Variable instance = new Variable(test, exp1);
         String result = instance.getName();
         String expResult=test;
         assertEquals(expResult, result);
     }
 
-
+    /**
+     * Test of getExpression method, of class Variable.
+     * @throws IllegalValueTypeException
+     */
     @Test
     public void testGetExpression() throws IllegalValueTypeException {
         System.out.println("getExpression");
-        Variable instance = new Variable("@test", expression1);
-        
+        String test="test";
+        Variable instance = new Variable("_test", exp1);
+
         Expression result = instance.getExpression();
-        Expression expResult= expression1;
+        Expression expResult=exp1;
         assertEquals(expResult, result);
     }
 
@@ -99,37 +105,34 @@ public class VariableTest {
     @Test
     public void testEqualsValid() throws IllegalValueTypeException {
         System.out.println("equals");
-        String test="@test";
 
-        Variable instance = new Variable(test, expression1);
-        Variable instance2= new Variable(test, expression2);
+        String test="test";
 
-        assertTrue(instance.equals(instance2));
+        Variable instance = new Variable(test, exp1);
+
+        Variable instance2= new Variable(test,  exp2);
+
+        boolean expResult = true;
+        boolean result = instance.equals(instance2);
+        assertEquals(expResult, result);
     }
-    
+
      /**
      * Test of equals method, of class Variable.
-     * @throws csheets.core.IllegalValueTypeException
+     * @throws IllegalValueTypeException
      */
     @Test
     public void testEqualsInvalid() throws IllegalValueTypeException {
         System.out.println("equalsInvalid");
     
-        String test="@test";
-        Variable instance = new Variable(test, expression1);
+        String test="test";
+        Variable instance = new Variable(test, exp1);
         
-        String test2="@test2";
-        Variable instance2= new Variable(test2, expression2);
-        assertFalse(instance.equals(instance2));
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void ensureNameCantBeEmptyOrNull(){
-        Variable v = new Variable("", expression1);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void ensureExpressionCantBeNull(){
-        Variable v = new Variable("@Name", null);
-    }
+        String test2="test2";
+        Variable instance2= new Variable(test2, exp2);
+        
+        boolean expResult = false;
+        boolean result = instance.equals(instance2);
+        assertEquals(expResult, result);
+    } 
 }

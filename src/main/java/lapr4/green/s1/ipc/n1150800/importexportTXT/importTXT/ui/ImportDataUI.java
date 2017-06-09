@@ -132,10 +132,8 @@ public class ImportDataUI extends JFrame {
 
                 CellRange cellRange = new CellRange(addressStrFirstCell, addressStrLastCell, uiController);
 
-                ImportDataController controller = new ImportDataController(uiController, fileToRead, separatorCharacter, cellRange, firstLineRepresentsHeaders);
+                ImportDataController controller = new ImportDataController(uiController, fileToRead, separatorCharacter, cellRange, firstLineRepresentsHeaders, uiController.getActiveSpreadsheet());
                 controller.readData();
-                
-                controller.startsLinkImport();
 
                 dispose();
             } catch (IllegalArgumentException | IOException | FormulaCompilationException ex) {
