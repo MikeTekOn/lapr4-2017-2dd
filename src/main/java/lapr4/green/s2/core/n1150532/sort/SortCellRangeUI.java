@@ -1,6 +1,9 @@
 package lapr4.green.s2.core.n1150532.sort;
 
+import static csheets.core.Address.HIGHEST_CHAR;
+import static csheets.core.Address.LOWEST_CHAR;
 import csheets.core.Cell;
+import eapli.util.Strings;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -210,8 +213,8 @@ public class SortCellRangeUI extends JDialog {
         p1.add(outInformation);
         p2.add(p2Left);
         p2.add(p2Right);
-        panel.add(p1);
-        panel.add(p2);
+        panel.add(p1, BorderLayout.CENTER);
+        panel.add(p2, BorderLayout.SOUTH);
         return panel;
     }
 
@@ -247,7 +250,49 @@ public class SortCellRangeUI extends JDialog {
      * @return It returns the sorting column index.
      */
     private int getSortingColumnIndex() {
-        return Integer.parseInt(inSortingColumn.getText());
+        int columnIndex = translateColumn(inSortingColumn.getText());
+        return changeToCellRangeIndex(columnIndex);
+    }
+
+    /**
+     * It translates the column name like shown in the UI to the matching index
+     * used in its address.
+     *
+     * @param column The column name from which to get the address column index.
+     * @return It returns the column index used in the address of the matching
+     * cell.
+     */
+    private int translateColumn(String column) {
+        if (Strings.isNullOrWhiteSpace(column)) {
+            throw new IllegalArgumentException("The column name must be written.");
+        }
+        int columnIndex = 0;
+        if (!column.matches("^[A-Z]+$")) {
+            throw new IllegalArgumentException("The column must contain only uppercase letters.");
+        }
+        final char[] columnArray = column.toCharArray();
+        int arrayIndex = 0;
+        while (arrayIndex < columnArray.length) {
+            columnIndex += (columnArray[arrayIndex] - LOWEST_CHAR) + (arrayIndex * (HIGHEST_CHAR - LOWEST_CHAR));
+            arrayIndex++;
+        }
+        return columnIndex;
+    }
+
+    /**
+     * It checks if the column index is within the selected cells columns and
+     * provides the index within the selected cells.
+     *
+     * @param columnIndex The spreadsheet column index.
+     * @return It returns the selected cells column index.
+     */
+    private int changeToCellRangeIndex(int columnIndex) {
+        int minimumAllowedColumn = selectedCells[0][0].getAddress().getColumn();
+        int maximumAllowedColumn = selectedCells[0][selectedCells[0].length - 1].getAddress().getColumn();
+        if (columnIndex < minimumAllowedColumn || columnIndex > maximumAllowedColumn) {
+            throw new IllegalArgumentException("The column must be within the the selected range.");
+        }
+        return columnIndex - minimumAllowedColumn;
     }
 
     /**
@@ -283,8 +328,7 @@ public class SortCellRangeUI extends JDialog {
                 dispose();
             } catch (IllegalArgumentException ex) {
                 outInformation.setText(ex.getMessage());
-            } catch (StackOverflowError ex) {
-                outInformation.setText("Not enough memory for this algorithm. Choose another one.");
+                pack();
             }
         }
     }
