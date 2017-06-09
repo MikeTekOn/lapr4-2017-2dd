@@ -46,7 +46,10 @@
  * {@link lapr4.red.s1.core.n1151094.columnSort.application.ColumnSortController} ({@link lapr4.red.s1.core.n1151094.columnSort.application.ColumnSortController#DEFAULT_ASCENDING}
  * and
  * {@link lapr4.red.s1.core.n1151094.columnSort.application.ColumnSortController#DEFAULT_DESCENDING}).</li>
- * <li>The cell exchanges lose all other cell information.
+ * <li>The cell exchanges lose all other cell information.</li>
+ * <li>The value parse ({@link csheets.core.Value#parseValue}) on an empty
+ * string results in a {@link csheets.core.Value.Type#DATE} instead of an
+ * {@link csheets.core.Value.Type#UNDEFINED}.</li>
  * </ul>
  *
  * <h2>What is new?</h2>
