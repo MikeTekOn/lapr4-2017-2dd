@@ -10,7 +10,10 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import lapr4.blue.s2.ipc.n1140822.fileShare.FileSharingController;
+import lapr4.blue.s2.ipc.n1140822.fileShare.ShareAction;
 import lapr4.green.s1.ipc.n1150532.comm.CommExtension;
+import lapr4.green.s1.ipc.n1150532.comm.CommTCPServer;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
 import lapr4.green.s1.ipc.n1150532.startSharing.ShareCellsAction;
 import lapr4.green.s1.ipc.n1150657.chat.ControllerConnection;
@@ -52,6 +55,8 @@ public class UICommExtensionSideBar extends JPanel {
      * The button to search peers.
      */
     private JButton btSearch;
+
+    private JButton btShare;
 
     /**
      * The button to connect to a peer.
@@ -210,18 +215,22 @@ public class UICommExtensionSideBar extends JPanel {
      */
     private JPanel createPeersBottomButtonsPanel() {
         final String shareCellsBtText = "Share Cells";
+        final String sharetext = "Share files";
         final int allignment = FlowLayout.CENTER;
         final JPanel panel = new JPanel(new GridLayout(1, 2));
         final JPanel p1 = new JPanel(new FlowLayout(allignment));
         btShareCells = new JButton(shareCellsBtText);
+        btShare = new JButton(sharetext);
         p1.add(btShareCells);
         final String message = "New Message";
         final JPanel p2 = new JPanel(new FlowLayout(allignment));
+        final JPanel p3 = new JPanel(new FlowLayout(allignment));
         btMessage = new JButton(message);
         p2.add(btMessage);
-
+        p3.add(btShare);
         panel.add(p1);
         panel.add(p2);
+        panel.add(p3);
         return panel;
     }
 
@@ -237,6 +246,7 @@ public class UICommExtensionSideBar extends JPanel {
         btConnect.addActionListener(new ConnectAction());
         btShareCells.addActionListener(new ShareCellsWithAction());
         btMessage.addActionListener(new NewMessageAction());
+        btShare.addActionListener(new FileSharingAction());
     }
 
     /**
@@ -257,6 +267,7 @@ public class UICommExtensionSideBar extends JPanel {
         btDeactivate.setEnabled(false);
         btSearch.setEnabled(false);
         btConnect.setEnabled(false);
+        btShare.setEnabled(false);
         btShareCells.setEnabled(false);
         btMessage.setEnabled(false);
     }
@@ -272,6 +283,7 @@ public class UICommExtensionSideBar extends JPanel {
         btConnect.setEnabled(true);
         btShareCells.setEnabled(true);
         btMessage.setEnabled(true);
+        btShare.setEnabled(true);
     }
 
     /**
@@ -358,6 +370,19 @@ public class UICommExtensionSideBar extends JPanel {
             } else {
                 JOptionPane.showMessageDialog(null, "Connect with someone.");
             }
+        }
+    }
+
+    /**
+     *
+     */
+    private class FileSharingAction implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            (new ShareAction(theExtension.getUDPServerPortNumber(), theController)).actionPerformed(e);
+
         }
     }
 

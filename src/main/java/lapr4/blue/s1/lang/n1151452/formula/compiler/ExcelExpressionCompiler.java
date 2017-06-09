@@ -83,7 +83,7 @@ public class ExcelExpressionCompiler implements ExpressionCompiler {
         }
 
         // Visit the expression and returns it
-        FormulaEvalVisitor eval = new FormulaEvalVisitor(cell);
+        FormulaEvalVisitor eval = new FormulaEvalVisitor(cell, null);
         Expression result = eval.visit(tree);
         if (eval.getNumberOfErrors() > 0) {
             throw new FormulaCompilationException(eval.getErrorsMessage());

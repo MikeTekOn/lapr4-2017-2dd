@@ -155,7 +155,8 @@ public class MenuBar extends JMenuBar {
         }
         extensionsMenu.addSeparator();
         extensionsMenu.add(actionManager.getAction("manageExtensions"));
-
+        extensionsMenu.add(actionManager.getAction("configurateExchangeRates"));
+        
         // Creates the window menu
         add(new WindowMenu(app, uiController));
 

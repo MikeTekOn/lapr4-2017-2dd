@@ -19,8 +19,16 @@ concatenation
         | <assoc=right> concatenation POWER concatenation
         | concatenation ( MULTI | DIV ) concatenation
         | concatenation ( PLUS | MINUS ) concatenation
-        | concatenation AMP concatenation 
+        | concatenation AMP concatenation
         ;
+
+script
+    : ( SPECIAL_CHAR | (( '<![SHELL[' | '<[SHELL[' ) script ']]>') | ~('<[SHELL[' | '<![SHELL[' | ']]>'))*
+    ;
+
+shellscript
+    :   ( '<![SHELL[' | '<[SHELL[' ) script ']]>'
+    ;
 
 atom
 	:	function_call
@@ -29,7 +37,9 @@ atom
 	|	LPAR comparison RPAR
 	|	block
 	|	assignment
-        |       VARIABLE_NAME
+	|   shellscript
+    |   VARIABLE_NAME
+    |   G_VARIABLE_NAME
 	;
 
 for_loop
@@ -41,7 +51,7 @@ block
 	;
 
 assignment
-	:  LPAR (reference | (VARIABLE_NAME) ) ASSIGN comparison RPAR
+	:  LPAR (reference | (VARIABLE_NAME) | (G_VARIABLE_NAME) ) ASSIGN comparison RPAR
 	;
 
 function_call
@@ -51,31 +61,37 @@ function_call
 	;
 
 reference
-	:	CELL_REF ( ( COLON ) CELL_REF )?
+	:	CELL_REF ( ( COLON ) CELL_REF )? | CELL
 	;
 
 literal
 	:	NUMBER
 	|	STRING
 	;
-	
+
 
 fragment LETTER: ('a'..'z'|'A'..'Z') ;
 
 FOR : 'FOR' | 'for' | 'For';
 
 FUNCTION :
-	  ( LETTER )+ 
+	  ( LETTER )+
 	;
- 
+
 CELL_REF
 	:
 		( ABS )? LETTER ( LETTER )?
 		( ABS )? ( DIGIT )+
 	;
 
+CELL : '#' 'CELL';
+
 VARIABLE_NAME 
         : UNDERSCORE LETTER (DIGIT|LETTER)*
+        ;
+
+G_VARIABLE_NAME
+        : AT LETTER (DIGIT|LETTER)*
         ;
 
 /* String literals, i.e. anything inside the delimiters */
@@ -83,13 +99,13 @@ VARIABLE_NAME
 STRING  : QUOT ('\\"' | ~'"')* QUOT
         ;
 
-QUOT: '"' 
+QUOT: '"'
 	;
 
 /* Numeric literals */
 NUMBER: ( DIGIT )+ ( COMMA ( DIGIT )+ )? ;
 
-fragment 
+fragment
 DIGIT : '0'..'9' ;
 
 /* Comparison operators */
@@ -115,18 +131,23 @@ PERCENT : '%' ;
 fragment ABS : '$' ;
 fragment EXCL:  '!'  ;
 COLON	: ':' ;
- 
+
 /* Miscellaneous operators */
-COMMA	: ',' ;
-SEMI	: ';' ;
-LPAR	: '(' ;
-RPAR	: ')' ; 
+COMMA	    : ',' ;
+SEMI	    : ';' ;
+LPAR	    : '(' ;
+RPAR	    : ')' ;
+L_RIGHT_PAR	: '[' ;
+R_RIGHT_PAR	: ']' ;
 L_CURLY_BRACKET	: '{' ;
 R_CURLY_BRACKET	: '}' ;
 fragment UNDERSCORE : '_';
+fragment AT : '@';
 
 /* assignment operator */
 ASSIGN  : ':=' ;
 
 /* White-space (ignored) */
 WS: ( ' ' | '\r' '\n' | '\n' | '\t' ) -> skip ;
+
+SPECIAL_CHAR: [.!?_*] ;

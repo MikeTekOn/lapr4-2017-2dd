@@ -19,9 +19,9 @@ import java.util.regex.PatternSyntaxException;
 public class RegexUtil {
 
     private List<String> info;
-    private String regex;
-    private Pattern p;
-    private Matcher m;
+    protected String regex;
+    protected Pattern p;
+    protected Matcher m;
 
     public RegexUtil(String regex) {
         this.regex = regex;
@@ -38,7 +38,6 @@ public class RegexUtil {
         try {
             Pattern.compile(regex);
         } catch (PatternSyntaxException exception) {
-            System.out.println("Invalid!");
             test = false;
         }
         return test;

@@ -6,7 +6,6 @@
 package lapr4.blue.s1.lang.n1151452.formula.compiler;
 
 import csheets.core.Cell;
-import csheets.core.IllegalValueTypeException;
 import csheets.core.Value;
 import csheets.core.formula.*;
 import csheets.core.formula.compiler.FormulaCompilationException;
@@ -15,47 +14,49 @@ import csheets.core.formula.lang.CellReference;
 import csheets.core.formula.lang.RangeReference;
 import csheets.core.formula.lang.ReferenceOperation;
 import csheets.core.formula.lang.UnknownElementException;
+import csheets.ui.ctrl.UIController;
+import lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable;
+import lapr4.blue.s1.lang.n1140822.beanshellwindow.BeanShellInstance;
+import lapr4.blue.s1.lang.n1140822.beanshellwindow.BeanShellLoader;
 import lapr4.blue.s1.lang.n1151452.formula.lang.Language;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperation;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperator;
+import lapr4.red.s2.lang.n1150623.globalVariables.VarContentor;
 import org.antlr.v4.runtime.Token;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import jdk.nashorn.internal.codegen.types.Type;
-import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVariable;
 
 /**
  * Represents the Formula Visitor (ANTLR4).
  *
  * @author Diana Silva {1151088@isep.ipp.pt]} on 03/06/17
  * @author Daniel Gonçalves [1151452@isep.ipp.pt] on 01/06/17.
+ *
+ * @author Guilherme Ferreira 1150623 corrected to work with 'Variable' class and VarContentor
+ * @author Ricardo Catalão (1150385) on 08/06/2017
  * @author jrt
- */
+*/
 @SuppressWarnings("Duplicates")
 public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
-
     private Cell cell = null;
     private int numberOfErrors;
     private final StringBuilder errorBuffer;
-    
+    private final UIController uiController;
+
     /**The starter lexical rule for temporary variables*/
     private static final char TEMP_VAR_STARTER='_';
-    
-    /**The temporary variables manager*/
-    private final Set<TemporaryVariable> temp_contentor;
 
-    public FormulaEvalVisitor(Cell cell) {
+    /**The temporary variables manager*/
+    private final VarContentor temp_contentor;
+
+    public FormulaEvalVisitor(Cell cell, UIController uiController) {
         this.cell = cell;
+        this.uiController = uiController;
         numberOfErrors = 0;
         errorBuffer = new StringBuilder();
-        temp_contentor = new HashSet<>();
+        temp_contentor = new VarContentor();
     }
 
     public int getNumberOfErrors() {
@@ -64,6 +65,43 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
 
     public String getErrorsMessage() {
         return errorBuffer.toString();
+    }
+
+    @Override
+    public Expression visitScript(BlueFormulaParser.ScriptContext ctx) {
+        super.visitScript(ctx);
+
+        StringBuilder builder = new StringBuilder();
+        for(int i=0; i<ctx.getChildCount(); i++){
+            builder.append(ctx.getChild(i).getText());
+            builder.append(" "); // WhiteSpace seems to always be ignored so... to not break things up, this was placed
+        }
+
+        return new Literal(new Value(builder.toString()));
+    }
+
+    /**
+     * Handles the behaviour of visiting the ShellScript grammar node. The shellScript node will have the information
+     * needed for what code the beanShell should execute, but also how to execute it.
+     *
+     * The node can start with 2 headers. (1) "<![SHELL[" or (2) "<[SHELL[".
+     * If (1) is chosen, the bean shell code should be run asynchronously and the result of visiting this node is
+     * null. If (2) is chosen, the code should be run synchronously and the result of visiting this node is the return
+     * value of visiting the bean shell code (normally, the value of the last instruction executed).
+     */
+    @Override
+    public Expression visitShellscript(BlueFormulaParser.ShellscriptContext ctx) {
+        BeanShellLoader loader = new BeanShellLoader();
+
+        Literal literal = (Literal)visit(ctx.getChild(1));
+        String code = literal.toString().substring(1, literal.toString().length() - 1);
+        BeanShellInstance shell = loader.create(code, uiController, temp_contentor);
+
+        if(ctx.getChild(0).getText().charAt(1) == '!'){ // It should run asynchronously
+            shell.setAsynchronous();
+        }
+
+        return shell;
     }
 
     @Override
@@ -129,7 +167,7 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
 
     /**
      * Updated method to consider temporary variables
-     * 
+     *
      * @author Diana Silva[1151088@isep.ipp.pt]
      * @param ctx tree parse
      * @return the visitor result
@@ -140,38 +178,22 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
             return visit(ctx.getChild(1));
         }
         else if (ctx.VARIABLE_NAME() != null) {
-            
-            String tempVarName=ctx.VARIABLE_NAME().getText();
-            
-            try {
-               
-                Iterator it=temp_contentor.iterator();
-                TemporaryVariable tempVar;
-                while(it.hasNext()){
-                    tempVar=(TemporaryVariable)it.next();
-                    if (tempVar.getName().equalsIgnoreCase(tempVarName)) {
-                        return tempVar.getExpression();
-                    }
-                }
-                throw new UnknownElementException("Invalid expression. Variable it wasn´t assigned yet.");
 
-            } catch (UnknownElementException ex) {
+            String tempVarName=ctx.VARIABLE_NAME().getText();
+
+            try {
+                return temp_contentor.getExpressionOfVariable(tempVarName);
+            } catch (IllegalArgumentException ex) {
                 addVisitError(ex.getLocalizedMessage());
             }
-         
+
         }
         else if(ctx.assignment() != null) {
             //it´s a temporary variable
-            if (ctx.assignment().VARIABLE_NAME() != null) { 
-                TemporaryVariable temp_var = (TemporaryVariable)visit(ctx.assignment());
-                //verifies if variable was already used in formula
-                if(temp_contentor.contains(temp_var)) {
-                    temp_contentor.remove(temp_var);
-                    temp_contentor.add(temp_var);
-                } else {
-                    temp_contentor.add(temp_var);
-                }
-            }      
+            if (ctx.assignment().VARIABLE_NAME() != null) {
+                Variable temp_var = (Variable)visit(ctx.assignment());
+                temp_contentor.update(temp_var);
+            }
         }
 
         return visitChildren(ctx);
@@ -215,7 +237,11 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
                         new CellReference(cell.getSpreadsheet(), ctx.getChild(2).getText())
                 );
             } else {
-                return new CellReference(cell.getSpreadsheet(), ctx.getText());
+                if(ctx.getText().equals("#CELL")){
+                    return new CellReference(cell.getSpreadsheet(), cell.getAddress().toString());
+                }else{
+                    return new CellReference(cell.getSpreadsheet(), ctx.getText());
+                }
             }
         } catch (ParseException | UnknownElementException ex) {
             addVisitError(ex.getMessage());
@@ -248,7 +274,7 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
      */
     public Expression visitAssignment(BlueFormulaParser.AssignmentContext ctx) {
         if (ctx.ASSIGN() != null) {
-            
+
             //it´s a cell reference assignment
             if (ctx.reference() != null) {
                 try {
@@ -262,13 +288,13 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
                 } catch (UnknownElementException ex) {
                     addVisitError(ex.getMessage());
                 }
-            
-            //it´s a temporary variable
+
+                //it´s a temporary variable
             } else if (ctx.VARIABLE_NAME() != null) {
-             
+
                 String name = ctx.VARIABLE_NAME().getText();
-                return new TemporaryVariable(name, visit(ctx.comparison()));
-                   
+                return new Variable(name, visit(ctx.comparison()));
+
             }
         }
 
@@ -341,3 +367,4 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
         numberOfErrors++;
     }
 }
+

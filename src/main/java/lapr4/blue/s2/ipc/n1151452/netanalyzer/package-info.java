@@ -2,7 +2,7 @@
  * Technical documentation regarding the user story Lang01.1: Block of Instructions.
  * <p>
  * <b>JIRA ISSUE: LAPR4E17DD-91</b><p>
- * <b>Scrum Master: yes</b>
+ * <b>Scrum Master: yes</b><p>
  * <b>Area Leader: yes</b>
  * <p>
  * <h2>1. Notes:</h2>
@@ -80,6 +80,8 @@
  *         <li>To make it a thread-safe object, I will implement a similar solution to the <b>producer - (priority consumer) problem</b></li>
  *         <li>To assist with the mutex access to the queue we will use a {@link java.util.concurrent.ConcurrentLinkedQueue} class.</li>
  *     </ol>
+  *     <b>NOTE:</b> I choose a {@link java.util.concurrent.ConcurrentLinkedQueue} instead of a {@link java.util.concurrent.LinkedBlockingQueue} because
+  *     of the "wait-free" approach that deals with the multiple producers, for the consumer I will implement a lock where he waits if the queue is empty.<p>
  *      <i>3.1.3.1. Logger Activity Diagram</i>
  *      <p>
  *      <img src="traffic_log_flow.png" alt="traffic log flow"><p>
@@ -185,12 +187,25 @@
   *  <li>Verify log ui.</li>
   * </ol>
   * </li>
+  * </ol>
  * <p>
  * <p>
  * <h2>5. Design</h2>
  * <p>
- *
+ * <h3>5.1. Publish a traffic event</h3>
+  * <img src="publish_traffic_event_sd.png" alt="Publish Traffic Event SD">
  * <p>
+ * <h3>5.2. Traffic Logger [Watchdog]</h3>
+  * <img src="traffic_logger_sd.png" alt="Traffic Logger SD">
+ * <p>
+ * <h3>5.3. Traffic Counter [Watchdog]</h3>
+  * <img src="traffic_counter_sd.png" alt="Traffic Counter SD">
+ * <p>
+ * <h3>5.4. Design Patterns and Best Practices</h3>
+ * <p><ol>
+  * <li>I used the <b>decorator pattern</b> to build the traffic input/output streams.</li>
+  * <li>We used the <b>strategy pattern</b> to abstract the secure/unsecure transmission responsibility.</li>
+ * </ol>
  * <p>
  * <h2>6. Integration/Demonstration</h2>
  * <p>
@@ -206,7 +221,7 @@
  * I worked on:<p>
  * Yesterday
  * <p><ol>
- * <li>Set up my workstation.
+ * <li>Prepare previous sprint demo [lang area].
  * </ol><p>
  * Today
  * <p><ol>
@@ -234,6 +249,21 @@
  * <p>
  * -nothing-
  * <p>
+ * <b>Thursday [08/06/2017]</b><p>
+  * I worked on:<p>
+  * Yesterday
+  * <p><ol>
+  * <li>Clarify requirments with product owner and update analysis.
+  * <li>Elaborate tests.
+  * </ol><p>
+  * Today
+  * <p><ol>
+  * <li>Complete Design.
+  * </ol><p>
+  * Blocking:
+  * <p>
+  * -nothing-
+  * <p>
  * <p>
  *
  * @author Daniel Gon&ccedil;alves [1151452@isep.ipp.pt]
