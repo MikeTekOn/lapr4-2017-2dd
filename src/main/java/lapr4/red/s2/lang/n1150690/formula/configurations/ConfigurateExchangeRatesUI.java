@@ -6,6 +6,8 @@
 package lapr4.red.s2.lang.n1150690.formula.configurations;
 
 import csheets.ui.ctrl.UIController;
+import lapr4.red.s2.lang.n1150385.beanshell.utils.Pair;
+
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -14,8 +16,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.util.Pair;
-import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -24,7 +24,6 @@ import javax.swing.JTable;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 /**
  *

@@ -14,7 +14,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
-import javafx.util.Pair;
+
+import lapr4.red.s2.lang.n1150385.beanshell.utils.Pair;
 import lapr4.red.s2.lang.n1150690.formula.MonetaryConvertion;
 
 /**
