@@ -40,7 +40,7 @@ import lapr4.blue.s1.lang.n1141570.XML.ui.ExportSelectedRowActionUI;
 import lapr4.blue.s1.lang.n1141570.XML.ui.ExportSelectedSpreadsheetActionUI;
 import lapr4.blue.s1.lang.n1141570.XML.ui.ExportWorkBookActionUI;
 import lapr4.red.s2.lang.n1150613.FunctionWizard.ui.IntermediateFunctionWizard;
-import lapr4.red.s2.lang.n1150690.formula.configurations.ConfigurateExchangeRatesAction;
+import lapr4.red.s2.lang.n1150690.formula.configurations.ConfigureExchangeRatesAction;
 
 /**
  * The main frame of the GUI.
@@ -133,7 +133,7 @@ public class Frame extends JFrame implements SelectionListener, ExtensionStateLi
         actionManager.registerAction("manageExtensions", new ManageExtensionsAction(this));
 
         //Register configurations of exchange rates
-        actionManager.registerAction("configurateExchangeRates", new ConfigurateExchangeRatesAction(app, uiController));
+        actionManager.registerAction("configurateExchangeRates", new ConfigureExchangeRatesAction(app, uiController));
 
         // Creates spreadsheet components
         workbookPane = new WorkbookPane(uiController, actionManager);

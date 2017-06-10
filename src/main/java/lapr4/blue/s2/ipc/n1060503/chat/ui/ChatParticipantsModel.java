@@ -8,10 +8,7 @@ package lapr4.blue.s2.ipc.n1060503.chat.ui;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
-import lapr4.blue.s2.ipc.n1060503.chat.profile.UserChatProfile;
-import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
-
-
+import lapr4.blue.s2.ipc.n1060503.chat.connection.UserChatDTO;
 
 /**
  * It represents the Panel for the chat.
@@ -32,7 +29,7 @@ public class ChatParticipantsModel extends AbstractTableModel {
     /**
      * The connections list.
      */
-    private final List<UserChatProfile> list;
+    private final List<UserChatDTO> list;
 
     /**
      * The constructor of the controller.
@@ -95,13 +92,10 @@ public class ChatParticipantsModel extends AbstractTableModel {
         if (rowIndex < 0 || rowIndex >= list.size() || columnIndex < 0 || columnIndex > 2) {
             return null;
         }
-        UserChatProfile ucp = list.get(rowIndex);
+        UserChatDTO ucp = list.get(rowIndex);
         Object data;
-        if (columnIndex == 1) {
-            data = ucp.getNickname();
-        } else {
-            data = ucp.getStatus();
-        }
+        data = ucp.getUserChatProfileNickname();
+
         return data;
     }
 
@@ -121,11 +115,17 @@ public class ChatParticipantsModel extends AbstractTableModel {
      * It adds a new connection to the table. If the connection already exists
      * within the table, it ignores it.
      *
-     * @param connection The connection to be added.
+     * @param ucp
      */
-    public void addRow(UserChatProfile ucp) {
-        int index = list.indexOf(ucp);
-        if (index == -1) {
+    public void addRow(UserChatDTO ucp) {
+        boolean flag = true;
+        for(UserChatDTO u : list){
+            if(ucp.getUserChatProfileNickname().equals(u.getUserChatProfileNickname())){
+                flag = false;
+                break;
+            }
+        }
+        if (flag) {
             list.add(ucp);
             fireTableDataChanged();
         }
@@ -137,7 +137,7 @@ public class ChatParticipantsModel extends AbstractTableModel {
      * @param index The index of the connection to retrieve.
      * @return It returns the connection or null if the index is not valid.
      */
-    public UserChatProfile provideConnection(int index) {
+    public UserChatDTO getUserChatDTO(int index) {
         if (index < 0 || index >= list.size()) {
             return null;
         }
@@ -150,7 +150,7 @@ public class ChatParticipantsModel extends AbstractTableModel {
      * @param connection The connection that is represented on the row.
      * @return It returns true if the file is removed or false otherwise.
      */
-    private boolean removeRow(UserChatProfile ucp) {
+    private boolean removeRow(UserChatDTO ucp) {
         int index = list.indexOf(ucp);
         if (index != -1) {
             list.remove(index);

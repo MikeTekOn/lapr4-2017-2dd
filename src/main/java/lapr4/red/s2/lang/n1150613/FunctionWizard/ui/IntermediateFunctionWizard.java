@@ -11,7 +11,7 @@ import javax.swing.JButton;
 /**
  * Represent the button of Function Wizard
  *
- * @author Pedro Fernandes
+ * @author Diogo Guedes
  */
 public class IntermediateFunctionWizard extends JButton {
 

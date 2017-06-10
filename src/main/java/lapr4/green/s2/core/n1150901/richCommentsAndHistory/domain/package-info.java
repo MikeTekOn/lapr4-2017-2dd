@@ -82,6 +82,7 @@
  * <p>
  *
  * <h2>7. Unit Tests</h2>
+ * This tests are perfomed in the following package: lapr.green.s2.core.n1150901.richCommentsAndHistory
  *
  * <b>Test1:</b> historyUpdatesWhenUserEditsCommentTest
  * <p>
@@ -89,36 +90,44 @@
  * and saves every changes.
  * <p>
  * <p>
- *
- * <b>Test2:</b> searchOnlyNeedsTextPatternsTest
- * <p>
- * There should be a way to verify if the search feature actually works with
- * only text patterns and doesn't need full words.
- * <p>
- * <p>
- *
- * <b>Test3:</b> formatIsAppliedToCommentTest
+ * 
+ * <h2>8. Functional Tests</h2>
+ * This are functional tests, performed manually in the UI.
+ * 
+ * <b>Test1:</b> formatIsAppliedToCommentTest
  * <p>
  * There should be a way to verify if the format is correctly applied to the
  * comment selected.
  * <p>
  * <p>
  *
- * <b>Test4:</b> styleIsAppliedToCommentTest
+ * <b>Test2:</b> styleIsAppliedToCommentTest
  * <p>
  * There should be a way to verify if the style is correctly applied to the
  * comment selected.
  * <p>
  * <p>
  *
- * <b>Test5:</b> oldCommentBecomesNewCommentTest<p>
+ * <b>Test3:</b> oldCommentBecomesNewCommentTest<p>
  * There should be a way to verify that a comment from the history of changes
  * can become "a new version" and "come back" to the current comments of a cell.
  * <p>
  * <p>
+ * 
+ * <b>Test4:</b> searchOnlyNeedsTextPatternsTest
+ * <p>
+ * There should be a way to verify if the search feature actually works with
+ * only text patterns and doesn't need full words.
+ * <p>
+ * <p>
  *
- * <h2>8. Design</h2>
+ * <h2>9. Design</h2>
  *
+ * For this user story it was needed to extend and use some classes that were already implemented.
+ * From those interactions we get the following Class Diagram:
+ * <img src="us8_design_cd.png" alt="design_cd">
+ * <p>
+ * 
  * From the 3 "parts" we get 3 diagrams that are the following:
  * <p>
  *

@@ -38,7 +38,20 @@ public class WriterThread implements Runnable {
      */
     private final Thread writerThread;
 
+    /**
+     * The cells DTO's matrix.
+     */
     private CellDTO[][] cellsDTO;
+
+    /**
+     * The current thread id.
+     */
+    private static long threadId = -2;
+
+    /**
+     * The is running boolean.
+     */
+    private static volatile boolean isRunning;
 
     /**
      * Creates a new instance of writer thread.
@@ -52,6 +65,7 @@ public class WriterThread implements Runnable {
         this.fileToWrite = fileToWrite;
         this.separatorCharacter = separatorCharacter;
 
+        isRunning = true;
         this.writerThread = new Thread(this);
         this.writerThread.start();
     }
@@ -59,7 +73,9 @@ public class WriterThread implements Runnable {
     @Override
     public void run() {
 
-        while (true) {
+        while (isRunning) {
+
+            threadId = Thread.currentThread().getId();
             System.out.println("I AM THE SYNCHRONIZATION THREAD!\n");
             this.cellsDTO = getCellsFromRange(this.activeSpreadsheet);
             try {
@@ -67,13 +83,30 @@ public class WriterThread implements Runnable {
             } catch (IOException ex) {
                 Logger.getLogger(WriterThread.class.getName()).log(Level.SEVERE, null, ex);
             }
-            //update every seconds
+            //update every 2 seconds
             try {
-                Thread.sleep(1000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+        threadId = -2;
+    }
+
+    /**
+     * Kills the current thread.
+     */
+    public static void kill() {
+        isRunning = false;
+    }
+
+    /**
+     * Obtains the current thread id.
+     *
+     * @return the current thread id
+     */
+    public static long obtainsThreadId() {
+        return WriterThread.threadId;
     }
 
     /**
@@ -131,7 +164,6 @@ public class WriterThread implements Runnable {
         }
 
         bw.flush();
-
         bw.close();
     }
 
