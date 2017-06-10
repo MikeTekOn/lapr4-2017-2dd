@@ -61,11 +61,12 @@ public class UserChatProfile implements AggregateRoot<Long>, Serializable{
     private StatusChatProfile status;
     
     /**
-     * path of default icon
-    
+     * path of default icon    
     private static final String DEFAULT_ICON_PATH = 
        "src/main/resources/lapr4/blue/s2/ipc/n1060503/chat/res/img/default_icon.png";
     */
+    private final URL DEFAULT_ICON_PATH = 
+            getClass().getClassLoader().getResource("lapr4/blue/s2/ipc/n1060503/chat/img/default_icon.png");
     
     /**
      * constructor by default
