@@ -137,8 +137,9 @@ public class MacroDialog extends JDialog {
     private JPanel createMacroTextAreaPanel() {
         JPanel macroTextAreaPanel = new JPanel(new BorderLayout());
         
+
         comboBox = new JComboBox<>();
-        
+        comboBox.setSelectedItem("Default");
         for (MacroWithName macroWithName : uiController.getActiveWorkbook().getMacroList().getMacroList()) {
             comboBox.addItem(macroWithName);
         }
