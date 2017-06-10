@@ -22,10 +22,9 @@ public class IntermediateFunctionWizardController extends FunctionWizardControll
     public String calculateResult(String parameters, String syntax) throws FormulaCompilationException {
         String result = calculateFunction(parameters, syntax);
 
-        System.out.println(result);
         uiController.getActiveCell().setContent(result);
         result = uiController.getActiveCell().getValue().toString();
-        System.out.println(result);
+
         return result;
     }
 

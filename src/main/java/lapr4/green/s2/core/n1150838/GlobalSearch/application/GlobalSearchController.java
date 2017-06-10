@@ -35,7 +35,7 @@ public class GlobalSearchController extends WorkbookSearchController implements 
     }
     
      public void  start(Filter filter,String regex){
-        t = new Thread(new RegexUtilExtended(filter,regex,ctrl.getActiveWorkbooks()));
+        t = new Thread(new RegexUtilExtended(filter,regex,ctrl));
         t.start();
     }
     

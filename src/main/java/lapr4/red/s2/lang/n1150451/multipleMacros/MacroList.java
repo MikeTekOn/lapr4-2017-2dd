@@ -7,12 +7,9 @@ package lapr4.red.s2.lang.n1150451.multipleMacros;
 
 import csheets.core.Spreadsheet;
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.*;
-import java.util.Set;
 
 import csheets.ui.ctrl.UIController;
-import lapr4.blue.s1.lang.n1151159.macros.Macro;
 
 /**
  *
@@ -21,7 +18,7 @@ import lapr4.blue.s1.lang.n1151159.macros.Macro;
 public class MacroList implements Serializable {
 
     List<MacroWithName> macroList;
-    private UIController uiController;
+    private transient UIController uiController;
 
     public MacroList() {
         macroList = new ArrayList<MacroWithName>();
