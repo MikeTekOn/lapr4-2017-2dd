@@ -43,23 +43,31 @@
  * This approach also sets the basis for the second functional increment of this use case, where permanent downloads will be implemented.
  * As all things, this approach has its downsides - it can be demanding on the network structure since you open a connection for each instance of the application which wants to share files.
  * But, once this connection is made, it will stay available for the rest of the application execution, which means it will be only opened once per execution.
- * The other side of the problem is the DTOs needed for this. We will need a DTO dedicated only to file lists (which will include a list of the files names,sizes and owners). The other DTO we will need is the FileDTO which will be the container for the file we want to transfer.
+ * The other side of the problem is the DTOs needed for this. We will need a DTO dedicated only to file lists (which will include a list of the files names,sizes and owners). The other DTO we will need is the FileDTO which will be the container for the file we want to transfer. Additionally, a FileNameDTO is needed so a client can request a file.
  * That being said, the new concepts we will introduce into the system are depicted below:
  * <p>
  * <p>
  *  FileShareController
  * <p>
  * <p>
- *  FileListDTO
+ *  FileNameListDTO and respective handler
  * <p>
  * <p>
- *  FileDTO
+ *  FileNameDTO and respective handler
+ * <p>
+ * <p>
+ *  FileDTO  and respective handler
  * <p>
  * 
  * <h2>4. Design</h2>
- *
+ *After the initial analysis, i reached the conclusion that sending the file lists over tcp connection is too demanding on the network, we'd need to have one connection for every client in the network.
+ * Because of that, this functionality will be implemented using UDP broadcasts as it should be. 
+ * The list of files is sent over broadcast using the FileNamesListDTO. This dto will then reach other clients udp servers and be handled by the respective handler (which should notify the observers that are observing this).
+ * After having the list of files, should the client wish to download one, it will have to send to the host of the file he wants, a tcp request using a FileNameDTO, which should be registered in client2 tcp server. After receiving this request, the response is immediate. The client2 system
+ * will search the file in the shared folder and should it find it, send it through the output stream in the FileNameDTOHandler. Because it is an immediate response, it will not reach client1 tcp server, it will instead reach client1 worker thread (which was opened to send the file name request).
+ * Because of that, the FileDTOHandler has to be registered not in the tcp server, but the tcp client, else, it wont be handled correctly.
  * <h3>4.1. Functional Tests</h3>
- * The domain of this functional increment has already been tested, as such, there will be no new tests implemented.
+ * The domain of this functional increment has already been tested, as such, there will be no new tests implemented. 
  *  <p>
  * Unit test 1 - 
  *  <p>
@@ -73,7 +81,9 @@
  * <p>
  * <img src="design.png" alt="image">
  * <p>
- * From this sequence diagram it can be seen
+ * From this sequence diagram it can be seen that we need a method to update the list of shared files (we get the dto, but how can we use the packet we read to update our user interface?).
+ * Other problem we have is putting the source of the file in the input list. The method to reconstruct a file, is retrieving an array of bytes and writing those bytes into a path. Now, how can we, when we download a file, know who sent it? To achieve this, we will need to add metadata 
+ *  to the downloaded file. Java already offers data structures to do this. Note that when reading the file (for instance , when we launch the application and see our downloaded files) we will also need to read that metadata.
  * <h3>4.3. Classes</h3>
  * 
  * <p>
@@ -81,18 +91,18 @@
  * <p>
  * 
  * <h3>4.4. Design Patterns and Best Practices</h3>
- * 
- * This is an extension, so all extension related patterns are already explained in other documents.
- * In regards to the macros, their specification can be found in lapr4.blue.s1.lang.n1151159.macros.
+ * In this use case, we use the observer pattern. Everytime we receive a file list from another client's broadcast, we notify the observers (which in this case is a list of available files). Note that observer must be implemented and observable extended in respective data structures.
  * 
  * 
  * <h2>5. Implementation</h2>
  * 
  * Added the planned classes.
  * Added junit testing to guarantee domain rules are enforced.
- * Implemented controller class.
- * Integrated macros with beanshell
- * Integrated beanshell with cleansheets
+ * Implemented the dto classes
+ * Implemented the dto handlers
+ * Added handlers into the needed servers
+ * Added ui implementation
+ *
  * <p>
  * 
  * 
