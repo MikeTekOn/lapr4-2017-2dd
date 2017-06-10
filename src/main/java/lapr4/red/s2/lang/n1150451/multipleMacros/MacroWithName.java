@@ -57,7 +57,7 @@ public class MacroWithName implements Expression, Serializable {
     public Value evaluate() throws IllegalValueTypeException {
         MacroController c = new MacroController();
         try {
-            return c.executeMacro(s, uiController, macroCode);
+            return c.executeMacro(s, uiController, macroCode, name);
         } catch (MacroCompilationException ex) {
             Logger.getLogger(MacroWithName.class.getName()).log(Level.SEVERE, null, ex);
         }
