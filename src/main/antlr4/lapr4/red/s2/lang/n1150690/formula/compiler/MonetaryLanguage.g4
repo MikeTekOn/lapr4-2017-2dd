@@ -11,7 +11,7 @@ expression:
     LPAR expression RPAR
     | left=expression op=MULTI (NUMBER | NUMBER_FOR_COIN)
     | left=expression op=DIV NUMBER
-    | left=expression op=(PLUS|MINUS) right=expression
+    | left=expression op=(PLUS|MINUS) (NUMBER | NUMBER_FOR_COIN)
     | value=NUMBER
     | value=NUMBER_FOR_COIN;
 

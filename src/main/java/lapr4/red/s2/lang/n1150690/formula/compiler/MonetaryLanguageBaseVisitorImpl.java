@@ -87,20 +87,16 @@ public class MonetaryLanguageBaseVisitorImpl extends MonetaryLanguageBaseVisitor
      */
     @Override
     public Expression visitExpression(MonetaryLanguageParser.ExpressionContext ctx) {
-        if (ctx.getChildCount() == 3) {
-            try {
-                return withThreeChilds(ctx);
-            } catch (IllegalValueTypeException ex) {
-                Logger.getLogger(MonetaryLanguageBaseVisitorImpl.class.getName()).log(Level.SEVERE, null, ex);
-            }
+        // if (ctx.getChildCount() == 3) {
+        try {
+            return withThreeChilds(ctx);
+        } catch (IllegalValueTypeException ex) {
+            Logger.getLogger(MonetaryLanguageBaseVisitorImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if (ctx.getChildCount() == 1) {
-            try {
-                return withThreeChilds(ctx);
-            } catch (IllegalValueTypeException ex) {
-                Logger.getLogger(MonetaryLanguageBaseVisitorImpl.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
+        //}
+        /* if (ctx.getChildCount() == 1) {
+            return withoneChild(ctx);
+        }*/
         return null;
     }
 
@@ -116,22 +112,32 @@ public class MonetaryLanguageBaseVisitorImpl extends MonetaryLanguageBaseVisitor
 
         // Convert binary operation
         BinaryOperator operator = null;
-        BigDecimal leftOperand = null;
+        //BigDecimal leftOperand = null;
         BigDecimal rightOperand = null;
-        try {
-            operator = Language.getInstance().getBinaryOperator(ctx.op.getText());
-        } catch (UnknownElementException ex) {
-            addVisitError(ex.getMessage());
+        if (ctx.op != null) {
+            try {
+                operator = Language.getInstance().getBinaryOperator(ctx.op.getText());
+            } catch (UnknownElementException ex) {
+                addVisitError(ex.getMessage());
+            }
         }
-        if (ctx.right != null && ctx.left != null) {
-            leftOperand = treatNumber(ctx.left.getText());
-            rightOperand = treatNumber(ctx.right.getText());
-            Literal l = new Literal(new Value((Number) leftOperand));
-            Literal r = new Literal(new Value((Number) rightOperand));
-            BinaryOperation o = new BinaryOperation(l, operator, r);
-            Literal result = new Literal(o.evaluate());
-            return (Expression) result;
+
+        //if (ctx.right != null && ctx.left != null) {
+        //return visit(ctx.getChild(0));
+        //leftOperand = treatNumber(ctx.left.getText());
+        if (ctx.NUMBER() != null) {
+            rightOperand = new BigDecimal(ctx.NUMBER().getText());
         }
+        if (ctx.NUMBER_FOR_COIN() != null) {
+            String number = ctx.NUMBER_FOR_COIN().getText();
+            rightOperand = treatNumber(number);
+        }
+        //Literal l = new Literal(new Value((Number) leftOperand));
+        Literal r = new Literal(new Value((Number) rightOperand));
+        BinaryOperation o = new BinaryOperation(visit(ctx.getChild(0)), operator, r);
+        Literal result = new Literal(o.evaluate());
+        return (Expression) result;
+        /*}
 
         if (ctx.NUMBER() != null) {
             rightOperand = new BigDecimal(ctx.NUMBER().getText());
@@ -146,7 +152,7 @@ public class MonetaryLanguageBaseVisitorImpl extends MonetaryLanguageBaseVisitor
             BinaryOperation o = new BinaryOperation(visit(ctx.getChild(0)), operator, r);
             return (Expression) o.evaluate();
         }
-        return new BinaryOperation(visit(ctx.getChild(0)), operator, visit(ctx.getChild(2)));
+        return new BinaryOperation(visit(ctx.getChild(0)), operator, );*/
     }
 
     /**
@@ -154,18 +160,19 @@ public class MonetaryLanguageBaseVisitorImpl extends MonetaryLanguageBaseVisitor
      * @param ctx
      * @return
      */
-    private Expression oneChild(MonetaryLanguageParser.ExpressionContext ctx) {
+    /*private Expression withoneChild(MonetaryLanguageParser.ExpressionContext ctx) {
         BigDecimal operand = null;
+        Literal o = null;
         if (ctx.NUMBER() != null) {
             operand = new BigDecimal(ctx.NUMBER().getText());
         }
         if (ctx.NUMBER_FOR_COIN() != null) {
             String number = ctx.NUMBER_FOR_COIN().getText();
             operand = treatNumber(number);
+            o = new Literal(new Value((Number) operand));
         }
         return (Expression) operand;
-    }
-
+    }*/
     /**
      *
      * @param n
