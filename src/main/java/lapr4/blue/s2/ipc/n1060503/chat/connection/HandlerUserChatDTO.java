@@ -39,11 +39,11 @@ public class HandlerUserChatDTO extends Observable implements CommHandler, Seria
         UserChatDTO ucldto = (UserChatDTO) ((PacketEncapsulatorDTO) dto).getDTO();
         lastReceivedDTO = ucldto;
         InetAddress serverIP =  connectionID.getAddress();
-        int portNumber =  connectionID.getPortNumber();               
+        //int portNumber =  connectionID.getPortNumber();               
         if (isOutsiderAnnouncement(serverIP)) {
             setChanged();
-            ConnectionID connection = new ConnectionIDImpl(serverIP, portNumber);
-            notifyObservers(connection);
+            //ConnectionID connection = new ConnectionIDImpl(serverIP, portNumber);
+            notifyObservers(ucldto);
             Logger.getLogger(HandlerUserChatDTO.class.getName()).log(Level.INFO, dto.getClass().toString());
         }
     }

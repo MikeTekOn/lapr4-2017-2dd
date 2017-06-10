@@ -136,23 +136,21 @@ public class MacroDialog extends JDialog {
      */
     private JPanel createMacroTextAreaPanel() {
         JPanel macroTextAreaPanel = new JPanel(new BorderLayout());
-        
 
         comboBox = new JComboBox<>();
-        comboBox.setSelectedItem("Default");
         for (MacroWithName macroWithName : uiController.getActiveWorkbook().getMacroList().getMacroList()) {
             comboBox.addItem(macroWithName);
         }
         comboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                macroTextArea.setText(((MacroWithName)comboBox.getSelectedItem()).getMacroCode());
+                macroTextArea.setText(((MacroWithName) comboBox.getSelectedItem()).getMacroCode());
             }
         });
-        
+
         macroTextArea = new JTextArea(MACRO_TEXT_AREA_ROWS, MACRO_TEXT_AREA_COLUMNS);
         macroTextArea.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
-        macroTextArea.setText(macroController.getDefaultMacro());
+        //macroTextArea.setText(macroController.getDefaultMacro());
 
         JScrollPane macroTextAreaScrollPane = new JScrollPane(macroTextArea);
 
@@ -218,7 +216,20 @@ public class MacroDialog extends JDialog {
                 if (!macroText.trim().isEmpty()) {
                     if (macroLanguageRadioButton.isSelected()) {
                         try {
-                            Value value = macroController.executeMacro(uiController.getActiveSpreadsheet(), uiController, macroText);
+                            String name;
+                            if (comboBox.getSelectedItem() == null) {
+                                name = "default";
+                            } else {
+                                name = comboBox.getSelectedItem().toString();
+                            }
+                            Value value = null;
+                            try {
+                                value = macroController.executeMacro(uiController.getActiveSpreadsheet(), uiController, macroText, name);
+                                if (value==null) System.out.println("ola!!!");
+                            } catch (NullPointerException e) {
+                                JOptionPane.showMessageDialog(rootPane, "Recursivity found.");
+                                return;
+                            }
                             macroOutputTextField.setText(value.toString());
                         } catch (MacroCompilationException | IllegalValueTypeException e) {
                             JOptionPane.showMessageDialog(null,

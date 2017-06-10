@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
 import lapr4.green.s1.ipc.n1150657.chat.ext.ChatExtension;
@@ -142,7 +143,7 @@ public class ChatParticipantsPanel extends JPanel {
      * @return It return the panel.
      */
     private JPanel createNetworkBottomButtonsPanel() {
-        final String searchBtText = "Search";
+        final String searchBtText = "Turn On / Search";
         final String connectBtText = "Connect";
         final int allignment = FlowLayout.CENTER;
         final JPanel panel = new JPanel(new GridLayout(1, 2));
@@ -172,8 +173,13 @@ public class ChatParticipantsPanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            table.clear();
-            (new ChatParticipantsAction(table, 15310)).actionPerformed(e);
+            try{
+                table.clear();            
+                (new ChatParticipantsAction(table, 15310)).actionPerformed(e);
+                btSearch.setEnabled(false);
+            } catch (NullPointerException n){
+                JOptionPane.showMessageDialog(null, "Go to Network Tab and click Activate");
+            }
         }
 
     }
