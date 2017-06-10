@@ -55,7 +55,7 @@ public class ConfigurateExchangeRatesController {
                 Pair<String, String> newPair = new Pair(name, value);
                 rates.add(newPair);
             }
-            
+
         } catch (IOException ex) {
         }
  return rates;

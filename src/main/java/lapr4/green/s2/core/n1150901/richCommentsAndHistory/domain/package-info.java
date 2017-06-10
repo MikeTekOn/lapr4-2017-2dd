@@ -51,12 +51,14 @@
  * cases?</li><p>
  * <li>What does it mean when it says that the user is allowed to make a new
  * version of a comment?</li>
- * <li>Should the capitalization be ignored when searching for text pattern in comments?</li>
+ * <li>Should the capitalization be ignored when searching for text pattern in
+ * comments?</li>
  * <li>The style and formatting can be applied only to active comments or to the
  * comments on the history too?</li>
  * <li>If a comment already has applied and style/format and it is edited,
  * should it be saved on the history with that style/format or the "default"
  * style/format?</li>
+ * <li>Should the style and format be persisted with the workbook?</li>
  * </ol>
  * <p>
  *
@@ -70,11 +72,13 @@
  *
  * <h2>6. Assumptions</h2>
  * <ol>
- * <li>The style and format should be applied by selecting an active comment.</li>
+ * <li>The style and format should be applied by selecting an active
+ * comment.</li>
  * <li>The history of a comment is persisted with all the comments of each
  * cell.</li><p>
  * <li>In the search of a comment the capitalization should not be ignored.</li>
- * <li>If a comment gets formatted or styled it should be saved as it is.</li>
+ * <li>The format and style of a comment should only be visible on the active
+ * workbook.</li>
  * <p>
  *
  * <h2>7. Unit Tests</h2>

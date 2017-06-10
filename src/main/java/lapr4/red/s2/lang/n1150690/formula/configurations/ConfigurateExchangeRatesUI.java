@@ -30,15 +30,15 @@ import javax.swing.table.DefaultTableModel;
  * @author Sofia Silva [1150690@isep.ipp.pt]
  */
 public class ConfigurateExchangeRatesUI extends JDialog {
-    
+
     private static final int WIDTH = 500;
     private static final int HEIGHT = 400;
     private ConfigurateExchangeRatesController controller;
     private UIController uiController;
-    
+
     private JTable table;
     private DefaultTableModel model;
-    
+
     public ConfigurateExchangeRatesUI(UIController uiController) {
         this.uiController = uiController;
         this.controller = new ConfigurateExchangeRatesController();
@@ -49,13 +49,13 @@ public class ConfigurateExchangeRatesUI extends JDialog {
         setTitle("Configurate Exchange Rates");
         super.setVisible(true);
     }
-    
+
     private void createComponents() {
         JPanel panel = new JPanel(new GridBagLayout());
-        
+
         GridBagConstraints grid = new GridBagConstraints();
         grid.fill = GridBagConstraints.VERTICAL;
-        
+
         grid.gridx = 0;
         grid.gridy = 0;
         JLabel l = new JLabel("<html><h2>Configurate Exchange Rates</h2></html>");
@@ -70,19 +70,19 @@ public class ConfigurateExchangeRatesUI extends JDialog {
         JScrollPane p = new JScrollPane(table);
         p.setPreferredSize(new Dimension(250, 85));
         panel.add(p, grid);
-        
+
         grid.fill = GridBagConstraints.EAST;
         grid.anchor = GridBagConstraints.CENTER;
         super.add(panel);
     }
-    
+
     private void createTablePanel() {
         //ImageIcon usaIcon = new ImageIcon(CleanSheets.class.getResource("res/img/usa.png"));
         //ImageIcon ukIcon = new ImageIcon(CleanSheets.class.getResource("res/img/uk.png"));
         //ImageIcon euroIcon = new ImageIcon(CleanSheets.class.getResource("res/img/euro.png"));
-        
+
         List<Pair<String, String>> exchangeRates = controller.getExchangeRates();
-        
+
         String[] columnNames = {"", "Euro", "Dollar", "Pound"};
         Object[][] data = new Object[3][4];
         data[0][0] = "Euro";
@@ -97,13 +97,13 @@ public class ConfigurateExchangeRatesUI extends JDialog {
         data[2][1] = exchangeRates.get(4).getValue();
         data[2][2] = exchangeRates.get(5).getValue();
         data[2][3] = "<html><font color=red>1.0000</font></html>";
-        
-        table = new JTable();   
+
+        table = new JTable();
         model = new DefaultTableModel(data, columnNames);
         table.setModel(model);
-        
+
         table.setRowHeight(0, 15);
-        
+
         table.getModel().addTableModelListener(new TableModelListener() {
             @Override
             public void tableChanged(TableModelEvent tme) {
@@ -125,5 +125,5 @@ public class ConfigurateExchangeRatesUI extends JDialog {
             }
         });
     }
-    
+
 }
