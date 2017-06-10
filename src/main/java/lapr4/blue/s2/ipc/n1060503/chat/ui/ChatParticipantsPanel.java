@@ -15,17 +15,10 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
-import lapr4.green.s1.ipc.n1150532.comm.CommExtension;
-import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
-import lapr4.green.s1.ipc.n1150532.comm.ui.ConfigurePortAction;
-import lapr4.green.s1.ipc.n1150532.comm.ui.ConnectToPeerAction;
-import lapr4.green.s1.ipc.n1150532.comm.ui.SearchPeersAction;
-import lapr4.green.s1.ipc.n1150532.comm.ui.UICommExtensionSideBar;
 import lapr4.green.s1.ipc.n1150657.chat.ext.ChatExtension;
 
 /**
@@ -83,7 +76,7 @@ public class ChatParticipantsPanel extends JPanel {
     /**
      * The extension.
      */
-    private final ChatExtension theExtension;
+    private final ChatParticipantsExtension theExtension;
     /**
      * The ChatPanel constructor.
      *
@@ -93,9 +86,9 @@ public class ChatParticipantsPanel extends JPanel {
     public ChatParticipantsPanel(UIController uiController, Extension extension) {
         super(new BorderLayout());
         theController = uiController;
-        theExtension = (ChatExtension) extension;
+        theExtension = (ChatParticipantsExtension) extension;
         buildPanel();
-        changeComponentName(ChatExtension.CHAT_NAME);
+        changeComponentName(ChatParticipantsExtension.CHAT_NAME);
         createInteractions();
     }
 
@@ -168,14 +161,14 @@ public class ChatParticipantsPanel extends JPanel {
      * It adds the action listeners.
      */
     private void createInteractions() {
-        btSearch.addActionListener(new ChatParticipantsPanel.SearchAction());
+        btSearch.addActionListener(new ChatParticipantsPanel.SearchUserAction());
         btConnect.addActionListener(new ChatParticipantsPanel.ConnectAction());
     }
     
     /**
      * The action listener for the search button.
      */
-    private class SearchAction implements ActionListener {
+    private class SearchUserAction implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
