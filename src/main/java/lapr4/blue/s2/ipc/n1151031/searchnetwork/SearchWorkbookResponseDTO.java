@@ -2,50 +2,33 @@ package lapr4.blue.s2.ipc.n1151031.searchnetwork;
 
 import eapli.framework.dto.DTO;
 import java.io.Serializable;
-import java.net.InetAddress;
+import java.util.List;
 
 /**
- * @FIXME
  * @author Tiago Correia - 1151031@isep.ipp.pt
  */
 public class SearchWorkbookResponseDTO implements DTO, Serializable {
 
     /**
-     * The TCP server's IP address in which to send the connection request.
+     * The list of search results.
      */
-    private final InetAddress serverIP;
-
-    private String workbookName;
-
-    private String summary;
+    private final List<SearchResults> list;
 
     /**
      * The full reply constructor.
      *
-     * @param serverIP
+     * @param list the list of search results
      */
-    public SearchWorkbookResponseDTO(InetAddress serverIP) {
-        this.serverIP = serverIP;
-        this.workbookName = "testName";
-        //this.summary = "testSummary";
+    public SearchWorkbookResponseDTO(List<SearchResults> list) {
+        this.list = list;
     }
 
     /**
-     * A getter to the TCP server's IP address.
+     * Returns the list of search results.
      *
-     * @return It returns the TCP server's address in which to send the TCP
-     * connection request.
+     * @return the list of search results
      */
-    public InetAddress getServerIP() {
-        return serverIP;
+    public List<SearchResults> getSearchResultsList() {
+        return list;
     }
-
-    public String getWorkbookName() {
-        return workbookName;
-    }
-
-    public String getSummary() {
-        return summary;
-    }
-
 }

@@ -3,7 +3,7 @@ package lapr4.blue.s2.ipc.n1151031.searchnetwork.ui;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
-import lapr4.blue.s2.ipc.n1151031.searchnetwork.SearchResult;
+import lapr4.blue.s2.ipc.n1151031.searchnetwork.SearchResults;
 
 /**
  * A class to control the search workbook in the network results table.
@@ -15,12 +15,12 @@ public class SearchWorkbookNetworkTableController extends AbstractTableModel {
     /**
      * The table headers.
      */
-    private final String[] columns = {"Host", "Workbook Name"};
+    private final String[] columns = {"Host", "Workbook Name", "SS #", "Spreadsheet Names"};
 
     /**
      * The search results list.
      */
-    private final List<SearchResult> list;
+    private final List<SearchResults> list;
 
     /**
      * The constructor of the controller.
@@ -80,15 +80,28 @@ public class SearchWorkbookNetworkTableController extends AbstractTableModel {
      */
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        if (rowIndex < 0 || rowIndex >= list.size() || columnIndex < 0 || columnIndex > 2) {
+        if (rowIndex < 0 || rowIndex >= list.size() || columnIndex < 0 || columnIndex > 3) {
             return null;
         }
-        SearchResult result = list.get(rowIndex);
+        SearchResults result = list.get(rowIndex);
         Object data = result;
+
         if (columnIndex == 0) {
             data = result.getAddress().getHostName();
         } else if (columnIndex == 1) {
             data = result.getWorkbookName();
+        } else if (columnIndex == 2) {
+            data = result.getSpreadsheetList().size();
+        } else if (columnIndex == 3) {
+            StringBuilder spreadsheetNames = new StringBuilder();
+            for (int i = 0; i < result.getSpreadsheetList().size(); i++) {
+                if (i == result.getSpreadsheetList().size() - 1) {
+                    spreadsheetNames.append(result.getSpreadsheetList().get(i).getTitle());
+                } else {
+                    spreadsheetNames.append(result.getSpreadsheetList().get(i).getTitle() + ", ");
+                }
+            }
+            data = spreadsheetNames.toString();
         }
         return data;
     }
@@ -111,7 +124,7 @@ public class SearchWorkbookNetworkTableController extends AbstractTableModel {
      *
      * @param result the result to add
      */
-    public void addRow(SearchResult result) {
+    public void addRow(SearchResults result) {
         int index = list.indexOf(result);
         if (index == -1) {
             list.add(result);
@@ -125,7 +138,7 @@ public class SearchWorkbookNetworkTableController extends AbstractTableModel {
      * @param index The index of the connection to retrieve.
      * @return the result or null if the index is not valid.
      */
-    public SearchResult provideConnection(int index) {
+    public SearchResults provideConnection(int index) {
         if (index < 0 || index >= list.size()) {
             return null;
         }

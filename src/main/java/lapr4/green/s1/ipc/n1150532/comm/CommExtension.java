@@ -207,7 +207,7 @@ public class CommExtension extends Extension implements Observer {
         udpServer.addHandler(FileNameListDTO.class, h2);
         HandlerUserChatDTO hucp = new HandlerUserChatDTO();
         udpServer.addHandler(UserChatDTO.class, hucp);
-        HandlerSearchWorkbookRequestDTO h3 = new HandlerSearchWorkbookRequestDTO();
+        HandlerSearchWorkbookRequestDTO h3 = new HandlerSearchWorkbookRequestDTO(uiController);
         udpServer.addHandler(SearchWorkbookRequestDTO.class, h3);
         //TODO 
     }

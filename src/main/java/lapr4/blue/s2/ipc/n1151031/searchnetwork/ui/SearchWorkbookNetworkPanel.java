@@ -36,7 +36,6 @@ public class SearchWorkbookNetworkPanel extends JPanel {
     public SearchWorkbookNetworkPanel(UIController uiController, Extension extension) {
         super(new BorderLayout());
         setName(CommExtension.NAME);
-        //this.extension = (CommExtension) extension;
         createComponents();
     }
 
