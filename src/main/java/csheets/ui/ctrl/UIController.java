@@ -42,6 +42,7 @@ import csheets.ext.Extension;
 import csheets.ext.ExtensionManager;
 import csheets.ui.ext.UIExtension;
 import csheets.ui.sheet.CellTransferHandler;
+import java.io.File;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionEvent;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionStateListener;
 
@@ -129,6 +130,10 @@ public class UIController implements SpreadsheetAppListener, ExtensionStateListe
         public Stack<Workbook> getActiveWorkbooks() {
 		return workbooks;
 	}
+        
+        public File getFile(Workbook workbook){
+            return app.getFile(workbook);
+        }
         
 
 	/**

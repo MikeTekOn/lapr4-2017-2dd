@@ -17,11 +17,13 @@ public class CellInfoDTO implements DTO {
 
     private Cell cell;
     private Workbook workbook;
+    private String workbookName;
     private int spreadsheetNumber;
 
-    public CellInfoDTO(Cell cell, int spreadsheetNumber,Workbook workbook) {
+    public CellInfoDTO(Cell cell, int spreadsheetNumber,Workbook workbook,String workbookName) {
         this.cell = cell;
         this.workbook=workbook;
+        this.workbookName=workbookName;
         this.spreadsheetNumber= spreadsheetNumber;
              
 
@@ -36,11 +38,18 @@ public class CellInfoDTO implements DTO {
     
     
     /**
-     * @return the workbookName
+     * @return the workbook
      */
-    public Workbook getWorkbookName() {
+    public Workbook getWorkbook() {
         return workbook;
     }
+        /**
+     * @return the workbookName
+     */
+    public String getWorkbookName() {
+        return workbookName;
+    }
+
 
 
     
@@ -50,6 +59,10 @@ public class CellInfoDTO implements DTO {
     public int getSpreadsheetNumber() {
         return spreadsheetNumber;
     }
+    
+    public void setWorkbookName(String name){
+        this.workbookName=name;
+    }
 
     /**
      * clones the DTO
@@ -58,7 +71,7 @@ public class CellInfoDTO implements DTO {
      */
     @Override
     public CellInfoDTO clone() {
-        return new CellInfoDTO(cell,  getSpreadsheetNumber(), getWorkbookName());
+        return new CellInfoDTO(cell,  getSpreadsheetNumber(), getWorkbook(),getWorkbookName());
     }
 
 
