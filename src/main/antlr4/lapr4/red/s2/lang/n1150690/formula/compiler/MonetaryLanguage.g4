@@ -8,12 +8,13 @@ formula: START_CHAR currency L_CURLY_BRACKET expression R_CURLY_BRACKET EOF;
 currency: DOLLAR | EURO | POUND;
 
 expression:
-    LPAR expression RPAR
-    | left=expression op=MULTI (NUMBER | NUMBER_FOR_COIN)
+    left=expression op=(MULTI|PLUS|MINUS) LPAR expression RPAR
+    | left=expression op=MULTI value
     | left=expression op=DIV NUMBER
-    | left=expression op=(PLUS|MINUS) (NUMBER | NUMBER_FOR_COIN)
-    | value=NUMBER
-    | value=NUMBER_FOR_COIN;
+    | left=expression op=(PLUS|MINUS) value
+    | value;
+
+value: NUMBER | NUMBER_FOR_COIN;
 
 START_CHAR: '#' ;
 DOLLAR  : 'dollar' | 'Dollar' | 'DOLLAR';
