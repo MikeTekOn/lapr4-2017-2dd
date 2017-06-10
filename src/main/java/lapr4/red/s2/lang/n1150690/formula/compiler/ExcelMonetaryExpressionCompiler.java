@@ -52,7 +52,7 @@ public class ExcelMonetaryExpressionCompiler implements ExpressionCompiler {
         parser.addErrorListener(errorListener); // add ours
 
         // Attempts to match an expression
-        ParseTree tree = parser.expression();
+        ParseTree tree = parser.formula();
         if (parser.getNumberOfSyntaxErrors() > 0) {
             throw new FormulaCompilationException(errorListener.getErrorMessage());
         }

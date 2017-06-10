@@ -9,6 +9,8 @@ import csheets.core.Cell;
 import csheets.core.Spreadsheet;
 import csheets.core.Value;
 import csheets.core.Workbook;
+import csheets.ui.ctrl.UIController;
+import java.io.File;
 import java.util.List;
 import java.util.Stack;
 import java.util.regex.Pattern;
@@ -24,12 +26,12 @@ import lapr4.white.s1.core.n1234567.comments.CommentsExtension;
  */
 public class RegexUtilExtended extends RegexUtil implements Runnable {
 
-    private Stack<Workbook> workbooks;
+    private UIController extension;
     private Filter filter;
 
-     public RegexUtilExtended(Filter filter, String regex, Stack<Workbook> workbooks) {
+    public RegexUtilExtended(Filter filter, String regex, UIController extension) {
         super(regex);
-        this.workbooks = workbooks;
+        this.extension = extension;
         this.filter = filter;
     }
 
@@ -40,18 +42,25 @@ public class RegexUtilExtended extends RegexUtil implements Runnable {
 
     }
 
-
     public void searchWorkbooks() {
-
-        for (Workbook workbook : workbooks) {
-              int spreadsheetNumber = 0 ;
+        int workbookCount = 0;
+        for (Workbook workbook : extension.getActiveWorkbooks()) {
+            int spreadsheetNumber = 0;
+            workbookCount++;
+            File workbookFile = extension.getFile(workbook);
+            String workbookName;
+            if (workbookFile == null) {
+                workbookName = "Untitled-" + workbookCount;
+            } else {
+                workbookName = workbookFile.getName();
+            }
             for (Spreadsheet spreadsheet : workbook) {
                 spreadsheetNumber++;
-                for (Cell cell : spreadsheet) {                  
-                    if(validateFilters(cell,filter.getTypesToInclude(),filter.getFormulasToInclude())){
-                        if(checkIfMatches(cell)){
-                            
-                            GlobalSearchPublisher.getInstance().notifyObservers(new CellInfoDTO(cell,spreadsheetNumber,workbook));
+                for (Cell cell : spreadsheet) {
+                    if (validateFilters(cell, filter.getTypesToInclude(), filter.getFormulasToInclude())) {
+                        if (checkIfMatches(cell)) {
+
+                            GlobalSearchPublisher.getInstance().notifyObservers(new CellInfoDTO(cell, spreadsheetNumber, workbook, workbookName));
                         }
                     }
                 }
@@ -73,65 +82,65 @@ public class RegexUtilExtended extends RegexUtil implements Runnable {
         m = p.matcher(cell.getContent());
         boolean test1 = m.matches();
         boolean test2 = false;
-        if(cell.getFormula()!= null){
-         m = p.matcher(cell.getValue().toString());   
-         test2 = m.matches();
+        if (cell.getFormula() != null) {
+            m = p.matcher(cell.getValue().toString());
+            test2 = m.matches();
         }
-        if(!filter.isIncludeComments()){
-           return test1 ? true :  (test2 ? true : false); 
+        if (!filter.isIncludeComments()) {
+            return test1 ? true : (test2 ? true : false);
         }
         boolean test3 = false;
-        
-        for (List<String> comments : (( CommentableCellWithMultipleUsers)cell.getExtension(CommentsExtension.NAME)).comments().values()) {
+
+        for (List<String> comments : ((CommentableCellWithMultipleUsers) cell.getExtension(CommentsExtension.NAME)).comments().values()) {
             for (String comment : comments) {
                 m = p.matcher(comment);
-                test3 = m.matches();      
-                if(test3 ==true){
+                test3 = m.matches();
+                if (test3 == true) {
                     return true;
                 }
             }
-        } 
-        
-        
-        return test1 ? true :  (test2 ? true : false);
-        
+        }
+
+        return test1 ? true : (test2 ? true : false);
+
     }
-    
-    public boolean containsFormulas(Cell cell,List<String> formulas){
+
+    public boolean containsFormulas(Cell cell, List<String> formulas) {
         for (String formula : formulas) {
-            if(cell.getFormula().toString().equals(formula.substring(1))) return true;
+            if (cell.getFormula().toString().equals(formula.substring(1))) {
+                return true;
+            }
         }
         return false;
     }
-    
-    public boolean validateFilters(Cell cell,List<String> types, List<String> formulas){
-        if(types.isEmpty() && formulas.isEmpty()){
+
+    public boolean validateFilters(Cell cell, List<String> types, List<String> formulas) {
+        if (types.isEmpty() && formulas.isEmpty()) {
             return true;
-        }else if(validateType(cell,types) || validateFormulas(cell,formulas)){
+        } else if (validateType(cell, types) || validateFormulas(cell, formulas)) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
     public boolean validateType(Cell cell, List<String> types) {
         for (String type : types) {
-            if(cell.getValue().getType().toString().equals(type)){
+            if (cell.getValue().getType().toString().equals(type)) {
                 return true;
             }
         }
         return false;
     }
-    
-    public boolean validateFormulas(Cell cell , List<String> formulas ){
+
+    public boolean validateFormulas(Cell cell, List<String> formulas) {
         for (String formula : formulas) {
-            
-            if(cell.getFormula()!=null && containsFormulas(cell,formulas))
-                    {
+
+            if (cell.getFormula() != null && containsFormulas(cell, formulas)) {
                 return true;
             }
         }
-            
+
         return false;
     }
 

@@ -182,15 +182,6 @@ public class GlobalSearchSideBar extends JPanel implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         if (arg instanceof CellInfoDTO) {
-//            
-//            try {
-//                mutex.acquire();
-//            } catch (InterruptedException ex) {
-//                Logger.getLogger(GlobalSearchSideBar.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//            model.addElement((CellInfoDTO) arg);      
-//            searchList.updateUI();  
-//            mutex.release();
             java.awt.EventQueue.invokeLater(new Runnable() {
                 @Override
                 public void run() {

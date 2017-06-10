@@ -6,13 +6,10 @@ package eapli.util;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Properties;
 
 /**
  * utility class for file manipulation.
@@ -37,16 +34,18 @@ public class Files {
         }
     }
 
-    
-    public static boolean updatePropertyValue(String propertyName, String newValue, URL resource) throws IOException{
-        File file = new File(resource.toString());
-        BufferedReader buffer = null;
-        
-        try {
-            buffer = new BufferedReader(new FileReader(file));
-        } catch (IOException ex) {
-            throw new IOException("The file is unreachable!");
-        }
+    /**
+     * Updates the value of a property.
+     *
+     * @param propertyName the property to update
+     * @param newValue the new value
+     * @param in the InputStreamReader
+     * @param path the path to the properties file
+     * @return True if the property was changed
+     * @throws IOException
+     */
+    public static boolean updatePropertyValue(String propertyName, String newValue, InputStreamReader in, String path) throws IOException {
+        BufferedReader buffer = new BufferedReader(in);
 
         ArrayList<String> lines = new ArrayList<>();
         String readLine = "";
@@ -54,7 +53,7 @@ public class Files {
             lines.add(readLine);
         }
 
-        PrintWriter writer = new PrintWriter(file);
+        PrintWriter writer = new PrintWriter(new File(path).getAbsolutePath());
         writer.print("");
         for (String line : lines) {
             if (line.contains(propertyName)) {

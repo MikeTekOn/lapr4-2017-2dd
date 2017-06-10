@@ -30,7 +30,7 @@ public class MacroWithName implements Expression, Serializable {
     private String name;
     private String macroCode;
     private Spreadsheet s;
-    private UIController uiController;
+    private transient UIController uiController;
 
     public MacroWithName(String name, String macroCode, Spreadsheet s, UIController uiController) {
         if (name.trim().isEmpty()) {
