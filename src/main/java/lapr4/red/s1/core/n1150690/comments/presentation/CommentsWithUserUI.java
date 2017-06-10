@@ -53,7 +53,7 @@ public class CommentsWithUserUI extends JPanel implements SelectionListener, Com
     /**
      * The list model to save the comments.
      */
-    private DefaultListModel model;
+    protected DefaultListModel model;
 
     /**
      * The text field in which the comments of the cell are displayed.
@@ -63,12 +63,12 @@ public class CommentsWithUserUI extends JPanel implements SelectionListener, Com
     /**
      * The comment that the user selected from the list.
      */
-    private String selectedComment;
+    protected String selectedComment;
 
     /**
      * The author of the comment that the user selected from the list.
      */
-    private String selectedUser;
+    protected String selectedUser;
 
     /* THIS IS A CHANGE MIGUEL MADE */
     /**
