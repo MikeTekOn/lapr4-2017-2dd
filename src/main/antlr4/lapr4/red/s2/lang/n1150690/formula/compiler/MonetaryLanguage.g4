@@ -19,7 +19,7 @@ START_CHAR: '#' ;
 DOLLAR  : 'dollar' | 'Dollar' | 'DOLLAR';
 EURO    : 'euro' | 'Euro' | 'EURO';
 POUND   : 'pound' | 'Pound' | 'POUND';
-NUMBER_FOR_COIN  : [0-9]+'.'[0-9][0-9]('€' | '$' | '£' );
+NUMBER_FOR_COIN  : [0-9]+'.'[0-9][0-9]('€'|'$'|'£');
 NUMBER  : '-'?[0-9]+('.'[0-9][0-9])? ;
 
 /* Arithmetic operators */
