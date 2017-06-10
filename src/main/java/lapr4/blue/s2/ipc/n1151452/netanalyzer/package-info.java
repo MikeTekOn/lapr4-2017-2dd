@@ -264,6 +264,20 @@
   * <p>
   * -nothing-
   * <p>
+ * <b>Friday [09/06/2017]</b><p>
+  * I worked on:<p>
+  * Yesterday
+  * <p><ol>
+  * <li>Completed Design
+  * </ol><p>
+  * Today
+  * <p><ol>
+  * <li>Started implementing the domain concepts.
+  * </ol><p>
+  * Blocking:
+  * <p>
+  * -nothing-
+  * <p>
  * <p>
  *
  * @author Daniel Gon&ccedil;alves [1151452@isep.ipp.pt]
