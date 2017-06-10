@@ -5,6 +5,7 @@
  */
 package lapr4.blue.s2.ipc.n1060503.chat.profile;
 
+import csheets.CleanSheets;
 import eapli.framework.domain.AggregateRoot;
 import eapli.util.Strings;
 import java.io.File;
@@ -13,6 +14,7 @@ import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -58,21 +60,20 @@ public class UserChatProfile implements AggregateRoot<Long>, Serializable{
      */
     private StatusChatProfile status;
     
-    
     /**
      * path of default icon
-     */
-    private final URL DEFAULT_ICON_PATH = 
-            getClass().getClassLoader().getResource("lapr4/blue/s2/ipc/n1060503/chat/img/default_icon.png");
+    
+    private static final String DEFAULT_ICON_PATH = 
+       "src/main/resources/lapr4/blue/s2/ipc/n1060503/chat/res/img/default_icon.png";
+    */
     
     /**
      * constructor by default
      * @throws java.io.IOException
      */
-    public UserChatProfile() throws IOException{
+    public UserChatProfile() throws MalformedURLException, IOException{
         nickname = username;
-        this.icon = changeIcon("");
-        //iconBytes = Files.readAllBytes(file.toPath());
+        changeIcon("");
         status = StatusChatProfile.ONLINE;
     }
     
@@ -85,7 +86,7 @@ public class UserChatProfile implements AggregateRoot<Long>, Serializable{
      * @throws java.net.MalformedURLException
      */
     public UserChatProfile changeInfo(String nickname, String image_path, 
-            StatusChatProfile status) throws MalformedURLException {
+            StatusChatProfile status) throws  MalformedURLException, IOException {
         if (status == null) {
             throw new IllegalStateException("Invalid status");
         }
@@ -96,7 +97,7 @@ public class UserChatProfile implements AggregateRoot<Long>, Serializable{
         if(!this.setStatus(status)){
             throw new IllegalStateException("Invalid status");
         }
-        this.icon = changeIcon(image_path);
+        changeIcon(image_path);
        
         this.nickname = nickname;
 
@@ -108,17 +109,22 @@ public class UserChatProfile implements AggregateRoot<Long>, Serializable{
      * @param image_path icon or image path
      * @return the new icon or imagem of user chat
      */
-    private ImageIcon changeIcon(String image_path) throws MalformedURLException{
-        ImageIcon i;
+    private void changeIcon(String image_path) throws  MalformedURLException, IOException{
         
+        File file;
+        URL url =  UserChatProfile.class.getResource("res/img/default_icon.png");
         if(image_path.isEmpty()){
-            i = new ImageIcon(DEFAULT_ICON_PATH);
+            
+            //String aux = DEFAULT_ICON_URL.toString();
+            //icon = new ImageIcon(aux);
+            //file = new File(aux);
+            //iconBytes = Files.readAllBytes(Paths.get(DEFAULT_ICON_URL.toString()));
         }else{
-            URL url = new URL(image_path);
-            i = new ImageIcon(url);
+            //URL url = new URL(image_path);
+            //icon = new ImageIcon(url);
+            //file = new File(url.toString());
+            //iconBytes = Files.readAllBytes(file.toPath());
         }
-        
-        return i;
     }
 
     @Override

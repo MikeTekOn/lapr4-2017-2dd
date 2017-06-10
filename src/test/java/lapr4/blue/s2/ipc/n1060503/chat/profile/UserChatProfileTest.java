@@ -56,12 +56,12 @@ public class UserChatProfileTest {
     }
     
     @Test(expected = IllegalStateException.class)
-    public void ensureNicknameIsNotNull() throws MalformedURLException{              
+    public void ensureNicknameIsNotNull() throws MalformedURLException, IOException{              
         u.changeInfo(null, invalid_path, StatusChatProfile.ONLINE);
     }
     
     @Test(expected = IllegalStateException.class)
-    public void ensureNicknameIsNotEmpty() throws MalformedURLException{              
+    public void ensureNicknameIsNotEmpty() throws MalformedURLException, IOException{              
         u.changeInfo("", invalid_path, StatusChatProfile.ONLINE);
     }
     
@@ -76,17 +76,17 @@ public class UserChatProfileTest {
     }
     
     @Test(expected = IllegalStateException.class)
-    public void ensureUserChatStatusIsValid() throws MalformedURLException{              
+    public void ensureUserChatStatusIsValid() throws MalformedURLException, IOException{              
         u.changeInfo(u.getNickname(), invalid_path, null);
     }
     
     @Test(expected = IllegalStateException.class)
-    public void ensureUserChatIconPathIsValid() throws MalformedURLException{ 
+    public void ensureUserChatIconPathIsValid() throws MalformedURLException, IOException{ 
         u.changeInfo(u.getNickname(), invalid_path, null);
     }
     
     @Test
-    public void ensureIsOK() throws MalformedURLException{       
+    public void ensureIsOK() throws MalformedURLException, IOException{       
         u.changeInfo(nickname, "", StatusChatProfile.OFFLINE);
     }
     

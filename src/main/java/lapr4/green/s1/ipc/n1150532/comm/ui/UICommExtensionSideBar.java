@@ -10,11 +10,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import lapr4.blue.s2.ipc.n1060503.chat.ui.ChatParticipantsAction;
-import lapr4.blue.s2.ipc.n1140822.fileShare.FileSharingController;
 import lapr4.blue.s2.ipc.n1140822.fileShare.ShareAction;
 import lapr4.green.s1.ipc.n1150532.comm.CommExtension;
-import lapr4.green.s1.ipc.n1150532.comm.CommTCPServer;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
 import lapr4.green.s1.ipc.n1150532.startSharing.ShareCellsAction;
 import lapr4.green.s1.ipc.n1150657.chat.ControllerConnection;
@@ -360,7 +357,6 @@ public class UICommExtensionSideBar extends JPanel {
     /**
      * The action listener for the new message.
      */
-    /**
     private class NewMessageAction implements ActionListener {
 
         @Override
@@ -368,12 +364,12 @@ public class UICommExtensionSideBar extends JPanel {
             ConnectionID connection = peersTable.getSelectedRowFile();
             if (connection != null) {
                 ControllerConnection.setChatController(connection);
-                (new ChatParticipantsAction(connection, theController)).actionPerformed(e);
+                (new ChatAction(connection, theController)).actionPerformed(e);
             } else {
                 JOptionPane.showMessageDialog(null, "Connect with someone.");
             }
         }
-    }*/
+    }
 
     /**
      *

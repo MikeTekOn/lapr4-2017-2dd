@@ -25,9 +25,9 @@ public class HandlerUserChatDTO extends Observable implements CommHandler, Seria
     @Override
     public void handleDTO(Object dto, ObjectOutputStream outStream) {
 
-        //ConnectionIDImpl connectionID = new ConnectionIDImpl(((PacketEncapsulatorDTO) dto).getPacket().getAddress(), ((UserChatListDTO) ((PacketEncapsulatorDTO) dto).getDTO()).tcpPort);
-        //((UserChatListDTO) ((PacketEncapsulatorDTO) dto).getDTO()).buildConnectionID(connectionID);
-        UserChatListDTO ucldto = (UserChatListDTO) ((PacketEncapsulatorDTO) dto).getDTO();
+        //ConnectionIDImpl connectionID = new ConnectionIDImpl(((PacketEncapsulatorDTO) dto).getPacket().getAddress(), ((UserChatDTO) ((PacketEncapsulatorDTO) dto).getDTO()).tcpPort);
+        //((UserChatDTO) ((PacketEncapsulatorDTO) dto).getDTO()).buildConnectionID(connectionID);
+        UserChatDTO ucldto = (UserChatDTO) ((PacketEncapsulatorDTO) dto).getDTO();
         lastReceivedDTO = ucldto;
         //setChanged();
         //notifyObservers(lastReceivedDTO);

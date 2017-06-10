@@ -193,5 +193,3 @@ extensions.props
 
 # Include gradle wrapper
 !/gradle/wrapper/gradle-wrapper.jar
-
-/JavaApplication7/nbproject/private/

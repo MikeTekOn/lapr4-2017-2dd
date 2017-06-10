@@ -110,6 +110,7 @@
  * <li> ensureUserChatHasOnlineStatusByDefault </li> 
  * <li> ensureUserChatCanChangeStatus </li> 
  * <li> ensureUserChatStatusIsValid </li> 
+ * <li> ensureUserChatIconPathIsValid </li> 
  * <li> ensureIsOK </li> 
  * </ol>
  * 

@@ -93,7 +93,7 @@ public class CommUDPClient extends Thread implements Observer {
      */
     public CommUDPClient(Object dtoToSend, int thePortNumber, int theWaitingTime) {
         dto = dtoToSend;
-        ((UserChatListDTO)dto).addObserver(this);
+        ((UserChatDTO)dto).addObserver(this);
         portNumber = thePortNumber;
         waitingTime = theWaitingTime;
         handlers = new HashMap<>();

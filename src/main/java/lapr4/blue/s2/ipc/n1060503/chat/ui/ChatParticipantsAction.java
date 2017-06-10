@@ -10,7 +10,7 @@ import java.awt.event.ActionEvent;
 import java.util.Observer;
 import lapr4.blue.s2.ipc.n1060503.chat.connection.CommUDPClient;
 import lapr4.blue.s2.ipc.n1060503.chat.connection.HandlerUserChatDTO;
-import lapr4.blue.s2.ipc.n1060503.chat.connection.UserChatListDTO;
+import lapr4.blue.s2.ipc.n1060503.chat.connection.UserChatDTO;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionDetailsResponseDTO;
 
 /**
@@ -61,7 +61,7 @@ public class ChatParticipantsAction extends BaseAction{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        UserChatListDTO request = new UserChatListDTO();
+        UserChatDTO request = new UserChatDTO();
         CommUDPClient worker = new CommUDPClient( request, portNumber, TIMEOUT);
         HandlerUserChatDTO handler = new HandlerUserChatDTO();
         handler.addObserver(table);
