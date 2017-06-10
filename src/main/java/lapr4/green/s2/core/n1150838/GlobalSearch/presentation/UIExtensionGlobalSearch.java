@@ -15,6 +15,8 @@ import javax.swing.JComponent;
  * @author Nuno Pinto 1150838
  */
 public class UIExtensionGlobalSearch extends UIExtension {
+    
+    private final JComponent sideBar;
 
     /**
      * The icon to display with the extension's name
@@ -28,7 +30,10 @@ public class UIExtensionGlobalSearch extends UIExtension {
      * @param uiController ui controller
      */
     public UIExtensionGlobalSearch(Extension extension, UIController uiController) {
+       
         super(extension, uiController);
+        sideBar =new GlobalSearchSideBar(uiController);
+       
     }
 
     /**
@@ -38,7 +43,7 @@ public class UIExtensionGlobalSearch extends UIExtension {
      */
     @Override
     public JComponent getSideBar() {
-        return new GlobalSearchSideBar(uiController);
+        return sideBar;
     }
 
 }

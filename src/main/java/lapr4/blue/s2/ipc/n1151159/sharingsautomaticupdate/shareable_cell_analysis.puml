@@ -1,0 +1,41 @@
+@startuml shareable_cell_analysis.png
+
+'http://plantuml.com/skinparam.html'
+skinparam handwritten true
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+    interface Extensible<T> {
+        +T getExtension(String name);
+    }
+    interface "Cell : Extensible<Cell>" as Cell {
+    }
+    class CellImpl {
+        -transient Map<String, CellExtension> extensions;
+        +Cell getExtension(String name);
+    }
+    class CellExtension {
+	-Cell delegate;
+	-String name;
+        +CellExtension(Cell delegate, String name)
+    }
+    interface CellListenner {
+    }
+    class "ShareableCell" as ShareableCell <<analysis>> {
+        - CellState: cellState;
+    }
+
+
+    Extensible <|-- Cell
+
+    Cell <|-- CellExtension
+    CellListenner <|-- CellExtension
+
+    Cell <|-- CellImpl
+
+    CellImpl o- CellExtension : extensions
+
+    CellExtension <|-- ShareableCell
+
+@enduml
+

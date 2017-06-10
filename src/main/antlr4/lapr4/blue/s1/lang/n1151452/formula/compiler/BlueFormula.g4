@@ -39,6 +39,7 @@ atom
 	|	assignment
 	|   shellscript
     |   VARIABLE_NAME
+    |   G_VARIABLE_NAME
 	;
 
 for_loop
@@ -50,7 +51,7 @@ block
 	;
 
 assignment
-	:  LPAR (reference | (VARIABLE_NAME) ) ASSIGN comparison RPAR
+	:  LPAR (reference | (VARIABLE_NAME) | (G_VARIABLE_NAME) ) ASSIGN comparison RPAR
 	;
 
 function_call
@@ -83,10 +84,14 @@ CELL_REF
 		( ABS )? ( DIGIT )+
 	;
 
-CELL : '#' 'CELL';
+CELL : '!' 'CELL';
 
 VARIABLE_NAME 
         : UNDERSCORE LETTER (DIGIT|LETTER)*
+        ;
+
+G_VARIABLE_NAME
+        : AT LETTER (DIGIT|LETTER)*
         ;
 
 /* String literals, i.e. anything inside the delimiters */
@@ -137,6 +142,7 @@ R_RIGHT_PAR	: ']' ;
 L_CURLY_BRACKET	: '{' ;
 R_CURLY_BRACKET	: '}' ;
 fragment UNDERSCORE : '_';
+fragment AT : '@';
 
 /* assignment operator */
 ASSIGN  : ':=' ;

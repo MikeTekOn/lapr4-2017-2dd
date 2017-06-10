@@ -54,7 +54,7 @@ public class ConfigurateExchangeRatesController {
                 Pair<String, String> newPair = new Pair(name, value);
                 rates.add(newPair);
             }
-            
+
         } catch (IOException ex) {
         }
  return rates;
@@ -66,10 +66,10 @@ public class ConfigurateExchangeRatesController {
      * @param newValue
      * @throws IOException
      */
-    public void changeExchangeRate(String exchangeRateName, double newValue) throws IOException {
+    public String changeExchangeRate(String exchangeRateName, double newValue) throws IOException {
         URL u = CleanSheets.class.getResource(PROPERTIES_FILE);
         Files.updatePropertyValue(exchangeRateName, String.valueOf(newValue), u);
-        updatesExchangeRate(exchangeRateName, newValue);
+        return updatesExchangeRate(exchangeRateName, newValue);
     }
 
     /**
@@ -79,7 +79,7 @@ public class ConfigurateExchangeRatesController {
      * @return
      * @throws IOException
      */
-    private Pair<String, String> updatesExchangeRate(String exchangeRateName, double newValue) throws IOException {
+    private String updatesExchangeRate(String exchangeRateName, double newValue) throws IOException {
         String[] coinNames = exchangeRateName.split("To");
         String dependentExchangeName = coinNames[2].trim() + "To" + coinNames[0].trim();
 
@@ -88,6 +88,6 @@ public class ConfigurateExchangeRatesController {
         URL u = CleanSheets.class.getResource(PROPERTIES_FILE);
         Files.updatePropertyValue(dependentExchangeName, String.valueOf(dependentExchangeRate), u);
 
-        return new Pair(dependentExchangeName, String.valueOf(dependentExchangeRate));
+        return String.valueOf(dependentExchangeRate);
     }
 }

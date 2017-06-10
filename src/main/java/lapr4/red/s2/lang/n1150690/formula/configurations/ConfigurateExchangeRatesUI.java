@@ -5,48 +5,33 @@
  */
 package lapr4.red.s2.lang.n1150690.formula.configurations;
 
-import csheets.CleanSheets;
 import csheets.ui.ctrl.UIController;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import javafx.util.Pair;
+
+import javax.swing.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.util.Pair;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.UIManager;
-import javax.swing.border.Border;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
 
 /**
  *
  * @author Sofia Silva [1150690@isep.ipp.pt]
  */
 public class ConfigurateExchangeRatesUI extends JDialog {
-    
+
     private static final int WIDTH = 500;
     private static final int HEIGHT = 400;
     private ConfigurateExchangeRatesController controller;
     private UIController uiController;
-    
+
     private JTable table;
-    
+    private DefaultTableModel model;
+
     public ConfigurateExchangeRatesUI(UIController uiController) {
         this.uiController = uiController;
         this.controller = new ConfigurateExchangeRatesController();
@@ -57,13 +42,13 @@ public class ConfigurateExchangeRatesUI extends JDialog {
         setTitle("Configurate Exchange Rates");
         super.setVisible(true);
     }
-    
+
     private void createComponents() {
         JPanel panel = new JPanel(new GridBagLayout());
-        
+
         GridBagConstraints grid = new GridBagConstraints();
         grid.fill = GridBagConstraints.VERTICAL;
-        
+
         grid.gridx = 0;
         grid.gridy = 0;
         JLabel l = new JLabel("<html><h2>Configurate Exchange Rates</h2></html>");
@@ -78,19 +63,19 @@ public class ConfigurateExchangeRatesUI extends JDialog {
         JScrollPane p = new JScrollPane(table);
         p.setPreferredSize(new Dimension(250, 85));
         panel.add(p, grid);
-        
+
         grid.fill = GridBagConstraints.EAST;
         grid.anchor = GridBagConstraints.CENTER;
         super.add(panel);
     }
-    
+
     private void createTablePanel() {
         //ImageIcon usaIcon = new ImageIcon(CleanSheets.class.getResource("res/img/usa.png"));
         //ImageIcon ukIcon = new ImageIcon(CleanSheets.class.getResource("res/img/uk.png"));
         //ImageIcon euroIcon = new ImageIcon(CleanSheets.class.getResource("res/img/euro.png"));
-        
+
         List<Pair<String, String>> exchangeRates = controller.getExchangeRates();
-        
+
         String[] columnNames = {"", "Euro", "Dollar", "Pound"};
         Object[][] data = new Object[3][4];
         data[0][0] = "Euro";
@@ -105,27 +90,33 @@ public class ConfigurateExchangeRatesUI extends JDialog {
         data[2][1] = exchangeRates.get(4).getValue();
         data[2][2] = exchangeRates.get(5).getValue();
         data[2][3] = "<html><font color=red>1.0000</font></html>";
-        //DefaultTableModel model = new DefaultTableModel(data, columnNames);
-        table = new JTable(data, columnNames);
+
+        table = new JTable();
+        model = new DefaultTableModel(data, columnNames);
+        table.setModel(model);
+
         table.setRowHeight(0, 15);
-        
+
         table.getModel().addTableModelListener(new TableModelListener() {
             @Override
             public void tableChanged(TableModelEvent tme) {
                 int column = tme.getColumn();
                 int row = tme.getFirstRow();
-                TableModel model = (TableModel)tme.getSource();
+                //TableModel model = (TableModel)tme.getSource();
                 String columnName = model.getColumnName(column);
                 Object data = model.getValueAt(row, column);
                 String exchangeName = model.getValueAt(row, 0).toString();
                 exchangeName += "To" + columnName;
+                double dataToChange = 1 / Double.parseDouble(data.toString());
+                table.setValueAt(String.valueOf(dataToChange), column, row);
+                model.fireTableDataChanged();
                 try {
-                    controller.changeExchangeRate(exchangeName, Double.parseDouble(data.toString()));
+                    String d = controller.changeExchangeRate(exchangeName, Double.parseDouble(data.toString()));
                 } catch (IOException ex) {
                     Logger.getLogger(ConfigurateExchangeRatesUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
     }
-    
+
 }

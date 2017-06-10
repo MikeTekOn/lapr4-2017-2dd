@@ -6,6 +6,7 @@
 package lapr4.red.s1.core.n1150690.comments.domain;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * This class represents the system user.
@@ -25,7 +26,7 @@ public class User implements Serializable {
     public User() {
         this.usersName = System.getProperty("user.name");
     }
-    
+
     /**
      * Returns the name of the user.
      *
@@ -33,5 +34,35 @@ public class User implements Serializable {
      */
     public String name() {
         return this.usersName;
+    }
+
+    /**
+     * @edit Miguel Silva (1150901) Sprint 2 - I've added the equals method
+     * necessary for my user story.
+     */
+    @Override
+    public boolean equals(Object o) {
+        // self check
+        if (this == o) {
+            return true;
+        }
+        // null check
+        if (o == null) {
+            return false;
+        }
+        // type check and cast
+        if (getClass() != o.getClass()) {
+            return false;
+        }
+        User user = (User) o;
+        // field comparison
+        return Objects.equals(usersName, user.name());
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 97 * hash + Objects.hashCode(this.usersName);
+        return hash;
     }
 }
