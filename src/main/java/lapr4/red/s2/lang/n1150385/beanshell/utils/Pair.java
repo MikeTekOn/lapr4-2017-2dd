@@ -13,6 +13,10 @@ public class Pair<T, E> {
         this.value = value;
     }
 
+    public T getKey(){
+        return key;
+    }
+    
     public E getValue(){
         return value;
     }

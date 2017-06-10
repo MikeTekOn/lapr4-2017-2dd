@@ -271,7 +271,7 @@ public class IntermediateFunctionWizardUI extends JDialog {
     private JPanel createPanelButons() {
 
         resultField = new JTextField();
-        resultField.setPreferredSize(new Dimension(100, 20));
+        resultField.setPreferredSize(new Dimension(200, 20));
 
         FlowLayout l = new FlowLayout();
         l.setVgap(5);
