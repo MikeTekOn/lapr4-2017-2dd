@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 import lapr4.red.s2.lang.n1150385.beanshell.utils.Pair;
 import lapr4.red.s2.lang.n1150690.formula.MonetaryConvertion;
 import lapr4.red.s2.lang.n1150690.formula.MonetaryValue;
-import lapr4.red.s2.lang.n1150690.formula.configurations.ConfigurateExchangeRatesController;
+import lapr4.red.s2.lang.n1150690.formula.configurations.ConfigureExchangeRatesController;
 import org.antlr.v4.runtime.Token;
 
 /**
@@ -35,7 +35,7 @@ public class MonetaryLanguageBaseVisitorImpl extends MonetaryLanguageBaseVisitor
     private String coin;
     private int numberOfErrors;
     private final StringBuilder errorBuffer;
-    private ConfigurateExchangeRatesController controller;
+    private ConfigureExchangeRatesController controller;
     private List<Pair<String, String>> exchangeRates;
 
     public MonetaryLanguageBaseVisitorImpl(Cell cell) {
@@ -44,7 +44,7 @@ public class MonetaryLanguageBaseVisitorImpl extends MonetaryLanguageBaseVisitor
         coin = "";
         numberOfErrors = 0;
         errorBuffer = new StringBuilder();
-        controller = new ConfigurateExchangeRatesController();
+        controller = new ConfigureExchangeRatesController();
         exchangeRates = controller.getExchangeRates();
     }
 
@@ -112,20 +112,8 @@ public class MonetaryLanguageBaseVisitorImpl extends MonetaryLanguageBaseVisitor
             //Literal result = new Literal(o.evaluate());
             //return (Expression) result;
         } else {
-            return new BinaryOperation(visit(ctx.getChild(1)), operator, visit(ctx.getChild(3)));
+            return new BinaryOperation(visit(ctx.getChild(0).getChild(0)), operator, visit(ctx.getChild(2)));
         }
-
-// if (ctx.getChildCount() == 3) {
-        /*try {
-            return withThreeChilds(ctx);
-        } catch (IllegalValueTypeException ex) {
-            Logger.getLogger(MonetaryLanguageBaseVisitorImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        //}
-        /* if (ctx.getChildCount() == 1) {
-            return withoneChild(ctx);
-        }
-        return null;*/
     }
 
     /**
@@ -140,62 +128,12 @@ public class MonetaryLanguageBaseVisitorImpl extends MonetaryLanguageBaseVisitor
             return new MonetaryValue(new BigDecimal(ctx.getText()));
         }else{
             String number = ctx.NUMBER_FOR_COIN().getText();
+            number += ctx.getChild(0).getChild(0).getText();
             return new MonetaryValue(new BigDecimal(treatNumber(number)));
         }
     }
-
-    /**
-     *
-     * @param ctx
-     * @return
-     */
-    /*private Expression withThreeChilds(MonetaryLanguageParser.ExpressionContext ctx) throws IllegalValueTypeException {
-        
-
-        /**/
-    //if (ctx.right != null && ctx.left != null) {
-    //return visit(ctx.getChild(0));
-    //leftOperand = treatNumber(ctx.left.getText());
-    //Literal l = new Literal(new Value((Number) leftOperand));
-    //Literal r = new Literal(new Value((Number) rightOperand));
-    //BinaryOperation o = new BinaryOperation(visit(ctx.getChild(0)), operator, r);
-    //Literal result = new Literal(o.evaluate());
-    //return (Expression) result;
-    /*}
-
-        if (ctx.NUMBER() != null) {
-            rightOperand = new BigDecimal(ctx.NUMBER().getText());
-            Literal r = new Literal(new Value((Number) rightOperand));
-            BinaryOperation o = new BinaryOperation(visit(ctx.getChild(0)), operator, r);
-            return (Expression) o.evaluate();
-        }
-        if (ctx.NUMBER_FOR_COIN() != null) {
-            String number = ctx.NUMBER_FOR_COIN().getText();
-            rightOperand = treatNumber(number);
-            Literal r = new Literal(new Value((Number) rightOperand));
-            BinaryOperation o = new BinaryOperation(visit(ctx.getChild(0)), operator, r);
-            return (Expression) o.evaluate();
-        }
-        return new BinaryOperation(visit(ctx.getChild(0)), operator, );
-    }*/
-    /**
-     *
-     * @param ctx
-     * @return
-     */
-    /*private Expression withoneChild(MonetaryLanguageParser.ExpressionContext ctx) {
-        BigDecimal operand = null;
-        Literal o = null;
-        if (ctx.NUMBER() != null) {
-            operand = new BigDecimal(ctx.NUMBER().getText());
-        }
-        if (ctx.NUMBER_FOR_COIN() != null) {
-            String number = ctx.NUMBER_FOR_COIN().getText();
-            operand = treatNumber(number);
-            o = new Literal(new Value((Number) operand));
-        }
-        return (Expression) operand;
-    }*/
+ 
+   
     /**
      *
      * @param n

@@ -7,6 +7,7 @@ formula: START_CHAR currency L_CURLY_BRACKET expression R_CURLY_BRACKET EOF;
 
 currency: DOLLAR | EURO | POUND;
 
+
 expression:
     left=expression op=(MULTI|PLUS|MINUS) LPAR expression RPAR
     | left=expression op=MULTI value
@@ -14,14 +15,20 @@ expression:
     | left=expression op=(PLUS|MINUS) value
     | value;
 
-value: NUMBER | NUMBER_FOR_COIN;
+value: NUMBER | NUMBER_FOR_COIN coins;
 
 START_CHAR: '#' ;
 DOLLAR  : 'dollar' | 'Dollar' | 'DOLLAR';
 EURO    : 'euro' | 'Euro' | 'EURO';
 POUND   : 'pound' | 'Pound' | 'POUND';
-NUMBER_FOR_COIN  : [0-9]+'.'[0-9][0-9]('€'|'$'|'£');
+NUMBER_FOR_COIN  : [0-9]+'.'[0-9][0-9];
 NUMBER  : '-'?[0-9]+('.'[0-9][0-9])? ;
+
+coins: (EURO_SYM |DOLLAR_SUM | LIBRA_SYM);
+
+EURO_SYM : '€' | '\u20AC';
+DOLLAR_SYM : '$'|'\u0024';
+LIBRA_SYM : '£' | '\u00A3';
 
 /* Arithmetic operators */
 PLUS	: '+' ;
