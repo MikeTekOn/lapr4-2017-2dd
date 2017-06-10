@@ -57,6 +57,7 @@ public class IntermediateFunctionWizardUI extends JDialog {
     private JTextField txtSyntax;
     private JTable tableHelpText;
     private DefaultTableModel defaultTableModel;
+    private JTextField resultField;
 
     private static final int WIDTHW = 300, LENGTH = 200;
     private static final int WIDTH_TABLE = 600, LENGTH_TABLE = 150;
@@ -130,6 +131,7 @@ public class IntermediateFunctionWizardUI extends JDialog {
                 try {
                     int i;
                     String auxIdentifier = "" + comboIdentifiers.getSelectedItem();
+                    resultField.setText("");
                     int size = defaultTableModel.getRowCount();
                     if (size > 0) {
                         for (i = size - 1; i >= 0; i--) {
@@ -158,14 +160,15 @@ public class IntermediateFunctionWizardUI extends JDialog {
                                         s = s + tableHelpText.getValueAt(j, 0).toString() + ";";
                                     } else {
                                         s = s + tableHelpText.getValueAt(j, 0).toString();
+                                       
                                     }
                                     try {
-                                        controller.calculateResult(s, txtSyntax.getText());
+                                        resultField.setText( controller.calculateResult(s, txtSyntax.getText()));
                                     } catch (FormulaCompilationException ex) {
-                                        System.out.println("invalid formula");
+                                        resultField.setText("Invalid parameters");
                                     }
                                 }
-                                
+
                             }
                         });
 
@@ -267,11 +270,17 @@ public class IntermediateFunctionWizardUI extends JDialog {
      */
     private JPanel createPanelButons() {
 
+        resultField = new JTextField();
+        resultField.setPreferredSize(new Dimension(200, 20));
+
         FlowLayout l = new FlowLayout();
         l.setVgap(5);
-
+        JPanel t = new JPanel();
+        t.add(resultField);
         JPanel p = new JPanel(l);
+        JPanel p2 = new JPanel(new BorderLayout());
 
+        t.setBorder(BorderFactory.createTitledBorder("Result:"));
         p.setBorder(BorderFactory.createTitledBorder(OPTIONS));
         JButton bt1 = createButtonApply();
         JButton bt2 = createButtonCancel();
@@ -281,7 +290,10 @@ public class IntermediateFunctionWizardUI extends JDialog {
         p.add(bt1);
         p.add(bt2);
 
-        return p;
+        p2.add(p, BorderLayout.CENTER);
+        p2.add(t, BorderLayout.WEST);
+
+        return p2;
     }
 
     /**
@@ -330,7 +342,7 @@ public class IntermediateFunctionWizardUI extends JDialog {
      */
     private void apply() throws FormulaCompilationException {
         try {
-            String aux = txtSyntax.getText();
+            String aux = resultField.getText();
             if (!aux.isEmpty()) {
                 controller.insertSyntaxFormulaBar(aux);
                 dispose();

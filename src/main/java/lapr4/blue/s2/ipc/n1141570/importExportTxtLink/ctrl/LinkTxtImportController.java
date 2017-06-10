@@ -11,7 +11,7 @@ import lapr4.green.s1.ipc.n1150800.importexportTXT.FileData;
  *
  * @author Eric
  */
-public class LinkTxtController {
+public class LinkTxtImportController {
 
     /**
      * The file to read from.
@@ -56,14 +56,14 @@ public class LinkTxtController {
     /**
      * Creates a new Link Txt Controller.
      *
-     * @param fileToRead
-     * @param separatorCharacter
-     * @param cellRange
-     * @param firstLineRepresentsHeaders
-     * @param uiController
-     * @param activeSpreadsheet
+     * @param fileToRead the file to read
+     * @param separatorCharacter the separator character
+     * @param cellRange the cell range
+     * @param firstLineRepresentsHeaders the boolean that represents the choose if first line represents headers or not
+     * @param uiController the UI controller
+     * @param activeSpreadsheet the active spreadsheet
      */
-    public LinkTxtController(File fileToRead, char separatorCharacter, CellRange cellRange, boolean firstLineRepresentsHeaders, UIController uiController, Spreadsheet activeSpreadsheet) {
+    public LinkTxtImportController(File fileToRead, char separatorCharacter, CellRange cellRange, boolean firstLineRepresentsHeaders, UIController uiController, Spreadsheet activeSpreadsheet) {
         this.fileToRead = fileToRead;
         this.separatorCharacter = separatorCharacter;
         this.cellRange = cellRange;
@@ -72,6 +72,9 @@ public class LinkTxtController {
         this.activeSpreadsheet = activeSpreadsheet;
     }
 
+    /**
+     * Creates a new link reader thread.
+     */
     public void fireLinkReaderThread() {
         this.readerThread = new ReaderThread(this.fileToRead, this.separatorCharacter, this.cellRange, this.firstLineRepresentsHeaders, this.uiController, this.activeSpreadsheet);
     }

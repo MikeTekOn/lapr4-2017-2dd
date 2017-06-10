@@ -31,15 +31,11 @@ public class ComplexCellRenderer extends JLabel implements ListCellRenderer {
             boolean cellHasFocus) {
 
         setText(value.toString());
-
-        if (value instanceof Font) {
-            //list.getComponent(index).setFont((Font) value);
-            JLabel label = (JLabel) list.getSelectedValue();
-            label.setFont((Font) value);
+        Color color = new Color(20, 20, 20);
+        if (isSelected) {
+            setFont((Font) value);
         } else if (value instanceof Color) {
-            //list.getComponent(index).setForeground((Color) value);
-            JLabel label = (JLabel) list.getSelectedValue();
-            label.setForeground((Color) value);
+            setForeground(color);
         }
         return this;
     }

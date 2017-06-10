@@ -16,7 +16,7 @@
  *
  * In this use case I will extend the functionality to add conditional formatting to cells. Currently it is only possible to add conditional formatting to each cell individually.
  * <p>
- * The extension will add the possibility to apply conditional formatting to multiple cells at the same time. Another improve is that the conditions may be relative to the cell itself with the use of a variable called "#CELL"
+ * The extension will add the possibility to apply conditional formatting to multiple cells at the same time. Another improve is that the conditions may be relative to the cell itself with the use of a variable called "!CELL"
  *
  * <h2>3. Analysis</h2>
  * The previous and existing implementation of conditional formatting has a problem that needs to be solved, a "UserStyle" that is a style for a certain condition needs to be associated to the cell that has the condition.
@@ -27,7 +27,7 @@
  * <p>
  * The final step will be to implement the feature to add the possibility to use a variable called "#CELL" that will add the possibility for the user be able to create conditions for multiple cells, but that are affected by each of them individually.
  * <p>
- *  To implement the usage of the variable "#CELL" to invoke each cell in the conditions it is needed to add it to the already implemented grammar and in the class FormulaEvalVisitor verify if it appears in the condition. In this case it is converted to the address of the cell being visited at the moment.
+ *  To implement the usage of the variable "!CELL" to invoke each cell in the conditions it is needed to add it to the already implemented grammar and in the class FormulaEvalVisitor verify if it appears in the condition. In this case it is converted to the address of the cell being visited at the moment.
  * <p>
  * As this use case will be an extension to what was already done and because I will have to make several changes in the already implemented code, most part of my work won't be on my package.
  * <p>
@@ -134,7 +134,20 @@
  * 1. -nothing-
  * <h2>6. Self Assessment</h2>
  *
- *
+ * <b>Day 4 - 09/06/2017</b>
+ * <p>
+ * Yesterday I worked on:
+ * <p>
+ * 1. Use case implementation and corrected documentation
+ * <p>
+ * Today
+ * <p>
+ * 1. Finish use case implementation, tried to find possible unit tests but all I found was already implemented in sprint 1
+ * <p>
+ * Blocking:
+ * <p>
+ * 1. -nothing-
+ * <h2>6. Self Assessment</h2>*
  /**
  * Created by Joao Cardoso - 1150943 on 06-06-2017.
  */

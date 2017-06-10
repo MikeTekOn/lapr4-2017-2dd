@@ -81,10 +81,13 @@ public class CellList extends AbstractListModel {
      */
     public String buildCellDescription(CellInfoDTO cell){
         StringBuilder sb = new StringBuilder();
-        sb.append("Spreadsheet: ");
+        sb.append("Workbook: ");
+        sb.append(cell.getWorkbookName());
+        sb.append(" Spreadsheet: ");
         sb.append(cell.getSpreadsheetNumber());
         sb.append(" Cell location: ");
         sb.append(cell.getCell().toString());
+        
 
         return sb.toString();
     }

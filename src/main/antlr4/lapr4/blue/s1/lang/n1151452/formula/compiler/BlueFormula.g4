@@ -84,7 +84,7 @@ CELL_REF
 		( ABS )? ( DIGIT )+
 	;
 
-CELL : '#' 'CELL';
+CELL : '!' 'CELL';
 
 VARIABLE_NAME 
         : UNDERSCORE LETTER (DIGIT|LETTER)*
