@@ -9,6 +9,11 @@ package lapr4.blue.s2.ipc.n1060503.chat;
  *
  * @author Pedro Fernandes
  */
-public class test {
+public class ChangeUserChatProfileController {
+    
+    
+    public ChangeUserChatProfileController(){
+        
+    }
     
 }

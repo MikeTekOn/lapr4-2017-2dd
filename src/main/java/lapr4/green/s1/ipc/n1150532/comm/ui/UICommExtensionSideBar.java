@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import lapr4.blue.s2.ipc.n1060503.chat.ui.ChatParticipantsAction;
 import lapr4.blue.s2.ipc.n1140822.fileShare.FileSharingController;
 import lapr4.blue.s2.ipc.n1140822.fileShare.ShareAction;
 import lapr4.green.s1.ipc.n1150532.comm.CommExtension;
@@ -244,7 +245,7 @@ public class UICommExtensionSideBar extends JPanel {
         btSearch.addActionListener(new SearchAction());
         btConnect.addActionListener(new ConnectAction());
         btShareCells.addActionListener(new ShareCellsWithAction());
-        btMessage.addActionListener(new NewMessageAction());
+        //btMessage.addActionListener(new NewMessageAction());
         btShare.addActionListener(new  FileSharingAction());
     }
 
@@ -358,6 +359,7 @@ public class UICommExtensionSideBar extends JPanel {
     /**
      * The action listener for the new message.
      */
+    /**
     private class NewMessageAction implements ActionListener {
 
         @Override
@@ -365,16 +367,13 @@ public class UICommExtensionSideBar extends JPanel {
            ConnectionID connection = peersTable.getSelectedRowFile();
             if (connection != null) {
                 ControllerConnection.setChatController(connection);
-                (new ChatAction(connection, theController)).actionPerformed(e);
+                (new ChatParticipantsAction(connection, theController)).actionPerformed(e);
             } else {
                 JOptionPane.showMessageDialog(null, "Connect with someone.");
             }
         }
-    }
+    }*/
 
-      /**
-     *
-     */
     private class FileSharingAction implements ActionListener {
 
         @Override

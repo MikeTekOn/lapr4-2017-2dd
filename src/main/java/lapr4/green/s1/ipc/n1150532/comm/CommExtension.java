@@ -1,5 +1,7 @@
 package lapr4.green.s1.ipc.n1150532.comm;
 
+import lapr4.blue.s2.ipc.n1060503.chat.connection.UserChatListDTO;
+import lapr4.blue.s2.ipc.n1060503.chat.connection.HandlerUserChatDTO;
 import csheets.core.Spreadsheet;
 import csheets.core.Workbook;
 import csheets.core.formula.compiler.FormulaCompilationException;
@@ -184,6 +186,8 @@ public class CommExtension extends Extension implements Observer {
         tcpServer.addHandler(FileNameDTO.class, h5);
         HandlerFileDTO h6 = new HandlerFileDTO();
         tcpServer.addHandler(FileDTO.class, h6);
+        HandlerUserChatDTO hucp = new HandlerUserChatDTO();
+        tcpServer.addHandler(UserChatListDTO.class, hucp);
         //TODO 
     }
 
@@ -195,6 +199,8 @@ public class CommExtension extends Extension implements Observer {
         udpServer.addHandler(ConnectionDetailsRequestDTO.class, h1);
         HandlerFileNameListDTO  h2 = new HandlerFileNameListDTO();
         udpServer.addHandler(FileNameListDTO.class, h2);
+        HandlerUserChatDTO hucp = new HandlerUserChatDTO();
+        udpServer.addHandler(UserChatListDTO.class, hucp);
         //TODO 
     }
 
@@ -212,6 +218,8 @@ public class CommExtension extends Extension implements Observer {
         tcpClientsManager.addHandler(ResponseWorkbookDTO.class, h3);
         HandlerFileDTO h6 = new HandlerFileDTO();
         tcpClientsManager.addHandler(FileDTO.class, h6);
+        HandlerUserChatDTO hucp = new HandlerUserChatDTO();
+        tcpClientsManager.addHandler(UserChatListDTO.class, hucp);
         //HandlerResponseMessageDTO h4 = new HandlerResponseMessageDTO();
         //tcpClientsManager.addHandler(ResponseMessageDTO.class,h4);
         //tcpServer.addHandler(RequestMessageDTO.class, h4);

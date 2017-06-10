@@ -10,6 +10,7 @@ import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.UIExtension;
 import javax.swing.JComponent;
 import javax.swing.JMenu;
+import lapr4.blue.s2.ipc.n1060503.chat.ui.ChatParticipantsPanel;
 
 /**
  * This class implements the UI interface extension for the chat extension. A UI
@@ -50,7 +51,7 @@ public class UIChatExtension extends UIExtension {
     @Override
     public JComponent getSideBar() {
         if (sideBar == null) {
-            sideBar = new ChatPanel(uiController);
+            sideBar = new ChatParticipantsPanel(uiController, extension);
         }
         return sideBar;
     }

@@ -51,8 +51,6 @@
  * <li> The system show receved message </li> 
  * </ol>
  * 
- * <b> Change User Chatprofile:</b>
- * 
  * 
  * <h2>3. Analysis</h2>
  * 
@@ -61,7 +59,7 @@
  * <ol>
  * <li> st phase: create / upload chat user profile. </li>
  * <li> st phase: search the users and allow conversation with only those who are online.</li>
- * <li> rd phase: persistence of profiles and the history of messages by user.</li>
+ * <li> rd phase: persistence the history of messages by user.</li>
  * </ol>
  * 
  * <p>
@@ -69,13 +67,14 @@
  * <p> - username
  * <p> - nickname
  * <p> - image (icon / photo)
- * <p> - state (online or offline)
+ * <p> - status (online or offline)
  * <p>
  * At any time the user can change all the attributes except the username, since it is the name of the system.
  * 
  * <p>
  * Regarding the icons it was established that there was only one by default. If the user wants to change to another icon or photo, you can upload it.
  * 
+ * <h3>Change User Chat Profile:</h3>
  * <p>
  * <img src="ssd_user_chat_profile.png" alt="image">
  * 
@@ -108,9 +107,10 @@
  * <li> ensureUsernameIsEqualSystem </li> 
  * <li> ensureNicknameIsNotNull </li> 
  * <li> ensureNicknameIsNotEmpty </li>
- * <li> ensureImageIsNotEmpty </li>
  * <li> ensureUserChatHasOnlineStatusByDefault </li> 
  * <li> ensureUserChatCanChangeStatus </li> 
+ * <li> ensureUserChatStatusIsValid </li> 
+ * <li> ensureIsOK </li> 
  * </ol>
  * 
  * 
@@ -126,17 +126,16 @@
  * 
  * <h3>4.3. UC Realization</h3>
  * 
- * <p>
- * Change User Chat Profile:
+ * <h3>Change User Chat Profile:</h3>
  * 
  * <img src="sd_user_chat_profile.png" alt="image">
  * 
  * <h3>4.4. Classes</h3>
  * 
  * <p>
- * Class Diagram:
+ * Class Diagram: Change User Chat Profile
  * <p>
- * <img src=".png" alt="image">
+ * <img src="cd_user_chat_profile.png" alt="image">
  * 
  * 
  * <h2>5. Implementation</h2>
