@@ -73,7 +73,7 @@
  * <b>3.1.2 Parser tree</b>
  *
  *  <p>
- *      Antlr will generate a parser tree including nodes and then is converted and an Expression is generated.
+ *      ANTLR will generate a parser tree including nodes and then is converted and an Expression is generated.
  *      Grammar rules:
  *      <ul>
  *            <li>global variable start with @</li>

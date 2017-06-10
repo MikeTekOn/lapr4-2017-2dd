@@ -14,6 +14,7 @@ import lapr4.blue.s2.ipc.n1060503.chat.ui.ChatParticipantsAction;
 import lapr4.blue.s2.ipc.n1140822.fileShare.FileSharingController;
 import lapr4.blue.s2.ipc.n1140822.fileShare.ShareAction;
 import lapr4.green.s1.ipc.n1150532.comm.CommExtension;
+import lapr4.green.s1.ipc.n1150532.comm.CommTCPServer;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
 import lapr4.green.s1.ipc.n1150532.startSharing.ShareCellsAction;
 import lapr4.green.s1.ipc.n1150657.chat.ControllerConnection;
@@ -55,7 +56,7 @@ public class UICommExtensionSideBar extends JPanel {
      * The button to search peers.
      */
     private JButton btSearch;
-    
+
     private JButton btShare;
 
     /**
@@ -215,7 +216,7 @@ public class UICommExtensionSideBar extends JPanel {
      */
     private JPanel createPeersBottomButtonsPanel() {
         final String shareCellsBtText = "Share Cells";
-        final String sharetext ="Share files";
+        final String sharetext = "Share files";
         final int allignment = FlowLayout.CENTER;
         final JPanel panel = new JPanel(new GridLayout(1, 2));
         final JPanel p1 = new JPanel(new FlowLayout(allignment));
@@ -245,8 +246,8 @@ public class UICommExtensionSideBar extends JPanel {
         btSearch.addActionListener(new SearchAction());
         btConnect.addActionListener(new ConnectAction());
         btShareCells.addActionListener(new ShareCellsWithAction());
-        //btMessage.addActionListener(new NewMessageAction());
-        btShare.addActionListener(new  FileSharingAction());
+        btMessage.addActionListener(new NewMessageAction());
+        btShare.addActionListener(new FileSharingAction());
     }
 
     /**
@@ -364,7 +365,7 @@ public class UICommExtensionSideBar extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-           ConnectionID connection = peersTable.getSelectedRowFile();
+            ConnectionID connection = peersTable.getSelectedRowFile();
             if (connection != null) {
                 ControllerConnection.setChatController(connection);
                 (new ChatParticipantsAction(connection, theController)).actionPerformed(e);
@@ -374,15 +375,16 @@ public class UICommExtensionSideBar extends JPanel {
         }
     }*/
 
+    /**
+     *
+     */
     private class FileSharingAction implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            ConnectionID connection = peersTable.getSelectedRowFile();
-            if (connection != null) {
-                FileSharingController controller = new FileSharingController(connection);
-                (new ShareAction(theExtension.getUDPServerPortNumber(), theController,connection)).actionPerformed(e);
-            } 
+
+            (new ShareAction(theExtension.getUDPServerPortNumber(), theController)).actionPerformed(e);
+
         }
     }
 

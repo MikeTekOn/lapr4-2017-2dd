@@ -37,26 +37,6 @@ public class Files {
         }
     }
 
-    /**
-     * Finds a property in the properties file and returns his value.
-     *
-     * @param in 
-     * @param propertyName the name of the property
-     * @return the value of the property to search
-     */
-    public static String getPropertyValue(InputStream in, String propertyName) {
-        Properties properties = new Properties();
-        InputStream input = in;
-        String value = "";
-        try {
-            properties.load(input);
-            input.close();
-
-            value = properties.getProperty(propertyName);
-        } catch (IOException ex) {
-        }
-        return value;
-    }
     
     public static boolean updatePropertyValue(String propertyName, String newValue, URL resource) throws IOException{
         File file = new File(resource.toString());

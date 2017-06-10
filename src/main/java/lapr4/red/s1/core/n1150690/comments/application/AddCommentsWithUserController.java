@@ -28,7 +28,7 @@ public class AddCommentsWithUserController {
     /**
      * The cell that will contain the comments
      */
-    private CommentableCellWithMultipleUsers cell;
+    protected CommentableCellWithMultipleUsers cell;
 
     /**
      * Creates a new comments controller.

@@ -66,11 +66,22 @@ public class MacroEvalVisitor extends MacroBaseVisitor<Expression> {
     }
 
     @Override
+    public Expression visitMacro_invoked(MacroParser.Macro_invokedContext ctx) {
+        StringBuilder s = new StringBuilder();
+        for (int i = 0; i < ctx.getChildCount(); i++) {
+            if (i != 0 && i != (ctx.getChildCount() - 1)) {
+                s.append(ctx.getChild(i));
+            }
+        }
+        return uiController.getActiveWorkbook().getMacroList().getMacroByName(s.toString());
+    }
+
+    @Override
     public Expression visitScript(MacroParser.ScriptContext ctx) {
         super.visitScript(ctx);
 
         StringBuilder builder = new StringBuilder();
-        for(int i=0; i<ctx.getChildCount(); i++){
+        for (int i = 0; i < ctx.getChildCount(); i++) {
             builder.append(ctx.getChild(i).getText());
             builder.append(" "); // WhiteSpace seems to always be ignored so... to not break things up, this was placed
         }
@@ -79,23 +90,26 @@ public class MacroEvalVisitor extends MacroBaseVisitor<Expression> {
     }
 
     /**
-     * Handles the behaviour of visiting the ShellScript grammar node. The shellScript node will have the information
-     * needed for what code the beanShell should execute, but also how to execute it.
+     * Handles the behaviour of visiting the ShellScript grammar node. The
+     * shellScript node will have the information needed for what code the
+     * beanShell should execute, but also how to execute it.
      *
-     * The node can start with 2 headers. (1) "<![SHELL[" or (2) "<[SHELL[".
-     * If (1) is chosen, the bean shell code should be run asynchronously and the result of visiting this node is
-     * null. If (2) is chosen, the code should be run synchronously and the result of visiting this node is the return
-     * value of visiting the bean shell code (normally, the value of the last instruction executed).
+     * The node can start with 2 headers. (1) "<![SHELL[" or (2) "<[SHELL[". If
+     * (1) is chosen, the bean shell code should be run asynchronously and the
+     * result of visiting this node is null. If (2) is chosen, the code should
+     * be run synchronously and the result of visiting this node is the return
+     * value of visiting the bean shell code (normally, the value of the last
+     * instruction executed).
      */
     @Override
     public Expression visitShellscript(MacroParser.ShellscriptContext ctx) {
         BeanShellLoader loader = new BeanShellLoader();
 
-        Literal literal = (Literal)visit(ctx.getChild(1));
+        Literal literal = (Literal) visit(ctx.getChild(1));
         String code = literal.toString().substring(1, literal.toString().length() - 1);
         BeanShellInstance shell = loader.create(code, uiController, null);
 
-        if(ctx.getChild(0).getText().charAt(1) == '!'){ // It should run asynchronously
+        if (ctx.getChild(0).getText().charAt(1) == '!') { // It should run asynchronously
             shell.setAsynchronous();
         }
 

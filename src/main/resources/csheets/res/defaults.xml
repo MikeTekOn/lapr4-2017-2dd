@@ -18,4 +18,6 @@
 <entry key="persistence.persistenceUnit">lapr4.csheets-crm-extension-PU</entry>
 <entry key="comm.udp.server.portNumber">15310</entry>
 <entry key="comm.tcp.server.portNumber">15320</entry>
+<entry key="share.download.folder">Downloads</entry>
+<entry key="share.shared.folder">Shared</entry>
 </properties>
