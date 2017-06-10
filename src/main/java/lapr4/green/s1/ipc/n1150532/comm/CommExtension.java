@@ -36,6 +36,8 @@ import lapr4.blue.s2.ipc.n1140822.fileShare.FileNameListDTO;
 import lapr4.blue.s2.ipc.n1140822.fileShare.HandlerFileDTO;
 import lapr4.blue.s2.ipc.n1140822.fileShare.HandlerFileNameDTO;
 import lapr4.blue.s2.ipc.n1140822.fileShare.HandlerFileNameListDTO;
+import lapr4.blue.s2.ipc.n1151031.searchnetwork.HandlerSearchWorkbookRequestDTO;
+import lapr4.blue.s2.ipc.n1151031.searchnetwork.SearchWorkbookRequestDTO;
 import lapr4.green.s1.ipc.n1150657.chat.ControllerConnection;
 import lapr4.green.s1.ipc.n1150657.chat.HandlerRequestMessageDTO;
 import lapr4.green.s1.ipc.n1150657.chat.MessageEvent;
@@ -197,8 +199,10 @@ public class CommExtension extends Extension implements Observer {
     private void addAllAvailableHandlersToUDPServer() {
         HandlerConnectionDetailsRequestDTO h1 = new HandlerConnectionDetailsRequestDTO();
         udpServer.addHandler(ConnectionDetailsRequestDTO.class, h1);
-        HandlerFileNameListDTO  h2 = new HandlerFileNameListDTO();
+        HandlerFileNameListDTO h2 = new HandlerFileNameListDTO();
         udpServer.addHandler(FileNameListDTO.class, h2);
+        HandlerSearchWorkbookRequestDTO h3 = new HandlerSearchWorkbookRequestDTO();
+        udpServer.addHandler(SearchWorkbookRequestDTO.class, h3);
         //TODO 
     }
 
@@ -295,7 +299,7 @@ public class CommExtension extends Extension implements Observer {
                     try {
                         Cell cell = aSpreadSheet.getCell(cellDTO.getAddress());
                         cell.setContent(cellDTO.getContent());
-                        StylableCell stylableCell = (StylableCell)cell.getExtension(StyleExtension.NAME);
+                        StylableCell stylableCell = (StylableCell) cell.getExtension(StyleExtension.NAME);
                         if (stylableCell != null && cellDTO.getStyleDTO() != null) {
                             Styles.setStyleFromDTO(stylableCell, cellDTO.getStyleDTO());
                         }
