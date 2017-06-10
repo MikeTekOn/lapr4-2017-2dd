@@ -1,9 +1,11 @@
-package lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.watchdogs;
+package lapr4.blue.s2.ipc.n1151452.netanalyzer;
 
 import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficEvent;
 import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficInputStream;
 import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
 import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.transmission.OpenTransmission;
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.watchdogs.TrafficLogListener;
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.watchdogs.TrafficLogger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -79,6 +81,13 @@ public class TrafficLoggerTest {
         out.close();
     }
 
+    /**
+     * Tests if the logger sends logs to a listener
+     *
+     * @throws IOException I/O Exception
+     * @throws ClassNotFoundException class not found
+     * @throws InterruptedException thread interruption
+     */
     @Test
     public void ensureLoggerSendsEventToListener() throws IOException, ClassNotFoundException {
 

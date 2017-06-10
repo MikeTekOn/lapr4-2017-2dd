@@ -1,9 +1,11 @@
-package lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.watchdogs;
+package lapr4.blue.s2.ipc.n1151452.netanalyzer;
 
 import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficCount;
 import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficInputStream;
 import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
 import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.transmission.OpenTransmission;
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.watchdogs.TrafficCounter;
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.watchdogs.TrafficCounterListener;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -80,8 +82,15 @@ public class TrafficCounterTest {
         out.close();
     }
 
+    /**
+     * Tests if the counter sends the count to a listener
+     *
+     * @throws IOException I/O Exception
+     * @throws ClassNotFoundException class not found
+     * @throws InterruptedException thread interruption
+     */
     @Test
-    public void ensureLoggerSendsEventToListener() throws IOException, ClassNotFoundException, InterruptedException {
+    public void ensureCounterSendsCountToListener() throws IOException, ClassNotFoundException, InterruptedException {
 
         String tester = "tester";
         int tester2 = 1;
