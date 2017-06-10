@@ -118,8 +118,14 @@ public class ChatParticipantsModel extends AbstractTableModel {
      * @param ucp
      */
     public void addRow(UserChatDTO ucp) {
-        int index = list.indexOf(ucp);
-        if (index == -1) {
+        boolean flag = true;
+        for(UserChatDTO u : list){
+            if(ucp.getUserChatProfileNickname().equals(u.getUserChatProfileNickname())){
+                flag = false;
+                break;
+            }
+        }
+        if (flag) {
             list.add(ucp);
             fireTableDataChanged();
         }
@@ -131,7 +137,7 @@ public class ChatParticipantsModel extends AbstractTableModel {
      * @param index The index of the connection to retrieve.
      * @return It returns the connection or null if the index is not valid.
      */
-    public UserChatDTO provideConnection(int index) {
+    public UserChatDTO getUserChatDTO(int index) {
         if (index < 0 || index >= list.size()) {
             return null;
         }

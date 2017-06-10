@@ -10,6 +10,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionListener;
+import lapr4.blue.s2.ipc.n1060503.chat.connection.HandlerUserChatDTO;
 import lapr4.blue.s2.ipc.n1060503.chat.connection.UserChatDTO;
 import lapr4.blue.s2.ipc.n1060503.chat.profile.UserChatProfile;
 
@@ -80,7 +81,7 @@ public class UserChatListTable extends JPanel implements Observer {
      * @return It returns the connection associated with the selected row.
      */
     public UserChatDTO getSelectedRowFile() {
-        return model.provideConnection(table.getSelectedRow());
+        return model.getUserChatDTO(table.getSelectedRow());
     }
 
     /**
@@ -101,7 +102,6 @@ public class UserChatListTable extends JPanel implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         if (arg instanceof UserChatDTO) {
-            System.out.println("teste: "+((UserChatDTO) arg).getUserChatProfileNickname());
             insertRow((UserChatDTO) arg);
         }
     }
