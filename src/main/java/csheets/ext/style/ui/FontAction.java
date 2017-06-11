@@ -27,6 +27,7 @@ import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
 
 import csheets.core.Cell;
+import csheets.core.CellImpl;
 import csheets.ext.style.StylableCell;
 import csheets.ext.style.StyleExtension;
 import csheets.ui.ctrl.FocusOwnerAction;
@@ -82,8 +83,11 @@ public class FontAction extends FocusOwnerAction {
 					StylableCell stylableCell = (StylableCell)cell.getExtension(
 						StyleExtension.NAME);
 					stylableCell.setFont(font);
+					if (cell instanceof CellImpl) {
+						((CellImpl) cell).setStyleChanged();
+					}
 				}
-	
+
 			uiController.setWorkbookModified(focusOwner.getSpreadsheet().getWorkbook());
 			focusOwner.repaint();
 		}

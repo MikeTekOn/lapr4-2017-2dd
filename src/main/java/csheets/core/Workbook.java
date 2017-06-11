@@ -67,7 +67,7 @@ public class Workbook implements Iterable<Spreadsheet>, Serializable {
     /**
      * Macro list of the workbook.
      */
-    private MacroList macroList;
+    private MacroList macroList = new MacroList();
     /**
      * The number of spreadsheets that have been created in the workbook
      */

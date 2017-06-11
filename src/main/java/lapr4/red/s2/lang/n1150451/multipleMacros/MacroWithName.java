@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import csheets.ui.ctrl.UIController;
+import java.util.Objects;
 import lapr4.blue.s1.lang.n1151159.macros.Macro;
 import lapr4.blue.s1.lang.n1151159.macros.MacroController;
 import lapr4.blue.s1.lang.n1151159.macros.compiler.MacroCompilationException;
@@ -29,7 +30,7 @@ public class MacroWithName implements Expression, Serializable {
     private String name;
     private String macroCode;
     private Spreadsheet s;
-    private UIController uiController;
+    private transient UIController uiController;
 
     public MacroWithName(String name, String macroCode, Spreadsheet s, UIController uiController) {
         if (name.trim().isEmpty()) {
@@ -40,7 +41,7 @@ public class MacroWithName implements Expression, Serializable {
             throw new IllegalArgumentException("Code can't be empty");
         }
         this.name = name;
-        this.s=s;
+        this.s = s;
         this.uiController = uiController;
     }
 
@@ -56,7 +57,7 @@ public class MacroWithName implements Expression, Serializable {
     public Value evaluate() throws IllegalValueTypeException {
         MacroController c = new MacroController();
         try {
-            return c.executeMacro(s, uiController, macroCode);
+            return c.executeMacro(s, uiController, macroCode, name);
         } catch (MacroCompilationException ex) {
             Logger.getLogger(MacroWithName.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -66,6 +67,35 @@ public class MacroWithName implements Expression, Serializable {
     @Override
     public Object accept(ExpressionVisitor visitor) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MacroWithName other = (MacroWithName) obj;
+        if (!Objects.equals(this.name, other.name)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 
 }

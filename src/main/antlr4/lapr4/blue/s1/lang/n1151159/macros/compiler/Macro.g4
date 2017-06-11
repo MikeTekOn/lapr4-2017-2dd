@@ -38,7 +38,8 @@ shellscript
     ;
 
 atom
-	:	function_call
+    : macro_invoked
+	|	function_call
 	|	reference
 	|	literal
 	|	LPAR comparison RPAR
@@ -46,6 +47,8 @@ atom
 	|	assignment
 	|   shellscript
 	;
+
+macro_invoked : LPAR_SQ (~(LPAR_SQ | RPAR_SQ))+ RPAR_SQ;
 
 assignment
 	:  LPAR reference ASSIGN comparison RPAR
@@ -125,6 +128,8 @@ LPAR	: '(' ;
 RPAR	: ')' ;
 L_CURLY_BRACKET	: '{' ;
 R_CURLY_BRACKET	: '}' ;
+LPAR_SQ : '[' ;
+RPAR_SQ : ']' ;
 
 /* assignment operator */
 ASSIGN  : ':=' ;

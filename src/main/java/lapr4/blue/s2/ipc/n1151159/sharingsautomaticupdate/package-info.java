@@ -156,6 +156,28 @@
  *
  *
  *
+ * <h3>6. Implementation</h3>
+ *
+ * <h4>6.1. Changed classes</h4>
+ * <p>
+ *     It was necessary to change some already existing classes instead of creating new ones / making the extend
+ *     mechanism.
+ * </p>
+ * <p>
+ *     The class {@link lapr4.black.s1.ipc.n2345678.comm.sharecells.CellDTO} was modified to add the StyledDTO of the
+ *     shared cells. Although the extend mechanism could be used in this case, the cost would be high in terms of
+ *     coupling, since there is a lot of usages of this class. A big refactor would be necessary.
+ * </p>
+ * <p>
+ *     The class {@link lapr4.green.s1.ipc.n1150532.comm.CommExtension} was also modified in the update method. If we
+ *     would extend this class, the method update would have to be overwritten. Since update method has a lot of logic
+ *     depending on the instance of the received object (not a good approach, but for the time being a refactor would bes
+ *     expensive), most of the logic would have to be duplicated. Also the usages of this class would have to be
+ *     refactored as well.
+ * </p>
+ *
+ *
+ *
  *
  * <h2>8. Work Log</h2>
  *
@@ -231,6 +253,25 @@
  * <p><b>Today</b></p>
  * <ol>
  *     <li>Implementation.</li>
+ * </ol>
+ *
+ * <p><b>Blocking:</b></p>
+ * <ol>
+ *     <li>Nothing.</li>
+ * </ol>
+ *
+ *
+ *
+ * <h3>Saturday 10/06/2017</h3>
+ *
+ * <p>Yesterday I've worked on:</p>
+ * <ol>
+ *     <li>Implementation</li>
+ * </ol>
+ *
+ * <p><b>Today</b></p>
+ * <ol>
+ *     <li>Implementation</li>
  * </ol>
  *
  * <p><b>Blocking:</b></p>

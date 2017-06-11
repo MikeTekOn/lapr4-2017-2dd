@@ -16,9 +16,9 @@ import csheets.core.formula.lang.RangeReference;
 import csheets.core.formula.lang.ReferenceOperation;
 import csheets.core.formula.lang.UnknownElementException;
 import csheets.ui.ctrl.UIController;
-import lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable;
 import lapr4.blue.s1.lang.n1140822.beanshellwindow.BeanShellInstance;
 import lapr4.blue.s1.lang.n1140822.beanshellwindow.BeanShellLoader;
+import lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable;
 import lapr4.blue.s1.lang.n1151452.formula.lang.Language;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperation;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperator;
@@ -252,7 +252,7 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
                         new CellReference(cell.getSpreadsheet(), ctx.getChild(2).getText())
                 );
             } else {
-                if(ctx.getText().equals("#CELL")){
+                if(ctx.getText().equals("!CELL")){
                     return new CellReference(cell.getSpreadsheet(), cell.getAddress().toString());
                 }else{
                     return new CellReference(cell.getSpreadsheet(), ctx.getText());

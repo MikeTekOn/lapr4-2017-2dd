@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr4.green.s2.core.n1150838.GlobalSearch.domain;
+package lapr4.green.s2.core.n1150838.GlobalSearch.presentation;
 
 import csheets.core.Cell;
+import csheets.core.Workbook;
 import eapli.framework.dto.DTO;
 
 /**
@@ -13,16 +14,27 @@ import eapli.framework.dto.DTO;
  * @author Nuno Pinto 1150838
  */
 public class CellInfoDTO implements DTO {
-
+    /**
+     * The cell that matchs the given regex
+     */
     private Cell cell;
-    private String cellContentFound;
-    private String comentContentFound;
+    /**
+     * The wokbook were the cell was found
+     */
+    private Workbook workbook;
+    /**
+     * The workbook name
+     */
+    private String workbookName;
+    /**
+     * Number of the spreadsheet that the cell was found
+     */
     private int spreadsheetNumber;
 
-    public CellInfoDTO(Cell cell, String cellContentFound, String comentContentFound,int spreadsheetNumber) {
+    public CellInfoDTO(Cell cell, int spreadsheetNumber,Workbook workbook,String workbookName) {
         this.cell = cell;
-        this.cellContentFound = cellContentFound;
-        this.comentContentFound = comentContentFound;
+        this.workbook=workbook;
+        this.workbookName=workbookName;
         this.spreadsheetNumber= spreadsheetNumber;
              
 
@@ -34,20 +46,23 @@ public class CellInfoDTO implements DTO {
     public Cell getCell() {
         return cell;
     }
-
+    
+    
     /**
-     * @return the cellContentFound
+     * @return the workbook
      */
-    public String getCellContentFound() {
-        return cellContentFound;
+    public Workbook getWorkbook() {
+        return workbook;
+    }
+        /**
+     * @return the workbookName
+     */
+    public String getWorkbookName() {
+        return workbookName;
     }
 
-    /**
-     * @return the comentContentFound
-     */
-    public String getComentContentFound() {
-        return comentContentFound;
-    }
+
+
     
     /**
      * @return the spreadCheetNumber
@@ -63,7 +78,7 @@ public class CellInfoDTO implements DTO {
      */
     @Override
     public CellInfoDTO clone() {
-        return new CellInfoDTO(cell, cellContentFound, getComentContentFound(), getSpreadsheetNumber());
+        return new CellInfoDTO(cell,  getSpreadsheetNumber(), getWorkbook(),getWorkbookName());
     }
 
 

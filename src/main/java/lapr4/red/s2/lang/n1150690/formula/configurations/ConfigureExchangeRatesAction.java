@@ -18,7 +18,7 @@ import javax.swing.ImageIcon;
  * @author Sofia Silva [1150690@isep.ipp.pt]
  */
 @SuppressWarnings("serial")
-public class ConfigurateExchangeRatesAction extends FocusOwnerAction{
+public class ConfigureExchangeRatesAction extends FocusOwnerAction{
 
      /**
      * The CleanSheets application
@@ -30,15 +30,15 @@ public class ConfigurateExchangeRatesAction extends FocusOwnerAction{
      */
     protected UIController uiController;
 
-    public ConfigurateExchangeRatesAction(CleanSheets app, UIController uiController) {
+    public ConfigureExchangeRatesAction(CleanSheets app, UIController uiController) {
         this.uiController = uiController;
-    }  
-    
+    }
+
     @Override
     protected String getName() {
         return "Configurate Exchange Rates";
     }
-    
+
     protected void defineProperties(){
         putValue(SMALL_ICON, new ImageIcon(CleanSheets.class.getResource("res/img/coin.png")));
     }
@@ -48,9 +48,9 @@ public class ConfigurateExchangeRatesAction extends FocusOwnerAction{
         if (focusOwner == null) {
             return;
         }
-        new ConfigurateExchangeRatesUI(uiController);
+        new ConfigureExchangeRatesUI(uiController);
     }
-    
-    
-    
+
+
+
 }

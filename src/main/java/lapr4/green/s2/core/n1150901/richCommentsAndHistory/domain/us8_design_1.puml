@@ -1,20 +1,30 @@
 @startuml core02_03_design1.png
 
+    participant "User" as user
     participant "CommentsWithHistoryUI" as ui
-    participant "CommentsWithHistoryController" as ctrl
+    participant "ComplexCellRenderer" as renderer
     
-    create ctrl
-    ui -> ctrl : create(uic)
+    user -> ui : Enters format
+    activate ui
 
-    ui -> ctrl : changeFormat()
-    activate ctrl
-    ctrl -> ctrl : changeFormat()
-    ui <-- ctrl
-    deactivate ctrl
+    ui -> renderer
+    activate renderer
+    renderer -> renderer : getListCellRendererComponent()
+    ui <-- renderer
+    deactivate renderer
 
-    ui -> ctrl : changeStyle()
-    activate ctrl
-    ctrl -> ctrl : changeStyle()
-    ui <-- ctrl
-    deactivate ctrl
+    user <-- ui : Comment formatted
+    deactivate ui
+
+    user -> ui : Enters style
+    activate ui
+
+    ui -> renderer
+    activate renderer
+    renderer -> renderer : getListCellRendererComponent()
+    ui <-- renderer
+    deactivate renderer
+    user <-- ui : Comment styled
+    deactivate ui
+
 @enduml
