@@ -21,6 +21,7 @@ import lapr4.blue.s1.lang.n1151159.macros.compiler.MacroCompiler;
  */
 public class MultipleMacrosWithNameController extends MacroController {
 
+
     /**
      * Executes a given macro.
      *
@@ -40,5 +41,8 @@ public class MultipleMacrosWithNameController extends MacroController {
             return null;
         }
         return macro.evaluate();
+    }
+    public void emptyList(){
+        macroList=null;
     }
 }
