@@ -12,9 +12,12 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -61,6 +64,11 @@ public class ChatParticipantsPanel extends JPanel {
      * The button to search peers.
      */
     private JButton btSearch;
+    
+    /**
+     * The button to change profile of user chat.
+     */
+    private JButton btChangeProfile;
 
     /**
      * The button to connect to a peer.
@@ -145,16 +153,21 @@ public class ChatParticipantsPanel extends JPanel {
     private JPanel createNetworkBottomButtonsPanel() {
         final String searchBtText = "Turn On / Search";
         final String connectBtText = "Connect";
+        final String changeProfile = "Change Profile";
         final int allignment = FlowLayout.CENTER;
         final JPanel panel = new JPanel(new GridLayout(1, 2));
         final JPanel p1 = new JPanel(new FlowLayout(allignment));
         final JPanel p2 = new JPanel(new FlowLayout(allignment));
+        final JPanel p3 = new JPanel(new FlowLayout(allignment));
         btSearch = new JButton(searchBtText);
         btConnect = new JButton(connectBtText);
+        btChangeProfile = new JButton(changeProfile);
         p1.add(btSearch);
         p2.add(btConnect);
+        p3.add(btChangeProfile);
         panel.add(p1);
         panel.add(p2);
+        panel.add(p3);
         return panel;
     }
     
@@ -164,6 +177,23 @@ public class ChatParticipantsPanel extends JPanel {
     private void createInteractions() {
         btSearch.addActionListener(new ChatParticipantsPanel.SearchUserAction());
         btConnect.addActionListener(new ChatParticipantsPanel.ConnectAction());
+        btChangeProfile.addActionListener(new ChatParticipantsPanel.ChangeProfileAction());
+    }
+    
+    /**
+     * The action listener for the search button.
+     */
+    private class ChangeProfileAction implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            try {
+                final ChangeUserChatProfileUI cucp = new ChangeUserChatProfileUI();
+            } catch (IOException ex) {
+                Logger.getLogger(ChatParticipantsPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
     }
     
     /**
