@@ -30,6 +30,7 @@ import static org.junit.Assert.*;
 public class WorkbookWithStylesHandlerTest {
     
     private CleanSheets cleansheet;
+    private UIController uiC;
     private Workbook workbook;
     private File workbookFile;
     private Spreadsheet spreadsheet1;
@@ -43,7 +44,10 @@ public class WorkbookWithStylesHandlerTest {
     @Before
     public void setUp() throws IOException, FormulaCompilationException {
         cleansheet = new CleanSheets();
-        workbook = new Workbook(2);
+        uiC = new UIController(cleansheet);
+        workbook = new Workbook();
+        workbook.addSpreadsheet();
+        workbook.addSpreadsheet();
         workbookFile = new File("workbookfile.cls");
         cleansheet.saveAs(workbook, workbookFile);
         
@@ -152,7 +156,6 @@ public class WorkbookWithStylesHandlerTest {
     public void testGetStylableCellsFromSpreadsheetWithinRange() {
         System.out.println("getStylableCellsFromSpreadsheetWithinRange");
         String strRange = "A1:B1";
-        UIController uiC = new UIController(cleansheet);
         uiC.setActiveSpreadsheet(spreadsheet2);
         ExportStylePDF ePDF = new ExportStylePDF();
         WorkbookWithStylesHandler instance = new WorkbookWithStylesHandler(workbook);
