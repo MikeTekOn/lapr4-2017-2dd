@@ -14,6 +14,7 @@ import lapr4.green.s1.ipc.n1150800.importexportTXT.FileData;
 
 import java.io.File;
 import java.io.IOException;
+import lapr4.blue.s2.ipc.n1141570.importExportTxtLink.ctrl.LinkTxtExportController;
 
 /**
  *
@@ -35,6 +36,11 @@ public class ExportDataController implements Controller {
      * The active spreadsheet in the current workbook
      */
     private Spreadsheet activeSpreadsheet;
+    
+    /**
+     * The link txt export controller
+     */
+    private LinkTxtExportController linkTxtExportController;
 
     /**
      * Creates an ExportDataController instance with
@@ -52,6 +58,11 @@ public class ExportDataController implements Controller {
 
         this.uiController = uiController;
         this.fileToWrite = fileData;
+        
+        this.activeSpreadsheet = uiController.getActiveSpreadsheet();
+        
+        this.linkTxtExportController = new LinkTxtExportController(this.activeSpreadsheet, fileToWrite, separatorCharacter);
+        this.linkTxtExportController.fireLinkWriterThread();
     }
 
     /**

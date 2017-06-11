@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import lapr4.blue.s2.ipc.n1140822.fileShare.FileSharingController;
 import lapr4.blue.s2.ipc.n1140822.fileShare.ShareAction;
 import lapr4.green.s1.ipc.n1150532.comm.CommExtension;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
@@ -54,7 +53,7 @@ public class UICommExtensionSideBar extends JPanel {
      * The button to search peers.
      */
     private JButton btSearch;
-    
+
     private JButton btShare;
 
     /**
@@ -214,7 +213,7 @@ public class UICommExtensionSideBar extends JPanel {
      */
     private JPanel createPeersBottomButtonsPanel() {
         final String shareCellsBtText = "Share Cells";
-        final String sharetext ="Share files";
+        final String sharetext = "Share files";
         final int allignment = FlowLayout.CENTER;
         final JPanel panel = new JPanel(new GridLayout(1, 2));
         final JPanel p1 = new JPanel(new FlowLayout(allignment));
@@ -245,7 +244,7 @@ public class UICommExtensionSideBar extends JPanel {
         btConnect.addActionListener(new ConnectAction());
         btShareCells.addActionListener(new ShareCellsWithAction());
         btMessage.addActionListener(new NewMessageAction());
-        btShare.addActionListener(new  FileSharingAction());
+        btShare.addActionListener(new FileSharingAction());
     }
 
     /**
@@ -362,7 +361,7 @@ public class UICommExtensionSideBar extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-           ConnectionID connection = peersTable.getSelectedRowFile();
+            ConnectionID connection = peersTable.getSelectedRowFile();
             if (connection != null) {
                 ControllerConnection.setChatController(connection);
                 (new ChatAction(connection, theController)).actionPerformed(e);
@@ -372,18 +371,16 @@ public class UICommExtensionSideBar extends JPanel {
         }
     }
 
-      /**
+    /**
      *
      */
     private class FileSharingAction implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            ConnectionID connection = peersTable.getSelectedRowFile();
-            if (connection != null) {
-                FileSharingController controller = new FileSharingController(connection);
-                (new ShareAction(theExtension.getUDPServerPortNumber(), theController,connection)).actionPerformed(e);
-            } 
+
+            (new ShareAction(theExtension.getUDPServerPortNumber(), theController)).actionPerformed(e);
+
         }
     }
 

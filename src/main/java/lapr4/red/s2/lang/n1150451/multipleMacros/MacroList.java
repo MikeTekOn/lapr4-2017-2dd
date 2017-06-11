@@ -7,21 +7,23 @@ package lapr4.red.s2.lang.n1150451.multipleMacros;
 
 import csheets.core.Spreadsheet;
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.*;
-import java.util.Set;
 
 import csheets.ui.ctrl.UIController;
-import lapr4.blue.s1.lang.n1151159.macros.Macro;
 
 /**
  *
  * @author Diogo Santos
  */
-public class MacroList implements Serializable{
+public class MacroList implements Serializable {
 
     List<MacroWithName> macroList;
-    private UIController uiController;
+    private transient UIController uiController;
+
+    public MacroList() {
+        macroList = new ArrayList<MacroWithName>();
+
+    }
 
     public MacroList(UIController uiController) {
         macroList = new ArrayList<MacroWithName>();
@@ -32,15 +34,15 @@ public class MacroList implements Serializable{
         return macroList;
     }
 
-    public boolean addMacro(String name, String code, Spreadsheet s){
+    public boolean addMacro(String name, String code, Spreadsheet s) {
         return addMacro(new MacroWithName(name, code, s, uiController));
     }
-    
+
     public boolean addMacro(MacroWithName m) {
         if (m == null) {
             throw new IllegalArgumentException("Macro can't be null");
         }
-        
+
         if (!checkExistence(m)) {
             return macroList.add(m);
         }
@@ -67,13 +69,17 @@ public class MacroList implements Serializable{
         }
         return false;
     }
-    
-    public MacroWithName getMacroByName(String name){
+
+    public MacroWithName getMacroByName(String name) {
         for (int i = 0; i < macroList.size(); i++) {
             if (name.equals(macroList.get(i).getName())) {
                 return macroList.get(i);
             }
         }
         return null;
+    }
+
+    void setUIController(UIController uiC) {
+        this.uiController=uiC;
     }
 }

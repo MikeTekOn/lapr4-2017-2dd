@@ -33,7 +33,7 @@ public class CellsDataTest {
         String[][] spreadsheetContent = new String[1][2];
         spreadsheetContent[0][0] = "Hello";
         spreadsheetContent[0][1] = "World";
-        workbook = new Workbook(spreadsheetContent);
+        workbook = new Workbook(null, spreadsheetContent);
         
         workbookFile = new File("workbookfile.cls");
         cleansheet.saveAs(workbook, workbookFile);

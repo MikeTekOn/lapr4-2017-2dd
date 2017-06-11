@@ -16,7 +16,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
-import lapr4.blue.s2.ipc.n1141570.importExportTxtLink.ctrl.LinkTxtController;
+import lapr4.blue.s2.ipc.n1141570.importExportTxtLink.ctrl.LinkTxtImportController;
 
 /**
  *
@@ -39,7 +39,7 @@ public class ImportDataUI extends JFrame {
      */
     private File fileToRead;
 
-    private LinkTxtController linkTxtController;
+    private LinkTxtImportController linkTxtController;
 
     /**
      * Creates an instance of ImportDataUI with
@@ -132,10 +132,8 @@ public class ImportDataUI extends JFrame {
 
                 CellRange cellRange = new CellRange(addressStrFirstCell, addressStrLastCell, uiController);
 
-                ImportDataController controller = new ImportDataController(uiController, fileToRead, separatorCharacter, cellRange, firstLineRepresentsHeaders);
+                ImportDataController controller = new ImportDataController(uiController, fileToRead, separatorCharacter, cellRange, firstLineRepresentsHeaders, uiController.getActiveSpreadsheet());
                 controller.readData();
-                
-                controller.startsLinkImport();
 
                 dispose();
             } catch (IllegalArgumentException | IOException | FormulaCompilationException ex) {

@@ -11,8 +11,8 @@ import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.CellDecorator;
 import csheets.ui.ext.TableDecorator;
 import csheets.ui.ext.UIExtension;
+import lapr4.green.s2.core.n1150901.richCommentsAndHistory.presentation.CommentsWithHistoryUI;
 import lapr4.red.s1.core.n1150690.comments.CommentedCellWithMultipleUsersDecorator;
-import lapr4.red.s1.core.n1150690.comments.presentation.CommentsWithUserUI;
 
 /**
  * This class implements the UI interface extension for the comments extension.
@@ -96,7 +96,7 @@ public class UIExtensionComments extends UIExtension {
 	public JComponent getSideBar() {
 		if (sideBar == null)
 			//sideBar = new CommentPanel(uiController);
-                        sideBar = new CommentsWithUserUI(uiController);
+                        sideBar = new CommentsWithHistoryUI(uiController);
 		return sideBar;
 	}	
 }
