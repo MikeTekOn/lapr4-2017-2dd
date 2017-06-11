@@ -5,12 +5,9 @@
  */
 package lapr4.green.s2.core.n1150838.GlobalSearch.presentation;
 
-import csheets.core.Workbook;
 import csheets.ui.ctrl.UIController;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,8 +18,6 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.Semaphore;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -35,7 +30,6 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import lapr4.green.s2.core.n1150838.GlobalSearch.GlobalSearchExtension;
 import lapr4.green.s2.core.n1150838.GlobalSearch.application.GlobalSearchController;
-import lapr4.green.s2.core.n1150838.GlobalSearch.domain.CellInfoDTO;
 import lapr4.green.s2.core.n1150838.GlobalSearch.domain.Filter;
 import lapr4.green.s2.core.n1150838.GlobalSearch.util.GlobalSearchPublisher;
 
@@ -65,7 +59,7 @@ public class GlobalSearchSideBar extends JPanel implements Observer {
     }
 
     /**
-     *
+     * the metho that will build all the window elements
      */
     private void initComponents() {
         setLayout(new BorderLayout());
@@ -122,6 +116,7 @@ public class GlobalSearchSideBar extends JPanel implements Observer {
      */
     private JTextField searchField() {
         searchField = new JTextField();
+        searchField.setPreferredSize(new Dimension(200,5));
         return searchField;
     }
 
@@ -150,7 +145,7 @@ public class GlobalSearchSideBar extends JPanel implements Observer {
 
                 ctrl.stop();
                 model.removeAll();
-                if (ctrl.checkIfValid(searchField.getText()) && searchField.getText().length() > 0) {
+                if (ctrl.checkIfValid(searchField.getText()) && searchField.getText().length()>0) {
                     List<String> typesToInclude = paneFilters.typesToInclude();
                     List<String> formulasToInclude = paneFilters.formulasToInclude();
                     boolean includeComments = paneFilters.includeComments();
@@ -167,6 +162,10 @@ public class GlobalSearchSideBar extends JPanel implements Observer {
         return b;
     }
 
+    /**
+     *
+     * @return the button to add filters
+     */
     private JButton buttonFilter() {
         JButton b = new JButton("Filters");
         //b.setPreferredSize(new Dimension(10,10));
@@ -179,27 +178,34 @@ public class GlobalSearchSideBar extends JPanel implements Observer {
         return b;
     }
 
+    /**
+     * The method that will be called when a cell was found in the search and
+     * after that the main list will be updated
+     *
+     * @param o
+     * @param arg
+     */
     @Override
     public void update(Observable o, Object arg) {
-        if (arg instanceof CellInfoDTO) {
-//            
-//            try {
-//                mutex.acquire();
-//            } catch (InterruptedException ex) {
-//                Logger.getLogger(GlobalSearchSideBar.class.getName()).log(Level.SEVERE, null, ex);
-//            }
-//            model.addElement((CellInfoDTO) arg);      
-//            searchList.updateUI();  
-//            mutex.release();
-            java.awt.EventQueue.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                   model.addElement((CellInfoDTO) arg);  
-                   searchList.updateUI(); 
+        if (arg!=null && arg instanceof CellInfoDTO) {
+            if (!((CellInfoDTO) arg).getCell().toString().equals("0")) {// ignore the null CELL
+                java.awt.EventQueue.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        model.addElement((CellInfoDTO) arg);
+                        searchList.updateUI();
+                    }
+                });
+            }
+
+        }else{
+            JOptionPane.showMessageDialog(null,
+                            "No results!",
+                            "No results",
+                            JOptionPane.ERROR_MESSAGE);
                 }
-            });
         }
 
     }
 
-}
+

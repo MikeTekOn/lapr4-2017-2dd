@@ -20,14 +20,23 @@ import lapr4.red.s1.core.n1150690.comments.domain.User;
  * authors.
  *
  * @author Sofia Silva [1150690@isep.ipp.pt]
+ * @edit Miguel Silva (1150901) Sprint 2 - I've edited this class to allow to
+ * update the history of comments.
  */
 public class CommentableCellWithMultipleUsers extends CommentableCell {
 
     /**
      * The list with the authors of the comments and the respective comments.
      */
-    private Map<User, List<String>> comments;
+    private final Map<User, List<String>> comments;
 
+    /* THIS IS A CHANGE I MADE */
+    /**
+     * The list with the changes made on comments by an user.
+     */
+    private final Map<User, Map<String, List<String>>> history;
+
+    /*-------------------------*/
     /**
      * Creates a comentable cell with the indentification of the user extension
      * for the given cell.
@@ -37,6 +46,9 @@ public class CommentableCellWithMultipleUsers extends CommentableCell {
     public CommentableCellWithMultipleUsers(Cell cell) {
         super(cell);
         comments = new HashMap<>();
+        /* THIS IS A CHANGE I MADE */
+        history = new HashMap<>();
+        /*-------------------------*/
     }
 
     /**
@@ -63,6 +75,12 @@ public class CommentableCellWithMultipleUsers extends CommentableCell {
         List<String> newList = new ArrayList<>();
         newList.add(super.getUserComment());
         comments.put(user, newList);
+        /* THIS IS A CHANGE I MADE */
+        List<String> newList2 = new ArrayList<>();
+        Map<String, List<String>> map = new HashMap<>();
+        map.put(super.getUserComment(), newList2);
+        history.put(user, map);
+        /*-------------------------*/
     }
 
     /**
@@ -77,12 +95,22 @@ public class CommentableCellWithMultipleUsers extends CommentableCell {
         if (Strings.isNullOrEmpty(newComment) || Strings.isNullOrWhiteSpace(newComment)) {
             throw new IllegalArgumentException("The comment should not be empty!");
         }
+        /* THIS IS A CHANGE I MADE */
+        super.setCommentHistory(oldComment);
+        /*-------------------------*/
         for (Map.Entry<User, List<String>> entry : comments.entrySet()) {
+            List<String> historyComments = new ArrayList<>();
             if (entry.getKey().name().equals(oldAuthor)) {
+                /* THIS IS A CHANGE I MADE */
+                historyComments = history.get(newAuthor).get(oldComment);
+                historyComments.add(oldComment);
+                history.get(newAuthor).remove(oldComment);
+                /*-------------------------*/
                 entry.getValue().remove(oldComment);
             }
             if (entry.getKey().name().equals(newAuthor.name())) {
                 entry.getValue().add(newComment);
+                history.get(newAuthor).put(newComment, historyComments);
             }
         }
     }
@@ -104,5 +132,27 @@ public class CommentableCellWithMultipleUsers extends CommentableCell {
     public boolean hasComments() {
         return !this.comments.isEmpty();
     }
+
+    /* THIS IS A CHANGE I MADE */
+    /**
+     * Returns the history of comments of this cell.
+     *
+     * @return The history of comments.
+     */
+    public Map<User, Map<String, List<String>>> history() {
+        return this.history;
+    }
+
+    /**
+     * Verifies if this cell has history of comments.
+     *
+     * @return Returns true if the cell has an history of comments, otherwise
+     * returns false.
+     */
+    @Override
+    public boolean hasHistory() {
+        return !this.history.isEmpty();
+    }
+    /*-------------------------*/
 
 }

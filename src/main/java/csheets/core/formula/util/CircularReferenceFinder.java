@@ -24,6 +24,7 @@ import csheets.core.Cell;
 import csheets.core.formula.Formula;
 import csheets.core.formula.Reference;
 import lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable;
+import lapr4.red.s2.lang.n1150690.formula.MonetaryValue;
 
 /**
  * An expression visitor that looks for circular references in a formula, i.e.
@@ -78,6 +79,11 @@ public class CircularReferenceFinder extends AbstractExpressionVisitor {
 
     @Override
     public Object visitTemporaryVariable(Variable tempVar) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Object visitMonetaryValue(MonetaryValue money) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

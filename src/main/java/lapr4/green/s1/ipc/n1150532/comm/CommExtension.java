@@ -1,5 +1,7 @@
 package lapr4.green.s1.ipc.n1150532.comm;
 
+import lapr4.blue.s2.ipc.n1060503.chat.connection.UserChatDTO;
+import lapr4.blue.s2.ipc.n1060503.chat.connection.HandlerUserChatDTO;
 import csheets.core.Cell;
 import csheets.core.CellImpl;
 import csheets.core.Spreadsheet;
@@ -43,6 +45,8 @@ import lapr4.blue.s2.ipc.n1140822.fileShare.FileNameListDTO;
 import lapr4.blue.s2.ipc.n1140822.fileShare.HandlerFileDTO;
 import lapr4.blue.s2.ipc.n1140822.fileShare.HandlerFileNameDTO;
 import lapr4.blue.s2.ipc.n1140822.fileShare.HandlerFileNameListDTO;
+import lapr4.blue.s2.ipc.n1151031.searchnetwork.HandlerSearchWorkbookRequestDTO;
+import lapr4.blue.s2.ipc.n1151031.searchnetwork.SearchWorkbookRequestDTO;
 import lapr4.green.s1.ipc.n1150657.chat.ControllerConnection;
 import lapr4.green.s1.ipc.n1150657.chat.HandlerRequestMessageDTO;
 import lapr4.green.s1.ipc.n1150657.chat.MessageEvent;
@@ -201,7 +205,9 @@ public class CommExtension extends Extension implements Observer {
         HandlerCellContentDTO h8 = new HandlerCellContentDTO();
         h8.addObserver(this);
         tcpServer.addHandler(CellContentDTO.class, h8);
-        //TODO 
+        HandlerUserChatDTO hucp = new HandlerUserChatDTO();
+        tcpServer.addHandler(UserChatDTO.class, hucp);
+        //TODO
     }
 
     /**
@@ -210,9 +216,13 @@ public class CommExtension extends Extension implements Observer {
     private void addAllAvailableHandlersToUDPServer() {
         HandlerConnectionDetailsRequestDTO h1 = new HandlerConnectionDetailsRequestDTO();
         udpServer.addHandler(ConnectionDetailsRequestDTO.class, h1);
-        HandlerFileNameListDTO  h2 = new HandlerFileNameListDTO();
+        HandlerFileNameListDTO h2 = new HandlerFileNameListDTO();
         udpServer.addHandler(FileNameListDTO.class, h2);
-        //TODO 
+        HandlerUserChatDTO hucp = new HandlerUserChatDTO();
+        udpServer.addHandler(UserChatDTO.class, hucp);
+        HandlerSearchWorkbookRequestDTO h3 = new HandlerSearchWorkbookRequestDTO(uiController);
+        udpServer.addHandler(SearchWorkbookRequestDTO.class, h3);
+        //TODO
     }
 
     /**
@@ -229,6 +239,8 @@ public class CommExtension extends Extension implements Observer {
         tcpClientsManager.addHandler(ResponseWorkbookDTO.class, h3);
         HandlerFileDTO h6 = new HandlerFileDTO();
         tcpClientsManager.addHandler(FileDTO.class, h6);
+        HandlerUserChatDTO hucp = new HandlerUserChatDTO();
+        tcpClientsManager.addHandler(UserChatDTO.class, hucp);
         //HandlerResponseMessageDTO h4 = new HandlerResponseMessageDTO();
         //tcpClientsManager.addHandler(ResponseMessageDTO.class,h4);
         //tcpServer.addHandler(RequestMessageDTO.class, h4);
@@ -309,7 +321,7 @@ public class CommExtension extends Extension implements Observer {
                     try {
                         Cell cell = aSpreadSheet.getCell(cellDTO.getAddress());
                         cell.setContent(cellDTO.getContent());
-                        StylableCell stylableCell = (StylableCell)cell.getExtension(StyleExtension.NAME);
+                        StylableCell stylableCell = (StylableCell) cell.getExtension(StyleExtension.NAME);
                         if (stylableCell != null && cellDTO.getStyleDTO() != null) {
                             Styles.setStyleFromDTO(stylableCell, cellDTO.getStyleDTO());
                         }

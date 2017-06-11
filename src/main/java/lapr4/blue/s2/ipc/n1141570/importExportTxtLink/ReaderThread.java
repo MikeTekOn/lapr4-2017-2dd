@@ -54,6 +54,16 @@ public class ReaderThread implements Runnable {
     private final Thread readerThread;
 
     /**
+     * The current thread id.
+     */
+    private static long threadId = -1;
+
+    /**
+     * The is running boolean.
+     */
+    private static volatile boolean isRunning;
+
+    /**
      * Creates a new reader thread.
      *
      * @param fileToRead
@@ -70,6 +80,7 @@ public class ReaderThread implements Runnable {
         this.firstLineRepresentsHeaders = firstLineRepresentsHeaders;
         this.activeSpreadsheet = activeSpreadsheet;
 
+        isRunning = true;
         this.readerThread = new Thread(this);
         this.readerThread.start();
     }
@@ -77,7 +88,8 @@ public class ReaderThread implements Runnable {
     @Override
     public void run() {
 
-        while (true) {
+        threadId = Thread.currentThread().getId();
+        while (isRunning) {
             try {
                 System.out.println("I AM THE SYNCHRONIZATION THREAD!\n");
                 readData();
@@ -85,14 +97,34 @@ public class ReaderThread implements Runnable {
                 e.printStackTrace();
             }
 
-            //update every seconds
+            //update every 2 seconds
             try {
-                Thread.sleep(5000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+
+                //Thread.currentThread().wait(Long.MAX_VALUE);
+                // Thread.currentThread().interrupt();
             }
 
         }
+        threadId = -1;
+    }
+
+    /**
+     * Kills the current thread.
+     */
+    public static void kill() {
+        isRunning = false;
+    }
+
+    /**
+     * Obtains the current thread id.
+     *
+     * @return the current thread id
+     */
+    public static long obtainsThreadId() {
+        return ReaderThread.threadId;
     }
 
     /**
@@ -211,6 +243,5 @@ public class ReaderThread implements Runnable {
 
             }
         }
-
     }
 }

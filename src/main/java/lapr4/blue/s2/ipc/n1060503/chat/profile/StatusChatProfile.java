@@ -3,12 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr4.blue.s2.ipc.n1060503.chat;
+package lapr4.blue.s2.ipc.n1060503.chat.profile;
 
 /**
- *
+ * represnt the possible status of user chat profile
  * @author Pedro Fernandes
  */
-public class test {
-    
+public enum StatusChatProfile {
+    ONLINE,
+    OFFLINE
 }

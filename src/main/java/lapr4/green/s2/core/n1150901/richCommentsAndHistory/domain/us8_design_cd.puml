@@ -1,0 +1,19 @@
+@startuml us8_design_cd.png
+
+class CommentsWithHistoryUI {
+}
+
+class CommentsWithHistoryController {
+}
+
+class CommentsWithUserUI {
+}
+
+class AddCommentsWithUserController {
+}
+
+CommentsWithHistoryUI ..|> CommentsWithUserUI
+CommentsWithUserUI ..> CommentsWithHistoryController
+CommentsWithHistoryController ..|> AddCommentsWithUserController
+
+@enduml us8_design_cd.png

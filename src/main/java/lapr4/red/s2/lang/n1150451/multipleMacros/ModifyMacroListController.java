@@ -7,6 +7,7 @@ package lapr4.red.s2.lang.n1150451.multipleMacros;
 
 import csheets.core.Spreadsheet;
 import csheets.core.Workbook;
+import csheets.ui.ctrl.UIController;
 import java.util.List;
 
 /**
@@ -17,8 +18,9 @@ public class ModifyMacroListController {
 
     private MacroList macroList;
 
-    public List<MacroWithName> getMacroList(Workbook w) {
+    public List<MacroWithName> getMacroList(Workbook w, UIController uiC) {
         macroList = w.getMacroList();
+        macroList.setUIController(uiC);
         return macroList.getMacroList();
     }
 

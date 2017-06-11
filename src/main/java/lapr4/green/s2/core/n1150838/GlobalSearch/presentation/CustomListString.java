@@ -8,13 +8,12 @@ package lapr4.green.s2.core.n1150838.GlobalSearch.presentation;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.AbstractListModel;
-import lapr4.green.s2.core.n1150838.GlobalSearch.domain.CellInfoDTO;
 
 /**
  *
  * @author nunopinto
  */
-public class ListString  extends AbstractListModel 
+public class CustomListString  extends AbstractListModel 
 {
    
     /**
@@ -26,7 +25,7 @@ public class ListString  extends AbstractListModel
      */
     private String selected;
 
-    public ListString(ArrayList<String> type) {
+    public CustomListString(ArrayList<String> type) {
         this.typeList = type;
     }
 

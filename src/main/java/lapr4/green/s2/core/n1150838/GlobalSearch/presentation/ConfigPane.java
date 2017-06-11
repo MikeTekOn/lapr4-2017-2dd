@@ -35,26 +35,29 @@ import lapr4.green.s2.core.n1150838.GlobalSearch.application.GlobalSearchControl
 
 /**
  *
- * @author nunopinto
+ * @author Nuno Pinto 1150838
  */
 public class ConfigPane extends JDialog {
-    
-    private final Dimension dimension = new Dimension(700,300);
-    private ListString modelAvailableTypes;
+
+    private final Dimension dimension = new Dimension(700, 300);
+    private CustomListString modelAvailableTypes;
     private JList availableTypes;
-     private ListString modelSelectedTypes;
+    private CustomListString modelSelectedTypes;
     private JList selectedTypes;
-     private ListString modelFormulas;
+    private CustomListString modelFormulas;
     private JList formulas;
     private JTextField fieldFormulas;
     private GlobalSearchController ctrl;
     private JCheckBox commentsBox;
-    
-    
-    
-    public ConfigPane(GlobalSearchController ctrl){
-        super(new JFrame(),"Filters");
-        this.ctrl=ctrl;
+
+    /**
+     * Builds the config pane
+     *
+     * @param ctrl
+     */
+    public ConfigPane(GlobalSearchController ctrl) {
+        super(new JFrame(), "Filters");
+        this.ctrl = ctrl;
         initComponents();
         setPreferredSize(dimension);
         setModal(true);
@@ -62,35 +65,47 @@ public class ConfigPane extends JDialog {
         setLocationRelativeTo(null);
         setResizable(false);
     }
-    
-    public void initComponents(){
-        JPanel mainPanel = new JPanel(new GridLayout(2,1));
+
+    /**
+     * Initializes all the config pane elements
+     */
+    public void initComponents() {
         
-        JPanel typesPanelList  = new JPanel();
-        BoxLayout boxLayoutX = new BoxLayout(typesPanelList,BoxLayout.X_AXIS);
-        typesPanelList.add(listAvailableTypes());
-        typesPanelList.add(buttonAdd());
-        typesPanelList.add(listSelectedTypes());
-        typesPanelList.add(buttonRemove());
+        JPanel mainPanel = new JPanel(new GridLayout(3, 1));
+      BoxLayout mainBox = new BoxLayout(mainPanel,BoxLayout.Y_AXIS);
+        mainPanel.setLayout(mainBox);
+        //builds thewindow upper section
+        JPanel typesPanelList = new JPanel(new BorderLayout());
+        JPanel auxPanel = new JPanel();
+        auxPanel.add(listAvailableTypes());
+       auxPanel.add(buttonAdd());
+       auxPanel.add(listSelectedTypes());
+       auxPanel.add(buttonRemove());
+       typesPanelList.add(auxPanel,BorderLayout.CENTER);
+        //build the window center section
         JPanel formulas = new JPanel();
         JPanel formulasList = new JPanel();
-        BoxLayout boxLayoutY = new BoxLayout(formulas,BoxLayout.X_AXIS);
+
         formulasList.add(listFormulas());
         formulasList.add(buttonRemoveFormula());
-        formulas.setLayout(boxLayoutY);
         formulas.add(panelInsertFormula());
         formulas.add(formulasList);
-        
-        
+
         mainPanel.add(typesPanelList);
         mainPanel.add(formulas);
+        mainPanel.add(commentsBox());
         add(mainPanel);
-        
+
     }
-    
-    public JScrollPane listAvailableTypes(){
-        
-        modelAvailableTypes = new ListString(new ArrayList());
+
+    /**
+     * Builds the available cell types list
+     *
+     * @return
+     */
+    public JScrollPane listAvailableTypes() {
+
+        modelAvailableTypes = new CustomListString(new ArrayList());
         for (Enum type : Value.Type.values()) {
             modelAvailableTypes.addElement(type.toString());
         }
@@ -98,34 +113,40 @@ public class ConfigPane extends JDialog {
         availableTypes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         availableTypes.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Available Types: "));
         JScrollPane scrollPane = new JScrollPane(availableTypes);
-        scrollPane.setPreferredSize(new Dimension(200,100));
+        scrollPane.setPreferredSize(new Dimension(200, 100));
         return scrollPane;
     }
-        public JScrollPane listSelectedTypes(){
-        
-        modelSelectedTypes = new ListString(new ArrayList());
+
+    public JScrollPane listSelectedTypes() {
+
+        modelSelectedTypes = new CustomListString(new ArrayList());
         selectedTypes = new JList(modelSelectedTypes);
         selectedTypes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         selectedTypes.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Types to include: "));
         JScrollPane scrollPane = new JScrollPane(selectedTypes);
-        scrollPane.setPreferredSize(new Dimension(200,100));
+        scrollPane.setPreferredSize(new Dimension(200, 100));
         return scrollPane;
     }
 
+    /**
+     * Builds the button to add types.
+     *
+     * @return the button
+     */
     private JButton buttonAdd() {
         JButton buttonAdd = new JButton("Add");
         buttonAdd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String selectedType = (String) availableTypes.getSelectedValue();
-                if(selectedType!=null){
+                if (selectedType != null) {
                     modelSelectedTypes.addElement(selectedType);
                     modelAvailableTypes.removeElement(selectedType);
                     selectedTypes.updateUI();
                     availableTypes.updateUI();
-                    
-                }else{
-                     JOptionPane.showMessageDialog(null,
+
+                } else {
+                    JOptionPane.showMessageDialog(null,
                             "Select a type to add",
                             "Invalid selection",
                             JOptionPane.ERROR_MESSAGE);
@@ -134,20 +155,26 @@ public class ConfigPane extends JDialog {
         });
         return buttonAdd;
     }
+
+    /**
+     * Builds the button to removes types.
+     *
+     * @return the button
+     */
     private JButton buttonRemove() {
         JButton buttonRemove = new JButton("Remove");
         buttonRemove.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String selectedType = (String) selectedTypes.getSelectedValue();
-                if(selectedType!=null){
+                if (selectedType != null) {
                     modelAvailableTypes.addElement(selectedType);
                     modelSelectedTypes.removeElement(selectedType);
-                                        selectedTypes.updateUI();
+                    selectedTypes.updateUI();
                     availableTypes.updateUI();
-                    
-                }else{
-                     JOptionPane.showMessageDialog(null,
+
+                } else {
+                    JOptionPane.showMessageDialog(null,
                             "Select a type to remove",
                             "Invalid selection",
                             JOptionPane.ERROR_MESSAGE);
@@ -156,30 +183,40 @@ public class ConfigPane extends JDialog {
         });
         return buttonRemove;
     }
-    
-       public JScrollPane listFormulas(){
-        
-        modelFormulas = new ListString(new ArrayList());
+
+    /**
+     * Builds the formulas list
+     *
+     * @return the list
+     */
+    public JScrollPane listFormulas() {
+
+        modelFormulas = new CustomListString(new ArrayList());
         formulas = new JList(modelFormulas);
         formulas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         formulas.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Formulas to include: "));
         JScrollPane scrollPane = new JScrollPane(formulas);
-        scrollPane.setPreferredSize(new Dimension(200,100));
+        scrollPane.setPreferredSize(new Dimension(200, 100));
         return scrollPane;
     }
-    
-     private JButton buttonRemoveFormula() {
+
+    /**
+     * Builds the button to removes formulas.
+     *
+     * @return the button
+     */
+    private JButton buttonRemoveFormula() {
         JButton buttonRemove = new JButton("Remove");
         buttonRemove.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String selectedType = (String) formulas.getSelectedValue();
-                
-                if(selectedType!=null){
+
+                if (selectedType != null) {
                     modelFormulas.removeElement(selectedType);
                     formulas.updateUI();
-                }else{
-                     JOptionPane.showMessageDialog(null,
+                } else {
+                    JOptionPane.showMessageDialog(null,
                             "Select a formula to remove",
                             "Invalid selection",
                             JOptionPane.ERROR_MESSAGE);
@@ -188,33 +225,51 @@ public class ConfigPane extends JDialog {
         });
         return buttonRemove;
     }
-     private JPanel panelInsertFormula(){
+
+    /**
+     * Builds the button to insert formulas 
+     *
+     * @return the button
+     */
+    private JPanel panelInsertFormula() {
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        JPanel panel = new JPanel();
+
+        fieldFormulas = new JTextField();
+        fieldFormulas.setPreferredSize(new Dimension(120, 30));
+        panel.add(new JLabel("Insert formulas:"));
+        panel.add(fieldFormulas);
+        panel.add(buttonAddFormula());
+        mainPanel.add(panel, BorderLayout.WEST);
+        return mainPanel;
+    }
+    /**
+     * builds the ceckbox to activate the comments
+     * @return 
+     */
+    private JPanel commentsBox(){
          JPanel mainPanel = new JPanel(new BorderLayout());
-         JPanel panel = new JPanel();
-      
-         fieldFormulas = new JTextField();
-         fieldFormulas.setPreferredSize(new Dimension(120,30));
-         panel.add(new JLabel("Insert formulas:"));
-         panel.add(fieldFormulas);
-         panel.add(buttonAddFormula());
-         mainPanel.add(panel,BorderLayout.CENTER);
-         commentsBox = new JCheckBox("Include comments");
-         mainPanel.add(commentsBox,BorderLayout.SOUTH);
-         
-         return mainPanel;
-     }
-     
-         private JButton buttonAddFormula() {
+          commentsBox = new JCheckBox("Include comments");
+         mainPanel.add(commentsBox, BorderLayout.SOUTH);
+          return mainPanel;
+    }
+
+    /**
+     * Builds the button to add formulas.
+     *
+     * @return the button
+     */
+    private JButton buttonAddFormula() {
         JButton buttonAdd = new JButton("Add");
         buttonAdd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String formula = fieldFormulas.getText();
                 try {
-                    if(formula.length()!=0 && ctrl.validateFormula(formula)){
+                    if (formula.length() != 0 && fieldFormulas.getText().startsWith("=") && ctrl.validateFormula(formula) ) {
                         modelFormulas.addElement(formula);
                         formulas.updateUI();
-                    }else{
+                    } else {
                         JOptionPane.showMessageDialog(null,
                                 "Write a formula to add",
                                 "Invalid selection",
@@ -222,25 +277,37 @@ public class ConfigPane extends JDialog {
                     }
                 } catch (FormulaCompilationException | IllegalValueTypeException ex) {
                     JOptionPane.showMessageDialog(null,
-                                "Invalid Formula!",
-                                "Invalid Formula",
-                                JOptionPane.ERROR_MESSAGE);
+                            "Invalid Formula!",
+                            "Invalid Formula",
+                            JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
         return buttonAdd;
     }
-         
-    public List<String> typesToInclude(){
-      return modelSelectedTypes.getValues();
+
+    /**
+     *
+     * @return the types to include in the search
+     */
+    public List<String> typesToInclude() {
+        return modelSelectedTypes.getValues();
     }
-    
-    public List<String> formulasToInclude(){
+
+    /**
+     *
+     * @return the formulas to include in the search
+     */
+    public List<String> formulasToInclude() {
         return modelFormulas.getValues();
     }
-    
-    public boolean includeComments(){
+
+    /**
+     *
+     * @return true if the comments are to be included in the search
+     */
+    public boolean includeComments() {
         return commentsBox.isSelected();
     }
-    
+
 }
