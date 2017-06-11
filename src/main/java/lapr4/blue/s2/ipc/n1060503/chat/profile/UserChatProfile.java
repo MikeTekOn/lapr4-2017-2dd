@@ -86,7 +86,7 @@ public class UserChatProfile implements AggregateRoot<Long>, Serializable{
      * @return changed user chat profile
      * @throws java.net.MalformedURLException
      */
-    public UserChatProfile changeInfo(String nickname, String image_path, 
+    public UserChatProfile changeInfo(String nickname,
             StatusChatProfile status) throws  MalformedURLException, IOException {
         if (status == null) {
             throw new IllegalStateException("Invalid status");
@@ -94,13 +94,11 @@ public class UserChatProfile implements AggregateRoot<Long>, Serializable{
         if(Strings.isNullOrEmpty(nickname)){
             throw new IllegalStateException("Invalid nickname");
         }
-
         if(!this.setStatus(status)){
             throw new IllegalStateException("Invalid status");
         }
-        changeIcon(image_path);
        
-        this.nickname = nickname;
+        this.setNickname(nickname);
 
         return this;
     }
@@ -110,7 +108,7 @@ public class UserChatProfile implements AggregateRoot<Long>, Serializable{
      * @param image_path icon or image path
      * @return the new icon or imagem of user chat
      */
-    private void changeIcon(String image_path) throws  MalformedURLException, IOException{
+    public void changeIcon(String image_path) throws  MalformedURLException, IOException{
         
         File file;
         URL url =  UserChatProfile.class.getResource("res/img/default_icon.png");
@@ -191,7 +189,18 @@ public class UserChatProfile implements AggregateRoot<Long>, Serializable{
         return this.nickname + this.status;
     }
     
+    /**
+     * 
+     * @return image icon of user chat
+     */
     public ImageIcon getImage(){
         return this.icon;
+    }
+
+    /**
+     * @param nickname the nickname to set
+     */
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 }

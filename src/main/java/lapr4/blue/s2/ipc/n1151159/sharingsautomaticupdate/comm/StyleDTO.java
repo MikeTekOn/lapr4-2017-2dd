@@ -1,4 +1,4 @@
-package lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate;
+package lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.comm;
 
 import eapli.framework.dto.DTO;
 

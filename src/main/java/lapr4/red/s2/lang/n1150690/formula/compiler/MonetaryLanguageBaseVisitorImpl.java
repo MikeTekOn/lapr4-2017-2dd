@@ -71,7 +71,7 @@ public class MonetaryLanguageBaseVisitorImpl extends MonetaryLanguageBaseVisitor
     public Expression visitCurrency(MonetaryLanguageParser.CurrencyContext ctx) {
         currency = ctx.getText();
         String firstLetter = currency.substring(0, 1);
-        currency = firstLetter.toUpperCase() + currency.substring(1).toLowerCase();
+        currency = firstLetter.toUpperCase() + currency.substring(1);
         if (currency.equals("Euro")) {
             coin = "€";
         }
@@ -90,11 +90,11 @@ public class MonetaryLanguageBaseVisitorImpl extends MonetaryLanguageBaseVisitor
     @Override
     public Expression visitExpression(MonetaryLanguageParser.ExpressionContext ctx) {
         BinaryOperator operator = null;
-        
-        if(ctx.getChildCount() == 1){
+
+        if (ctx.getChildCount() == 1) {
             return visitChildren(ctx);
         }
-        
+
         if (ctx.op != null) {
             try {
                 operator = Language.getInstance().getBinaryOperator(ctx.op.getText());
@@ -102,11 +102,11 @@ public class MonetaryLanguageBaseVisitorImpl extends MonetaryLanguageBaseVisitor
                 addVisitError(ex.getMessage());
             }
         }
-        
+
         if (ctx.NUMBER() != null) {
             return new BinaryOperation(visit(ctx.getChild(1)), operator, new MonetaryValue(new BigDecimal(ctx.NUMBER().getText())));
         }
-        
+
         if (ctx.LPAR() != null && ctx.RPAR() != null) {
             return new BinaryOperation(visit(ctx.getChild(1)), operator, visit(ctx.getChild(4)));
             //Literal result = new Literal(o.evaluate());
@@ -123,35 +123,31 @@ public class MonetaryLanguageBaseVisitorImpl extends MonetaryLanguageBaseVisitor
     @Override
     public Expression visitValue(MonetaryLanguageParser.ValueContext ctx) {
         Token t = (Token) ctx.getChild(0).getPayload();
-        
+
         if (t.getType() == MonetaryLanguageParser.NUMBER) {
             return new MonetaryValue(new BigDecimal(ctx.getText()));
-        }else{
-            String number = ctx.NUMBER_FOR_COIN().getText();
-            number += ctx.getChild(0).getChild(0).getText();
-            return new MonetaryValue(new BigDecimal(treatNumber(number)));
+        } else {
+            String number = ctx.getText();
+            String treatedNumber = treatNumber(number.substring(0, number.length() - 1), number.substring(number.length() - 1));
+            return new MonetaryValue(new BigDecimal(treatedNumber));
         }
     }
- 
-   
+
     /**
      *
      * @param n
      * @return
      */
-    private String treatNumber(String n) {
+    private String treatNumber(String n, String currentCoin) {
         int size = n.length();
-        String currentCoin = n.substring(size - 1).trim();
-        if (currentCoin.equals("€") || currentCoin.equals("$") || currentCoin.equals("£")) {
-            if (!currentCoin.equals(coin)) {
-                String factor = factorToConvert(currentCoin);
-                MonetaryConvertion conversion = new MonetaryConvertion();
-                return conversion.convertTo(n.substring(0, size - 1), new BigDecimal(factor)).toString();
-            }
-            return new BigDecimal(n.substring(0, size - 1)).toString();
+        if (!currentCoin.equals(coin)) {
+            String factor = factorToConvert(currentCoin);
+            MonetaryConvertion conversion = new MonetaryConvertion();
+            return conversion.convertTo(n.substring(0, size - 1), new BigDecimal(factor)).toString();
         }
-        return new BigDecimal(n).toString();
+        return new BigDecimal(n.substring(0, size - 1)).toString();
     }
+
 
     /**
      * Adds a given message to the visit error.
@@ -170,6 +166,15 @@ public class MonetaryLanguageBaseVisitorImpl extends MonetaryLanguageBaseVisitor
      */
     private String factorToConvert(String currentCoin) {
         String exchange = "";
+        if(currentCoin.contains("\\u20AC")){
+            currentCoin = currentCoin.replaceAll("\\u20AC", "€");
+        }
+        if(currentCoin.contains("\\u0024")){
+            currentCoin = currentCoin.replaceAll("\\u0024", "$");
+        }
+        if(currentCoin.contains("\\u00A3")){
+            currentCoin = currentCoin.replaceAll("\\u00A3", "£");
+        }
         if (currentCoin.equals("€")) {
             exchange = currency + "ToEuro";
         }

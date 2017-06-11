@@ -38,6 +38,7 @@ import csheets.core.formula.util.ReferenceTransposer;
 import csheets.ext.CellExtension;
 import csheets.ext.Extension;
 import csheets.ext.ExtensionManager;
+import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.StyleListener;
 
 /**
  * The implementation of the <code>Cell</code> interface.
@@ -73,8 +74,11 @@ public class CellImpl implements Cell {
 	private transient List<CellListener> listeners
 		= new ArrayList<CellListener>();
 
+	/** The style listeners that have beens registered on the cell */
+	private transient List<StyleListener> styleListeners = new ArrayList<>();
+
 	/** The cell extensions that have been instantiated */
-	private transient Map<String, CellExtension> extensions = 
+	private transient Map<String, CellExtension> extensions =
 		new HashMap<String, CellExtension>();
 
 	/**
@@ -147,6 +151,22 @@ public class CellImpl implements Cell {
 		// Checks for change
 		if (!newValue.equals(oldValue))
 			fireValueChanged();
+	}
+
+    /**
+     * Sets the style changed.
+     */
+	public void setStyleChanged() {
+		fireStyleChanged();
+	}
+
+    /**
+     * Notifies all registered listeners that the style of the cell changed.
+     */
+	private void fireStyleChanged() {
+		for (StyleListener listener: styleListeners) {
+			listener.styleModified(this);
+		}
 	}
 
 	/**
@@ -320,7 +340,7 @@ public class CellImpl implements Cell {
 		// Change the address of the source cell
 		// Remove the target cell from the spreadsheet
 		// Flag the target cell as overwritten!
-		
+
 		// fireCellCopied(source);
 	}
 
@@ -346,6 +366,24 @@ public class CellImpl implements Cell {
 	public void removeCellListener(CellListener listener) {
 		listeners.remove(listener);
 	}
+
+    /**
+     * Adds a given style listener.
+     *
+     * @param styleListener style listener to be added
+     */
+	public void addStyleListener(StyleListener styleListener) {
+	    styleListeners.add(styleListener);
+    }
+
+    /**
+     * Removes a given style listener.
+     *
+     * @param styleListener style listener to be removed
+     */
+    public void removeStyleListener(StyleListener styleListener) {
+        styleListeners.remove(styleListener);
+    }
 
 	public CellListener[] getCellListeners() {
 		return listeners.toArray(new CellListener[listeners.size()]);

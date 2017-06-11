@@ -262,6 +262,25 @@
  *
  *
  *
+ * <h3>Saturday 10/06/2017</h3>
+ *
+ * <p>Yesterday I've worked on:</p>
+ * <ol>
+ *     <li>Implementation</li>
+ * </ol>
+ *
+ * <p><b>Today</b></p>
+ * <ol>
+ *     <li>Implementation</li>
+ * </ol>
+ *
+ * <p><b>Blocking:</b></p>
+ * <ol>
+ *     <li>Nothing.</li>
+ * </ol>
+ *
+ *
+ *
  * @author Ivo Ferro [1151159]
  */
 package lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate;

@@ -25,6 +25,7 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lapr4.red.s2.lang.n1150451.multipleMacros.MacroWithName;
+import lapr4.red.s2.lang.n1150451.multipleMacros.application.MultipleMacrosWithNameController;
 
 /**
  * Represents a dialog to execute macros.
@@ -45,7 +46,7 @@ public class MacroDialog extends JDialog {
     /**
      * The macro controller.
      */
-    private MacroController macroController = new MacroController();
+    private MultipleMacrosWithNameController macroController = new MultipleMacrosWithNameController();
 
     /* UI Components */
     private JRadioButton macroLanguageRadioButton;
@@ -136,11 +137,14 @@ public class MacroDialog extends JDialog {
      */
     private JPanel createMacroTextAreaPanel() {
         JPanel macroTextAreaPanel = new JPanel(new BorderLayout());
-
+        
         comboBox = new JComboBox<>();
+        String macroText = macroController.getDefaultMacro();
+        comboBox.addItem(new MacroWithName("default", macroText, uiController.getActiveSpreadsheet(), uiController));
         for (MacroWithName macroWithName : uiController.getActiveWorkbook().getMacroList().getMacroList()) {
             comboBox.addItem(macroWithName);
         }
+         comboBox.setSelectedIndex(-1);
         comboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -225,7 +229,7 @@ public class MacroDialog extends JDialog {
                             Value value = null;
                             try {
                                 value = macroController.executeMacro(uiController.getActiveSpreadsheet(), uiController, macroText, name);
-                                if (value==null) System.out.println("ola!!!");
+                                if (value==null) return;
                             } catch (NullPointerException e) {
                                 JOptionPane.showMessageDialog(rootPane, "Recursivity found.");
                                 return;
