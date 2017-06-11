@@ -55,4 +55,20 @@ public class CustomUtil {
             return (long) bos.size();
         }
     }
+
+    /**
+     * Creates a string with a human readable scale to represent a size in bytes (ex. 5 MB or 6 kB)
+     *
+     * @param bytes the size in bytes to convert
+     * @param si    the SI unit to use (Standard: 1000 bytes vs Binary 1024)
+     * @return the string representation of the size
+     */
+    public static String readableByteCount(long bytes, boolean si) {
+
+        int unit = si ? 1000 : 1024;
+        if (bytes < unit) return bytes + " B";
+        int exp = (int) (Math.log(bytes) / Math.log(unit));
+        String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
+        return String.format("%.1f %sB", (bytes / Math.pow(unit, exp)), pre);
+    }
 }
