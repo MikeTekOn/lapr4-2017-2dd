@@ -67,7 +67,7 @@ public class Workbook implements Iterable<Spreadsheet>, Serializable {
     /**
      * Macro list of the workbook.
      */
-    private MacroList macroList = new MacroList();
+    private MacroList macroList;
     /**
      * The number of spreadsheets that have been created in the workbook
      */
@@ -80,6 +80,17 @@ public class Workbook implements Iterable<Spreadsheet>, Serializable {
      */
     public Workbook() {
     }
+
+    /**
+	 * Creates a new workbook, using the given content matrix to create
+	 * spreadsheets initially.
+	 * @param contents the content matrices to use when creating spreadsheets
+	 */
+	public Workbook(String[][]... contents) {
+		for (String[][] content : contents)
+			spreadsheets.add(new SpreadsheetImpl(this,
+				getNextSpreadsheetTitle()));
+	}
 
     /**
      * Creates a new workbook, which initially contains the given number of

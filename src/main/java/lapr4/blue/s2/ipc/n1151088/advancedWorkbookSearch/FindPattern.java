@@ -29,7 +29,7 @@ public class FindPattern {
             Path pathName=file.getFileName();
             if(pathName!=null && matcher.matches(pathName)){
                 FileDTO dto = new FileDTO(pathName.getFileName().toString(), pathName.toString());
-                FindWorkbooksPublisher.getInstance().notifyObservers(dto);
+               // FindWorkbooksPublisher.getInstance().notifyObservers(dto);
             }
             
         }

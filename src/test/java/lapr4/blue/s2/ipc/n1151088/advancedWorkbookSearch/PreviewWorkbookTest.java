@@ -51,7 +51,7 @@ public class PreviewWorkbookTest {
         Workbook workbook =  app.getWorkbooks()[0];
         PreviewWorkbook instance = new PreviewWorkbook(workbook);
         
-        int expResult = 3;
+        int expResult = 2;
         int result = instance.nrSpreadSheetsFilled();
         assertEquals(expResult, result);
     }

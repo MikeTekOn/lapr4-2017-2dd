@@ -1,7 +1,5 @@
 package lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch;
 
-import lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.PreviewWorkbookBuilder;
-import lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.PreviewWorkbook;
 import csheets.CleanSheets;
 import csheets.core.Address;
 import csheets.core.Cell;
@@ -54,20 +52,16 @@ public class PreviewWorkbookBuilderTest {
     public void testBuildPreviewAreaOneSpreadsheet() throws IllegalValueTypeException {
         System.out.println("buildPreviewArea");
  
-        Workbook workbook =  app.getWorkbooks()[0];
-        
-        PreviewWorkbookBuilder instance=new PreviewWorkbookBuilder(workbook);
-        
         //Only the first row of cells
-        String[][] contentSheet1={{"testA1","5","3","2"}};
+        String[][] contentSheet1={{"testA1","=5","=3","=2"}};
+        Workbook test=new Workbook();
+        test.addSpreadsheet(contentSheet1);
+        test.addSpreadsheet();
        
-        Workbook workbookTest=new Workbook(contentSheet1);
-       workbookTest.addSpreadsheet();
-       workbookTest.addSpreadsheet();
-       workbookTest.addSpreadsheet();
-    
-        PreviewWorkbook expResult = new PreviewWorkbook(workbookTest);
-        PreviewWorkbook result = new PreviewWorkbook(workbookTest);
+        PreviewWorkbookBuilder instance=new PreviewWorkbookBuilder(app.getWorkbooks()[0]);
+        PreviewWorkbook result=instance.previewWorkbook();        
+       PreviewWorkbook expResult = new PreviewWorkbook(test);
+         
         assertEquals(expResult, result);
 
     }
@@ -87,20 +81,21 @@ public class PreviewWorkbookBuilderTest {
         
         Workbook workbookTest =  app.getWorkbooks()[0];
        workbookTest.addSpreadsheet();
-       workbookTest.addSpreadsheet();
-       workbookTest.addSpreadsheet();
        
-        PreviewWorkbookBuilder instance=new PreviewWorkbookBuilder(workbookTest);
-        
         //Only the first row of cells
-        String[][] content={{"testA1","5","3","2"}};
+        String[][] contentSheet1={{"testA1","=5","=2+1","=2"}};
+        String[][] contentSheet2={{"=2"}};
   
-        workbookTest.getSpreadsheet(1).getCell(4, 1).setContent(contentAnotherSheet);
-    
+        Workbook test=new Workbook();
+        test.addSpreadsheet(contentSheet1);
+        test.addSpreadsheet(contentSheet2);
+        test.addSpreadsheet();
         PreviewWorkbook expResult = new PreviewWorkbook(workbookTest);
-        PreviewWorkbook result = new PreviewWorkbook(workbookTest);
-        assertEquals(expResult, result);
         
+        PreviewWorkbookBuilder instance=new PreviewWorkbookBuilder(app.getWorkbooks()[0]);
+        PreviewWorkbook result=instance.previewWorkbook();        
+  
+        assertEquals(expResult, result);   
     }
     
 }
