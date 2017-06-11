@@ -10,8 +10,8 @@ import csheets.core.Workbook;
 import csheets.ui.ctrl.UIController;
 import lapr4.s1.export.ExportContext;
 
-import lapr4.green.s2.core.n1150800.PDFStyle.domain.ExportStylePDF;
-import lapr4.green.s2.core.n1150800.PDFStyle.domain.WorkbookWithStylesHandler;
+import lapr4.green.s2.core.n1150800.PDFStyle.ExportStylePDF;
+import lapr4.green.s2.core.n1150800.PDFStyle.WorkbookWithStylesHandler;
 
 /**
  *

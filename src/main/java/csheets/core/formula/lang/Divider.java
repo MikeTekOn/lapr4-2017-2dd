@@ -43,7 +43,7 @@ public class Divider implements BinaryOperator {
 	public Value applyTo(Expression leftOperand, Expression rightOperand) throws IllegalValueTypeException {
 		//updated to realize divisions with values in BigDecimal
                 BigDecimal divisor = new BigDecimal(rightOperand.evaluate().toDouble());
-		if (divisor.doubleValue() != 0)
+		if (divisor.compareTo(BigDecimal.ZERO) == 0)
 			return new Value(new BigDecimal(leftOperand.evaluate().toDouble()).divide(divisor));
 		else
 			return new Value(new DivisionByZeroException(rightOperand));

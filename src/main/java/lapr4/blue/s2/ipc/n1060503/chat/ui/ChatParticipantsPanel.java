@@ -78,7 +78,7 @@ public class ChatParticipantsPanel extends JPanel {
     /**
      * The button to connect to a peer.
      */
-    private JButton btMessage;
+    private JButton btConnect;
     
     private UserChatListTable table;
     
@@ -157,29 +157,23 @@ public class ChatParticipantsPanel extends JPanel {
      */
     private JPanel createNetworkBottomButtonsPanel() {
         final String searchBtText = "Turn On / Search";
-        final String newMessageBtText = "New Message";
+        final String connectBtText = "Connect";
         final String changeProfile = "Change Profile";
         final int allignment = FlowLayout.CENTER;
         final JPanel panel = new JPanel(new GridLayout(1, 2));
         final JPanel p1 = new JPanel(new FlowLayout(allignment));
         final JPanel p2 = new JPanel(new FlowLayout(allignment));
-        final JPanel p3 = new JPanel(new BorderLayout());
+        final JPanel p3 = new JPanel(new FlowLayout(allignment));
         btSearch = new JButton(searchBtText);
-        btMessage = new JButton(newMessageBtText);
+        btConnect = new JButton(connectBtText);
         btChangeProfile = new JButton(changeProfile);
-        final JPanel p4 = new JPanel(new FlowLayout(allignment));
-        p4.add(btChangeProfile);
-        
         p1.add(btSearch);
-        p2.add(btMessage);
-        
+        p2.add(btConnect);
+        p3.add(btChangeProfile);
         panel.add(p1);
         panel.add(p2);
-        
-        p3.add(panel, BorderLayout.CENTER);
-        p3.add(p4, BorderLayout.SOUTH);
-        
-        return p3;
+        panel.add(p3);
+        return panel;
     }
     
     /**
@@ -187,7 +181,7 @@ public class ChatParticipantsPanel extends JPanel {
      */
     private void createInteractions() {
         btSearch.addActionListener(new ChatParticipantsPanel.SearchUserAction());
-        btMessage.addActionListener(new ChatParticipantsPanel.ConnectAction());
+        btConnect.addActionListener(new ChatParticipantsPanel.ConnectAction());
         btChangeProfile.addActionListener(new ChatParticipantsPanel.ChangeProfileAction());
     }
     

@@ -109,7 +109,6 @@ public class ShareFrame extends JFrame implements Observer {
         menu.add(itemChangeDownload);
         menu.add(itemChangeShared);
         String[] columnNames = {"File name", "Host", "File size"};
-        String[] columnNamesDL = {"File name", "Host", "File size", "State"};
         table = new JTable();
         dlTable = new JTable();
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -130,7 +129,7 @@ public class ShareFrame extends JFrame implements Observer {
             }
 
         });
-        dlTableModel = new DefaultTableModel(columnNamesDL, 0);
+        dlTableModel = new DefaultTableModel(columnNames, 0);
         tableModel = new DefaultTableModel(columnNames, 0);
         table.setModel(tableModel);
         dlTable.setModel(dlTableModel);
@@ -143,7 +142,7 @@ public class ShareFrame extends JFrame implements Observer {
         JScrollPane scrollPane = new JScrollPane(table);
 
         JScrollPane scrollPane2 = new JScrollPane(dlTable);
-
+        
         tabs.add(scrollPane);
         tabs.add(scrollPane2);
         tabs.setTitleAt(0, "Files shared with you");
@@ -167,19 +166,12 @@ public class ShareFrame extends JFrame implements Observer {
     @Override
     public void update(Observable o, Object arg) {
         boolean update = true;
-        int removeIndex = -1;
         if (o instanceof HandlerFileNameListDTO) {
 
             for (String fileName : ((FileNameListDTO) arg).filesMap().keySet()) {
                 for (int i = 0; i < tableModel.getDataVector().size(); i++) {
                     if (tableModel.getValueAt(i, 0).equals(fileName) && tableModel.getValueAt(i, 1).equals(((FileNameListDTO) arg).connID())) {
-                        if (tableModel.getValueAt(i, 2).equals(((FileNameListDTO) arg).filesMap().get(fileName) + " bytes")) {
-                            update = false;
-                        } else {
-                               tableModel.removeRow(i);
-                               break;
-                        }
-
+                        update = false;
                     }
                 }
                 if (update) {
@@ -188,24 +180,11 @@ public class ShareFrame extends JFrame implements Observer {
                     rowData[1] = ((FileNameListDTO) arg).connID();
                     rowData[2] = (((FileNameListDTO) arg).filesMap().get(fileName)) + " bytes";
                     tableModel.addRow(rowData);
-                    for (int row = 0; row < dlTable.getRowCount(); row++) {
-                        if (dlTableModel.getValueAt(row, 0).equals(fileName) && dlTableModel.getValueAt(row, 1).equals("/" + ((FileNameListDTO) arg).connID().toString())) {
-                            if (!dlTableModel.getValueAt(row, 2).equals(rowData[2].toString())) {
-                                dlTableModel.setValueAt("OUTDATED", row, 3);
-                                  dlTable.setModel(dlTableModel);
-                            } else {
-                                dlTableModel.setValueAt("UP-TO-DATE", row, 3);
-                                  dlTable.setModel(dlTableModel);
-                            }
-                        }
-                    }
+                    update = true;
                 }
-                update=true;
             }
             table.setModel(tableModel);
-          
         }
-
     }
 
     public JButton createDownloadButton() {
@@ -217,11 +196,6 @@ public class ShareFrame extends JFrame implements Observer {
                 if (table.getSelectedRow() != -1) {
                     shareController = new FileSharingController((ConnectionID) tableModel.getValueAt(table.getSelectedRow(), 1));
                     shareController.requestFile((String) tableModel.getValueAt(table.getSelectedRow(), 0));
-                    try {
-                        fillDownloadTable();
-                    } catch (IOException ex) {
-                        Logger.getLogger(ShareFrame.class.getName()).log(Level.SEVERE, null, ex);
-                    }
                 } else {
                     JOptionPane.showMessageDialog(ShareFrame.this, "Please select a file to download", "Error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -232,7 +206,6 @@ public class ShareFrame extends JFrame implements Observer {
     }
 
     public void fillDownloadTable() throws IOException {
-        dlTableModel.setRowCount(0);
         Map<String, Integer> tempMap = new LinkedHashMap<>();
         File folder = new File(ShareConfiguration.getDownloadFolder());
         folder.mkdirs();
@@ -245,11 +218,10 @@ public class ShareFrame extends JFrame implements Observer {
             String realHost = Charset.defaultCharset().decode(buf).toString();
             String fileName = file.getName();
             int fileSize = Files.readAllBytes(file.toPath()).length;
-            Object[] rowData = new Object[4];
+            Object[] rowData = new Object[3];
             rowData[0] = fileName;
             rowData[1] = realHost;
             rowData[2] = fileSize + " bytes";
-            rowData[3] = "----";
             dlTableModel.addRow(rowData);
             dlTable.setModel(dlTableModel);
         }

@@ -1,20 +1,16 @@
 package lapr4.blue.s2.ipc.n1060503.chat.ui;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableCellRenderer;
 import lapr4.blue.s2.ipc.n1060503.chat.connection.UserChatDTO;
 
 /**
@@ -49,47 +45,23 @@ public class UserChatListTable extends JPanel implements Observer {
     private void createUserInterface() {
         final int bottomUpPadding = 5;
         final int sidesPadding = 20;
-        final Dimension size = new Dimension(400, 200);
+        final Dimension size = new Dimension(400, 250);
 
         setLayout(new GridLayout(1, 1));
         table = new JTable(model) {
             @Override
             public Class getColumnClass(int column) {
-                return (column == 0) ? Icon.class : String.class;
+                return (column == 0) ? Icon.class : Object.class;
             }
         };
         table.setAutoCreateRowSorter(true);
-        DefaultTableCellRenderer centerRender = new DefaultTableCellRenderer();
-        centerRender.setHorizontalAlignment(SwingConstants.CENTER);
-        ImageRenderer imgRender = new ImageRenderer();
-        imgRender.setHorizontalAlignment(SwingConstants.CENTER);
-        table.getColumnModel().getColumn(0).setCellRenderer(imgRender);
-        table.getColumnModel().getColumn(1).setCellRenderer(centerRender);
-        table.getColumnModel().getColumn(2).setCellRenderer(centerRender);
-        table.getColumnModel().getColumn(0).setPreferredWidth(20);
-        table.getColumnModel().getColumn(1).setPreferredWidth(70);
-        table.getColumnModel().getColumn(2).setPreferredWidth(20);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setFillsViewportHeight(false);
         table.setPreferredScrollableViewportSize(size);
-        table.setRowHeight(30);
-        table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        table.setRowHeight(60);
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBorder(BorderFactory.createEmptyBorder(bottomUpPadding, sidesPadding, bottomUpPadding, sidesPadding));
         add(scrollPane);
-    }
-
-    class ImageRenderer extends DefaultTableCellRenderer {
-
-        JLabel lbl = new JLabel();
-        
-        @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-                boolean hasFocus, int row, int column) {
-
-            lbl.setIcon((Icon) value);
-            return lbl;
-        }
     }
 
     /**

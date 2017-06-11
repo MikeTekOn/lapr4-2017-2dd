@@ -28,11 +28,6 @@ public class FileNameListDTO extends Observable implements Serializable {
 
     }
 
-    
-    public int tcpPort()
-    {
-        return this.tcpPort;
-    }
     public Map<String, Integer> filesMap() {
         return this.fileDataMap;
     }

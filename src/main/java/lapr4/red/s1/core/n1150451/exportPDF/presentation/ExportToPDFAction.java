@@ -13,8 +13,8 @@ import csheets.ui.ctrl.UIController;
 import java.awt.event.ActionEvent;
 import static javax.swing.Action.SMALL_ICON;
 import javax.swing.ImageIcon;
-import lapr4.green.s2.core.n1150800.PDFStyle.domain.ExportStylePDFThread;
-import lapr4.green.s2.core.n1150800.PDFStyle.presentation.ExportStylePDFUI;
+import lapr4.green.s2.core.n1150800.PDFStyle.ExportStylePDFThread;
+import lapr4.green.s2.core.n1150800.PDFStyle.ExportStylePDFUI;
 
 /**
  * @author Sofia Silva [1150690@isep.ipp.pt]
