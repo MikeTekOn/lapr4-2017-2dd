@@ -6,6 +6,7 @@
 package lapr4.white.s1.core.n4567890.contacts.persistence;
 
 import eapli.framework.persistence.DataIntegrityViolationException;
+import lapr4.green.s2.core.n1150738.contacts.domain.CompanyContact;
 import lapr4.white.s1.core.n4567890.contacts.domain.Contact;
 import eapli.framework.persistence.repositories.Repository;
 
@@ -24,4 +25,7 @@ public interface ContactRepository extends Repository<Contact, Long> {
      * @return list of found contacts
      */
     List<Contact> findByRegex(String regexPattern);
+
+
+    Iterable<Contact> allRelatedToCompany(CompanyContact c);
 }

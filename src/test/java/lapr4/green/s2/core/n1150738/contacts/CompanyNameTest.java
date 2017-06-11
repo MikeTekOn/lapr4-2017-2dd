@@ -1,6 +1,6 @@
-package lapr4.green.s2.core.n1150738.contacts.company;
+package lapr4.green.s2.core.n1150738.contacts;
 
-import lapr4.green.s2.core.n1150738.contacts.company.domain.CompanyName;
+import lapr4.green.s2.core.n1150738.contacts.domain.CompanyName;
 import org.junit.Test;
 
 /**

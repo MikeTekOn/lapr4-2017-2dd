@@ -1,7 +1,8 @@
-package lapr4.green.s2.core.n1150738.contacts.company.domain;
+package lapr4.green.s2.core.n1150738.contacts.domain;
 
 
 import eapli.framework.domain.AggregateRoot;
+import org.eclipse.persistence.annotations.PrimaryKey;
 
 import javax.persistence.*;
 
@@ -12,6 +13,10 @@ import javax.persistence.*;
  */
 @Entity
 public class CompanyContact implements AggregateRoot<CompanyName> {
+
+    @Id
+    @GeneratedValue
+    private Long pk;
 
     /**
      * The name of the Company

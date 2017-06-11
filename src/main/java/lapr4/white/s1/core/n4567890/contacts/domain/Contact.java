@@ -11,6 +11,8 @@ package lapr4.white.s1.core.n4567890.contacts.domain;
  */
 //import eapli.framework.domain.AggregateRoot;
 import eapli.framework.domain.AggregateRoot;
+import lapr4.green.s2.core.n1150738.contacts.domain.CompanyContact;
+import lapr4.green.s2.core.n1150738.contacts.domain.Profession;
 
 import java.io.Serializable;
 import javax.persistence.CascadeType;
@@ -55,11 +57,15 @@ public class Contact implements AggregateRoot<Long>, Serializable {
     @OneToOne(cascade = CascadeType.ALL) //(cascade = CascadeType.MERGE)
     private Agenda agenda=null;
 
+    private CompanyContact companyContact = null;
+
+    private Profession profession = null;
+
     protected Contact() {
         // for ORM
     }
 
-    public Contact(final String name, final String firstName, final String lastName, String photo, String address, String email, String phone) {
+    public Contact(final String name, final String firstName, final String lastName, String photo, String address, String email, String phone, Profession profession, CompanyContact companyContact) {
         if (name.isEmpty()|firstName.isEmpty()|lastName.isEmpty()|phone.isEmpty()
                 |address.isEmpty()|email.isEmpty()|email==null|phone==null|address==null
                 |name==null|firstName==null|lastName==null){
@@ -76,8 +82,13 @@ public class Contact implements AggregateRoot<Long>, Serializable {
         this.phone=phone;
         this.email=email;
         this.agenda=new Agenda();
+        this.companyContact = companyContact;
+        this.profession = profession;
     }
-    
+
+    public Contact(final String name, final String firstName, final String lastName, String photo, String address, String email, String phone) {
+        this(name,firstName,lastName,photo,address,email, phone,null,null);
+    }
     @Override
     public String toString() {
         if (this.name==null)
@@ -142,6 +153,22 @@ public class Contact implements AggregateRoot<Long>, Serializable {
 
     public String setAddress(String newAddress) {
         return this.address=newAddress;
+    }
+
+    public CompanyContact getCompanyContact() {
+        return companyContact;
+    }
+
+    public void setCompanyContact(CompanyContact companyContact) {
+        this.companyContact = companyContact;
+    }
+
+    public Profession getProfession() {
+        return profession;
+    }
+
+    public void setProfession(Profession profession) {
+        this.profession = profession;
     }
 
     /**

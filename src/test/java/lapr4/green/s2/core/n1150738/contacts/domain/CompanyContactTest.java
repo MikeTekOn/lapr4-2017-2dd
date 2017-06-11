@@ -1,8 +1,6 @@
-package lapr4.green.s2.core.n1150738.contacts.company.domain;
+package lapr4.green.s2.core.n1150738.contacts.domain;
 
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * A Unit Test class to test CompanyContact.

@@ -11,7 +11,7 @@ package lapr4.white.s1.core.n4567890.contacts.persistence.jpa;
  */
 
 import eapli.framework.persistence.DataIntegrityViolationException;
-import jdk.nashorn.internal.runtime.regexp.joni.Regex;
+import lapr4.green.s2.core.n1150738.contacts.domain.CompanyContact;
 import lapr4.white.s1.core.n4567890.contacts.ExtensionSettings;
 import lapr4.white.s1.core.n4567890.contacts.domain.Contact;
 import lapr4.white.s1.core.n4567890.contacts.persistence.ContactRepository;
@@ -57,5 +57,10 @@ class JpaContactRepository extends CrmJpaRepositoryBase<Contact, Long> implement
         }
 
         return foundContacts;
+    }
+
+    @Override
+    public Iterable<Contact> allRelatedToCompany(CompanyContact c) {
+        return null;
     }
 }

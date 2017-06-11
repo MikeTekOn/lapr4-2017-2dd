@@ -62,5 +62,5 @@
  * <p>
  * @author Henrique Oliveira [1150738@isep.ipp.pt]
  */
-package lapr4.green.s2.core.n1150738.contacts.company;
+package lapr4.green.s2.core.n1150738.contacts;
 

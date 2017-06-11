@@ -1,4 +1,4 @@
-package lapr4.green.s2.core.n1150738.contacts.company.domain;
+package lapr4.green.s2.core.n1150738.contacts.domain;
 
 import eapli.framework.domain.ValueObject;
 
@@ -24,7 +24,7 @@ public class Profession implements ValueObject{
         if(eapli.util.Strings.isNullOrEmpty(name)){
             throw new IllegalArgumentException("Invalid Profession!");
         }
-        this.profession = profession;
+        this.profession = name;
     }
 
     /**
