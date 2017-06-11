@@ -55,6 +55,7 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
 import java.util.Set;
+import lapr4.blue.s2.ipc.n1140822.fileShare.ShareConfiguration;
 import lapr4.green.s2.core.n1150657.extensions.ui.ExtensionLoadFrame;
 
 /**
@@ -174,6 +175,9 @@ public class CleanSheets implements Observer {
                 // Loads user properties
                 File propsFile = new File(USER_PROPERTIES_FILENAME);
                 props = new NamedProperties(propsFile, defaultProps);
+                ShareConfiguration.downloadFolder = props.getProperty("share.download.folder");
+                ShareConfiguration.sharedFolder = props.getProperty("share.shared.folder");
+                ShareConfiguration.setProperties(props);
                 BootEventVerifier bev = new BootEventVerifier();
                 try {
                     bev.verify(props);
@@ -221,6 +225,9 @@ public class CleanSheets implements Observer {
         // Loads user properties
         File propsFile = new File(USER_PROPERTIES_FILENAME);
         props = new NamedProperties(propsFile, defaultProps);
+        ShareConfiguration.downloadFolder = props.getProperty("share.download.folder");
+        ShareConfiguration.sharedFolder = props.getProperty("share.shared.folder");
+        ShareConfiguration.setProperties(props);
         BootEventVerifier bev = new BootEventVerifier();
         try {
             bev.verify(props);
