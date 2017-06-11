@@ -68,9 +68,8 @@ public class ImportXmlControllerTest {
         ImportXmlController instance = new ImportXmlController(controller);
         instance.selectPath("ImportXml.xml");
         File file = new File("ImportXml.xml");
-        boolean expResult = true ;
+        boolean expResult = true;
         boolean result = instance.validateExtension(file);
-        
         assertEquals(expResult, result);
 
     }
