@@ -16,6 +16,8 @@ import lapr4.green.s1.ipc.n1150532.comm.connection.HandlerConnectionDetailsRespo
 import lapr4.green.s1.ipc.n1150532.comm.connection.PacketEncapsulatorDTO;
 
 /**
+ * Class that handles the response DTO.
+ * 
  * @author Tiago Correia - 1151031@isep.ipp.pt
  */
 public class HandlerSearchWorkbookResponseDTO extends Observable implements CommHandler, Serializable {

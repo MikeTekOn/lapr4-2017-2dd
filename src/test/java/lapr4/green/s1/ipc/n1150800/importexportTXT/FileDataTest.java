@@ -58,7 +58,7 @@ public class FileDataTest {
     @Before
     public void setUp() throws FileNotFoundException, IOException {
         cs = new CleanSheets();
-        workbook = new Workbook(1);
+        workbook = new Workbook(1, null);
         workbookFile = new File("workbookFile.cls");
         cs.saveAs(workbook, workbookFile);
         activeSpreadsheet = workbook.getSpreadsheet(0);

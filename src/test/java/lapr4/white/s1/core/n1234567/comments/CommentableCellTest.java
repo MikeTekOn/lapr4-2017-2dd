@@ -25,7 +25,7 @@ public class CommentableCellTest {
 	@Test public void testHasComment() {
 		
 		// create a workbook with 2 sheets
-		Workbook wb=new Workbook(2);
+		Workbook wb=new Workbook(2, null);
 		Spreadsheet s=wb.getSpreadsheet(0);
 		// get the first cell
 		Cell c=s.getCell(0,0);
@@ -50,7 +50,7 @@ public class CommentableCellTest {
 	@Test public void testSetGetUserComment() {
 		
 		// create a workbook with 2 sheets
-		Workbook wb=new Workbook(2);
+		Workbook wb=new Workbook(2, null);
 		Spreadsheet s=wb.getSpreadsheet(0);
 		// get the first cell
 		Cell c=s.getCell(0,0);
@@ -70,7 +70,7 @@ public class CommentableCellTest {
 	@Test public void testCommentableCellListenner() {
 		
 		// create a workbook with 2 sheets
-		Workbook wb=new Workbook(2);
+		Workbook wb=new Workbook(2, null);
 		Spreadsheet s=wb.getSpreadsheet(0);
 		// get the first cell
 		Cell c=s.getCell(0,0);

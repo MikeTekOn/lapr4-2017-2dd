@@ -1,7 +1,7 @@
 package lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.util;
 
 import csheets.ext.style.StylableCell;
-import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.StyleDTO;
+import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.comm.StyleDTO;
 
 /**
  * Class with the utility methods to make operations over styles.

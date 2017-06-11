@@ -23,6 +23,7 @@
  */
 package csheets.core.formula.compiler;
 
+import csheets.ui.ctrl.UIController;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -58,7 +59,7 @@ public class ExcelExpressionCompiler implements ExpressionCompiler {
         return FORMULA_STARTER;
     }
 
-    public Expression compile(Cell cell, String source) throws FormulaCompilationException {
+    public Expression compile(Cell cell, String source, UIController uiController) throws FormulaCompilationException {
         // Creates the lexer and parser
         ANTLRInputStream input = new ANTLRInputStream(source);
 

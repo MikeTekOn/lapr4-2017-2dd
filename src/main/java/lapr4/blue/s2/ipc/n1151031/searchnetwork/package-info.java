@@ -59,14 +59,16 @@
  * instance needs to reply with:
  * <p>
  * <b>Instance identification:</b> identification of the instance where the
- * workbook was found. The CleanSheets class should also have this information.
+ * workbook was found. The response packet should have this information.
  * <p>
- * <b>Name:</b> the workbook's name.
+ * <b>Name:</b> the workbook's name. We can access it by using the getFile()
+ * method of the Cleansheets class and then using the getName() of the File
+ * class.
  *
  * <p>
  * <b>Summary:</b> a summary of the workbook's contents which consists of the
- * name of the spreadsheets and the first non-empty cells of each spreadsheet.
- * The class Spreadsheet has methods to provide this information.
+ * number and name of the spreadsheets. The class Spreadsheet has methods to
+ * provide this information.
  *
  * To create the reply we need a SearchWorkbookNetworkResponseDTO and the
  * associated handler.
@@ -98,11 +100,32 @@
  * <img src="ipc03_2_design1.png" alt="image">
  *
  * <h3>4.2 How to handle the requestDTO</h3>
+ * <p>
+ * Note: in order to access the instance's active workbooks we need access to
+ * the App (Cleansheets class). We only have access to it through the
+ * UIController. To solve this problem and be able to handle the search request
+ * inside the request handler we have to pass the UIController to the
+ * constructor of the handler. The class that creates the handler is the
+ * CommExtension and it has a uiController and that should solve the problem.
+ *
+ * <img src="ipc03_2_design3.png" alt="image">
  *
  * <h3>4.3 How to handle the responseDTO</h3>
  * <p>
  * <img src="ipc03_2_design2.png" alt="image">
  *
+ * <h2>5. Tests</h2>
+ * 
+ * <h3>Functional tests</h3>
+ * <ul>
+ * <li>Open instances of cleansheets in different computers.</li>
+ * <li>open some workbooks in each instance.</li>
+ * <li>go to Network sidebar and activate the network in both computers.</li>
+ * <li>in one of the computers, search for a workbook name that is active in the other computer.</li>
+ * <li>make sure the workbook is found and the list is updated with the correct information.</li>
+ * <li>repeat for other files and using only the "cls" extension as name.</li>
+ * <li>all the active workbooks must appear.</li>
+ * </ul>
  *
  * <h2>8. Work Log</h2>
  * <p>
@@ -131,8 +154,7 @@
  * Today
  * <p>
  * 1. Analysis of the search in the network feature increment which was not
- * entirely finished. 
- * 2. Started the design of the FI.
+ * entirely finished. 2. Started the design of the FI.
  * <p>
  * Blocking:
  * <p>
@@ -143,13 +165,11 @@
  * Yesterday I worked on:
  * <p>
  * 1. Analysis of the search in the network feature increment which was not
- * entirely finished. 
- * 2. Started the design of the FI.
+ * entirely finished. 2. Started the design of the FI.
  * <p>
  * Today
  * <p>
- * 1. Finish analysis.
- * 2. Finish design.
+ * 1. Finish analysis. 2. Finish design.
  * <p>
  * Blocking:
  * <p>
@@ -159,14 +179,11 @@
  * <p>
  * Yesterday I worked on:
  * <p>
- * 1. Finished analysis.
- * 2. Started design.
+ * 1. Finished analysis. 2. Started design.
  * <p>
  * Today
  * <p>
- * 1. Finish design.
- * 2. Start tests.
- * 3. Start implementation.
+ * 1. Finish design. 2. Start tests. 3. Start implementation.
  * <p>
  * Blocking:
  * <p>
@@ -176,15 +193,15 @@
  * <p>
  * Yesterday I worked on:
  * <p>
- * 1. ---
+ * 1. Finished design. 2. Started tests. 3. Started implementation.
  * <p>
  * Today
  * <p>
- * 1. ---
+ * 1. Finish tests and implementation.
  * <p>
  * Blocking:
  * <p>
- * 1. ---
+ * 1. Nothing
  * <p>
  *  * <b>Sunday</b>
  * <p>

@@ -24,35 +24,42 @@ import csheets.core.IllegalValueTypeException;
 import csheets.core.Value;
 import csheets.core.formula.BinaryOperator;
 import csheets.core.formula.Expression;
+import java.math.BigDecimal;
 
 /**
  * An adder.
+ *
  * @author Einar Pehrson
  */
 public class Adder implements BinaryOperator {
 
-	/** The unique version identifier used for serialization */
-	private static final long serialVersionUID = -1880245696016234963L;
+    /**
+     * The unique version identifier used for serialization
+     */
+    private static final long serialVersionUID = -1880245696016234963L;
 
-	/**
-	 * Creates a new adder.
-	 */
-	public Adder() {}
-
-	public Value applyTo(Expression leftOperand, Expression rightOperand) throws IllegalValueTypeException {
-		return new Value(leftOperand.evaluate().toDouble()
-				+ rightOperand.evaluate().toDouble());
-	}
-
-	public String getIdentifier() {
-		return "+";
-	}
-
-	public Value.Type getOperandValueType() {
-		return Value.Type.NUMERIC;
-	}
-
-	public String toString() {
-		return getIdentifier();
-	}
+    /**
+     * Creates a new adder.
+     */
+    public Adder() {
+    }
+    
+    public Value applyTo(Expression leftOperand, Expression rightOperand) throws IllegalValueTypeException {
+        //updated to realize additions with values in BigDecimal
+        BigDecimal left = new BigDecimal(leftOperand.evaluate().toDouble());
+        BigDecimal right = new BigDecimal(rightOperand.evaluate().toDouble());
+        return new Value(left.add(right));
+    }
+    
+    public String getIdentifier() {
+        return "+";
+    }
+    
+    public Value.Type getOperandValueType() {
+        return Value.Type.NUMERIC;
+    }
+    
+    public String toString() {
+        return getIdentifier();
+    }
 }

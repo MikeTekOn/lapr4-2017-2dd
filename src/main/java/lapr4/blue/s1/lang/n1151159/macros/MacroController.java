@@ -16,7 +16,7 @@ import lapr4.blue.s1.lang.n1151159.macros.compiler.MacroCompiler;
  */
 public class MacroController {
 
-    private static ArrayList<String> macroList;
+    public static ArrayList<String> macroList;
 
     public MacroController() {
 
@@ -27,26 +27,7 @@ public class MacroController {
         return macro.evaluate();
     }
     
-    /**
-     * Executes a given macro.
-     *
-     * @param spreadsheet the spreadsheet where the macro is going to be
-     * executed
-     * @param macroText the macro text
-     * @return value of the last executed expression
-     * @throws MacroCompilationException macro compilation exception
-     * @throws IllegalValueTypeException illegal value type exception
-     */
-    public Value executeMacro(Spreadsheet spreadsheet, UIController uiController, String macroText, String macroName) throws MacroCompilationException, IllegalValueTypeException {
-        if (macroList == null) {
-            macroList = new ArrayList<>();
-        }
-        Expression macro = MacroCompiler.getInstance().compile(spreadsheet, uiController, macroText, macroName, macroList);
-        if (macro == null) {
-            return null;
-        }
-        return macro.evaluate();
-    }
+
 
     /**
      * Gets the text of a default macro that calculate the average of 3 grades.
