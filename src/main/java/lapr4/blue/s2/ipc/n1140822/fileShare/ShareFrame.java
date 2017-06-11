@@ -192,8 +192,10 @@ public class ShareFrame extends JFrame implements Observer {
                         if (dlTableModel.getValueAt(row, 0).equals(fileName) && dlTableModel.getValueAt(row, 1).equals("/" + ((FileNameListDTO) arg).connID().toString())) {
                             if (!dlTableModel.getValueAt(row, 2).equals(rowData[2].toString())) {
                                 dlTableModel.setValueAt("OUTDATED", row, 3);
+                                  dlTable.setModel(dlTableModel);
                             } else {
                                 dlTableModel.setValueAt("UP-TO-DATE", row, 3);
+                                  dlTable.setModel(dlTableModel);
                             }
                         }
                     }
@@ -201,6 +203,7 @@ public class ShareFrame extends JFrame implements Observer {
                 update=true;
             }
             table.setModel(tableModel);
+          
         }
 
     }
