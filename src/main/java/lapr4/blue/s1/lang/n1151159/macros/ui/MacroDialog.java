@@ -235,6 +235,7 @@ public class MacroDialog extends JDialog {
                                macroController.emptyList();
                                 value = macroController.executeMacro(uiController.getActiveSpreadsheet(), uiController, macroText, name);
                                 if (value == null) {
+                                    JOptionPane.showMessageDialog(rootPane, "Recursivity found.");
                                     return;
                                 }
                             } catch (NullPointerException e) {
