@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr4.green.s2.core.n1150800.PDFStyle;
+package lapr4.green.s2.core.n1150800.PDFStyle.domain;
 
 import csheets.core.Cell;
 import csheets.core.Spreadsheet;
@@ -49,6 +49,7 @@ public class WorkbookWithStylesHandler extends WorkbookHandler {
     
     /**
      * Provides a list of cells with their styles
+     * @param s - the spreadsheet containing the cells
      * @return list of cells with their styles
      */
     public List<StylableCell> getStylableCellsFrom(Spreadsheet s) {
@@ -58,6 +59,10 @@ public class WorkbookWithStylesHandler extends WorkbookHandler {
  
     /**
      * Provides a list of cells with their styles
+     * @param s - the spreadsheet containing the cells
+     * @param strRange - the range
+     * @param uiC - the user interface controller
+     * @param ePDF - the export strategy
      * @return list of cells with their styles
      */
     public List<StylableCell> getStylableCellsFromSpreadsheetWithinRange(Spreadsheet s, String strRange, UIController uiC, ExportPDF ePDF) {

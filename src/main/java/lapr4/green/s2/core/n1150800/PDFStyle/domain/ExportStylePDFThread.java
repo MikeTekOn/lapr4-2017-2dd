@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr4.green.s2.core.n1150800.PDFStyle;
+package lapr4.green.s2.core.n1150800.PDFStyle.domain;
+
+import lapr4.green.s2.core.n1150800.PDFStyle.application.ExportStylePDFController;
 
 /**
  *
