@@ -47,20 +47,21 @@ public class GlobalSearchControllerTest {
     @After
     public void tearDown() {
     }
-
+//
 //    /**
 //     * Test of validateFormula method, of class GlobalSearchController.
 //     */
-//    @Test
+//    @Test(expected=NullPointerException.class)
 //    public void testValidateFormula() throws Exception {
 //        System.out.println("validateFormula");
 //        String formula = "=2";
 //        boolean expResult = true;
 //        boolean result = ctrl.validateFormula(formula);
 //        assertEquals(expResult, result);
-//        
+//        formula = "2";
+//        result = ctrl.validateFormula(formula);
 //    }
-
-
-    
+//
+//
+//    
 }
