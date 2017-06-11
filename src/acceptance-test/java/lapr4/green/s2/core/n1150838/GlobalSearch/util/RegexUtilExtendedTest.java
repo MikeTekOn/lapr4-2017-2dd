@@ -47,7 +47,7 @@ public class RegexUtilExtendedTest {
         boolean isCommentsToInclude = false;
         app = new CleanSheets();
         app.create();
-        ctrl = new UIController(app);
+//        ctrl = new UIController(app);
         Filter f = new Filter(types, formulas, isCommentsToInclude);
         instance = new RegexUtilExtended(f, ".*2.*", ctrl);
         spreadsheet = app.getWorkbooks()[0].getSpreadsheet(0);

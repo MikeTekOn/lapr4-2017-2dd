@@ -76,7 +76,7 @@ public class WriterThread implements Runnable {
         while (isRunning) {
 
             threadId = Thread.currentThread().getId();
-            System.out.println("I AM THE SYNCHRONIZATION THREAD!\n");
+            //System.out.println("I AM THE SYNCHRONIZATION THREAD!\n");
             this.cellsDTO = getCellsFromRange(this.activeSpreadsheet);
             try {
                 setToFile(cellsDTO);
@@ -113,7 +113,8 @@ public class WriterThread implements Runnable {
      * This method obtains the contains from the cells in the defined range
      *
      * @param activeSpreadsheet
-     * @return the cells' content
+     *
+     * @return the cells content
      */
     public CellDTO[][] getCellsFromRange(Spreadsheet activeSpreadsheet) {
         int rows = activeSpreadsheet.getRowCount() + 1;
@@ -134,12 +135,13 @@ public class WriterThread implements Runnable {
     }
 
     /**
-     * Writes the data from the cells into a file with
+     * Writes the data from the cells into a file
      *
      * @param cellList - the list of cells that contains the data to be written
      * into a file
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @throws FileNotFoundException throws this exception if does not find the
+     * file
+     * @throws IOException throws this exception if error inputing or outputing
      */
     public void setToFile(CellDTO[][] cellList) throws FileNotFoundException, IOException {
         FileOutputStream stream = new FileOutputStream(this.fileToWrite);
