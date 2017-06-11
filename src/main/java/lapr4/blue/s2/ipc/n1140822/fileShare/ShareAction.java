@@ -75,13 +75,15 @@ public class ShareAction extends BaseAction {
             Logger.getLogger(ShareAction.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        fileDTO = new FileNameListDTO(map,CommTCPServer.getServer().provideConnectionPort());
+        fileDTO = new FileNameListDTO(map, CommTCPServer.getServer().provideConnectionPort());
 
-        ((HandlerFileNameListDTO) CommUDPServer.getServer().getHandler(fileDTO.getClass())).addObserver(new ShareFrame(uiController));
+        ShareFrame frame = new ShareFrame(uiController);
+        ((HandlerFileNameListDTO) CommUDPServer.getServer().getHandler(fileDTO.getClass())).addObserver(frame);
+         ((HandlerFileDTO) CommTCPClientsManager.getManager().getHandler(FileDTO.class)).addObserver(frame);
         CommUDPClient worker = new CommUDPClient(fileDTO, port, 55);
-       
+
         worker.start();
-       
+
     }
 
     public static Map<String, Integer> fillListOfSharedfiles() throws IOException {
@@ -90,7 +92,8 @@ public class ShareAction extends BaseAction {
         folder.mkdirs();
         File[] files = folder.listFiles();
         for (File file : files) {
-            tempMap.put(file.getName(), Files.readAllBytes(file.toPath()).length);
+            byte[] fileSize = Files.readAllBytes(file.toPath());
+            tempMap.put(file.getName(), fileSize.length);
         }
         return tempMap;
     }

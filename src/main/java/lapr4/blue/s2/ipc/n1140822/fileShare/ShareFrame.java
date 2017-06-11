@@ -166,6 +166,7 @@ public class ShareFrame extends JFrame implements Observer {
      */
     @Override
     public void update(Observable o, Object arg) {
+
         boolean update = true;
         int removeIndex = -1;
         if (o instanceof HandlerFileNameListDTO) {
@@ -175,11 +176,11 @@ public class ShareFrame extends JFrame implements Observer {
                     if (tableModel.getValueAt(i, 0).equals(fileName) && tableModel.getValueAt(i, 1).equals(((FileNameListDTO) arg).connID())) {
                         if (tableModel.getValueAt(i, 2).equals(((FileNameListDTO) arg).filesMap().get(fileName) + " bytes")) {
                             update = false;
-                        } else {
-                               tableModel.removeRow(i);
-                               break;
-                        }
 
+                        } else {
+                            tableModel.removeRow(i);
+                            break;
+                        }
                     }
                 }
                 if (update) {
@@ -188,23 +189,24 @@ public class ShareFrame extends JFrame implements Observer {
                     rowData[1] = ((FileNameListDTO) arg).connID();
                     rowData[2] = (((FileNameListDTO) arg).filesMap().get(fileName)) + " bytes";
                     tableModel.addRow(rowData);
+
                     for (int row = 0; row < dlTable.getRowCount(); row++) {
                         if (dlTableModel.getValueAt(row, 0).equals(fileName) && dlTableModel.getValueAt(row, 1).equals("/" + ((FileNameListDTO) arg).connID().toString())) {
                             if (!dlTableModel.getValueAt(row, 2).equals(rowData[2].toString())) {
                                 dlTableModel.setValueAt("OUTDATED", row, 3);
-                                  dlTable.setModel(dlTableModel);
-                            } else {
-                                dlTableModel.setValueAt("UP-TO-DATE", row, 3);
-                                  dlTable.setModel(dlTableModel);
+
                             }
                         }
                     }
                 }
-                update=true;
+                update = true;
             }
             table.setModel(tableModel);
-          
+
         }
+          if (o instanceof HandlerFileDTO) {
+             JOptionPane.showMessageDialog(ShareFrame.this, "File " + (String) tableModel.getValueAt(table.getSelectedRow(), 0) + " downloaded with success.");
+          }
 
     }
 
@@ -215,12 +217,13 @@ public class ShareFrame extends JFrame implements Observer {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (table.getSelectedRow() != -1) {
-                    shareController = new FileSharingController((ConnectionID) tableModel.getValueAt(table.getSelectedRow(), 1));
-                    shareController.requestFile((String) tableModel.getValueAt(table.getSelectedRow(), 0));
                     try {
+                        shareController = new FileSharingController((ConnectionID) tableModel.getValueAt(table.getSelectedRow(), 1));
+                        shareController.requestFile((String) tableModel.getValueAt(table.getSelectedRow(), 0));
                         fillDownloadTable();
-                    } catch (IOException ex) {
-                        Logger.getLogger(ShareFrame.class.getName()).log(Level.SEVERE, null, ex);
+                        
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(ShareFrame.this, "Error occured when downloading the file", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
                     JOptionPane.showMessageDialog(ShareFrame.this, "Please select a file to download", "Error", JOptionPane.ERROR_MESSAGE);
@@ -249,7 +252,7 @@ public class ShareFrame extends JFrame implements Observer {
             rowData[0] = fileName;
             rowData[1] = realHost;
             rowData[2] = fileSize + " bytes";
-            rowData[3] = "----";
+            rowData[3] = "UP-TO-DATE";
             dlTableModel.addRow(rowData);
             dlTable.setModel(dlTableModel);
         }

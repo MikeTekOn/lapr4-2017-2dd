@@ -238,6 +238,7 @@ public class CommExtension extends Extension implements Observer {
         HandlerResponseWorkbookDTO h3 = new HandlerResponseWorkbookDTO();
         tcpClientsManager.addHandler(ResponseWorkbookDTO.class, h3);
         HandlerFileDTO h6 = new HandlerFileDTO();
+       
         tcpClientsManager.addHandler(FileDTO.class, h6);
         HandlerUserChatDTO hucp = new HandlerUserChatDTO();
         tcpClientsManager.addHandler(UserChatDTO.class, hucp);
