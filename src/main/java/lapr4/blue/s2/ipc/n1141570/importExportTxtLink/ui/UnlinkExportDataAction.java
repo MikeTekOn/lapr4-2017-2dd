@@ -17,7 +17,7 @@ public class UnlinkExportDataAction extends BaseAction {
      * The user interface controller.
      */
     protected UIController uiController;
-    
+
     /**
      * The flag boolean.
      */
@@ -43,18 +43,16 @@ public class UnlinkExportDataAction extends BaseAction {
     }
 
     /**
-      * A simple action to unlink the linked exported file.
+     * A simple action to unlink the linked exported file.
      *
      * @param event the event that was fired
      */
     @Override
     public void actionPerformed(ActionEvent event) {
 
-        System.out.println("You clicked me!\n");
-
         //EXPORT
         if (WriterThread.obtainsThreadId() != -2) {
-         
+
             Set<Thread> setOfThread = Thread.getAllStackTraces().keySet();
 
             //Iterate over set to find thread i want to stop
@@ -64,13 +62,12 @@ public class UnlinkExportDataAction extends BaseAction {
                     WriterThread.kill();
                     System.out.println("Unlink stopped!\n");
                     JOptionPane.showMessageDialog(null, "Now export is Unlinked!.");
-                 
                 }
                 System.out.printf("Id da thread a comparar: %d\n", id);
             }
 
-        } else if(WriterThread.obtainsThreadId() == -2){
-            JOptionPane.showMessageDialog(null, "First you need to export data txt!", "Unlink data", JOptionPane.ERROR_MESSAGE);
+        } else if (WriterThread.obtainsThreadId() == -2) {
+            JOptionPane.showMessageDialog(null, "First you need to export data txt!", "Unlinking Error", JOptionPane.ERROR_MESSAGE);
         }
 
     }

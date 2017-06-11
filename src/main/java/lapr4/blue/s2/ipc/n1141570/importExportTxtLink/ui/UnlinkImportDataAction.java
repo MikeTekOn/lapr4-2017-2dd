@@ -44,8 +44,6 @@ public class UnlinkImportDataAction extends BaseAction {
     @Override
     public void actionPerformed(ActionEvent event) {
 
-        System.out.println("You clicked me!\n");
-
         //IMPORT
         if (ReaderThread.obtainsThreadId() != -1) {
 
@@ -61,8 +59,8 @@ public class UnlinkImportDataAction extends BaseAction {
                 }
                 System.out.printf("Id da thread a comparar: %d\n", id);
             }
-        } else if(ReaderThread.obtainsThreadId() == -1){
-            JOptionPane.showMessageDialog(null, "First you need to import data txt!", "Unlink data", JOptionPane.ERROR_MESSAGE);
+        } else if (ReaderThread.obtainsThreadId() == -1) {
+            JOptionPane.showMessageDialog(null, "First you need to import data txt!", "Unlinking Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
