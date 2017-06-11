@@ -23,7 +23,12 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
+import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
+import lapr4.green.s1.ipc.n1150532.comm.ui.ConnectToPeerAction;
+import lapr4.green.s1.ipc.n1150657.chat.ControllerConnection;
 import lapr4.green.s1.ipc.n1150657.chat.ext.ChatExtension;
+import lapr4.green.s1.ipc.n1150657.chat.ui.ChatAction;
+import lapr4.green.s1.ipc.n1150657.chat.ui.NewMessageFrame;
 
 /**
  * It represents the Panel for the chat.
@@ -220,12 +225,18 @@ public class ChatParticipantsPanel extends JPanel {
     private class ConnectAction implements ActionListener {
 
         @Override
-        public void actionPerformed(ActionEvent e) {
-            /**
-            ConnectionID connection = table.getSelectedRowFile();
-            if (connection != null) {
-                (new ConnectToPeerAction(connection)).actionPerformed(e);
-            }*/
+        public void actionPerformed(ActionEvent e) {                
+            if(table.getSelectedRowFile().getStatus().equals("OFFLINE")){
+                JOptionPane.showMessageDialog(null, table.getSelectedRowFile().getUserChatProfileNickname()
+                        +" is OFFLINE","Error",JOptionPane.INFORMATION_MESSAGE);
+            }else{         
+                ConnectionID connection = table.getSelectedRowFile().getConnectionID();
+                if (connection != null) {
+                    ControllerConnection.setChatController(connection);
+                    (new ConnectToPeerAction(connection)).actionPerformed(e);
+                    (new ChatAction(connection, theController)).actionPerformed(e);
+                }
+            }
         }
 
     }
