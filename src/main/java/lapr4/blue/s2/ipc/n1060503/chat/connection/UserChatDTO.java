@@ -26,14 +26,13 @@ public class UserChatDTO extends Observable implements  DTO, Serializable {
     int tcpPort;
     private ConnectionID connID;
     
-    public UserChatDTO(){
-        try {
-            ucp = new UserChatProfile();
-            tcpPort = CommTCPServer.getServer().provideConnectionPort();
-
-        } catch (IOException ex) {
-            Logger.getLogger(UserChatDTO.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public UserChatDTO(UserChatProfile ucp){
+        this.ucp = ucp;
+        tcpPort = CommTCPServer.getServer().provideConnectionPort();
+    }
+    
+    public String getUserChatProfileUsername(){
+        return ucp.getUsername();
     }
     
     public String getUserChatProfileNickname(){
