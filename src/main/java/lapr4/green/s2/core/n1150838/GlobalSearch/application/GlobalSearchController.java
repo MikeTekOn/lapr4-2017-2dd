@@ -37,7 +37,7 @@ public class GlobalSearchController extends WorkbookSearchController implements 
      */
     public boolean validateFormula(String formula) throws FormulaCompilationException, IllegalValueTypeException{
         FormulaCompiler instance = FormulaCompiler.getInstance();
-        Formula f = instance.compile(null, formula);
+        Formula f = instance.compile(null, formula, ctrl);
         f.evaluate();
         return true;
     }

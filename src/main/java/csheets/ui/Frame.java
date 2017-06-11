@@ -77,6 +77,7 @@ public class Frame extends JFrame implements SelectionListener, ExtensionStateLi
         // Stores members and creates controllers
         this.app = app;
         uiController = new UIController(app);
+        app.setUIController(uiController);
 
         // Creates action manager
         FileChooser chooser = null;

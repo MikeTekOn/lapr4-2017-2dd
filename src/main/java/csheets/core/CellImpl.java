@@ -38,6 +38,7 @@ import csheets.core.formula.util.ReferenceTransposer;
 import csheets.ext.CellExtension;
 import csheets.ext.Extension;
 import csheets.ext.ExtensionManager;
+import csheets.ui.ctrl.UIController;
 import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.StyleListener;
 
 /**
@@ -70,6 +71,8 @@ public class CellImpl implements Cell {
 	/** The cell's dependents */
 	private SortedSet<Cell> dependents = new TreeSet<Cell>();
 
+	private UIController uiController;
+
 	/** The cell listeners that have been registered on the cell */
 	private transient List<CellListener> listeners
 		= new ArrayList<CellListener>();
@@ -88,9 +91,10 @@ public class CellImpl implements Cell {
 	 * @param spreadsheet the spreadsheet
 	 * @param address the address of the cell
 	 */
-	CellImpl(Spreadsheet spreadsheet, Address address) {
+	CellImpl(Spreadsheet spreadsheet, Address address, UIController uiController) {
 		this.spreadsheet = spreadsheet;
 		this.address = address;
+		this.uiController = uiController;
 	}
 
 	/**
@@ -102,8 +106,8 @@ public class CellImpl implements Cell {
 	 * @param content the content of the cell
 	 * @throws FormulaCompilationException if an incorrectly formatted formula was entered
 	 */
-	CellImpl(Spreadsheet spreadsheet, Address address, String content) throws FormulaCompilationException {
-		this(spreadsheet, address);
+	CellImpl(Spreadsheet spreadsheet, Address address, String content,UIController uiController) throws FormulaCompilationException {
+		this(spreadsheet, address, uiController);
 		storeContent(content);
 		reevaluate();
 	}
@@ -221,7 +225,7 @@ public class CellImpl implements Cell {
 		// Parses formula
 		Formula formula = null;
 		if (content.length() > 1)
-			formula = FormulaCompiler.getInstance().compile(this, content);
+			formula = FormulaCompiler.getInstance().compile(this, content, uiController);
 
 		// Stores content and formula
 		this.content = content;

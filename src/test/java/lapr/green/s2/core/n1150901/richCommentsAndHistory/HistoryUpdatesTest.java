@@ -34,7 +34,7 @@ public class HistoryUpdatesTest {
     
     @Before
     public void setUp() {
-        w = new Workbook(1);
+        w = new Workbook(1, null);
         a = new Address(0, 0);
         comm = new CommentableCellWithMultipleUsers(w.getSpreadsheet(0).getCell(a));
         user = new User();
