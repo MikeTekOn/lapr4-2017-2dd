@@ -109,6 +109,7 @@ public class ShareFrame extends JFrame implements Observer {
         menu.add(itemChangeDownload);
         menu.add(itemChangeShared);
         String[] columnNames = {"File name", "Host", "File size"};
+        String[] columnNamesDL = {"File name", "Host", "File size", "State"};
         table = new JTable();
         dlTable = new JTable();
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -129,7 +130,7 @@ public class ShareFrame extends JFrame implements Observer {
             }
 
         });
-        dlTableModel = new DefaultTableModel(columnNames, 0);
+        dlTableModel = new DefaultTableModel(columnNamesDL, 0);
         tableModel = new DefaultTableModel(columnNames, 0);
         table.setModel(tableModel);
         dlTable.setModel(dlTableModel);
@@ -142,7 +143,7 @@ public class ShareFrame extends JFrame implements Observer {
         JScrollPane scrollPane = new JScrollPane(table);
 
         JScrollPane scrollPane2 = new JScrollPane(dlTable);
-        
+
         tabs.add(scrollPane);
         tabs.add(scrollPane2);
         tabs.setTitleAt(0, "Files shared with you");
@@ -174,7 +175,6 @@ public class ShareFrame extends JFrame implements Observer {
                     if (tableModel.getValueAt(i, 0).equals(fileName) && tableModel.getValueAt(i, 1).equals(((FileNameListDTO) arg).connID())) {
                         if (tableModel.getValueAt(i, 2).equals(((FileNameListDTO) arg).filesMap().get(fileName) + " bytes")) {
                             update = false;
-
                         } else {
                             tableModel.removeRow(i);
                             break;
@@ -192,7 +192,6 @@ public class ShareFrame extends JFrame implements Observer {
                         if (dlTableModel.getValueAt(row, 0).equals(fileName) && dlTableModel.getValueAt(row, 1).equals("/" + ((FileNameListDTO) arg).connID().toString())) {
                             if (!dlTableModel.getValueAt(row, 2).equals(rowData[2].toString())) {
                                 dlTableModel.setValueAt("OUTDATED", row, 3);
-
                             }
                         }
                     }
@@ -202,9 +201,9 @@ public class ShareFrame extends JFrame implements Observer {
             table.setModel(tableModel);
 
         }
-          if (o instanceof HandlerFileDTO) {
-             JOptionPane.showMessageDialog(ShareFrame.this, "File " + (String) tableModel.getValueAt(table.getSelectedRow(), 0) + " downloaded with success.");
-          }
+        if (o instanceof HandlerFileDTO) {
+            JOptionPane.showMessageDialog(ShareFrame.this, "File " + (String) tableModel.getValueAt(table.getSelectedRow(), 0) + " downloaded with success.");
+        }
 
     }
 
@@ -219,7 +218,7 @@ public class ShareFrame extends JFrame implements Observer {
                         shareController = new FileSharingController((ConnectionID) tableModel.getValueAt(table.getSelectedRow(), 1));
                         shareController.requestFile((String) tableModel.getValueAt(table.getSelectedRow(), 0));
                         fillDownloadTable();
-                        
+
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(ShareFrame.this, "Error occured when downloading the file", "Error", JOptionPane.ERROR_MESSAGE);
                     }
@@ -233,6 +232,7 @@ public class ShareFrame extends JFrame implements Observer {
     }
 
     public void fillDownloadTable() throws IOException {
+        dlTableModel.setRowCount(0);
         Map<String, Integer> tempMap = new LinkedHashMap<>();
         File folder = new File(ShareConfiguration.getDownloadFolder());
         folder.mkdirs();
@@ -245,7 +245,7 @@ public class ShareFrame extends JFrame implements Observer {
             String realHost = Charset.defaultCharset().decode(buf).toString();
             String fileName = file.getName();
             int fileSize = Files.readAllBytes(file.toPath()).length;
-            Object[] rowData = new Object[3];
+            Object[] rowData = new Object[4];
             rowData[0] = fileName;
             rowData[1] = realHost;
             rowData[2] = fileSize + " bytes";

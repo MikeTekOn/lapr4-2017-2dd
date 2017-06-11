@@ -61,11 +61,11 @@ public class MonetaryLanguageBaseVisitorImpl extends MonetaryLanguageBaseVisitor
      */
     //@Override
     public Expression visitFormula(MonetaryLanguageParser.FormulaContext ctx) {
-      
+
         currency = ctx.getChild(1).getText().toLowerCase();
-        
+
         if (currency.equals("euro")) {
-            coin = "\\u20AC";
+            coin = "€";
         }
         if (currency.equals("dollar")) {
             coin = "$";
@@ -77,7 +77,7 @@ public class MonetaryLanguageBaseVisitorImpl extends MonetaryLanguageBaseVisitor
         return a;
     }
 
-    /**
+     /**
      * {@inheritDoc}
      */
     @Override
@@ -85,7 +85,7 @@ public class MonetaryLanguageBaseVisitorImpl extends MonetaryLanguageBaseVisitor
         BinaryOperator operator = null;
 
         if (ctx.getChildCount() == 1) {
-            return visitChildren(ctx);
+            return visitValue(ctx.value());
         }
 
         if (ctx.op != null) {
@@ -95,17 +95,20 @@ public class MonetaryLanguageBaseVisitorImpl extends MonetaryLanguageBaseVisitor
                 addVisitError(ex.getMessage());
             }
         }
-
-        if (ctx.NUMBER() != null) {
-            return new BinaryOperation(visit(ctx.getChild(1)), operator, new MonetaryValue(new BigDecimal(ctx.NUMBER().getText())));
+        if (ctx.DIV() != null) {
+            if (operator.toString().equals(ctx.DIV().toString())) {
+                return new BinaryOperation(visit(ctx.getChild(0)), operator, new MonetaryValue(new BigDecimal(ctx.NUMBER().getText())));
+            }
         }
 
+
+        /* if (ctx.NUMBER() != null) {
+            return new BinaryOperation(visit(ctx.getChild(1)), operator, new MonetaryValue(new BigDecimal(ctx.NUMBER().getText())));
+        }*/
         if (ctx.LPAR() != null && ctx.RPAR() != null) {
-            return new BinaryOperation(visit(ctx.getChild(1)), operator, visit(ctx.getChild(4)));
-            //Literal result = new Literal(o.evaluate());
-            //return (Expression) result;
+            return visitExpression(ctx.expression());
         } else {
-            return new BinaryOperation(visit(ctx.getChild(0).getChild(0)), operator, visit(ctx.getChild(2)));
+            return new BinaryOperation(visit(ctx.getChild(0)), operator, visit(ctx.getChild(2)));
         }
     }
 
@@ -133,7 +136,10 @@ public class MonetaryLanguageBaseVisitorImpl extends MonetaryLanguageBaseVisitor
      */
     private String treatNumber(String n, String currentCoin) {
         int size = n.length();
-        if (!currentCoin.equals(coin)) {
+        currentCoin = currentCoin.replaceAll("\\u20AC", "€");
+        currentCoin = currentCoin.replaceAll("\\u0024", "\\$");
+        currentCoin = currentCoin.replaceAll("\\u00A3", "£");
+        if (!currentCoin.equalsIgnoreCase(coin)) {
             String factor = factorToConvert(currentCoin);
             MonetaryConvertion conversion = new MonetaryConvertion();
             return conversion.convertTo(n.substring(0, size - 1), new BigDecimal(factor)).toString();
@@ -159,18 +165,33 @@ public class MonetaryLanguageBaseVisitorImpl extends MonetaryLanguageBaseVisitor
     private String factorToConvert(String currentCoin) {
         String exchange = "";
         currency = currency.substring(0, 1).toUpperCase() + currency.substring(1).toLowerCase();
-        currentCoin = currentCoin.replaceAll("\\u20AC", "€");
-        currentCoin = currentCoin.replaceAll("\\u0024", "$");
-        currentCoin = currentCoin.replaceAll("\\u00A3", "£");
 
-        if (currentCoin.equals("€")) {
-            exchange = currency + "ToEuro";
-        }
-        if (currentCoin.equals("$")) {
-            exchange = currency + "ToDollar";
-        }
-        if (currentCoin.equals("£")) {
-            exchange = currency + "ToPound";
+        switch (currency) {
+            case "Euro":
+                if (currentCoin.equals("$")) {
+                    exchange = "DollarToEuro";
+                }
+                if (currentCoin.equals("£")) {
+                    exchange = "PoundToEuro";
+                }
+                break;
+            case "Dollar":
+                if (currentCoin.equals("€")) {
+                    exchange = "EuroToDollar";
+                }
+                if (currentCoin.equals("£")) {
+                    exchange = "PoundToDollar";
+                }
+                break;
+            case "Pound":
+                if (currentCoin.equals("€")) {
+                    exchange = "EuroToPound";
+                }
+                if (currentCoin.equals("$")) {
+                    exchange = "DollarToPound";
+                }
+                break;
+
         }
         for (Pair<String, String> p : exchangeRates) {
             if (p.getKey() == exchange) {

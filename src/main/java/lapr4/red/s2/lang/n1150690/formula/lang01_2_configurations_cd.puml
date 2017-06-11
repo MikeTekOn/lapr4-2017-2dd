@@ -1,0 +1,28 @@
+@startuml block_instructions_cd.png
+
+'http://plantuml.com/skinparam.html'
+
+class ConfigureExchangeRatesUI{
+}
+class ConfigureExchangeRatesController{
+    +List<Pair<String,String>> getExchangeRate
+    +String changeExchangeRate(name, value)
+    -String updateExchangeRate(name, value)
+}
+class MonetaryConvertion{
+    +BigDecimal convertTo(value, exchangeRate)
+    +BigDecimal dependentExchangeRate(value)
+}
+
+class Files{
+    +updateProperty(name, newValue)
+}
+
+ConfigureExchangeRatesUI ..> ConfigureExchangeRatesController
+ConfigureExchangeRatesController ..> MonetaryConvertion
+
+ConfigureExchangeRatesController -> Files
+
+
+
+@enduml
