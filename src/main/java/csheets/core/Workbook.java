@@ -20,6 +20,8 @@
  */
 package csheets.core;
 
+import csheets.ui.ctrl.UIController;
+import lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable;
 import lapr4.red.s2.lang.n1150623.globalVariables.VarContentor;
 
 import java.io.IOException;
@@ -71,6 +73,8 @@ public class Workbook implements Iterable<Spreadsheet>, Serializable {
      */
     private int createdSpreadsheets;
 
+    private UIController uiController;
+
     /**
      * Creates a new empty workbook.
      */
@@ -83,10 +87,10 @@ public class Workbook implements Iterable<Spreadsheet>, Serializable {
      *
      * @param sheets the number of sheets to create initially
      */
-    public Workbook(int sheets) {
+    public Workbook(int sheets, UIController uiController) {
         for (int i = 0; i < sheets; i++) {
             spreadsheets.add(new SpreadsheetImpl(this,
-                    getNextSpreadsheetTitle()));
+                    getNextSpreadsheetTitle(), uiController));
         }
     }
 
@@ -96,10 +100,11 @@ public class Workbook implements Iterable<Spreadsheet>, Serializable {
      *
      * @param contents the content matrices to use when creating spreadsheets
      */
-    public Workbook(String[][]... contents) {
+    public Workbook(UIController uiController, String[][]... contents) {
+        this.uiController = uiController;
         for (String[][] content : contents) {
             spreadsheets.add(new SpreadsheetImpl(this,
-                    getNextSpreadsheetTitle(), content));
+                    getNextSpreadsheetTitle(), content, uiController));
         }
     }
 
@@ -108,7 +113,7 @@ public class Workbook implements Iterable<Spreadsheet>, Serializable {
      */
     public void addSpreadsheet() {
         Spreadsheet spreadsheet = new SpreadsheetImpl(this,
-                getNextSpreadsheetTitle());
+                getNextSpreadsheetTitle(), uiController);
         spreadsheets.add(spreadsheet);
         fireSpreadsheetInserted(spreadsheet, spreadsheets.size() - 1);
     }
@@ -121,7 +126,7 @@ public class Workbook implements Iterable<Spreadsheet>, Serializable {
      */
     public void addSpreadsheet(String[][] content) {
         Spreadsheet spreadsheet = new SpreadsheetImpl(this,
-                getNextSpreadsheetTitle(), content);
+                getNextSpreadsheetTitle(), content, uiController);
         spreadsheets.add(spreadsheet);
         fireSpreadsheetInserted(spreadsheet, spreadsheets.size() - 1);
     }
@@ -265,5 +270,21 @@ public class Workbook implements Iterable<Spreadsheet>, Serializable {
      */
     public MacroList getMacroList() {
         return macroList;
+    }
+
+    /**
+     *
+     * @return the global variable container
+     */
+    public VarContentor globalVariables() {
+        return this.globalVariables;
+    }
+
+    /**
+     *
+     * @param var - Global Variable to save or update
+     */
+    public void updateGlobalVariable(Variable var) {
+        this.globalVariables.update(var);
     }
 }

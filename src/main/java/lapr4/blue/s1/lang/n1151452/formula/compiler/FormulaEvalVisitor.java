@@ -7,6 +7,7 @@ package lapr4.blue.s1.lang.n1151452.formula.compiler;
 
 import csheets.core.Cell;
 import csheets.core.Value;
+import csheets.core.Workbook;
 import csheets.core.formula.*;
 import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.core.formula.compiler.IllegalFunctionCallException;
@@ -188,11 +189,25 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
             }
 
         }
+        else if (ctx.G_VARIABLE_NAME() != null){
+            String tempVarName=ctx.G_VARIABLE_NAME().getText();
+
+            try {
+                return uiController.getActiveWorkbook().globalVariables().getExpressionOfVariable(tempVarName);
+            } catch (IllegalArgumentException ex) {
+                addVisitError(ex.getLocalizedMessage());
+            }
+        }
         else if(ctx.assignment() != null) {
-            //it´s a temporary variable
+
             if (ctx.assignment().VARIABLE_NAME() != null) {
+                //it´s a temporary variable
                 Variable temp_var = (Variable)visit(ctx.assignment());
                 temp_contentor.update(temp_var);
+            }else if(ctx.assignment().G_VARIABLE_NAME() != null){
+                //it's a global variable
+                Variable temp_var = (Variable)visit(ctx.assignment());
+                uiController.getActiveWorkbook().updateGlobalVariable(temp_var);
             }
         }
 
@@ -289,12 +304,15 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
                     addVisitError(ex.getMessage());
                 }
 
-                //it´s a temporary variable
-            } else if (ctx.VARIABLE_NAME() != null) {
 
+            } else if (ctx.VARIABLE_NAME() != null) {
+                //it´s a temporary variable
                 String name = ctx.VARIABLE_NAME().getText();
                 return new Variable(name, visit(ctx.comparison()));
-
+            }else if(ctx.G_VARIABLE_NAME() != null){
+                //it's a global variable
+                String name = ctx.G_VARIABLE_NAME().getText();
+                return new Variable(name, visit(ctx.comparison()));
             }
         }
 

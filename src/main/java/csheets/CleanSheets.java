@@ -44,6 +44,8 @@ import csheets.ext.ExtensionManager;
 import csheets.io.Codec;
 import csheets.io.CodecFactory;
 import csheets.io.NamedProperties;
+import csheets.ui.Frame;
+import csheets.ui.ctrl.UIController;
 import eapli.framework.persistence.DataConcurrencyException;
 import eapli.framework.persistence.DataIntegrityViolationException;
 import lapr4.red.s1.core.n1150943.contacts.application.BootEventVerifier;
@@ -79,6 +81,8 @@ public class CleanSheets {
 	/** The application's properties */
 	private NamedProperties props;
 
+	private UIController uiController;
+
 	/** The listeners registered to receive events */
 	private List<SpreadsheetAppListener> listeners
 		= new ArrayList<SpreadsheetAppListener>();
@@ -99,8 +103,8 @@ public class CleanSheets {
 	 * Creates the CleanSheets application.
 	 */
 	public CleanSheets() {
-                // Load resources
-                messages = ResourceBundle.getBundle(DEFAULT_RESOURCE_FILENAME, Locale.getDefault());
+        // Load resources
+        messages = ResourceBundle.getBundle(DEFAULT_RESOURCE_FILENAME, Locale.getDefault());
             
 		// Loads compilers
 		FormulaCompiler.getInstance();
@@ -197,7 +201,7 @@ public class CleanSheets {
 	 * Creates a new workbook.
 	 */
 	public void create() {
-		Workbook workbook = new Workbook(3);
+		Workbook workbook = new Workbook(3, uiController);
 		workbooks.put(workbook, null);
 		fireSpreadsheetAppEvent(workbook, null, SpreadsheetAppEvent.Type.CREATED);
 	}
@@ -376,6 +380,10 @@ public class CleanSheets {
 					listeners.toArray(new SpreadsheetAppListener[listeners.size()])
 				)
 			);
+	}
+
+	public void setUIController(UIController uiController) {
+		this.uiController = uiController;
 	}
 
 	/**
