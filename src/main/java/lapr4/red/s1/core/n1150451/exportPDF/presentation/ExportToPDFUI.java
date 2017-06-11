@@ -23,7 +23,7 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.filechooser.*;
-import lapr4.green.s2.core.n1150800.PDFStyle.application.ExportStylePDFController;
+import lapr4.green.s2.core.n1150800.PDFStyle.ExportStylePDFController;
 
 /**
  * @author Diogo Santos 1150451

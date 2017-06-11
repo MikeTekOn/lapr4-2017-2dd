@@ -109,7 +109,6 @@ public class ShareFrame extends JFrame implements Observer {
         menu.add(itemChangeDownload);
         menu.add(itemChangeShared);
         String[] columnNames = {"File name", "Host", "File size"};
-        String[] columnNamesDL = {"File name", "Host", "File size", "State"};
         table = new JTable();
         dlTable = new JTable();
         table.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -130,7 +129,7 @@ public class ShareFrame extends JFrame implements Observer {
             }
 
         });
-        dlTableModel = new DefaultTableModel(columnNamesDL, 0);
+        dlTableModel = new DefaultTableModel(columnNames, 0);
         tableModel = new DefaultTableModel(columnNames, 0);
         table.setModel(tableModel);
         dlTable.setModel(dlTableModel);
@@ -143,7 +142,7 @@ public class ShareFrame extends JFrame implements Observer {
         JScrollPane scrollPane = new JScrollPane(table);
 
         JScrollPane scrollPane2 = new JScrollPane(dlTable);
-
+        
         tabs.add(scrollPane);
         tabs.add(scrollPane2);
         tabs.setTitleAt(0, "Files shared with you");
@@ -168,7 +167,6 @@ public class ShareFrame extends JFrame implements Observer {
     public void update(Observable o, Object arg) {
 
         boolean update = true;
-        int removeIndex = -1;
         if (o instanceof HandlerFileNameListDTO) {
 
             for (String fileName : ((FileNameListDTO) arg).filesMap().keySet()) {
@@ -235,7 +233,6 @@ public class ShareFrame extends JFrame implements Observer {
     }
 
     public void fillDownloadTable() throws IOException {
-        dlTableModel.setRowCount(0);
         Map<String, Integer> tempMap = new LinkedHashMap<>();
         File folder = new File(ShareConfiguration.getDownloadFolder());
         folder.mkdirs();
@@ -248,7 +245,7 @@ public class ShareFrame extends JFrame implements Observer {
             String realHost = Charset.defaultCharset().decode(buf).toString();
             String fileName = file.getName();
             int fileSize = Files.readAllBytes(file.toPath()).length;
-            Object[] rowData = new Object[4];
+            Object[] rowData = new Object[3];
             rowData[0] = fileName;
             rowData[1] = realHost;
             rowData[2] = fileSize + " bytes";

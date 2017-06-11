@@ -86,7 +86,7 @@ public class ShareAction extends BaseAction {
 
     }
 
-    public static Map<String, Integer> fillListOfSharedfiles() throws IOException {
+    private Map<String, Integer> fillListOfSharedfiles() throws IOException {
         Map<String, Integer> tempMap = new LinkedHashMap<>();
         File folder = new File(ShareConfiguration.getSharedFolder());
         folder.mkdirs();

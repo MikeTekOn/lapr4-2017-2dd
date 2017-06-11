@@ -9,7 +9,7 @@ currency: DOLLAR | EURO | POUND;
 
 
 expression:
-    LPAR expression RPAR
+    left=expression op=(MULTI|PLUS|MINUS) LPAR expression RPAR
     | left=expression op=MULTI value
     | left=expression op=DIV NUMBER
     | left=expression op=(PLUS|MINUS) value
