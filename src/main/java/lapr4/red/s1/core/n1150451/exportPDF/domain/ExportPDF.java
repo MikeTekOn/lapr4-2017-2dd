@@ -27,15 +27,15 @@ import java.util.regex.Pattern;
  */
 public class ExportPDF implements ExportStrategy {
 
-    private String path;
-    private List<Cell> list;
-    private boolean sections;
+    protected String path;
+    protected List<Cell> list;
+    protected boolean sections;
 
     //Table limits
-    private int minRow = 0;
-    private int maxRow = 127;
-    private int minColumn = 0;
-    private int maxColumn = 52;
+    protected int minRow = 0;
+    protected int maxRow = 127;
+    protected int minColumn = 0;
+    protected int maxColumn = 52;
 
     private HashMap<String, Anchor> mapAnchor = new HashMap<>();
 
@@ -126,7 +126,7 @@ public class ExportPDF implements ExportStrategy {
      *
      * @return Document
      */
-    private Document initiatePrinter() {
+    protected Document initiatePrinter() {
         Document document = null;
 
         try {
@@ -144,7 +144,7 @@ public class ExportPDF implements ExportStrategy {
      * Returns an hashmap containing all the cells organized by their spreadsheet.
      * @return 
      */
-    private Map<Spreadsheet, Set<Cell>> getMapBySpreadSheet() {
+    protected Map<Spreadsheet, Set<Cell>> getMapBySpreadSheet() {
         Map<Spreadsheet, Set<Cell>> map = new HashMap<>();
         for (Cell c : list) {
             //If the spreadsheet doesn't exist in the map
@@ -167,7 +167,7 @@ public class ExportPDF implements ExportStrategy {
      *
      * @param cells
      */
-    private void removeHiddenCells(Set<Cell> cells) {
+    protected void removeHiddenCells(Set<Cell> cells) {
         Set<Cell> toBeRemoved = new HashSet<>();
         for (Cell c : cells) {
             if (c.getAddress().getColumn() >= 52 || c.getAddress().getRow() > 127) {
@@ -184,7 +184,7 @@ public class ExportPDF implements ExportStrategy {
      * @param cells Cells of the spreadsheet to be placed in the matrix.
      * @return
      */
-    private String[][] getLinesSheet(Set<Cell> cells) {
+    protected String[][] getLinesSheet(Set<Cell> cells) {
         String[][] alCells = new String[128][53];
         for (int i = 0; i < 128; i++) {
             String[] lines = new String[53];
@@ -208,7 +208,7 @@ public class ExportPDF implements ExportStrategy {
      * Fills the first row of the matrix with the column identification letters, from A to AZ. 
      * @param lines First line of the matrix.
      */
-    private void fillFirstRow(String[] lines) {
+    protected void fillFirstRow(String[] lines) {
         for (int i = 1; i < 27; i++) {
             lines[i] = "" + (char) ('A' + (i - 1));
         }
@@ -231,7 +231,7 @@ public class ExportPDF implements ExportStrategy {
      * @param doc Document where the table of contents is to be placed.
      * @param map Map containing the Spreadsheet list.
      */
-    private void createFrontPage(Document doc, Map<Spreadsheet, Set<Cell>> map) {
+    protected void createFrontPage(Document doc, Map<Spreadsheet, Set<Cell>> map) {
         PdfPTable table = new PdfPTable(1);
         table.setWidthPercentage(50);
         for (Spreadsheet s : map.keySet()) {
