@@ -13,6 +13,8 @@ public class ExportXMLMenuUI extends JMenu {
     /**
      * Creates an instance of the export xml menu. Adds the associated export
      * xml actions.
+     * 
+     * @param uiController the interface controller
      */
     public ExportXMLMenuUI(UIController uiController) {
         super("Export XML");

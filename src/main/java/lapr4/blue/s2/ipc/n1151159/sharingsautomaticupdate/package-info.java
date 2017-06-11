@@ -69,6 +69,12 @@
  *     cell will back to the initial state before start being edited. In the worst case, both instances will have to
  *     try to acquire a "lock" again.
  * </p>
+ * <p>
+ *     The cell's state just matters for the cells being shared. That way we are going to delegate this responsibility
+ *     to the ShareableCell extension, using the delegation design pattern. In the following image we can observe the
+ *     relations between the cell and the shareable cell.
+ * </p>
+ * <img src="shareable_cell_analysis.png" alt="shareable cell analysis placeholder">
  *
  * <h4>Send the style of the cells.</h4>
  * <p>
@@ -117,6 +123,62 @@
  *
  *
  *
+ * <h2>5. Design</h2>
+ *
+ *
+ * <h3>5.1. Cell's state diagram</h3>
+ *
+ * <img src="cells_state_diagram.png" alt="cells state diagram placeholder">
+ *
+ *
+ * <h3>5.2. Changes on CellDTO to send style</h3>
+ *
+ * <img src="start_sharing.png" alt="start sharing placeholder">
+ *
+ * <h3>5.3. Extension setup</h3>
+ *
+ * <p>
+ *     Refer to the logic of the extension manager presented in the package
+ *     {@link lapr4.white.s1.core.n1234567.comments}
+ * </p>
+ *
+ *
+ * <h3>5.4. Design Patterns</h3>
+ * <p>
+ *     It was identified that the cells should behave in different manner depending on the actions that was happening.
+ *     To solve this problem, the state diagram was applied.
+ * </p>
+ * <p>
+ *     To decouple the cell state and the responsibility to deal with different states, the delegation design pattern
+ *     will be applied. For that a ShareableCell cell extension will be created.
+ * </p>
+ *
+ *
+ *
+ *
+ * <h3>6. Implementation</h3>
+ *
+ * <h4>6.1. Changed classes</h4>
+ * <p>
+ *     It was necessary to change some already existing classes instead of creating new ones / making the extend
+ *     mechanism.
+ * </p>
+ * <p>
+ *     The class {@link lapr4.black.s1.ipc.n2345678.comm.sharecells.CellDTO} was modified to add the StyledDTO of the
+ *     shared cells. Although the extend mechanism could be used in this case, the cost would be high in terms of
+ *     coupling, since there is a lot of usages of this class. A big refactor would be necessary.
+ * </p>
+ * <p>
+ *     The class {@link lapr4.green.s1.ipc.n1150532.comm.CommExtension} was also modified in the update method. If we
+ *     would extend this class, the method update would have to be overwritten. Since update method has a lot of logic
+ *     depending on the instance of the received object (not a good approach, but for the time being a refactor would bes
+ *     expensive), most of the logic would have to be duplicated. Also the usages of this class would have to be
+ *     refactored as well.
+ * </p>
+ *
+ *
+ *
+ *
  * <h2>8. Work Log</h2>
  *
  * <h3>Tuesday 06/06/2017</h3>
@@ -135,7 +197,7 @@
  *
  * <p><b>Blocking:</b></p>
  * <ol>
- *     <li>Nothing</li>
+ *     <li>Nothing.</li>
  * </ol>
  *
  *
@@ -144,19 +206,80 @@
  *
  * <p>Yesterday I've worked on:</p>
  * <ol>
- *     <li>Presentation of the lang demo</li>
- *     <li>Starts the analysis</li>
+ *     <li>Functional increment analysis.</li>
  * </ol>
  *
  * <p><b>Today</b></p>
  * <ol>
- *     <li>Functional increment analysis.</li>
+ *     <li>Functional increment tests.</li>
+ *     <li>Functional increment design.</li>
  * </ol>
  *
  * <p><b>Blocking:</b></p>
  * <ol>
- *     <li>Nothing</li>
+ *     <li>Nothing.</li>
  * </ol>
+ *
+ *
+ *
+ * <h3>Thursday 08/06/2017</h3>
+ *
+ * <p>Yesterday I've worked on:</p>
+ * <ol>
+ *     <li>Functional increment tests.</li>
+ *     <li>Functional increment design.</li>
+ * </ol>
+ *
+ * <p><b>Today</b></p>
+ * <ol>
+ *     <li>Finish design.</li>
+ *     <li>Implementation.</li>
+ * </ol>
+ *
+ * <p><b>Blocking:</b></p>
+ * <ol>
+ *     <li>Nothing.</li>
+ * </ol>
+ *
+ *
+ *
+ * <h3>Friday 09/06/2017</h3>
+ *
+ * <p>Yesterday I've worked on:</p>
+ * <ol>
+ *     <li>Functional increment design.</li>
+ * </ol>
+ *
+ * <p><b>Today</b></p>
+ * <ol>
+ *     <li>Implementation.</li>
+ * </ol>
+ *
+ * <p><b>Blocking:</b></p>
+ * <ol>
+ *     <li>Nothing.</li>
+ * </ol>
+ *
+ *
+ *
+ * <h3>Saturday 10/06/2017</h3>
+ *
+ * <p>Yesterday I've worked on:</p>
+ * <ol>
+ *     <li>Implementation</li>
+ * </ol>
+ *
+ * <p><b>Today</b></p>
+ * <ol>
+ *     <li>Implementation</li>
+ * </ol>
+ *
+ * <p><b>Blocking:</b></p>
+ * <ol>
+ *     <li>Nothing.</li>
+ * </ol>
+ *
+ *
  *
  * @author Ivo Ferro [1151159]
  */

@@ -10,6 +10,7 @@ import lapr4.blue.s1.lang.n1151452.formula.lang.Assigner;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
+import lapr4.red.s2.lang.n1150690.formula.MonetaryValue;
 
 /**
  * A expression visitor that collects only nonAssignableRefs that are not
@@ -42,6 +43,8 @@ public class AssignableFetcher extends AbstractExpressionVisitor {
      * @return the non-assignable nonAssignableRefs that have been fetched
      */
     public SortedSet<Reference> getNonAssignableReferences(Expression expression) {
+        if(expression == null)
+            return new TreeSet<>();
 
         nonAssignableRefs = new TreeSet<>();
         expression.accept(this); // Fetches & fills non-assignable references set
@@ -89,5 +92,10 @@ public class AssignableFetcher extends AbstractExpressionVisitor {
         }
 
         return operation;
+    }
+
+    @Override
+    public Object visitMonetaryValue(MonetaryValue money) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

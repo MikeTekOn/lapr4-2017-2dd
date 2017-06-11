@@ -4,6 +4,7 @@ import csheets.core.Cell;
 import csheets.core.formula.Expression;
 import csheets.core.formula.compiler.ExpressionCompiler;
 import csheets.core.formula.compiler.FormulaCompilationException;
+import csheets.ui.ctrl.UIController;
 import lapr4.blue.s1.lang.n1151452.formula.compiler.BlueFormulaLexer;
 import lapr4.blue.s1.lang.n1151452.formula.compiler.BlueFormulaParser;
 import lapr4.blue.s1.lang.n1151452.formula.compiler.FormulaEvalVisitor;
@@ -16,6 +17,7 @@ import java.util.List;
 /**
  * A compiler that generates Excel-style expressions from strings.
  *
+ * @author Ricardo Catalão (1150385)
  * @author Tiago Correia
  * @author Einar Pehrson
  */
@@ -28,6 +30,8 @@ public class ConditionalStyleCompiler implements ExpressionCompiler {
     private static final char EXPRESSION_STARTER = '=';
 
     private static final ConditionalStyleCompiler instance = new ConditionalStyleCompiler();
+
+    private UIController uiController;
 
     /**
      * Returns the singleton instance.
@@ -50,7 +54,7 @@ public class ConditionalStyleCompiler implements ExpressionCompiler {
     }
 
     @Override
-    public Expression compile(Cell cell, String source) throws FormulaCompilationException {
+    public Expression compile(Cell cell, String source, UIController uiController) throws FormulaCompilationException {
         // Creates the lexer and parser
         //noinspection deprecation
         ANTLRInputStream input = new ANTLRInputStream(source);
@@ -72,7 +76,7 @@ public class ConditionalStyleCompiler implements ExpressionCompiler {
         }
 
         // Visit the expression and returns it
-        FormulaEvalVisitor eval = new FormulaEvalVisitor(cell);
+        FormulaEvalVisitor eval = new FormulaEvalVisitor(cell, uiController);
         Expression result = eval.visit(tree);
         if (eval.getNumberOfErrors() > 0) {
             throw new FormulaCompilationException(eval.getErrorsMessage());

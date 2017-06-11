@@ -72,7 +72,7 @@ public class WorkbookHandler {
         List<Cell> list = new ArrayList<>();
         for (int i = topLeftRow; i <= bottomRightRow; i++) {
             for (int j = topLeftColumn; j <= topRightColumn; j++) {
-                list.add(s.getCell(i, j));
+                list.add(s.getCell(j, i));
             }
         }
         return list;

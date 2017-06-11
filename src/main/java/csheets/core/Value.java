@@ -20,6 +20,7 @@
  */
 package csheets.core;
 
+import eapli.util.Strings;
 import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.Format;
@@ -357,6 +358,15 @@ public class Value implements Comparable<Value>, Serializable {
          * @return return
 	 */
 	public static Value parseValue(String value, Type... types) {
+            
+                // The empty string was being parsed as Date Type and it would be null at a later point.
+                // The empty string should be of the UNDEFINED type.
+                // The default Value constructor does the trick.
+                //@author Manuel Meireles (1150532)
+                if (Strings.isNullOrEmpty(value)){
+                    return new Value();
+                }
+                
 		// Uses default types
 		if (types.length == 0)
 			types = new Type[] {Type.BOOLEAN, Type.DATE, Type.NUMERIC};

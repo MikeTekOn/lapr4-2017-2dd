@@ -66,7 +66,7 @@ public class ConsoleV2 {
         printer.println("Enter formula here:");
 
         // Fetches a cell
-        Workbook workbook = new Workbook(1);
+        Workbook workbook = new Workbook(1, null);
         Spreadsheet sheet = workbook.getSpreadsheet(0);
         Cell cell = sheet.getCell(new Address(0, 0));
 
@@ -85,7 +85,7 @@ public class ConsoleV2 {
                 try {
                     ParseTree tree = parser.expression();
 
-                    FormulaEvalVisitor eval = new FormulaEvalVisitor(cell);
+                    FormulaEvalVisitor eval = new FormulaEvalVisitor(cell, null);
                     Expression expression = eval.visit(tree);
                     printer.println("Formula: " + expression + " = " + expression.evaluate());
                 } catch (RecognitionException e) {

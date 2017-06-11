@@ -9,6 +9,7 @@ import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.core.formula.util.ReferenceFetcher;
 import csheets.ext.style.StylableCell;
 import csheets.ext.style.StyleExtension;
+import csheets.ui.ctrl.UIController;
 
 import javax.swing.border.Border;
 import java.awt.*;
@@ -37,16 +38,19 @@ public class ConditionStylableCell extends StylableCell {
 
     private SortedSet<Cell> dependents;
 
+    private UIController uiController;
+    
     /**
      * The listeners registered to receive events from the condition stylable
      * cell
      */
     private transient List<ConditionStylableCellListener> listeners = new ArrayList<ConditionStylableCellListener>();
 
-    public ConditionStylableCell(Cell cell) {
+    public ConditionStylableCell(Cell cell, UIController uiController) {
         super(cell);
         userStyle=new UserStyle();
         dependents = new TreeSet<Cell>();
+        this.uiController = uiController;
     }
 
     public UserStyle userStyle(){ return userStyle; }
@@ -92,7 +96,7 @@ public class ConditionStylableCell extends StylableCell {
                 return;
             }
             try {
-                expression = ConditionalStyleCompiler.getInstance().compile(getDelegate(), getUserCondition());
+                expression = ConditionalStyleCompiler.getInstance().compile(getDelegate(), getUserCondition(), uiController);
                 SortedSet<Reference> references = (new ReferenceFetcher()).getReferences(expression);
 
                 if (getDelegate() == cell) {
@@ -106,7 +110,9 @@ public class ConditionStylableCell extends StylableCell {
                         }
                     }
                 }
-            } catch (FormulaCompilationException e) {                
+            } catch (FormulaCompilationException e) {
+                ConditionStylableCell c = (ConditionStylableCell) cell.getExtension(ConditionalStyleExtension.NAME);
+                c.setUserCondition(null);
                 throw new IllegalConditionException("The entered condition is not valid!");
             }
             try {

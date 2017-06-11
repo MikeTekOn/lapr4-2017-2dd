@@ -37,7 +37,7 @@
  * <p>
  * Interface DataTransmissionContext defines the context of data transportation. <p>
  * Class BasicDataTransmissionContext: simply redirects the data being sent/received to the channel where it will ne transported/arrive. <p>
- * Class SecureDataTransmissionContext: inserts a layer of security between the data being sent/received and the channel where it will ne transported/arrive. <p>
+ * Class SecureDataTransmissionContext: inserts a layer of security between the data being sent/received and the channel where it will ne transported/arrive.
  * <p>
  *
  *

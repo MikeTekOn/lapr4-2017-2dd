@@ -4,6 +4,8 @@ import csheets.core.IllegalValueTypeException;
 import csheets.core.Spreadsheet;
 import csheets.core.Value;
 import csheets.core.formula.Expression;
+import csheets.ui.ctrl.UIController;
+import java.util.ArrayList;
 import lapr4.blue.s1.lang.n1151159.macros.compiler.MacroCompilationException;
 import lapr4.blue.s1.lang.n1151159.macros.compiler.MacroCompiler;
 
@@ -14,19 +16,18 @@ import lapr4.blue.s1.lang.n1151159.macros.compiler.MacroCompiler;
  */
 public class MacroController {
 
-    /**
-     * Executes a given macro.
-     *
-     * @param spreadsheet the spreadsheet where the macro is going to be executed
-     * @param macroText   the macro text
-     * @return value of the last executed expression
-     * @throws MacroCompilationException macro compilation exception
-     * @throws IllegalValueTypeException illegal value type exception
-     */
-    public Value executeMacro(Spreadsheet spreadsheet, String macroText) throws MacroCompilationException, IllegalValueTypeException {
-        Expression macro = MacroCompiler.getInstance().compile(spreadsheet, macroText);
+    public static ArrayList<String> macroList;
+
+    public MacroController() {
+
+    }
+
+        public Value executeMacro(Spreadsheet spreadsheet, UIController uiController, String macroText) throws MacroCompilationException, IllegalValueTypeException {
+        Expression macro = MacroCompiler.getInstance().compile(spreadsheet, uiController, macroText);
         return macro.evaluate();
     }
+    
+
 
     /**
      * Gets the text of a default macro that calculate the average of 3 grades.

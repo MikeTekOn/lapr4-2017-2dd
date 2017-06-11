@@ -19,7 +19,7 @@ public class ConditionalStyleExtension extends Extension {
     /**
      * The name of the extension
      */
-    public static final String NAME = "Conditional Style";
+    public static final String NAME = "Conditional Formatting";
     
      /**
      * The description of the extension
@@ -32,12 +32,15 @@ public class ConditionalStyleExtension extends Extension {
      * The first version of the conditional style extension.
      */
     public static final int VERSION = 1;
+    public UIController uiController;
 
     /**
      * Creates a new Example extension.
+     * @param uiControlle
      */
-    public ConditionalStyleExtension() {
+    public ConditionalStyleExtension(UIController uiControlle){
         super(NAME, VERSION, DESCRIPTION);
+        this.uiController = uiControlle;
     }
 
     /**
@@ -48,7 +51,7 @@ public class ConditionalStyleExtension extends Extension {
      */
     @Override
     public ConditionStylableCell extend(Cell cell) {
-        return new ConditionStylableCell(cell);
+        return new ConditionStylableCell(cell,uiController);
     }
 
     /**

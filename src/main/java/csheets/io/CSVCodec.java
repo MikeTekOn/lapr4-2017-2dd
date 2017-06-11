@@ -34,6 +34,7 @@ import java.util.List;
 
 import csheets.core.Spreadsheet;
 import csheets.core.Workbook;
+import csheets.ui.ctrl.UIController;
 
 /**
  * A codec for comma-separated files.
@@ -44,10 +45,12 @@ public class CSVCodec implements Codec {
 	/** The string used to separate the content of different cells */
 	public static final String SEPARATOR = ";";
 
+	private UIController uiController;
+
 	/**
 	 * Creates a new CSV codec.
 	 */
-	public CSVCodec() {}
+	public CSVCodec(UIController uiController) {this.uiController = uiController;}
 
 	public Workbook read(InputStream stream) throws IOException {
 		// Wraps stream
@@ -76,7 +79,7 @@ public class CSVCodec implements Codec {
 		streamReader.close();
 		stream.close();
 
-		return new Workbook(content);
+		return new Workbook(uiController, content);
 	}
 
 	public void write(Workbook workbook, OutputStream stream) throws IOException {

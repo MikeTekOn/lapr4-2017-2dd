@@ -131,7 +131,8 @@ public class CommUDPServer extends Thread {
                 in = new ObjectInputStream(bis);
                 bos = new ByteArrayOutputStream();
                 out = new ObjectOutputStream(bos);
-                processIncommingDTO(in.readObject(), udpPacket);
+                Object obj = in.readObject();
+                processIncommingDTO(obj, udpPacket);
                 data = bos.toByteArray();
                 udpPacket.setData(data);
                 udpPacket.setLength(data.length);

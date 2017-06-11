@@ -1,0 +1,37 @@
+@startuml ipc04_02_design_export.png
+
+participant "ExportDataUI" as UI
+participant "FileChooser" as FileChooser
+participant "ExportDataController" as Controller
+participant "UIController" as UIController
+participant "Spreadsheet" as Spreadsheet
+participant "CellDTO" as CellDTO
+participant "LinkTxtController" as Controller
+participant "WriterThread" as Thread
+
+activate UI
+UI -> FileChooser : new()
+activate FileChooser
+UI <-- FileChooser : Requests file
+UI -> FileChooser : getFileToSave()
+UI <-- FileChooser : file
+deactivate FileChooser
+create Controller
+UI -> Controller : new(file)
+activate Controller
+Controller -> UIController : getActiveSpreadsheet()
+loop for (cell in range)
+    create CellDTO
+    Controller -> CellDTO : createFromCell(cell)
+end
+Controller -> Controller : setFileData(cellList)
+Controller -> LinkTxtController : fireWriterLinkThread()
+activate LinkTxtController
+LinkTxtController -> WriterThread : new()
+activate WriterThread
+LinkTxtController -> WriterThread : run()
+UI <-- Controller : success
+deactivate Controller
+deactivate UI
+
+@enduml ipc04_02_design_export.png

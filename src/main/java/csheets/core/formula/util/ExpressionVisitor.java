@@ -21,9 +21,10 @@
 package csheets.core.formula.util;
 
 import csheets.core.formula.*;
-import lapr4.blue.s1.lang.n1151088.temporaryVariables.TemporaryVariable;
+import lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable;
 import lapr4.blue.s1.lang.n1151159.macros.Macro;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperation;
+import lapr4.red.s2.lang.n1150690.formula.MonetaryValue;
 
 /**
  * An interface for using the Visitor pattern for traversing expressions.
@@ -94,6 +95,10 @@ public interface ExpressionVisitor {
      * @param tempVar temporary variable to be visited
      * @return an arbitrary object
      */
-    public Object visitTemporaryVariable(TemporaryVariable tempVar);
+    public Object visitTemporaryVariable(Variable tempVar);
+    
+    /**
+     */
+    public Object visitMonetaryValue(MonetaryValue money);
     
 }

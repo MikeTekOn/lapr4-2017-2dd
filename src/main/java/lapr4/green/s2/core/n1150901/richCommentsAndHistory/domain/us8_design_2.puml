@@ -1,0 +1,14 @@
+@startuml core02_03_design2.png
+
+    participant "User" as user
+    participant "CommentsWithHistoryUI" as ui
+    participant "CommentsWithHistoryController" as ctrl
+    
+    user -> ui : Selects comment
+    activate ui
+    ui -> ui : selectionChanged(event)
+    ui -> ui : updateList()
+    user <-- ui : Show history
+    deactivate ui
+
+@enduml

@@ -14,7 +14,7 @@ import lapr4.green.s1.ipc.n1150838.findworkbooks.ui.UIFindWorkbooksExtension;
  *
  * @author nunopinto
  */
-public class ExtensionFindWorkbooks extends Extension {
+public class ExtensionFindWorkbooks /*extends Extension */{
     
     /** The name of the extension */
     public static final String NAME = "Find Workbook";

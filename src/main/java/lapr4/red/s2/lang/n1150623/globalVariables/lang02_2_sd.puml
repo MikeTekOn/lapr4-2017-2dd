@@ -1,0 +1,63 @@
+@startuml lang02_2_sd.png
+
+actor User
+participant "UI"
+participant "FormulaEvalVisitor" as FEV
+participant "ExcelExpressionCompiler" as Compiler
+participant "VarContentor" as Contentor
+participant "Variable" as Var
+participant "ExpressionVisitor"
+participant "Operation" 
+participant "VariableFactory" as varfac
+
+title \nLang02.2 - Global Variables - Sequence Diagram\n\n
+
+activate UI
+User -> UI : Introduces formula containing global variable(s)
+UI -> FEV : visitExpression (expression)
+deactivate UI
+activate FEV
+activate Compiler
+FEV -> Compiler : getStarter()
+FEV -> Compiler : compile(cell,source)
+deactivate Compiler
+activate Contentor
+FEV -> Contentor : add(globalVar)
+
+activate varfac
+   Contentor -> varfac : createVariable(
+deactivate varfac
+
+create Var
+Contentor --> Var : create
+Contentor -> Contentor : add(createdGlobalVar)
+
+
+
+
+note right of Var
+Here put the persistence of Global variable (in the add method)
+end note
+
+
+
+
+
+deactivate Contentor
+activate Compiler
+FEV -> Compiler : visitGlobalVariable(globalVar)
+create ExpressionVisitor
+Compiler->ExpressionVisitor : create
+deactivate Compiler
+activate ExpressionVisitor
+activate Operation
+ExpressionVisitor -> Operation : evaluate()
+ExpressionVisitor -> Operation : accept(ExpressionVisitor visitor)
+Operation --> Operator : applyTo()
+deactivate Operation
+deactivate ExpressionVisitor
+activate UI
+FEV -> UI
+deactivate FEV
+UI -> User : Displays the formula result
+@enduml

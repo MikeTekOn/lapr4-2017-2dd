@@ -1,0 +1,17 @@
+@startuml core02_03_design3.png
+
+    participant "User" as user
+    participant "CommentsWithHistoryUI" as ui
+    participant "CommentsWithHistoryController" as ctrl
+
+    user -> ui : Enter word to search
+    activate ui
+    ui -> ctrl : searchPartOfWord(word)
+    activate ctrl
+    ctrl -> ctrl : searchPartOfWord(word)
+    ui <-- ctrl
+    deactivate ctrl
+    user <-- ui : Show result
+    deactivate ui
+
+@enduml

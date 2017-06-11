@@ -24,6 +24,7 @@
 package lapr4.gray.s1.lang.n3456789.formula.compiler;
 
 
+import csheets.ui.ctrl.UIController;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.RecognitionException;
@@ -63,7 +64,7 @@ public class ExcelExpressionCompiler implements ExpressionCompiler {
     }
 
     @Override
-    public Expression compile(Cell cell, String source) throws FormulaCompilationException {
+    public Expression compile(Cell cell, String source, UIController uiController) throws FormulaCompilationException {
         // Creates the lexer and parser
         ANTLRInputStream input = new ANTLRInputStream(source);
 
