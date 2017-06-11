@@ -1,0 +1,38 @@
+@startuml
+
+class ImportXmlUI{
+   
+}
+
+
+class ImportXmlController{
+   
+    + selectPath(path)
+    + importXml()
+    + validateExtension(file)
+}
+
+class ImportXml{
+    + importData()
+    + validateExtension(file)
+}
+
+class ImportContext{
+    + executeStrategy()
+}
+ 
+class UIController{
+  +setActiveWorkbook(work)
+}
+
+interface ImportStrategy {
+  + importData()
+}
+
+ImportXmlUI ..> ImportXmlController
+ImportXmlController ..> ImportContext
+ImportXmlController..>ImportXml
+ImportXml ->UIController
+ImportXml ->ImportContext
+ImportXml ..> ImportStrategy
+@enduml

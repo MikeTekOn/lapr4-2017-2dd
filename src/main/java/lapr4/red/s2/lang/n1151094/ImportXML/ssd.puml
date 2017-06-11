@@ -1,0 +1,10 @@
+@startuml
+actor User
+User -> UI:Starts importing xml
+activate User
+activate UI
+UI --> User:Open a window
+User -> UI:Select the file 
+User <-- UI:Validate file extension
+User <-- UI: informs about the sucess of the operation
+@enduml
