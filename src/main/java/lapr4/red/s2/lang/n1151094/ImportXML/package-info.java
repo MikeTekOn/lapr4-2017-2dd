@@ -66,7 +66,11 @@
  *
  * <h2>4. Design</h2>
  *
- * <h3><b>Sequence Diagrams</b></h3>
+ * <h3>4.1Functional Tests</h3>
+ * <ol>
+ *    <li>testImportXml()</li>
+ *    <li>testValidateExtension()</li>
+ * </ol>
  * <p>
  * <h3>Short Sequence Diagram</h3>
  * <img src="ssd.png" alt="image">
