@@ -22,6 +22,9 @@ public class ConditionalStyleExtension extends Extension {
     public static final String NAME = "Conditional Formatting";
     public UIController uiController;
 
+    public ConditionalStyleExtension(){
+        super(NAME);
+    }
     /**
      * Creates a new Example extension.
      */

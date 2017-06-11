@@ -77,7 +77,7 @@ public class ImportXml implements ImportStrategy {
             Node an;
 
             int contador = countSpreadSheet(listSpreadSheet), count = 0;
-            Workbook work = new Workbook(contador);
+            Workbook work = new Workbook(contador, null);
 
             for (int i = 0; i < listSpreadSheet.getLength(); i++) {
                 an = listSpreadSheet.item(i);
