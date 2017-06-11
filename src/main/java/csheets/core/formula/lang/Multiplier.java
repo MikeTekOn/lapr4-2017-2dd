@@ -24,6 +24,7 @@ import csheets.core.IllegalValueTypeException;
 import csheets.core.Value;
 import csheets.core.formula.BinaryOperator;
 import csheets.core.formula.Expression;
+import java.math.BigDecimal;
 
 /**
  * A multiplier.
@@ -40,8 +41,10 @@ public class Multiplier implements BinaryOperator {
 	public Multiplier() {}
 
 	public Value applyTo(Expression leftOperand, Expression rightOperand) throws IllegalValueTypeException {
-		return new Value(leftOperand.evaluate().toDouble()
-				* rightOperand.evaluate().toDouble());
+            //updated to realize multiplications with values in BigDecimal
+            BigDecimal left = new BigDecimal(leftOperand.evaluate().toDouble());
+            BigDecimal right = new BigDecimal(rightOperand.evaluate().toDouble());
+            return new Value(left.multiply(right));
 	}
 
 	public String getIdentifier() {
