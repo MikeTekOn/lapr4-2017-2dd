@@ -11,14 +11,11 @@ import lapr4.white.s1.core.n4567890.contacts.ui.ContactDialog;
  * Represents the builder of workbook preview area 
  * @author Diana Silva [1151088@isep.ipp.pt]
  */
-public class PreviewWorkbookBuilder implements Runnable{
+public class PreviewWorkbookBuilder{
     
     /** The workbook to preview*/
     private Workbook originalWorkbook;
-    /** The workbook with preview content*/
-    private Workbook workbookBuilded;
-    
-    private PreviewWorkbook previewWorkbook;
+
     /**The default number of rows previewed*/
     private static final int DEFAULT_NUMBER_ROWS=1;
     /**The default number of columns previewed*/
@@ -39,8 +36,8 @@ public class PreviewWorkbookBuilder implements Runnable{
      * @return preview workbook
      * @throws IllegalValueTypeException workbook not filled
      */
-    public void previewWorkbook() throws IllegalValueTypeException{
-        buildPreviewArea();
+    public PreviewWorkbook previewWorkbook() throws IllegalValueTypeException{
+        return buildPreviewArea();
     }
     
   
@@ -49,13 +46,10 @@ public class PreviewWorkbookBuilder implements Runnable{
      * @return 
      * @throws csheets.core.IllegalValueTypeException 
      */
-    private void buildPreviewArea() throws IllegalValueTypeException{
+    private PreviewWorkbook buildPreviewArea() throws IllegalValueTypeException{
         int i;
         int nSheets=this.originalWorkbook.getSpreadsheetCount(), sheetAddedCount=0;
-        workbookBuilded=new Workbook();
-        workbookBuilded.addSpreadsheet();
-        workbookBuilded.addSpreadsheet();
-        workbookBuilded.addSpreadsheet();
+        Workbook workbookBuilded=new Workbook();
         
          //verifies each sheet the first row cells
         for(i=0; i<nSheets; i++){
@@ -63,9 +57,10 @@ public class PreviewWorkbookBuilder implements Runnable{
             String[][] spreadsheetContent= findContentFirstFilledCells(originalWorkbook.getSpreadsheet(i));
             
             //includes only non-empty spreadsheets 
-            if(haveFilledCells(spreadsheetContent)){
+            if(spreadsheetContent!=null && haveFilledCells(spreadsheetContent)){
                 spreadsheetContent=cleanSpreadsheetContent(spreadsheetContent);
-                workbookBuilded.addSpreadsheet(spreadsheetContent);                
+                workbookBuilded.addSpreadsheet(spreadsheetContent);    
+                workbookBuilded.addSpreadsheet();
                 workbookBuilded.getSpreadsheet(sheetAddedCount).setTitle(DEFAULT_TITLE + originalWorkbook.getSpreadsheet(i).getTitle());
                 workbookBuilded.getSpreadsheet(sheetAddedCount+1).setTitle(DEFAULT_TITLE + originalWorkbook.getSpreadsheet(i).getTitle());
                
@@ -74,7 +69,8 @@ public class PreviewWorkbookBuilder implements Runnable{
             
         }
         try{
-           previewWorkbook= new PreviewWorkbook(workbookBuilded);
+           PreviewWorkbook previewWorkbook= new PreviewWorkbook(workbookBuilded);
+           return previewWorkbook;
         }catch(IllegalStateException e){}
         
         throw new IllegalStateException("It wasnt possible to create workbook "
@@ -105,24 +101,21 @@ public class PreviewWorkbookBuilder implements Runnable{
                     
                     //verifies if it´s non-filled cell
                     if(cellIsFilled(cell)){
-                        if(contentColumn!=0 && contentColumn<DEFAULT_NUMBER_COLUMNS-1){
-                           contentColumn++;
-                        } 
+                        
+                         
+                        if(cell.getValue()!=null)
+                            firstFilledContent[contentRow][contentColumn]=cell.getValue().toString();
+                        else
+                            firstFilledContent[contentRow][contentColumn]=cell.getContent();
+                        if(contentColumn<DEFAULT_NUMBER_COLUMNS-1){
+                             contentColumn++;
                         
                         //reach the last column
-                        if(contentColumn==DEFAULT_NUMBER_COLUMNS-1 && 
-                                contentRow<DEFAULT_NUMBER_ROWS-1){
-                                contentRow++;
-                                contentColumn=0;   
-                        }    
-                        if(cell.getValue() == null){
-                        
-                            firstFilledContent[contentRow][contentColumn]=cell.getValue().toString();    
-                        }else{
-  
-                            firstFilledContent[contentRow][contentColumn]=cell.getContent();
-                        }
-                        
+                        } else{
+                            contentRow++;
+                            contentColumn=0;
+                        } 
+                      
                          //previewWorkbook filled
                         if(contentRow==DEFAULT_NUMBER_ROWS-1 && contentColumn==DEFAULT_NUMBER_COLUMNS)
                             return firstFilledContent;
@@ -181,9 +174,9 @@ public class PreviewWorkbookBuilder implements Runnable{
      * @return true if all strings have content, false if not
      */
     private String[][] cleanSpreadsheetContent(String[][] ss){
-        String[][] cleanSs=new String[DEFAULT_NUMBER_ROWS][DEFAULT_NUMBER_ROWS];
+        String[][] cleanSs=new String[DEFAULT_NUMBER_ROWS][DEFAULT_NUMBER_COLUMNS];
         for (int row=0; row<DEFAULT_NUMBER_ROWS; row++) {
-            for(int column=0; column<DEFAULT_NUMBER_ROWS; column++){
+            for(int column=0; column<DEFAULT_NUMBER_COLUMNS; column++){
                 if(ss[row][column]==null)
                     cleanSs[row][column]="";
                 else
@@ -212,14 +205,5 @@ public class PreviewWorkbookBuilder implements Runnable{
     
     public static int getDefaultRowsPreview(){
         return DEFAULT_NUMBER_ROWS;
-    }
-
-    @Override
-    public void run() {
-        try {
-            previewWorkbook();
-        } catch (IllegalValueTypeException ex) {
-            ex.getMessage();
-        }
     }
 }

@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr4.green.s2.core.n1150800.PDFStyle;
+package lapr4.green.s2.core.n1150800.PDFStyle.presentation;
 
+import lapr4.green.s2.core.n1150800.PDFStyle.domain.ExportStylePDFThread;
 import com.itextpdf.text.BaseColor;
 import csheets.core.Spreadsheet;
 import csheets.ext.style.StyleExtension;
@@ -24,6 +25,7 @@ import javax.swing.JColorChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import lapr4.green.s2.core.n1150800.PDFStyle.application.ExportStylePDFController;
 import lapr4.red.s1.core.n1150451.exportPDF.presentation.ExportToPDFUI;
 
 /**

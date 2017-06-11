@@ -111,9 +111,14 @@
  * </code> <br/><br/>It is needed to use the cicle, and not just child(1), since the macro
  * name could be a combination of letters and numbers and, in that case, more
  * than one token would be detected.
+ * 
+ * <img src="domain_diagram.png" alt="image"/>
  *
  * <h3>4.3. Classes</h3>
  * <p>
+ * Two new classes were made in this iteration. The following is a UML representation of them:
+ * <img src="class_diagram.png" alt="image"/>
+ * 
  * <h3>4.4. Design Patterns and Best Practices</h3>
  * <p>
  * <h2>5. Implementation</h2>

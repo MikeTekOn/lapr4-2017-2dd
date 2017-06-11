@@ -1,0 +1,37 @@
+@startuml 
+
+'http://plantuml.com/skinparam.html'
+
+interface Expression {
+	+Value evaluate()
+	+Object accept(ExpressionVisitor visitor)
+}
+abstract class Operation <O extends Operator> {
+    getOperator()
+}
+
+interface BinaryOperator
+interface Operator
+
+
+note left : <b>concrete classes:\nAdder, LessThan, etc.
+class MonetaryValue{
+}
+class Value{
+}
+class BinaryOperation
+
+Value --> Expression
+MonetaryValue --> Expression
+BinaryOperation --> Expression : leftOperand
+BinaryOperation --> Expression : rightOperand
+
+Expression <|- Operation
+Operation <|--- BinaryOperation
+
+
+Operator <|- BinaryOperator
+
+BinaryOperation *--- BinaryOperator
+
+@enduml

@@ -1,10 +1,15 @@
-@startuml formulas_domain_model.png
+@startuml domain_model_macros.png
 
 'http://plantuml.com/skinparam.html'
-
+skinparam handwritten true
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
 
 class Formula {
-	+Formula(Cell cell, Expression expression) 
+	+Formula(Cell cell, Expression expression)
+}
+class Macro {
+	+Macro(List<Expression> expressions)
 }
 interface Expression {
 	+Value evaluate()
@@ -16,14 +21,19 @@ interface UnaryOperator
 note right : <b>concrete classes:\nPercent, etc.
 interface BinaryOperator
 note left : <b>concrete classes:\nAdder, LessThan, etc.
-interface NaryOperator 
-
+interface NaryOperator <<<b>analysis>>
+class SequenceBlock <<<b>analysis>> {
+    +Value applyTo(Expression[] operands)
+}
+class Assignment <<<b>analysis>> {
+    +Value applyTo(Expression[] operands)
+}
 abstract class Operation <O extends Operator> {
-    getOperator() 
+    getOperator()
 }
 class UnaryOperation
 class BinaryOperation
-class NaryOperation
+class NaryOperation <<<b>analysis>>
 class FunctionCall
 class Literal
 interface ExpressionVisitor {
@@ -33,14 +43,15 @@ interface ExpressionVisitor {
 	+Object visitReference(Reference reference)
 	+Object visitFunctionCall(FunctionCall call)
 	+Object visitNaryOperation(NaryOperation operation)
-        <b>+Object visitMonetaryValue(MonetaryValue operation)</b>
+	+Object visitMacro(Expression)
+        <b>+Object visitMacro_invoked(Expression)</b>
 }
 note right : <b>Vistior pattern to transverse\n<b>expressions and compile them
+Expression <|-- Macro
 Expression <|-- Formula
 Expression <|-- Reference
 Expression <|-- Operation
 Expression <|-- FunctionCall
-Expression <|-- MonetaryValue
 Expression <|-- Literal
 Operation <|-- UnaryOperation
 Operation <|-- BinaryOperation
@@ -61,5 +72,7 @@ UnaryOperation *-- UnaryOperator
 BinaryOperation *-- BinaryOperator
 NaryOperation *-- NaryOperator
 
+NaryOperator <|-- SequenceBlock
 
+BinaryOperator <|-- Assignment
 @enduml

@@ -1,6 +1,5 @@
 package lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.ui;
 
-import csheets.core.IllegalValueTypeException;
 import csheets.core.Workbook;
 import csheets.ui.ctrl.UIController;
 import java.awt.BorderLayout;
@@ -15,8 +14,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -143,9 +140,10 @@ protected ActionListener[] buttonListeners;
     
     private Workbook buildPreviewWorkbookDefault(){
         
-        String[][] content={{"Please cliic"}};
-        return new Workbook(findExtension,content);
-        
+        String[][] content={{"Please select workbook to preview"}};
+        Workbook b= new Workbook(content);
+        b.addSpreadsheet(content);
+        return b;
     }
     
     /**
