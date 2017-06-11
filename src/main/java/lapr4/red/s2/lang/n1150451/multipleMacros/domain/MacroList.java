@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr4.red.s2.lang.n1150451.multipleMacros;
+package lapr4.red.s2.lang.n1150451.multipleMacros.domain;
 
 import csheets.core.Spreadsheet;
 import java.io.Serializable;

@@ -30,7 +30,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import lapr4.red.s2.lang.n1150451.multipleMacros.MacroList;
+import lapr4.red.s2.lang.n1150451.multipleMacros.domain.MacroList;
 
 /**
  * A workbook which can contain several spreadsheets.

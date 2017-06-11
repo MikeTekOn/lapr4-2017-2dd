@@ -26,7 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import lapr4.red.s2.lang.n1150451.multipleMacros.MacroWithName;
+import lapr4.red.s2.lang.n1150451.multipleMacros.domain.MacroWithName;
 import lapr4.red.s2.lang.n1150451.multipleMacros.application.MultipleMacrosWithNameController;
 
 /**
