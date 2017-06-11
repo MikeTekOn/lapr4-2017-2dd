@@ -132,10 +132,11 @@ public class ConditionStylableCell extends StylableCell {
             } catch (IllegalValueTypeException e) {                
                 throw new IllegalConditionException("Invalid cell value: " + e.toString());
             }        
-        }else{
-            StylableCell stylableCell = (StylableCell) getDelegate().getExtension(StyleExtension.NAME);
-            stylableCell.resetStyle();
         }
+//        else{
+//            StylableCell stylableCell = (StylableCell) getDelegate().getExtension(StyleExtension.NAME);
+//            stylableCell.resetStyle();
+//        }
     }
 
     /**
