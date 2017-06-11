@@ -136,6 +136,7 @@ public class CommUDPClient extends Thread implements Observer {
                 sock.send(udpPacket);
                 sock.setSoTimeout(waitingTime);
                 Thread.sleep(22000);
+                updateDto();
             }
         } catch (SocketTimeoutException ex) {
             // There are no more replies, the client should finish its execution
@@ -198,7 +199,16 @@ public class CommUDPClient extends Thread implements Observer {
 
     @Override
     public void update(Observable o, Object o1) {
-        this.dto = o;
+        this.dto = o1;
+    }
+
+    private void updateDto()
+    {
+        try {
+            this.dto = new FileNameListDTO(ShareAction.fillListOfSharedfiles(), ((FileNameListDTO)dto).tcpPort());
+        } catch (IOException ex) {
+            Logger.getLogger(CommUDPClient.class.getName()).log(Level.SEVERE, null, ex);
+}
     }
 
 }
