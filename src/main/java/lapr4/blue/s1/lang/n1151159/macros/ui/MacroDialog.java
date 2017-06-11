@@ -251,6 +251,7 @@ public class MacroDialog extends JDialog {
                     } else if (beanShellLanguageRadioButton.isSelected()) {
 
                         try {
+                            macroController.emptyList();
                             BeanShellClassLoaderController beanShellController = new BeanShellClassLoaderController();
                             BeanShellResult result = beanShellController.createAndExecuteScript(macroText, uiController);
                             macroOutputTextField.setText(result.lastResult());
