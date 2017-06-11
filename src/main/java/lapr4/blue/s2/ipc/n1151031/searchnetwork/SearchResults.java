@@ -32,6 +32,7 @@ public class SearchResults implements Serializable {
      *
      * @param workbookName the workbook name
      * @param spreadsheetList the list of spreadsheets in the workbook
+     * @param address the address
      */
     public SearchResults(String workbookName, List<Spreadsheet> spreadsheetList, InetAddress address) {
         this.workbookName = workbookName;

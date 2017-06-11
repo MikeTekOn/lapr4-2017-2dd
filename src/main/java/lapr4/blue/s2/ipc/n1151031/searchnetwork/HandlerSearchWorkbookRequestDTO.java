@@ -16,6 +16,8 @@ import lapr4.green.s1.ipc.n1150532.comm.connection.HandlerConnectionDetailsReque
 import lapr4.green.s1.ipc.n1150532.comm.connection.PacketEncapsulatorDTO;
 
 /**
+ * The class that handles request DTO's.
+ * 
  * @author Tiago Correia - 1151031@isep.ipp.pt
  */
 public class HandlerSearchWorkbookRequestDTO implements CommHandler, Serializable {

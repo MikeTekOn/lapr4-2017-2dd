@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
+ * The data transfer object for replies.
+ * 
  * @author Tiago Correia - 1151031@isep.ipp.pt
  */
 public class SearchWorkbookResponseDTO implements DTO, Serializable {

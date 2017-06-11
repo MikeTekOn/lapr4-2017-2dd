@@ -6,6 +6,7 @@ import csheets.ui.ext.UIExtension;
 import lapr4.blue.s2.ipc.n1151031.searchnetwork.ui.SearchWorkbookNetworkUIExtension;
 
 /**
+ * The Search workbook in the network Extension.
  *
  * @author Tiago Correia - 1151031@isep.ipp.pt
  */
