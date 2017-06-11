@@ -54,14 +54,26 @@ public class ReaderThread implements Runnable {
     private final Thread readerThread;
 
     /**
+     * The current thread id.
+     */
+    private static long threadId = -1;
+
+    /**
+     * The is running boolean.
+     */
+    private static volatile boolean isRunning;
+
+    /**
      * Creates a new reader thread.
      *
-     * @param fileToRead
-     * @param seperatorCharacter
-     * @param cellRange
-     * @param firstLineRepresentsHeaders
-     * @param activeSpreadsheet
-     * @param uiController
+     * @param fileToRead the file to read from
+     * @param seperatorCharacter the separator character to recognize as
+     * different column
+     * @param cellRange the cell range
+     * @param firstLineRepresentsHeaders the boolean that represents if first
+     * line is a header or not
+     * @param activeSpreadsheet the active spreadsheet
+     * @param uiController the user interface
      */
     public ReaderThread(File fileToRead, char seperatorCharacter, CellRange cellRange, boolean firstLineRepresentsHeaders, UIController uiController, Spreadsheet activeSpreadsheet) {
         this.fileToRead = fileToRead;
@@ -70,6 +82,7 @@ public class ReaderThread implements Runnable {
         this.firstLineRepresentsHeaders = firstLineRepresentsHeaders;
         this.activeSpreadsheet = activeSpreadsheet;
 
+        isRunning = true;
         this.readerThread = new Thread(this);
         this.readerThread.start();
     }
@@ -77,27 +90,47 @@ public class ReaderThread implements Runnable {
     @Override
     public void run() {
 
-        while (true) {
+        threadId = Thread.currentThread().getId();
+        while (isRunning) {
             try {
-                System.out.println("I AM THE SYNCHRONIZATION THREAD!\n");
+                //System.out.println("I AM THE SYNCHRONIZATION THREAD!\n");
                 readData();
             } catch (FormulaCompilationException | IOException e) {
                 e.printStackTrace();
             }
 
-            //update every seconds
+            //update every 2 seconds
             try {
-                Thread.sleep(5000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-            }
 
+                //Thread.currentThread().wait(Long.MAX_VALUE);
+                // Thread.currentThread().interrupt();
+            }
         }
+        threadId = -1;
+    }
+
+    /**
+     * Kills the current thread.
+     */
+    public static void kill() {
+        isRunning = false;
+    }
+
+    /**
+     * Obtains the current thread id.
+     *
+     * @return the current thread id
+     */
+    public static long obtainsThreadId() {
+        return ReaderThread.threadId;
     }
 
     /**
      * This method reads the data from the file and fills a range of cells with
-     * the given data
+     * the given data.
      *
      * @throws IOException
      * @throws FormulaCompilationException
@@ -108,11 +141,12 @@ public class ReaderThread implements Runnable {
     }
 
     /**
-     * Reads and returns the file data
+     * Reads and returns the file data.
      *
      * @return a list of cells containing the data read from a file
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @throws FileNotFoundException throws this exception if does not find the
+     * file
+     * @throws IOException throws this exception if error inputing or outputing
      */
     private CellDTO[][] getFileData() throws FileNotFoundException, IOException {
         FileInputStream stream = new FileInputStream(this.fileToRead);
@@ -179,8 +213,9 @@ public class ReaderThread implements Runnable {
     /**
      * Fills the cells with the data received from the parameter.
      *
-     * @param cellList - matrix containing the data
-     * @throws FormulaCompilationException
+     * @param cellList the matrix containing the data
+     * @throws FormulaCompilationException an exception that is thrown during
+     * compilation.
      */
     public void fillCells(CellDTO[][] cellList) throws FormulaCompilationException {
         int i, j;
@@ -208,9 +243,8 @@ public class ReaderThread implements Runnable {
                             stylableCell.getFont().getStyle() & Font.BOLD, stylableCell.getFont().getSize()));
 
                 }
-
             }
         }
-
     }
+
 }

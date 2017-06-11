@@ -5,12 +5,14 @@ import java.awt.GridLayout;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionListener;
-import lapr4.blue.s2.ipc.n1151031.searchnetwork.SearchResult;
+import javax.swing.table.DefaultTableCellRenderer;
+import lapr4.blue.s2.ipc.n1151031.searchnetwork.SearchResults;
 
 /**
  * The table with the results of the workbook's network search.
@@ -44,7 +46,7 @@ public class SearchWorkbookNetworkTable extends JPanel implements Observer {
     private void createUserInterface() {
         final int bottomUpPadding = 5;
         final int sidesPadding = 20;
-        final Dimension size = new Dimension(400, 125);
+        final Dimension size = new Dimension(400, 250);
 
         setLayout(new GridLayout(1, 1));
         table = new JTable(controller);
@@ -52,9 +54,19 @@ public class SearchWorkbookNetworkTable extends JPanel implements Observer {
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setFillsViewportHeight(false);
         table.setPreferredScrollableViewportSize(size);
+        table.setRowHeight(30);
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBorder(BorderFactory.createEmptyBorder(bottomUpPadding, sidesPadding, bottomUpPadding, sidesPadding));
         add(scrollPane);
+
+        //table customization
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        table.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+        table.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+        table.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
+        table.getColumnModel().getColumn(2).setMaxWidth(40);
+        table.getColumnModel().getColumn(3).setMinWidth(100);
     }
 
     /**
@@ -62,7 +74,7 @@ public class SearchWorkbookNetworkTable extends JPanel implements Observer {
      *
      * @param result the result added
      */
-    public void insertRow(SearchResult result) {
+    public void insertRow(SearchResults result) {
         controller.addRow(result);
     }
 
@@ -90,8 +102,8 @@ public class SearchWorkbookNetworkTable extends JPanel implements Observer {
      */
     @Override
     public void update(Observable o, Object arg) {
-        if (arg instanceof SearchResult) {
-            insertRow((SearchResult) arg);
+        if (arg instanceof SearchResults) {
+            insertRow((SearchResults) arg);
         }
     }
 

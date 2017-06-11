@@ -38,7 +38,20 @@ public class WriterThread implements Runnable {
      */
     private final Thread writerThread;
 
+    /**
+     * The cells DTO's matrix.
+     */
     private CellDTO[][] cellsDTO;
+
+    /**
+     * The current thread id.
+     */
+    private static long threadId = -2;
+
+    /**
+     * The is running boolean.
+     */
+    private static volatile boolean isRunning;
 
     /**
      * Creates a new instance of writer thread.
@@ -52,6 +65,7 @@ public class WriterThread implements Runnable {
         this.fileToWrite = fileToWrite;
         this.separatorCharacter = separatorCharacter;
 
+        isRunning = true;
         this.writerThread = new Thread(this);
         this.writerThread.start();
     }
@@ -59,28 +73,48 @@ public class WriterThread implements Runnable {
     @Override
     public void run() {
 
-        while (true) {
-            System.out.println("I AM THE SYNCHRONIZATION THREAD!\n");
+        while (isRunning) {
+
+            threadId = Thread.currentThread().getId();
+            //System.out.println("I AM THE SYNCHRONIZATION THREAD!\n");
             this.cellsDTO = getCellsFromRange(this.activeSpreadsheet);
             try {
                 setToFile(cellsDTO);
             } catch (IOException ex) {
                 Logger.getLogger(WriterThread.class.getName()).log(Level.SEVERE, null, ex);
             }
-            //update every seconds
+            //update every 2 seconds
             try {
-                Thread.sleep(1000);
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+        threadId = -2;
+    }
+
+    /**
+     * Kills the current thread.
+     */
+    public static void kill() {
+        isRunning = false;
+    }
+
+    /**
+     * Obtains the current thread id.
+     *
+     * @return the current thread id
+     */
+    public static long obtainsThreadId() {
+        return WriterThread.threadId;
     }
 
     /**
      * This method obtains the contains from the cells in the defined range
      *
      * @param activeSpreadsheet
-     * @return the cells' content
+     *
+     * @return the cells content
      */
     public CellDTO[][] getCellsFromRange(Spreadsheet activeSpreadsheet) {
         int rows = activeSpreadsheet.getRowCount() + 1;
@@ -101,12 +135,13 @@ public class WriterThread implements Runnable {
     }
 
     /**
-     * Writes the data from the cells into a file with
+     * Writes the data from the cells into a file
      *
      * @param cellList - the list of cells that contains the data to be written
      * into a file
-     * @throws FileNotFoundException
-     * @throws IOException
+     * @throws FileNotFoundException throws this exception if does not find the
+     * file
+     * @throws IOException throws this exception if error inputing or outputing
      */
     public void setToFile(CellDTO[][] cellList) throws FileNotFoundException, IOException {
         FileOutputStream stream = new FileOutputStream(this.fileToWrite);
@@ -131,7 +166,6 @@ public class WriterThread implements Runnable {
         }
 
         bw.flush();
-
         bw.close();
     }
 

@@ -35,7 +35,7 @@ import javax.swing.JTextField;
  *
  * @author Sofia Silva [1150690@isep.ipp.pt]
  */
-public class ConfigurateExchangeRatesUI extends JDialog {
+public class ConfigureExchangeRatesUI extends JDialog {
 
     /**
      * The width of the JDialog.
@@ -50,7 +50,7 @@ public class ConfigurateExchangeRatesUI extends JDialog {
     /**
      * The controller of this use case.
      */
-    private ConfigurateExchangeRatesController controller;
+    private ConfigureExchangeRatesController controller;
 
     /**
      * The user interface controller.
@@ -67,9 +67,9 @@ public class ConfigurateExchangeRatesUI extends JDialog {
      *
      * @param uiController the user interface controller
      */
-    public ConfigurateExchangeRatesUI(UIController uiController) {
+    public ConfigureExchangeRatesUI(UIController uiController) {
         this.uiController = uiController;
-        this.controller = new ConfigurateExchangeRatesController();
+        this.controller = new ConfigureExchangeRatesController();
         this.fields = new ArrayList<>();
         super.setMinimumSize(new Dimension(WIDTH, HEIGHT));
         createComponents();
@@ -90,7 +90,7 @@ public class ConfigurateExchangeRatesUI extends JDialog {
 
         grid.gridx = 0;
         grid.gridy = 0;
-        JLabel l = new JLabel("<html><h2>Configurate Exchange Rates</h2></html>");
+        JLabel l = new JLabel("<html><h2>Configure Exchange Rates</h2></html>");
         l.setBackground(this.getBackground());
         panel.add(l, grid);
 
@@ -137,7 +137,7 @@ public class ConfigurateExchangeRatesUI extends JDialog {
                     try {
                         valueToUpdate = controller.changeExchangeRate(exchange, Double.parseDouble(valueChanged.toString()));
                     } catch (IOException | URISyntaxException ex) {
-                        Logger.getLogger(ConfigurateExchangeRatesUI.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(ConfigureExchangeRatesUI.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     String[] coinNames = exchange.split("To");
                     String dependentExchangeName = coinNames[1].trim() + "To" + coinNames[0].trim();

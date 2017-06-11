@@ -12,14 +12,23 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
+import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
+import lapr4.green.s1.ipc.n1150532.comm.ui.ConnectToPeerAction;
+import lapr4.green.s1.ipc.n1150657.chat.ControllerConnection;
 import lapr4.green.s1.ipc.n1150657.chat.ext.ChatExtension;
+import lapr4.green.s1.ipc.n1150657.chat.ui.ChatAction;
+import lapr4.green.s1.ipc.n1150657.chat.ui.NewMessageFrame;
 
 /**
  * It represents the Panel for the chat.
@@ -60,6 +69,11 @@ public class ChatParticipantsPanel extends JPanel {
      * The button to search peers.
      */
     private JButton btSearch;
+    
+    /**
+     * The button to change profile of user chat.
+     */
+    private JButton btChangeProfile;
 
     /**
      * The button to connect to a peer.
@@ -142,18 +156,23 @@ public class ChatParticipantsPanel extends JPanel {
      * @return It return the panel.
      */
     private JPanel createNetworkBottomButtonsPanel() {
-        final String searchBtText = "Search";
+        final String searchBtText = "Turn On / Search";
         final String connectBtText = "Connect";
+        final String changeProfile = "Change Profile";
         final int allignment = FlowLayout.CENTER;
         final JPanel panel = new JPanel(new GridLayout(1, 2));
         final JPanel p1 = new JPanel(new FlowLayout(allignment));
         final JPanel p2 = new JPanel(new FlowLayout(allignment));
+        final JPanel p3 = new JPanel(new FlowLayout(allignment));
         btSearch = new JButton(searchBtText);
         btConnect = new JButton(connectBtText);
+        btChangeProfile = new JButton(changeProfile);
         p1.add(btSearch);
         p2.add(btConnect);
+        p3.add(btChangeProfile);
         panel.add(p1);
         panel.add(p2);
+        panel.add(p3);
         return panel;
     }
     
@@ -163,6 +182,23 @@ public class ChatParticipantsPanel extends JPanel {
     private void createInteractions() {
         btSearch.addActionListener(new ChatParticipantsPanel.SearchUserAction());
         btConnect.addActionListener(new ChatParticipantsPanel.ConnectAction());
+        btChangeProfile.addActionListener(new ChatParticipantsPanel.ChangeProfileAction());
+    }
+    
+    /**
+     * The action listener for the search button.
+     */
+    private class ChangeProfileAction implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            try {
+                final ChangeUserChatProfileUI cucp = new ChangeUserChatProfileUI();
+            } catch (IOException ex) {
+                Logger.getLogger(ChatParticipantsPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
     }
     
     /**
@@ -172,8 +208,13 @@ public class ChatParticipantsPanel extends JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            table.clear();
-            (new ChatParticipantsAction(table, 15310)).actionPerformed(e);
+            try{
+                table.clear();            
+                (new ChatParticipantsAction(table, 15310)).actionPerformed(e);
+                btSearch.setEnabled(false);
+            } catch (NullPointerException n){
+                JOptionPane.showMessageDialog(null, "Go to Network Tab and click Activate");
+            }
         }
 
     }
@@ -184,12 +225,18 @@ public class ChatParticipantsPanel extends JPanel {
     private class ConnectAction implements ActionListener {
 
         @Override
-        public void actionPerformed(ActionEvent e) {
-            /**
-            ConnectionID connection = table.getSelectedRowFile();
-            if (connection != null) {
-                (new ConnectToPeerAction(connection)).actionPerformed(e);
-            }*/
+        public void actionPerformed(ActionEvent e) {                
+            if(table.getSelectedRowFile().getStatus().equals("OFFLINE")){
+                JOptionPane.showMessageDialog(null, table.getSelectedRowFile().getUserChatProfileNickname()
+                        +" is OFFLINE","Error",JOptionPane.INFORMATION_MESSAGE);
+            }else{         
+                ConnectionID connection = table.getSelectedRowFile().getConnectionID();
+                if (connection != null) {
+                    ControllerConnection.setChatController(connection);
+                    (new ConnectToPeerAction(connection)).actionPerformed(e);
+                    (new ChatAction(connection, theController)).actionPerformed(e);
+                }
+            }
         }
 
     }

@@ -1,18 +1,32 @@
 package lapr4.blue.s2.ipc.n1151031.searchnetwork;
 
+import csheets.core.Spreadsheet;
+import csheets.core.Workbook;
+import csheets.ui.ctrl.UIController;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
 import lapr4.green.s1.ipc.n1150532.comm.connection.HandlerConnectionDetailsRequestDTO;
+import lapr4.green.s1.ipc.n1150532.comm.connection.PacketEncapsulatorDTO;
 
 /**
- * @FIXME
+ * The class that handles request DTO's.
+ * 
  * @author Tiago Correia - 1151031@isep.ipp.pt
  */
 public class HandlerSearchWorkbookRequestDTO implements CommHandler, Serializable {
+
+    private final UIController uiController;
+
+    public HandlerSearchWorkbookRequestDTO(UIController uiController) {
+        this.uiController = uiController;
+    }
 
     /**
      * The last DTO received.
@@ -31,9 +45,30 @@ public class HandlerSearchWorkbookRequestDTO implements CommHandler, Serializabl
     public void handleDTO(Object dto, ObjectOutputStream outStream) {
         lastReceivedDTO = dto;
 
-        //@TODO
-        
-        SearchWorkbookResponseDTO reply = new SearchWorkbookResponseDTO(null);
+        PacketEncapsulatorDTO encapsulator = (PacketEncapsulatorDTO) dto;
+        SearchWorkbookRequestDTO request = (SearchWorkbookRequestDTO) encapsulator.getDTO();
+        String workbookName = request.getWorkbookName();
+
+        //searches for active workbooks with received name pattern
+        //returns a list of workbooks found with the name and spreadsheet list
+        List<SearchResults> results = new ArrayList();
+        Stack<Workbook> activeWorkbooks = uiController.getActiveWorkbooks();
+        for (Workbook workbook : activeWorkbooks) {
+            if (uiController.getFile(workbook) != null) {
+                String name = uiController.getFile(workbook).getName();
+                List<Spreadsheet> spreadsheetList = new ArrayList();
+                if (name.contains(workbookName) && !workbookName.equals("")) {
+                    int numSpreadsheets = workbook.getSpreadsheetCount();
+                    for (int i = 0; i < numSpreadsheets; i++) {
+                        spreadsheetList.add(workbook.getSpreadsheet(i));
+                    }
+                    SearchResults searchResult = new SearchResults(name, spreadsheetList, null);
+                    results.add(searchResult);
+                }
+            }
+        }
+
+        SearchWorkbookResponseDTO reply = new SearchWorkbookResponseDTO(results);
         try {
             outStream.writeObject(reply);
             outStream.flush();

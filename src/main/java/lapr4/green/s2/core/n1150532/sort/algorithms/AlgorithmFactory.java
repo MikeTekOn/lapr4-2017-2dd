@@ -23,8 +23,8 @@ public class AlgorithmFactory {
      */
     public List<SortingAlgorithm> buildAllSortingAlgorithms() {
         List<SortingAlgorithm> list = new ArrayList<>();
-        list.add(new QuickSort());
         list.add(new BubbleSort());
+        list.add(new QuickSort());
         return list;
     }
 

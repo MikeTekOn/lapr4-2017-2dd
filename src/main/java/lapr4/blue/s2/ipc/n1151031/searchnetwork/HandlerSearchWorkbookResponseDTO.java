@@ -16,7 +16,8 @@ import lapr4.green.s1.ipc.n1150532.comm.connection.HandlerConnectionDetailsRespo
 import lapr4.green.s1.ipc.n1150532.comm.connection.PacketEncapsulatorDTO;
 
 /**
- * @FIXME
+ * Class that handles the response DTO.
+ * 
  * @author Tiago Correia - 1151031@isep.ipp.pt
  */
 public class HandlerSearchWorkbookResponseDTO extends Observable implements CommHandler, Serializable {
@@ -28,7 +29,7 @@ public class HandlerSearchWorkbookResponseDTO extends Observable implements Comm
 
     /**
      * Stores the received DTO as the last received DTO. If the workbook was
-     * found it publishes the SearchResult.
+     * found it publishes the results.
      *
      * @param dto The received DTO. It is suppose to be an
      * SearchWorkbookResponseDTO.
@@ -39,13 +40,16 @@ public class HandlerSearchWorkbookResponseDTO extends Observable implements Comm
         lastReceivedDTO = dto;
         PacketEncapsulatorDTO reply = (PacketEncapsulatorDTO) dto;
         InetAddress serverIP = reply.getPacket().getAddress();
-        String workbookName = ((SearchWorkbookResponseDTO) reply.getDTO()).getWorkbookName();
-        //String summary = ((SearchWorkbookResponseDTO) reply.getDTO()).getSummary();
-        if (isOutsiderAnnouncement(serverIP)) {
-            setChanged();
-            SearchResult result = new SearchResult(serverIP, workbookName);
-            notifyObservers(result);
+        List<SearchResults> results = ((SearchWorkbookResponseDTO) reply.getDTO()).getSearchResultsList();
+
+        for (SearchResults result : results) {
+            if (isOutsiderAnnouncement(serverIP)) {
+                setChanged();
+                SearchResults tableEntry = new SearchResults(result.getWorkbookName(), result.getSpreadsheetList(), serverIP);
+                notifyObservers(tableEntry);
+            }
         }
+
     }
 
     /**

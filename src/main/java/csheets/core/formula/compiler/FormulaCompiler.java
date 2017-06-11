@@ -30,6 +30,7 @@ import csheets.CleanSheets;
 import csheets.core.Cell;
 import csheets.core.formula.Expression;
 import csheets.core.formula.Formula;
+import csheets.ui.ctrl.UIController;
 
 /**
  * A compiler that generates formulas from strings.
@@ -45,7 +46,7 @@ public class FormulaCompiler {
 
 	/** The expression compilers used to compile formulas */
 	private List<ExpressionCompiler> compilers = new ArrayList<ExpressionCompiler>();
-	
+
 	/**
 	 * Creates the formula compiler.
 	 */
@@ -108,10 +109,10 @@ public class FormulaCompiler {
 	 * @return a list of lexical tokens
 	 * @throws FormulaCompilationException if the formula could not be compiled
 	 */
-	public Formula compile(Cell cell, String source) throws FormulaCompilationException {
+	public Formula compile(Cell cell, String source,UIController uiController) throws FormulaCompilationException {
 		for (ExpressionCompiler compiler : compilers)
 			if (source.charAt(0) == compiler.getStarter()) {
-				Expression expression = compiler.compile(cell, source);
+				Expression expression = compiler.compile(cell, source, uiController);
 				return new Formula(cell, expression);
 			}
 		return null;

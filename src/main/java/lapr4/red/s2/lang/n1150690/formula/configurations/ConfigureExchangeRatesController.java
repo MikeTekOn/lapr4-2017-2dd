@@ -26,7 +26,7 @@ import lapr4.red.s2.lang.n1150690.formula.MonetaryConvertion;
  *
  * @author Sofia Silva [1150690@isep.ipp.pt]
  */
-public class ConfigurateExchangeRatesController {
+public class ConfigureExchangeRatesController {
 
     /**
      * The name of the file that contains the exchange rates.
@@ -46,7 +46,7 @@ public class ConfigurateExchangeRatesController {
     /**
      * Creates a new configurations controller.
      */
-    public ConfigurateExchangeRatesController() {
+    public ConfigureExchangeRatesController() {
         fillExchangeRatesName();
         rates = new ArrayList<>();
     }
@@ -122,7 +122,7 @@ public class ConfigurateExchangeRatesController {
         URL resource = CleanSheets.class.getResource(PROPERTIES_FILE);
         URI e = resource.toURI();
         String path = e.getPath();
-        Files.updatePropertyValue(dependentExchangeName, String.valueOf(newValue), in, path);
+        Files.updatePropertyValue(dependentExchangeName, String.valueOf(dependentExchangeRate), in, path);
 
         return String.valueOf(dependentExchangeRate);
     }

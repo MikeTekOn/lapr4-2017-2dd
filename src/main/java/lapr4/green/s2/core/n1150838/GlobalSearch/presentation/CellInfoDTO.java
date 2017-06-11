@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr4.green.s2.core.n1150838.GlobalSearch.domain;
+package lapr4.green.s2.core.n1150838.GlobalSearch.presentation;
 
 import csheets.core.Cell;
 import csheets.core.Workbook;
@@ -14,10 +14,21 @@ import eapli.framework.dto.DTO;
  * @author Nuno Pinto 1150838
  */
 public class CellInfoDTO implements DTO {
-
+    /**
+     * The cell that matchs the given regex
+     */
     private Cell cell;
+    /**
+     * The wokbook were the cell was found
+     */
     private Workbook workbook;
+    /**
+     * The workbook name
+     */
     private String workbookName;
+    /**
+     * Number of the spreadsheet that the cell was found
+     */
     private int spreadsheetNumber;
 
     public CellInfoDTO(Cell cell, int spreadsheetNumber,Workbook workbook,String workbookName) {
@@ -58,10 +69,6 @@ public class CellInfoDTO implements DTO {
      */
     public int getSpreadsheetNumber() {
         return spreadsheetNumber;
-    }
-    
-    public void setWorkbookName(String name){
-        this.workbookName=name;
     }
 
     /**
