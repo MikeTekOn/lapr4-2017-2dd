@@ -9,7 +9,7 @@ currency: DOLLAR | EURO | POUND;
 
 
 expression:
-    left=expression op=(MULTI|PLUS|MINUS) LPAR expression RPAR
+    LPAR expression RPAR
     | left=expression op=MULTI value
     | left=expression op=DIV NUMBER
     | left=expression op=(PLUS|MINUS) value
@@ -24,10 +24,10 @@ POUND   : 'pound' | 'Pound' | 'POUND';
 NUMBER_FOR_COIN  : [0-9]+'.'[0-9][0-9];
 NUMBER  : '-'?[0-9]+('.'[0-9][0-9])? ;
 
-coins: (EURO_SYM |DOLLAR_SUM | LIBRA_SYM);
+coins: (EURO_SYM |DOLLAR_SYM | LIBRA_SYM);
 
 EURO_SYM : '€' | '\u20AC';
-DOLLAR_SYM : '$'|'\u0024';
+DOLLAR_SYM : '$' | '\u0024';
 LIBRA_SYM : '£' | '\u00A3';
 
 /* Arithmetic operators */

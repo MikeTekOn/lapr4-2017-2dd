@@ -48,8 +48,13 @@ public class ChangeUserChatProfileController {
         return ucp != null;
     }
     
-    public void changeIcon(String icon_path) throws IOException{
-        ucp.changeIcon(icon_path);
+    public void changeIcon(ImageIcon icon) throws IOException{
+        ucp.setIcon(icon);
+    }
+    
+    public boolean persist(){
+        //TODO
+        return true;
     }
     
 }

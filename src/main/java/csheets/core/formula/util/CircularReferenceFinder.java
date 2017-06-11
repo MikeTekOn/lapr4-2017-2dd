@@ -84,7 +84,6 @@ public class CircularReferenceFinder extends AbstractExpressionVisitor {
 
     @Override
     public Object visitMonetaryValue(MonetaryValue money) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       return money; 
     }
-
 }

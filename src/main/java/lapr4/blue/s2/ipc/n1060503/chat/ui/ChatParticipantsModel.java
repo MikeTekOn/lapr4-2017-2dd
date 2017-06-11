@@ -7,6 +7,7 @@ package lapr4.blue.s2.ipc.n1060503.chat.ui;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.ImageIcon;
 import javax.swing.table.AbstractTableModel;
 import lapr4.blue.s2.ipc.n1060503.chat.connection.UserChatDTO;
 
@@ -15,7 +16,7 @@ import lapr4.blue.s2.ipc.n1060503.chat.connection.UserChatDTO;
  *
  * @author Sofia Gonçalves (1150657)
  */
-public class ChatParticipantsModel extends AbstractTableModel {
+public final class ChatParticipantsModel extends AbstractTableModel {
     
     /**
      * The table headers.
@@ -23,8 +24,7 @@ public class ChatParticipantsModel extends AbstractTableModel {
     private final String[] columns = {        
         "Icon", 
         "Nickname",
-        "Status",
-        "IP Address"};
+        "Status"};
 
     /**
      * The connections list.
@@ -94,7 +94,18 @@ public class ChatParticipantsModel extends AbstractTableModel {
         }
         UserChatDTO ucp = list.get(rowIndex);
         Object data;
-        data = ucp.getUserChatProfileNickname();
+        switch (columnIndex) {
+            case 0:                
+//                data = ucp.getImage();
+                data = new ImageIcon();// FIXME  image received with errors
+                break;
+            case 1:
+                data = ucp.getUserChatProfileNickname();
+                break;
+            default:
+                data = ucp.getStatus();
+                break;
+        }
 
         return data;
     }

@@ -5,6 +5,7 @@
  */
 package lapr4.red.s2.lang.n1150451.multipleMacros.ui;
 
+import bsh.util.JConsole;
 import csheets.ui.ctrl.UIController;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -20,6 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import lapr4.red.s2.lang.n1150451.multipleMacros.MacroWithName;
@@ -85,7 +87,8 @@ public class NewEditMacroDialog extends JDialog {
         grid.gridy = 3;
         codeArea = new JTextArea();
         codeArea.setRows(10);
-        mainPanel.add(codeArea, grid);
+        JScrollPane pane = new JScrollPane(codeArea);
+        mainPanel.add(pane, grid);
 
         if (macro != null) {
             fieldName.setText(macro.getName());

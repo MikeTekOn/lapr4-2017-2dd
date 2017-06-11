@@ -44,6 +44,7 @@ import csheets.ext.ExtensionManager;
 import csheets.io.Codec;
 import csheets.io.CodecFactory;
 import csheets.io.NamedProperties;
+import csheets.ui.ctrl.UIController;
 import eapli.framework.persistence.DataConcurrencyException;
 import eapli.framework.persistence.DataIntegrityViolationException;
 import lapr4.red.s1.core.n1150943.contacts.application.BootEventVerifier;
@@ -100,6 +101,8 @@ public class CleanSheets {
      */
     private List<SpreadsheetAppListener> listeners
             = new ArrayList<SpreadsheetAppListener>();
+
+    private UIController uiController;
 
     /**
      * Gives access to the localization strings
@@ -165,6 +168,10 @@ public class CleanSheets {
         }
     }
 
+    public void setUIController(UIController uiController){
+        this.uiController = uiController;
+    }
+
     /**
      * Starts CleanSheets from the command-line.
      *
@@ -225,7 +232,7 @@ public class CleanSheets {
      * Creates a new workbook.
      */
     public void create() {
-        Workbook workbook = new Workbook(3);
+        Workbook workbook = new Workbook(3, null);
         workbooks.put(workbook, null);
         fireSpreadsheetAppEvent(workbook, null, SpreadsheetAppEvent.Type.CREATED);
     }

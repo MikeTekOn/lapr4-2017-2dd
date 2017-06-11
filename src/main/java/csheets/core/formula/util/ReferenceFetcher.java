@@ -30,50 +30,57 @@ import lapr4.red.s2.lang.n1150690.formula.MonetaryValue;
 
 /**
  * An expression visitor that collects the references from an expression.
+ *
  * @author Einar Pehrson
  */
 public class ReferenceFetcher extends AbstractExpressionVisitor {
 
-	/** The references that have been fetched */
-	private SortedSet<Reference> references;
+    /**
+     * The references that have been fetched
+     */
+    private SortedSet<Reference> references;
 
-	/**
-	 * Creates a new reference fetcher.
-	 */
-	public ReferenceFetcher() {}
+    /**
+     * Creates a new reference fetcher.
+     */
+    public ReferenceFetcher() {
+    }
 
-	/**
-	 * Traverses the given expression and returns the references that were found.
-	 * @param expression the expression from which to fetch references
-	 * @return the references that have been fetched
-	 */
-	public SortedSet<Reference> getReferences(Expression expression) {
-		references = new TreeSet<Reference>();
-		expression.accept(this);
-		return references;
-	}
+    /**
+     * Traverses the given expression and returns the references that were
+     * found.
+     *
+     * @param expression the expression from which to fetch references
+     * @return the references that have been fetched
+     */
+    public SortedSet<Reference> getReferences(Expression expression) {
+        references = new TreeSet<Reference>();
+        expression.accept(this);
+        return references;
+    }
 
-	/**
-	 * Adds the reference to the set.
-	 * @param reference the reference to visit
-	 */
-	public Object visitReference(Reference reference) {
-		references.add(reference);
-		return reference;
-	}
-        
-        @Override
-        public Object visitNaryOperation(NaryOperation operation) {
-            Expression[] operands=operation.getOperands();
-        
-            for (Expression expr: operands) {
-                expr.accept(this);
-            }
-            return operation;
+    /**
+     * Adds the reference to the set.
+     *
+     * @param reference the reference to visit
+     */
+    public Object visitReference(Reference reference) {
+        references.add(reference);
+        return reference;
+    }
+
+    @Override
+    public Object visitNaryOperation(NaryOperation operation) {
+        Expression[] operands = operation.getOperands();
+
+        for (Expression expr : operands) {
+            expr.accept(this);
         }
+        return operation;
+    }
 
     @Override
     public Object visitMonetaryValue(MonetaryValue money) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return money;
     }
 }

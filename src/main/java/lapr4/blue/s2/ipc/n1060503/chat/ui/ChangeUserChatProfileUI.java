@@ -9,14 +9,18 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -31,30 +35,32 @@ import lapr4.blue.s2.ipc.n1060503.chat.profile.StatusChatProfile;
  *
  * @author Pedro Fernandes
  */
-public class ChangeUserChatProfileUI extends JDialog{
-    
-    private JButton applyBtn;
+public class ChangeUserChatProfileUI extends JDialog {
+
+    private JButton changeBtn;
+    private JButton changeImageBtn;
     private JButton cancelBtn;
     private JTextField txtUsername;
     private JTextField txtNickname;
     private JRadioButton statusON, statusOFF;
-    
+    private JLabel image;
+
     private ChangeUserChatProfileController controller;
-    
+
     private static final String USERNAME = "USERNAME: ";
     private static final String NICKNAME = "NICKNAME: ";
     private static final String STATUS = "STATUS: ";
-    
+
     private static final Dimension LABEL_SIZE = new JLabel(USERNAME).
-                                                        getPreferredSize(); 
+            getPreferredSize();
     private static final int WIDTHW = 300, LENGTH = 200;
-    
-    public ChangeUserChatProfileUI() throws IOException{
+
+    public ChangeUserChatProfileUI() throws IOException {
         setModal(true);
         setTitle("Change User Chat Profile");
-        
+
         controller = new ChangeUserChatProfileController();
-        
+
         add(createComponents());
 
         addWindowListener(new WindowAdapter() {
@@ -69,34 +75,50 @@ public class ChangeUserChatProfileUI extends JDialog{
         setLocationRelativeTo(null);
         setVisible(true);
     }
-    
+
     /**
      * create all ui panels
+     *
      * @return all ui panels
      * @throws UnknownElementException to be caught
      */
     private JPanel createComponents() {
         JPanel panel = new JPanel(new BorderLayout());
-        
+
+        panel.add(createPanelImage(), BorderLayout.NORTH);
         panel.add(createPanelCenter(), BorderLayout.CENTER);
         panel.add(createPanelButons(), BorderLayout.SOUTH);
         return panel;
     }
-    
-    private JPanel createPanelCenter(){
+
+    private JPanel createPanelImage() {
+        JPanel panel = new JPanel();
+
+        image = new JLabel(controller.getIcon());
+        panel.add(image);
+
+        JPanel p = new JPanel();       
+        p.add(createButtonChangeImageBtn());
+        
+        panel.add(createButtonChangeImageBtn());
+
+        return panel;
+    }
+
+    private JPanel createPanelCenter() {
         JPanel panel = new JPanel(new BorderLayout());
 
         JPanel p = new JPanel(new GridLayout(4, 1));
-        
+
         int aux = 20;
         txtUsername = new JTextField(aux);
         txtUsername.requestFocusInWindow();
         txtUsername.setText("" + controller.getUsername());
         txtUsername.setEditable(false);
-        
+
         txtNickname = new JTextField(aux);
         txtNickname.setText("" + controller.getNickname());
-        
+
         statusON = new JRadioButton("ONLINE");
         statusON.addActionListener(new ActionListener() {
             @Override
@@ -106,8 +128,8 @@ public class ChangeUserChatProfileUI extends JDialog{
                 }
             }
         });
-        
-        statusOFF = new JRadioButton("OFFLINE");      
+
+        statusOFF = new JRadioButton("OFFLINE");
         statusOFF.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -116,23 +138,23 @@ public class ChangeUserChatProfileUI extends JDialog{
                 }
             }
         });
-        
-        if(controller.getStatus().equals("ONLINE")){
+
+        if (controller.getStatus().equals("ONLINE")) {
             statusON.setSelected(true);
         }
-        if(controller.getStatus().equals("OFFLINE")){
+        if (controller.getStatus().equals("OFFLINE")) {
             statusOFF.setSelected(true);
         }
-        
+
         p.add(createPanelLabelText(USERNAME, txtUsername));
         p.add(createPanelLabelText(NICKNAME, txtNickname));
         p.add(createPanelLabelRadioBtn(STATUS, statusON, statusOFF));
-        
+
         panel.add(p, BorderLayout.CENTER);
-        
+
         return panel;
     }
-    
+
     private JPanel createPanelLabelText(String label1, JTextField text) {
         JLabel lb1 = new JLabel(label1, JLabel.RIGHT);
         lb1.setPreferredSize(LABEL_SIZE);
@@ -144,7 +166,7 @@ public class ChangeUserChatProfileUI extends JDialog{
 
         return p;
     }
-    
+
     private JPanel createPanelLabelRadioBtn(String label1, JRadioButton radiobtn1, JRadioButton radiobtn2) {
         JLabel lb1 = new JLabel(label1, JLabel.RIGHT);
         lb1.setPreferredSize(LABEL_SIZE);
@@ -156,11 +178,11 @@ public class ChangeUserChatProfileUI extends JDialog{
         p.add(radiobtn2);
 
         return p;
-    } 
-    
-    
+    }
+
     /**
      * create panel for the buttons
+     *
      * @return panel for the buttons
      */
     private JPanel createPanelButons() {
@@ -169,9 +191,9 @@ public class ChangeUserChatProfileUI extends JDialog{
         l.setVgap(5);
 
         JPanel p = new JPanel(l);
-        
+
         p.setBorder(BorderFactory.createTitledBorder("Options:"));
-        JButton bt1 = createButtonApply();
+        JButton bt1 = createButtonChange();
         JButton bt2 = createButtonCancel();
 
         getRootPane().setDefaultButton(bt1);
@@ -181,15 +203,16 @@ public class ChangeUserChatProfileUI extends JDialog{
 
         return p;
     }
-    
+
     /**
      * create Apply Button
+     *
      * @return Apply Button
      */
-    private JButton createButtonApply(){
-        applyBtn = new JButton("Apply");
-        applyBtn.setToolTipText("Change user chat profile");
-        applyBtn.addActionListener(new ActionListener() {
+    private JButton createButtonChange() {
+        changeBtn = new JButton("Change");
+        changeBtn.setToolTipText("Change user chat profile");
+        changeBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
@@ -204,14 +227,43 @@ public class ChangeUserChatProfileUI extends JDialog{
             }
         });
 
-        return applyBtn;
+        return changeBtn;
     }
-    
+
+    /**
+     * create Apply Button
+     *
+     * @return Apply Button
+     */
+    private JButton createButtonChangeImageBtn() {
+        changeImageBtn = new JButton("Change Image");
+        changeImageBtn.setToolTipText("Change image user chat profile");
+        changeImageBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    final ChooseImageUI choose = new ChooseImageUI(controller);
+                    image.setIcon(controller.getIcon());
+                } catch (IOException ex) {
+                    Logger.getLogger(ChangeUserChatProfileUI.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "Invalid file!",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        return changeImageBtn;
+    }
+
     /**
      * create Cancel Button
+     *
      * @return Cancel Button
      */
-    private JButton createButtonCancel(){
+    private JButton createButtonCancel() {
         cancelBtn = new JButton("Cancel");
         cancelBtn.setToolTipText("Back to previous screen");
         cancelBtn.addActionListener(new ActionListener() {
@@ -223,43 +275,41 @@ public class ChangeUserChatProfileUI extends JDialog{
 
         return cancelBtn;
     }
-    
-    
+
     /**
      * execute when Apply Button is cliked
      */
-    private void apply() throws IOException{
+    private void apply() throws IOException {
         // TODO save icon and info into repository
         boolean flag = true;
-        if(statusON.isSelected()){
+        if (statusON.isSelected()) {
             flag = controller.changeInfo(txtNickname.getText(), StatusChatProfile.ONLINE);
         }
-        if(statusON.isSelected()){
+        if (statusON.isSelected()) {
             flag = controller.changeInfo(txtNickname.getText(), StatusChatProfile.OFFLINE);
         }
-        if(flag){
+        if (flag) {
             JOptionPane.showMessageDialog(
-                            null,
-                            "User Chat Profile Changed with sucess!",
-                            "Change User Chat Profile",
-                            JOptionPane.INFORMATION_MESSAGE);
+                    null,
+                    "User Chat Profile Changed with sucess!",
+                    "Change User Chat Profile",
+                    JOptionPane.INFORMATION_MESSAGE);
             dispose();
-        }else{
+        } else {
             JOptionPane.showMessageDialog(
-                            null,
-                            "Invalid data!",
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE);
+                    null,
+                    "Invalid data!",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
         }
 
     }
-    
-    
+
     /**
      * execute when Cancel Button is cliked
      */
-    private void cancel(){
+    private void cancel() {
         dispose();
     }
-    
+
 }

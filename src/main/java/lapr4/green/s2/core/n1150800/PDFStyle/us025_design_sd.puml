@@ -13,7 +13,8 @@ note right
     Export configurations include: 
         - The range of cells to be exported;
         - The path of the file;
-        - TODO (...)
+        - The existence of sections;
+        - The border line and color.
 end note
 
 UI -> Controller : manageConfigurations()
@@ -33,6 +34,11 @@ end note
 User -> UI : Confirms
 activate UI
 UI -> Controller : export()
+note right of UI
+    It was used a thread 
+    for the execution
+    of this method
+end note
 activate Controller
 Controller -> ExportContext : executeStrategy()
 activate ExportContext
