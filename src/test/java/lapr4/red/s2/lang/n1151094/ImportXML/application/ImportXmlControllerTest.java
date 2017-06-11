@@ -70,6 +70,7 @@ public class ImportXmlControllerTest {
         File file = new File("ImportXml.xml");
         boolean expResult = true ;
         boolean result = instance.validateExtension(file);
+        
         assertEquals(expResult, result);
 
     }
