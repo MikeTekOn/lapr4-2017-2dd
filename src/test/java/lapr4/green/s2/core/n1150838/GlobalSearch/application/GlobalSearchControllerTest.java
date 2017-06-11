@@ -48,18 +48,18 @@ public class GlobalSearchControllerTest {
     public void tearDown() {
     }
 
-    /**
-     * Test of validateFormula method, of class GlobalSearchController.
-     */
-    @Test
-    public void testValidateFormula() throws Exception {
-        System.out.println("validateFormula");
-        String formula = "=2";
-        boolean expResult = true;
-        boolean result = ctrl.validateFormula(formula);
-        assertEquals(expResult, result);
-        
-    }
+//    /**
+//     * Test of validateFormula method, of class GlobalSearchController.
+//     */
+//    @Test
+//    public void testValidateFormula() throws Exception {
+//        System.out.println("validateFormula");
+//        String formula = "=2";
+//        boolean expResult = true;
+//        boolean result = ctrl.validateFormula(formula);
+//        assertEquals(expResult, result);
+//        
+//    }
 
 
     
