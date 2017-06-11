@@ -144,6 +144,7 @@ public class MacroDialog extends JDialog {
         for (MacroWithName macroWithName : uiController.getActiveWorkbook().getMacroList().getMacroList()) {
             comboBox.addItem(macroWithName);
         }
+         comboBox.setSelectedIndex(-1);
         comboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
