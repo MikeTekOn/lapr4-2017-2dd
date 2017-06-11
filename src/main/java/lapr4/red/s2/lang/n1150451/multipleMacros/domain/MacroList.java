@@ -79,7 +79,7 @@ public class MacroList implements Serializable {
         return null;
     }
 
-    void setUIController(UIController uiC) {
+    public void setUIController(UIController uiC) {
         this.uiController=uiC;
     }
 }
