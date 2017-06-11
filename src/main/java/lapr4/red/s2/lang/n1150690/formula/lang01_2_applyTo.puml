@@ -1,0 +1,29 @@
+@startuml sequence_block_sd.png
+
+'http://plantuml.com/skinparam.html'
+
+participant Expression
+participant "operator : BinaryOperator" as bin
+participant "left : operand" <<Expression>>
+participant "right : operand" <<Expression>>
+participant "v : value" as v
+
+[-> Expression: evaluate()
+Expression->bin: applyTo(left, right)
+bin->"left": l = new BigDecimal(left.evaluate().toDouble()
+bin->"right": r = new BigDecimal(right.evaluate().toDouble()
+
+alt add 
+create v
+bin -> v: new Value(l + r)
+else subtract
+create v
+bin -> v: new Value(l - r)
+else multiply
+create v
+bin -> v: new Value(l * r)
+else divide
+create v
+bin -> v: new Value(l / r)
+end
+@enduml

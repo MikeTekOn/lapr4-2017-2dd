@@ -6,6 +6,7 @@ import csheets.core.Cell;
 import csheets.core.IllegalValueTypeException;
 import csheets.core.Workbook;
 import csheets.core.formula.compiler.FormulaCompilationException;
+import csheets.ui.ctrl.UIController;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +20,7 @@ public class PreviewWorkbookBuilderTest {
      private CleanSheets app;
      String contentA1="testA1", contentA2="{(_Var:=1+2); _Var+1}", 
         contentB5="=(B1:=3+2)", contentA3="=2+1", contentA4="=2";
+     private UIController controller;
     
     public PreviewWorkbookBuilderTest() {
     }
@@ -27,6 +29,7 @@ public class PreviewWorkbookBuilderTest {
     public void setUp() throws FormulaCompilationException {
         //Try to create the CS application object
         app = new CleanSheets();
+        controller = new UIController(app);
         
         //This will build workbook to preview
         app.create();

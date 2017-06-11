@@ -140,8 +140,8 @@ protected ActionListener[] buttonListeners;
     
     private Workbook buildPreviewWorkbookDefault(){
         
-        String[][] content={{"Please cliic"}};
-        Workbook b= new Workbook(this.findExtension);
+        String[][] content={{"Please select workbook to preview"}};
+        Workbook b= new Workbook(content);
         b.addSpreadsheet(content);
         return b;
     }
