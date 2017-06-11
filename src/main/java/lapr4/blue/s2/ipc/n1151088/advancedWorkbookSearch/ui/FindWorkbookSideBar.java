@@ -144,7 +144,7 @@ protected ActionListener[] buttonListeners;
     private Workbook buildPreviewWorkbookDefault(){
         
         String[][] content={{"Please cliic"}};
-        return new Workbook(content);
+        return new Workbook(findExtension,content);
         
     }
     
