@@ -27,6 +27,7 @@ import javax.swing.ImageIcon;
 import javax.swing.border.Border;
 
 import csheets.core.Cell;
+import csheets.core.CellImpl;
 import csheets.ext.style.StylableCell;
 import csheets.ext.style.StyleExtension;
 import csheets.ui.ctrl.FocusOwnerAction;
@@ -82,6 +83,9 @@ public class BorderAction extends FocusOwnerAction {
 					StylableCell stylableCell = (StylableCell)cell.getExtension(
 						StyleExtension.NAME);
 					stylableCell.setBorder(border);
+					if (cell instanceof CellImpl) {
+						((CellImpl) cell).setStyleChanged();
+					}
 				}
 	
 			uiController.setWorkbookModified(focusOwner.getSpreadsheet().getWorkbook());

@@ -9,7 +9,7 @@ import csheets.core.Address;
 import csheets.core.Cell;
 import csheets.ext.style.StylableCell;
 import csheets.ext.style.StyleExtension;
-import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.StyleDTO;
+import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.comm.StyleDTO;
 import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.util.Styles;
 
 import java.io.Serializable;

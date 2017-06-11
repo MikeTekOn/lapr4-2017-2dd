@@ -3,10 +3,13 @@ package lapr4.green.s1.ipc.n1150532.startSharing;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.RequestSharedCellsDTO;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.ResponseSharedCellsDTO;
 import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
+import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
+import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionIDImpl;
 import lapr4.green.s1.ipc.n1150532.comm.connection.SocketEncapsulatorDTO;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,8 +39,12 @@ public class HandlerRequestSharedCellsDTO extends Observable implements CommHand
         SocketEncapsulatorDTO receivedDTO = (SocketEncapsulatorDTO) dto;
         RequestSharedCellsDTO request = (RequestSharedCellsDTO) receivedDTO.getDTO();
         lastReceivedDTO = request;
+
+        Socket socket = receivedDTO.getSocket();
+        ConnectionID connection = new ConnectionIDImpl(socket.getInetAddress(), socket.getPort());
+
         setChanged();
-        notifyObservers(new SharedCellsEvent(request.getSpreadsheetName(), request.getCells()));
+        notifyObservers(new SharedCellsEvent(request.getSpreadsheetName(), request.getCells(), connection));
         ResponseSharedCellsDTO reply = new ResponseSharedCellsDTO(request.getSpreadsheetName(), request.getAddress1(), request.getAddress2(), ResponseSharedCellsDTO.SharedCellsStatusResponse.OK);
         try {
             outStream.writeObject(reply);
