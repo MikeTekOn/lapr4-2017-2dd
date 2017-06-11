@@ -50,8 +50,8 @@ public class HandlerFileNameListDTOTest {
 //        Map<String, Integer> fileDataMap = new LinkedHashMap<>();
 //        fileDataMap.put("File1", 10000);
 //        CommTCPServer tcpServer = CommTCPServer.getServer();
-//        FileNameListDTO dto = new FileNameListDTO(fileDataMap,new ConnectionIDImpl(InetAddress.getLocalHost(), 0));
-//        CommUDPClient udpClient = new CommUDPClient(dto, 15001, 0);
+//        FileNameListDTO dto = new FileNameListDTO(fileDataMap,CommTCPServer.getServer().provideConnectionPort());
+//        CommUDPClient udpClient = new CommUDPClient(dto, 15000, 55);
 //        udpClient.start();
 //        Thread.sleep(1000);
 //       

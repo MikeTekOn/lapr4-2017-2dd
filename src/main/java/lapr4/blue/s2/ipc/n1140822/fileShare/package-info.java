@@ -67,9 +67,9 @@
  * will search the file in the shared folder and should it find it, send it through the output stream in the FileNameDTOHandler. Because it is an immediate response, it will not reach client1 tcp server, it will instead reach client1 worker thread (which was opened to send the file name request).
  * Because of that, the FileDTOHandler has to be registered not in the tcp server, but the tcp client, else, it wont be handled correctly.
  * <h3>4.1. Functional Tests</h3>
- * The domain of this functional increment has already been tested, as such, there will be no new tests implemented. 
+ * The domain of this functional increment has already been tested. There is not much room for testing since our implementations ignore local requests.
  *  <p>
- * Unit test 1 - 
+ *  Unit test 1 -  testHandlerFileList
  *  <p>
  * <h3>4.2. UC Realization</h3>
  * To realize this functional increment, we will need the classes referred in the analysis section and the already implemented ones.
@@ -84,6 +84,16 @@
  * From this sequence diagram it can be seen that we need a method to update the list of shared files (we get the dto, but how can we use the packet we read to update our user interface?).
  * Other problem we have is putting the source of the file in the input list. The method to reconstruct a file, is retrieving an array of bytes and writing those bytes into a path. Now, how can we, when we download a file, know who sent it? To achieve this, we will need to add metadata 
  *  to the downloaded file. Java already offers data structures to do this. Note that when reading the file (for instance , when we launch the application and see our downloaded files) we will also need to read that metadata.
+ * <p>
+ *  About the persisted download and shared folder settings, cleansheets already has some kind of local file settings persistence, the properties class and implementation. It has some default properties which are loaded when opening cleansheets.
+ *  There is also an implementation of a class called NamedProperties. We will need to add our configuration settings to these data structures and save them when we exit a running instance, so they persist when opening. Properties has a map which we put the key (the name of the setting) and the value. 
+ *  After we update these values, when we close the instance it will automatically save them. The loading is quite easy too. It loads the defaults first, and then it overwrites the settings with the user saved ones.
+ * <p>
+ * It was also necessary to see if a downloaded file is outdated or up to date. Normally, this would just be more metadata added to the file and read while we fill the download folder. The tricky part is, we'd need to send this data not when the user downloads a file, but when instance one
+ * broadcasts its file names. This doesnt work because we only send the file names, we dont even have the file structure constructed yet. Since the download of files was not expected to be implemented in this sprint (although it will be implemented), the details of this functionality are a bit fuzzy.
+ * As such, and since the downloads will be implemented, the file state will be compared using the size of the file (exactly to the bit, its sure to work in most cases). If a file you have downloaded is also being broadcast, if their sizes differ, your downloaded file will be out of date. 
+ * <p>
+  *<p>
  * <h3>4.3. Classes</h3>
  * 
  * <p>
@@ -92,7 +102,7 @@
  * 
  * <h3>4.4. Design Patterns and Best Practices</h3>
  * In this use case, we use the observer pattern. Everytime we receive a file list from another client's broadcast, we notify the observers (which in this case is a list of available files). Note that observer must be implemented and observable extended in respective data structures.
- * 
+ * We also use the Singleton pattern, for the configuration of the download and shared folders.
  * 
  * <h2>5. Implementation</h2>
  * 
