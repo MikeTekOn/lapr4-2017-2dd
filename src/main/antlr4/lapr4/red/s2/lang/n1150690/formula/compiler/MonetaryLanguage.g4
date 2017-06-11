@@ -27,7 +27,7 @@ NUMBER  : '-'?[0-9]+('.'[0-9][0-9])? ;
 coins: (EURO_SYM |DOLLAR_SYM | LIBRA_SYM);
 
 EURO_SYM : '€' | '\u20AC';
-DOLLAR_SYM : '$';
+DOLLAR_SYM : '$' | '\u0024';
 LIBRA_SYM : '£' | '\u00A3';
 
 /* Arithmetic operators */
