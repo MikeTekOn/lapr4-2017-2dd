@@ -201,7 +201,13 @@
  * <h3>5.3. Traffic Counter [Watchdog]</h3>
   * <img src="traffic_counter_sd.png" alt="Traffic Counter SD">
  * <p>
- * <h3>5.4. Design Patterns and Best Practices</h3>
+  * <h3>5.4. Network Analyzer Extension Setup</h3>
+  * <p>
+  *  Following the examples from other extension below is the sequence diagram that demonstrates how to create an extension sidebar.
+  *  <p>
+  * <img src="extension_setup_sd.png" alt="Extension Setup SD">
+  * <p>
+ * <h3>5.5. Design Patterns and Best Practices</h3>
  * <p><ol>
   * <li>I used the <b>decorator pattern</b> to build the traffic input/output streams.</li>
   * <li>We used the <b>strategy pattern</b> to abstract the secure/unsecure transmission responsibility.</li>
@@ -259,6 +265,20 @@
   * Today
   * <p><ol>
   * <li>Complete Design.
+  * </ol><p>
+  * Blocking:
+  * <p>
+  * -nothing-
+  * <p>
+ * <b>Friday [09/06/2017]</b><p>
+  * I worked on:<p>
+  * Yesterday
+  * <p><ol>
+  * <li>Completed Design
+  * </ol><p>
+  * Today
+  * <p><ol>
+  * <li>Started implementing the domain concepts.
   * </ol><p>
   * Blocking:
   * <p>
