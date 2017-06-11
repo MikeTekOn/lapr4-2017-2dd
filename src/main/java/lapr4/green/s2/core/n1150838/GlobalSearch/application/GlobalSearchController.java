@@ -20,25 +20,39 @@ import lapr4.red.s1.core.n1150613.workbookSearch.application.WorkbookSearchContr
  * @author nunopinto
  */
 public class GlobalSearchController extends WorkbookSearchController implements Controller {
-    
+    /**
+     * The thread that executes the search algorithm
+     */
     protected Thread t ;
     
     public GlobalSearchController(UIController ctrl) {
         super(ctrl);
     }
-    
+    /**
+     * Validates if the given formula is valid
+     * @param formula the formula to valid
+     * @return true if the given formula is valid
+     * @throws FormulaCompilationException
+     * @throws IllegalValueTypeException 
+     */
     public boolean validateFormula(String formula) throws FormulaCompilationException, IllegalValueTypeException{
         FormulaCompiler instance = FormulaCompiler.getInstance();
-        Formula f = instance.compile(null, formula);
+        Formula f = instance.compile(null, formula, ctrl);
         f.evaluate();
         return true;
     }
-    
+    /**
+     * Starts the thread to search 
+     * @param filter
+     * @param regex 
+     */
      public void  start(Filter filter,String regex){
-        t = new Thread(new RegexUtilExtended(filter,regex,ctrl.getActiveWorkbooks()));
+        t = new Thread(new RegexUtilExtended(filter,regex,ctrl));
         t.start();
     }
-    
+    /**
+     * Stop the search thread
+     */
     public void stop(){
         if(t!=null){
             t.stop();

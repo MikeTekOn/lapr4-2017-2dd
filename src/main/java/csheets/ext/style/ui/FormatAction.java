@@ -29,6 +29,7 @@ import java.text.NumberFormat;
 import javax.swing.ImageIcon;
 
 import csheets.core.Cell;
+import csheets.core.CellImpl;
 import csheets.core.IllegalValueTypeException;
 import csheets.core.Value;
 import csheets.ext.style.StylableCell;
@@ -110,6 +111,9 @@ public class FormatAction extends FocusOwnerAction implements SelectionListener 
 						StyleExtension.NAME);
 					stylableCell.setFormat(
 						stylableCell.isFormattable() ? format : null);
+					if (cell instanceof CellImpl) {
+						((CellImpl) cell).setStyleChanged();
+					}
 				}
 	
 			uiController.setWorkbookModified(focusOwner.getSpreadsheet().getWorkbook());

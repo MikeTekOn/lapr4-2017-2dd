@@ -19,7 +19,7 @@ public class GlobalSearchExtension extends Extension {
     public static final String NAME = "Global Search";
 
 	/**
-	 * Creates a new Example extension.
+	 * Creates a new Gloabel search extension.
 	 */
 	public GlobalSearchExtension() {
             super(NAME);

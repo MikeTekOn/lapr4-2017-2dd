@@ -10,7 +10,6 @@ import csheets.ui.ctrl.SelectionEvent;
 import csheets.ui.ctrl.SelectionListener;
 import csheets.ui.ctrl.UIController;
 import lapr4.red.s1.core.n1150690.comments.CommentableCellWithMultipleUsers;
-import lapr4.red.s1.core.n1150690.comments.application.AddCommentsWithUserController;
 import lapr4.red.s1.core.n1150690.comments.domain.User;
 import lapr4.white.s1.core.n1234567.comments.CommentableCell;
 import lapr4.white.s1.core.n1234567.comments.CommentableCellListener;
@@ -54,7 +53,7 @@ public class CommentsWithUserUI extends JPanel implements SelectionListener, Com
     /**
      * The list model to save the comments.
      */
-    private DefaultListModel model;
+    protected DefaultListModel model;
 
     /**
      * The text field in which the comments of the cell are displayed.
@@ -64,18 +63,34 @@ public class CommentsWithUserUI extends JPanel implements SelectionListener, Com
     /**
      * The comment that the user selected from the list.
      */
-    private String selectedComment;
+    protected String selectedComment;
 
     /**
      * The author of the comment that the user selected from the list.
      */
-    private String selectedUser;
+    protected String selectedUser;
 
     /* THIS IS A CHANGE MIGUEL MADE */
     /**
      * The cell where the listeners are applied.
      */
     protected CommentableCellWithMultipleUsers cell;
+
+    /**
+     * The color to paint the JList cell with.
+     */
+    protected Color color;
+
+    /**
+     * The font to set on the JList cell.
+     */
+    protected Font font;
+
+    /**
+     * A flag to know if the color or the font of the JList cell is being
+     * changed.
+     */
+    protected int flag = 0;
 
     /* ----------------------- */
 
@@ -147,6 +162,7 @@ public class CommentsWithUserUI extends JPanel implements SelectionListener, Com
         panelComments = new JList();
         panelComments.setModel(model);
         panelComments.setBackground(this.getBackground());
+        panelComments.setCellRenderer(new ComplexCellRenderer());
         panelComments.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         panelComments.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "User: Comment"));
         panelComments.addMouseListener(new MouseAdapter() {
@@ -265,4 +281,33 @@ public class CommentsWithUserUI extends JPanel implements SelectionListener, Com
         }
     }
 
+    /* THIS IS A CHANGE MIGUEL MADE */
+    public class ComplexCellRenderer extends DefaultListCellRenderer{
+
+        public ComplexCellRenderer() {
+            setOpaque(true);
+        }
+
+        @Override
+        public Component getListCellRendererComponent(JList list,
+                Object value,
+                int index,
+                boolean isSelected,
+                boolean cellHasFocus) {
+            
+            super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+            setText(value.toString());
+            if (flag == 1) {
+                setFont(font);
+            } else if (flag == 2) {
+                setForeground(color);
+            } else if (flag == 3){
+                setBackground(color);
+            }
+
+            return this;
+        }
+    }
+    /* ----------------------- */
 }

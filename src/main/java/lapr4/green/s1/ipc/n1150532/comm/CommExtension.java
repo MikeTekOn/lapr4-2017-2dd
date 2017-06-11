@@ -1,6 +1,9 @@
 package lapr4.green.s1.ipc.n1150532.comm;
 
+import lapr4.blue.s2.ipc.n1060503.chat.connection.UserChatDTO;
+import lapr4.blue.s2.ipc.n1060503.chat.connection.HandlerUserChatDTO;
 import csheets.core.Cell;
+import csheets.core.CellImpl;
 import csheets.core.Spreadsheet;
 import csheets.core.Workbook;
 import csheets.core.formula.compiler.FormulaCompilationException;
@@ -16,6 +19,12 @@ import java.util.Map;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.CellDTO;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.RequestSharedCellsDTO;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.ResponseSharedCellsDTO;
+import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.ShareContentCellListener;
+import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.StyleListener;
+import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.comm.CellContentDTO;
+import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.comm.CellStyleDTO;
+import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.comm.HandlerCellContentDTO;
+import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.comm.HandlerCellStyleDTO;
 import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.util.Styles;
 import lapr4.green.s1.ipc.n1150532.comm.connection.*;
 import lapr4.green.s1.ipc.n1150532.comm.ui.UICommExtension;
@@ -36,6 +45,8 @@ import lapr4.blue.s2.ipc.n1140822.fileShare.FileNameListDTO;
 import lapr4.blue.s2.ipc.n1140822.fileShare.HandlerFileDTO;
 import lapr4.blue.s2.ipc.n1140822.fileShare.HandlerFileNameDTO;
 import lapr4.blue.s2.ipc.n1140822.fileShare.HandlerFileNameListDTO;
+import lapr4.blue.s2.ipc.n1151031.searchnetwork.HandlerSearchWorkbookRequestDTO;
+import lapr4.blue.s2.ipc.n1151031.searchnetwork.SearchWorkbookRequestDTO;
 import lapr4.green.s1.ipc.n1150657.chat.ControllerConnection;
 import lapr4.green.s1.ipc.n1150657.chat.HandlerRequestMessageDTO;
 import lapr4.green.s1.ipc.n1150657.chat.MessageEvent;
@@ -188,7 +199,15 @@ public class CommExtension extends Extension implements Observer {
         tcpServer.addHandler(FileNameDTO.class, h5);
         HandlerFileDTO h6 = new HandlerFileDTO();
         tcpServer.addHandler(FileDTO.class, h6);
-        //TODO 
+        HandlerCellStyleDTO h7 = new HandlerCellStyleDTO();
+        h7.addObserver(this);
+        tcpServer.addHandler(CellStyleDTO.class, h7);
+        HandlerCellContentDTO h8 = new HandlerCellContentDTO();
+        h8.addObserver(this);
+        tcpServer.addHandler(CellContentDTO.class, h8);
+        HandlerUserChatDTO hucp = new HandlerUserChatDTO();
+        tcpServer.addHandler(UserChatDTO.class, hucp);
+        //TODO
     }
 
     /**
@@ -197,9 +216,13 @@ public class CommExtension extends Extension implements Observer {
     private void addAllAvailableHandlersToUDPServer() {
         HandlerConnectionDetailsRequestDTO h1 = new HandlerConnectionDetailsRequestDTO();
         udpServer.addHandler(ConnectionDetailsRequestDTO.class, h1);
-        HandlerFileNameListDTO  h2 = new HandlerFileNameListDTO();
+        HandlerFileNameListDTO h2 = new HandlerFileNameListDTO();
         udpServer.addHandler(FileNameListDTO.class, h2);
-        //TODO 
+        HandlerUserChatDTO hucp = new HandlerUserChatDTO();
+        udpServer.addHandler(UserChatDTO.class, hucp);
+        HandlerSearchWorkbookRequestDTO h3 = new HandlerSearchWorkbookRequestDTO(uiController);
+        udpServer.addHandler(SearchWorkbookRequestDTO.class, h3);
+        //TODO
     }
 
     /**
@@ -216,6 +239,8 @@ public class CommExtension extends Extension implements Observer {
         tcpClientsManager.addHandler(ResponseWorkbookDTO.class, h3);
         HandlerFileDTO h6 = new HandlerFileDTO();
         tcpClientsManager.addHandler(FileDTO.class, h6);
+        HandlerUserChatDTO hucp = new HandlerUserChatDTO();
+        tcpClientsManager.addHandler(UserChatDTO.class, hucp);
         //HandlerResponseMessageDTO h4 = new HandlerResponseMessageDTO();
         //tcpClientsManager.addHandler(ResponseMessageDTO.class,h4);
         //tcpServer.addHandler(RequestMessageDTO.class, h4);
@@ -291,13 +316,18 @@ public class CommExtension extends Extension implements Observer {
                 SharedCellsEvent event = (SharedCellsEvent) arg;
                 Spreadsheet aSpreadSheet = uiController.getActiveSpreadsheet();
                 SortedSet<CellDTO> cellsDTO = event.getCells();
+                ConnectionID connection = event.getConnection();
                 for (CellDTO cellDTO : cellsDTO) {
                     try {
                         Cell cell = aSpreadSheet.getCell(cellDTO.getAddress());
                         cell.setContent(cellDTO.getContent());
-                        StylableCell stylableCell = (StylableCell)cell.getExtension(StyleExtension.NAME);
+                        StylableCell stylableCell = (StylableCell) cell.getExtension(StyleExtension.NAME);
                         if (stylableCell != null && cellDTO.getStyleDTO() != null) {
                             Styles.setStyleFromDTO(stylableCell, cellDTO.getStyleDTO());
+                        }
+                        cell.addCellListener(new ShareContentCellListener(connection));
+                        if (cell instanceof CellImpl) {
+                            ((CellImpl)cell).addStyleListener(new StyleListener(connection));
                         }
                     } catch (FormulaCompilationException ex) {
                         Logger.getLogger(CommExtension.class.getName()).log(Level.SEVERE, null, ex);
@@ -347,6 +377,25 @@ public class CommExtension extends Extension implements Observer {
                     }
                 }
 
+            }
+            if (arg instanceof CellStyleDTO) {
+                CellStyleDTO dto = (CellStyleDTO) arg;
+                Spreadsheet aSpreadSheet = uiController.getActiveSpreadsheet();
+                Cell cell = aSpreadSheet.getCell(dto.getAddress());
+                StylableCell stylableCell = (StylableCell)cell.getExtension(StyleExtension.NAME);
+                if (stylableCell != null && dto.getStyleDTO() != null) {
+                    Styles.setStyleFromDTO(stylableCell, dto.getStyleDTO());
+                }
+            }
+            if (arg instanceof CellContentDTO) {
+                CellContentDTO dto = (CellContentDTO) arg;
+                Spreadsheet aSpreadSheet = uiController.getActiveSpreadsheet();
+                Cell cell = aSpreadSheet.getCell(dto.getAddress());
+                try {
+                    cell.setContent(dto.getContent());
+                } catch (Exception ex) {
+                    Logger.getLogger(CommExtension.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
     }

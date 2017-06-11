@@ -42,7 +42,7 @@ public class CommentsWithHistoryUIExtension extends UIExtension {
     @Override
     public JComponent getSideBar() {
         if (sideBar == null) {
-            sideBar = new CommentsWithHistoryPanel(uiController);
+            sideBar = new CommentsWithHistoryUI(uiController);
         }
         return sideBar;
     }

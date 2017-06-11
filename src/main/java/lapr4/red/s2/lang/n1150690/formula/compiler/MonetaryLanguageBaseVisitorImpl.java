@@ -6,18 +6,23 @@
 package lapr4.red.s2.lang.n1150690.formula.compiler;
 
 import csheets.core.Cell;
+import csheets.core.IllegalValueTypeException;
+import csheets.core.Value;
 import csheets.core.formula.BinaryOperation;
 import csheets.core.formula.BinaryOperator;
 import csheets.core.formula.Expression;
+import csheets.core.formula.Literal;
 import csheets.core.formula.lang.Language;
 import csheets.core.formula.lang.UnknownElementException;
-import eapli.util.Files;
-import java.io.InputStream;
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.rmi.PortableRemoteObject;
+import lapr4.red.s2.lang.n1150385.beanshell.utils.Pair;
 import lapr4.red.s2.lang.n1150690.formula.MonetaryConvertion;
+import lapr4.red.s2.lang.n1150690.formula.MonetaryValue;
+import lapr4.red.s2.lang.n1150690.formula.configurations.ConfigureExchangeRatesController;
+import org.antlr.v4.runtime.Token;
 
 /**
  *
@@ -25,12 +30,13 @@ import lapr4.red.s2.lang.n1150690.formula.MonetaryConvertion;
  */
 public class MonetaryLanguageBaseVisitorImpl extends MonetaryLanguageBaseVisitor<Expression> {
 
-    private static final String PROPERTIES_FILE = "project.properties";
     private Cell cell;
     private String currency;
     private String coin;
     private int numberOfErrors;
     private final StringBuilder errorBuffer;
+    private ConfigureExchangeRatesController controller;
+    private List<Pair<String, String>> exchangeRates;
 
     public MonetaryLanguageBaseVisitorImpl(Cell cell) {
         this.cell = cell;
@@ -38,6 +44,8 @@ public class MonetaryLanguageBaseVisitorImpl extends MonetaryLanguageBaseVisitor
         coin = "";
         numberOfErrors = 0;
         errorBuffer = new StringBuilder();
+        controller = new ConfigureExchangeRatesController();
+        exchangeRates = controller.getExchangeRates();
     }
 
     public int getNumberOfErrors() {
@@ -51,21 +59,13 @@ public class MonetaryLanguageBaseVisitorImpl extends MonetaryLanguageBaseVisitor
     /**
      * {@inheritDoc}
      */
-    @Override
+    //@Override
     public Expression visitFormula(MonetaryLanguageParser.FormulaContext ctx) {
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Expression visitCurrency(MonetaryLanguageParser.CurrencyContext ctx) {
-        currency = ctx.getText();
-        String firstLetter = currency.substring(0, 1);
-        currency = firstLetter + currency.substring(1).toLowerCase();
+      
+        currency = ctx.getChild(1).getText().toLowerCase();
+        
         if (currency.equals("euro")) {
-            coin = "€";
+            coin = "\\u20AC";
         }
         if (currency.equals("dollar")) {
             coin = "$";
@@ -73,7 +73,8 @@ public class MonetaryLanguageBaseVisitorImpl extends MonetaryLanguageBaseVisitor
         if (currency.equals("pound")) {
             coin = "£";
         }
-        return visitChildren(ctx);
+        Expression a = visitExpression(ctx.expression());
+        return a;
     }
 
     /**
@@ -81,40 +82,63 @@ public class MonetaryLanguageBaseVisitorImpl extends MonetaryLanguageBaseVisitor
      */
     @Override
     public Expression visitExpression(MonetaryLanguageParser.ExpressionContext ctx) {
-        try {
-            // Convert binary operation
-            BinaryOperator operator = Language.getInstance().getBinaryOperator(ctx.op.getText());
-            /*if (ctx.left != null) {
-                String left = ctx.left.getText();
-                int size = left.length();
-                String currentCoin = left.substring(size - 2).trim();
-                if (!currentCoin.equals(coin)) {
-                    String factor = factorToConvert(currentCoin);
-                    MonetaryConvertion conversion = new MonetaryConvertion();
-                    conversion.convertTo(left.substring(0, size-1), new BigDecimal(factor));
-                }
-            }
-            if (ctx.right != null) {
-                String right = ctx.right.getText();
-                int size = right.length();
-                String currentCoin = right.substring(size - 2).trim();
-                if (!currentCoin.equals(coin)) {
-                    String factor = factorToConvert(currentCoin);
-                    MonetaryConvertion conversion = new MonetaryConvertion();
-                    conversion.convertTo(right.substring(0, size-1), new BigDecimal(factor));
-                }
-            }*/
+        BinaryOperator operator = null;
 
-            return new BinaryOperation(
-                    visit(ctx.getChild(0)),
-                    operator,
-                    visit(ctx.getChild(2))
-            );
-        } catch (UnknownElementException ex) {
-            addVisitError(ex.getMessage());
+        if (ctx.getChildCount() == 1) {
+            return visitChildren(ctx);
         }
 
-        return visitChildren(ctx);
+        if (ctx.op != null) {
+            try {
+                operator = Language.getInstance().getBinaryOperator(ctx.op.getText());
+            } catch (UnknownElementException ex) {
+                addVisitError(ex.getMessage());
+            }
+        }
+
+        if (ctx.NUMBER() != null) {
+            return new BinaryOperation(visit(ctx.getChild(1)), operator, new MonetaryValue(new BigDecimal(ctx.NUMBER().getText())));
+        }
+
+        if (ctx.LPAR() != null && ctx.RPAR() != null) {
+            return new BinaryOperation(visit(ctx.getChild(1)), operator, visit(ctx.getChild(4)));
+            //Literal result = new Literal(o.evaluate());
+            //return (Expression) result;
+        } else {
+            return new BinaryOperation(visit(ctx.getChild(0).getChild(0)), operator, visit(ctx.getChild(2)));
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     */
+    @Override
+    public Expression visitValue(MonetaryLanguageParser.ValueContext ctx) {
+        Token t = (Token) ctx.getChild(0).getPayload();
+
+        if (t.getType() == MonetaryLanguageParser.NUMBER) {
+            return new MonetaryValue(new BigDecimal(ctx.getText()));
+        } else {
+            String number = ctx.getText();
+            String treatedNumber = treatNumber(number.substring(0, number.length() - 1), number.substring(number.length() - 1));
+            return new MonetaryValue(new BigDecimal(treatedNumber));
+        }
+    }
+
+    /**
+     *
+     * @param n
+     * @return
+     */
+    private String treatNumber(String n, String currentCoin) {
+        int size = n.length();
+        if (!currentCoin.equals(coin)) {
+            String factor = factorToConvert(currentCoin);
+            MonetaryConvertion conversion = new MonetaryConvertion();
+            return conversion.convertTo(n.substring(0, size - 1), new BigDecimal(factor)).toString();
+        }
+        return new BigDecimal(n.substring(0, size - 1)).toString();
     }
 
     /**
@@ -134,6 +158,11 @@ public class MonetaryLanguageBaseVisitorImpl extends MonetaryLanguageBaseVisitor
      */
     private String factorToConvert(String currentCoin) {
         String exchange = "";
+        currency = currency.substring(0, 1).toUpperCase() + currency.substring(1).toLowerCase();
+        currentCoin = currentCoin.replaceAll("\\u20AC", "€");
+        currentCoin = currentCoin.replaceAll("\\u0024", "$");
+        currentCoin = currentCoin.replaceAll("\\u00A3", "£");
+
         if (currentCoin.equals("€")) {
             exchange = currency + "ToEuro";
         }
@@ -143,7 +172,11 @@ public class MonetaryLanguageBaseVisitorImpl extends MonetaryLanguageBaseVisitor
         if (currentCoin.equals("£")) {
             exchange = currency + "ToPound";
         }
-        InputStream in = this.getClass().getResourceAsStream(PROPERTIES_FILE);
-        return "";/*Files.getPropertyValue(in, exchange);*/
+        for (Pair<String, String> p : exchangeRates) {
+            if (p.getKey() == exchange) {
+                return p.getValue();
+            }
+        }
+        return null;
     }
 }

@@ -11,7 +11,7 @@ import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.CellDecorator;
 import csheets.ui.ext.TableDecorator;
 import csheets.ui.ext.UIExtension;
-import lapr4.green.s2.core.n1150901.richCommentsAndHistory.presentation.CommentsWithHistoryPanel;
+import lapr4.green.s2.core.n1150901.richCommentsAndHistory.presentation.CommentsWithHistoryUI;
 import lapr4.red.s1.core.n1150690.comments.CommentedCellWithMultipleUsersDecorator;
 
 /**
@@ -96,7 +96,7 @@ public class UIExtensionComments extends UIExtension {
 	public JComponent getSideBar() {
 		if (sideBar == null)
 			//sideBar = new CommentPanel(uiController);
-                        sideBar = new CommentsWithHistoryPanel(uiController);
+                        sideBar = new CommentsWithHistoryUI(uiController);
 		return sideBar;
 	}	
 }

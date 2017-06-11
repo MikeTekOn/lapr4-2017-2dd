@@ -22,6 +22,7 @@ package csheets.core.formula.compiler;
 
 import csheets.core.Cell;
 import csheets.core.formula.Expression;
+import csheets.ui.ctrl.UIController;
 
 /**
  * A compiler that generates expressions from strings.
@@ -36,10 +37,10 @@ public interface ExpressionCompiler {
 	 * @return the compiled expression
 	 * @throws FormulaCompilationException if the expression could not be compiled
 	 */
-	public Expression compile(Cell cell, String source) throws FormulaCompilationException;
+	Expression compile(Cell cell, String source, UIController uiController) throws FormulaCompilationException;
 
 	/**
 	 * @return the 
 	 */
-	public char getStarter();
+	char getStarter();
 }

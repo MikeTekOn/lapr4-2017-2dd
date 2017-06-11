@@ -20,6 +20,7 @@ import java.util.Objects;
 import lapr4.blue.s1.lang.n1151159.macros.Macro;
 import lapr4.blue.s1.lang.n1151159.macros.MacroController;
 import lapr4.blue.s1.lang.n1151159.macros.compiler.MacroCompilationException;
+import lapr4.red.s2.lang.n1150451.multipleMacros.application.MultipleMacrosWithNameController;
 
 /**
  *
@@ -30,7 +31,7 @@ public class MacroWithName implements Expression, Serializable {
     private String name;
     private String macroCode;
     private Spreadsheet s;
-    private UIController uiController;
+    private transient UIController uiController;
 
     public MacroWithName(String name, String macroCode, Spreadsheet s, UIController uiController) {
         if (name.trim().isEmpty()) {
@@ -55,9 +56,9 @@ public class MacroWithName implements Expression, Serializable {
 
     @Override
     public Value evaluate() throws IllegalValueTypeException {
-        MacroController c = new MacroController();
+        MultipleMacrosWithNameController c = new MultipleMacrosWithNameController();
         try {
-            return c.executeMacro(s, uiController, macroCode);
+            return c.executeMacro(s, uiController, macroCode, name);
         } catch (MacroCompilationException ex) {
             Logger.getLogger(MacroWithName.class.getName()).log(Level.SEVERE, null, ex);
         }

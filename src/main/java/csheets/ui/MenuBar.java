@@ -28,6 +28,7 @@ import csheets.ui.ext.*;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import lapr4.red.s1.core.n1151094.columnSort.presentation.SortMenuUI;
+import lapr4.red.s2.lang.n1151094.ImportXML.presentation.ImportXmlMenuUI;
 
 /**
  * The menu bar.
@@ -57,6 +58,7 @@ public class MenuBar extends JMenuBar {
         fileMenu.addSeparator();
 
         fileMenu.add(new ExportToMenu(app, uiController, actionManager));
+        fileMenu.add(new ImportXmlMenuUI(uiController));
 
         fileMenu.add(actionManager.getAction("close"));
         fileMenu.add(actionManager.getAction("closeall"));

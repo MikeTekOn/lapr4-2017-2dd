@@ -103,14 +103,13 @@ public class CommentableCellWithMultipleUsers extends CommentableCell {
             if (entry.getKey().name().equals(oldAuthor)) {
                 /* THIS IS A CHANGE I MADE */
                 historyComments = history.get(newAuthor).get(oldComment);
+                historyComments.add(oldComment);
                 history.get(newAuthor).remove(oldComment);
                 /*-------------------------*/
                 entry.getValue().remove(oldComment);
             }
             if (entry.getKey().name().equals(newAuthor.name())) {
                 entry.getValue().add(newComment);
-                Map<String, List<String>> newMap = new HashMap<>();
-                newMap.put(newComment, historyComments);
                 history.get(newAuthor).put(newComment, historyComments);
             }
         }
