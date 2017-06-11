@@ -47,6 +47,7 @@ public class FunctionWizardController {
         for (Function f : Language.getInstance().getFunctions()){
             list.add(f.getIdentifier());
         }
+        
         return list;
     }
     
@@ -86,7 +87,7 @@ public class FunctionWizardController {
         aux += RIGHT_PAR;
         return aux;
     }
-    
+      
     /**
      * insert the syntax of the function in formula bar
      * @param syntax syntax of the function
