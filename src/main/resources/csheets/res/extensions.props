@@ -13,4 +13,5 @@ lapr4.green.s2.core.n1150838.GlobalSearch.GlobalSearchExtension=true
 lapr4.blue.s1.lang.n1151031.formulastools.ConditionalStyleExtension=true
 lapr4.blue.s2.ipc.n1151452.netanalyzer.NetAnalyzerExtension=true
 lapr4.blue.s2.ipc.n1151031.searchnetwork.SearchWorkbookNetworkExtension=true;
+lapr4.blue.s2.ipc.n1060503.chat.ui.ChatParticipantsExtension=true
 

@@ -11,6 +11,7 @@ import java.util.Observer;
 import lapr4.blue.s2.ipc.n1060503.chat.connection.CommUDPClient;
 import lapr4.blue.s2.ipc.n1060503.chat.connection.HandlerUserChatDTO;
 import lapr4.blue.s2.ipc.n1060503.chat.connection.UserChatDTO;
+import lapr4.blue.s2.ipc.n1060503.chat.profile.UserChatProfile;
 import lapr4.green.s1.ipc.n1150532.comm.CommUDPServer;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionDetailsResponseDTO;
 
@@ -40,9 +41,12 @@ public class ChatParticipantsAction extends BaseAction{
      */
     private final Observer table;
     
-    public ChatParticipantsAction(Observer theTable, int thePortNumber) {
+    private UserChatProfile ucp;
+    
+    public ChatParticipantsAction(Observer theTable, int thePortNumber, UserChatProfile ucp) {
         table= theTable;
         portNumber = thePortNumber;      
+        this.ucp=ucp;
     }
     
     /**
@@ -62,7 +66,7 @@ public class ChatParticipantsAction extends BaseAction{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        UserChatDTO request = new UserChatDTO();
+        UserChatDTO request = new UserChatDTO(ucp);
         CommUDPClient worker = new CommUDPClient( request, portNumber, TIMEOUT);        
         HandlerUserChatDTO handler = new HandlerUserChatDTO();
         handler.addObserver(table);

@@ -30,7 +30,7 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import lapr4.red.s2.lang.n1150451.multipleMacros.MacroWithName;
+import lapr4.red.s2.lang.n1150451.multipleMacros.domain.MacroWithName;
 import lapr4.red.s2.lang.n1150451.multipleMacros.ModifyMacroListController;
 
 /**

@@ -58,7 +58,8 @@
  * importing operators and functions from java.lang.Math.
  * <p>
  * 4 & 5. Simple changes in UI,changing the Frame class to place the desired
- * button between the CellEditor and the formula bar.
+ * button between the CellEditor and the formula bar. Remove the button from the
+ * Menu.
  * <p>
  *
  * <img src="ssd_insert_function_intermediate_wizard.png" alt="image">
