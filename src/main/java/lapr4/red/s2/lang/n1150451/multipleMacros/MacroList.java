@@ -5,32 +5,44 @@
  */
 package lapr4.red.s2.lang.n1150451.multipleMacros;
 
-import java.util.HashSet;
+import csheets.core.Spreadsheet;
+import java.io.Serializable;
 import java.util.*;
-import java.util.Set;
-import lapr4.blue.s1.lang.n1151159.macros.Macro;
+
+import csheets.ui.ctrl.UIController;
 
 /**
  *
  * @author Diogo Santos
  */
-public class MacroList {
+public class MacroList implements Serializable {
 
-    List<Macro> macroList;
+    List<MacroWithName> macroList;
+    private transient UIController uiController;
 
     public MacroList() {
-        macroList = new ArrayList<Macro>();
+        macroList = new ArrayList<MacroWithName>();
+
     }
 
-    public List<Macro> getMacroList() {
+    public MacroList(UIController uiController) {
+        macroList = new ArrayList<MacroWithName>();
+        this.uiController = uiController;
+    }
+
+    public List<MacroWithName> getMacroList() {
         return macroList;
     }
 
-    public boolean addMacro(Macro m) {
+    public boolean addMacro(String name, String code, Spreadsheet s) {
+        return addMacro(new MacroWithName(name, code, s, uiController));
+    }
+
+    public boolean addMacro(MacroWithName m) {
         if (m == null) {
             throw new IllegalArgumentException("Macro can't be null");
         }
-        
+
         if (!checkExistence(m)) {
             return macroList.add(m);
         }
@@ -38,23 +50,36 @@ public class MacroList {
 
     }
 
-    public boolean removeMacro(Macro m) {
-        return macroList.remove(m);
+    public boolean removeMacro(String m) {
+        return macroList.remove(getMacroByName(m));
     }
 
-    public boolean updateMacro(Macro previousMacro, Macro newMacro) {
-        if (removeMacro(previousMacro)) {
-            return addMacro(newMacro);
+    public boolean updateMacro(String previousMacroName, String name, String code, Spreadsheet s) {
+        if (removeMacro(previousMacroName)) {
+            return addMacro(name, code, s);
         }
         return false;
     }
 
-    private boolean checkExistence(Macro m) {
+    private boolean checkExistence(MacroWithName m) {
         for (int i = 0; i < macroList.size(); i++) {
             if (m.equals(macroList.get(i))) {
                 return true;
             }
         }
         return false;
+    }
+
+    public MacroWithName getMacroByName(String name) {
+        for (int i = 0; i < macroList.size(); i++) {
+            if (name.equals(macroList.get(i).getName())) {
+                return macroList.get(i);
+            }
+        }
+        return null;
+    }
+
+    void setUIController(UIController uiC) {
+        this.uiController=uiC;
     }
 }

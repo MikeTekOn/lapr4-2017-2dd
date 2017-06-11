@@ -1,0 +1,38 @@
+@startuml traffic_logger_sd.png
+box "Publisher Threads [Producers]" #79BD9A
+collections PublisherTrafficEvent as evs <<Runnable>>
+participant TrafficLogger as tl <<Singleton>>
+end box
+box "Shared Memory" #ADC6FD
+participant ConcurrentLinkedQueue as q
+participant lock <<Lock>>
+end box
+box "Consumer Thread" #FFDC75
+participant LogConsumer as c <<Runnable>>
+participant TrafficLogger as tl2 <<Singleton>>
+end box
+box "Main Thread"
+participant TrafficLogger as tl3 <<Singleton>>
+end box
+
+tl3 -> c : run()
+evs -> tl : update(ev)
+note over q
+ConcurrentLinkedQueue
+will sync the concurrent calls
+using a "wait-free" algorithm
+end note
+tl -> q : add(ev)
+tl -> lock : notify()
+hnote over lock, c : unlock
+loop true
+loop queue.isEmpty()
+c -> lock : wait()
+hnote over lock, c : lock
+end loop
+c -> q : poll()
+c -> : alertListeners(log)
+end loop
+evs -> evs : terminate
+
+@enduml

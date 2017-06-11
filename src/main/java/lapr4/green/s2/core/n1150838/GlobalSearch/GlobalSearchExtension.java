@@ -8,6 +8,7 @@ package lapr4.green.s2.core.n1150838.GlobalSearch;
 import csheets.ext.Extension;
 import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.UIExtension;
+import lapr4.green.s2.core.n1150838.GlobalSearch.presentation.UIExtensionGlobalSearch;
 
 /**
  *
@@ -15,10 +16,10 @@ import csheets.ui.ext.UIExtension;
  */
 public class GlobalSearchExtension extends Extension {
     	/** The name of the extension */
-    public static final String NAME = "Workbook Search";
+    public static final String NAME = "Global Search";
 
 	/**
-	 * Creates a new Example extension.
+	 * Creates a new Gloabel search extension.
 	 */
 	public GlobalSearchExtension() {
             super(NAME);
@@ -31,6 +32,6 @@ public class GlobalSearchExtension extends Extension {
 	 */
         @Override
 	public UIExtension getUIExtension(UIController uiController) {
-            return null;
+            return new UIExtensionGlobalSearch(this, uiController);
         }
 }

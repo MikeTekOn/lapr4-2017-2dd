@@ -1,0 +1,25 @@
+@startuml ipc03_2_design2.png
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+participant "HandlerSearchWorkbookRespoonseDTO" as handlerDTO
+participant "PacketEncapsulatorDTO" as packet
+participant "DatagramPacket" as datagram
+participant "SearchWorkbookResponseDTO" as resDTO
+participant "SearchResult" as sresult
+participant "Observable" as obs
+
+-> handlerDTO : handleDTO()
+handlerDTO -> packet : reply = (PacketEncapsulator) dto
+handlerDTO -> packet : InetAddress ip = getPacket()
+packet -> datagram : getAddress()
+handlerDTO -> packet : String workbookName = getDTO()
+packet -> resDTO : getWorkbookName()
+handlerDTO -> packet : String summary = getDTO()
+packet -> resDTO : getSummary()
+create sresult
+handlerDTO -> sresult : result = create(ip, workbookName, summary)
+handlerDTO -> obs : notifyObservers(result)
+
+@enduml

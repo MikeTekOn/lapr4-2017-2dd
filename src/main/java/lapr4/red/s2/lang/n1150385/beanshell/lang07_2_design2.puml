@@ -1,0 +1,26 @@
+@startuml lang07_02_design2.png
+
+participant BeanShellInstance as shell
+
+[-> shell: evaluate()
+shell -> shell: result = null;
+shell -> shell: Map<String, Object> temp = executeScript();
+
+create participant "result : BeanShellResult" as result
+shell -> result: result = new BeanShellResult(temp);
+
+alt if(result != null && result.lastResult() != null)
+shell -> result: lastResult = lastResult();
+
+create participant "returnVal : Value" as value
+shell -> value: returnVal = new Value(lastResult);
+<- shell: return returnVal;
+else
+note right of shell
+it can happen that the shell execution was set to be
+asynchronous aso, as a result, it returns nothing
+end note
+<- shell: return null;
+end alt
+
+@enduml
