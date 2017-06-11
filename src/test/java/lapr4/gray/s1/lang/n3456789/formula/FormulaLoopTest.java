@@ -29,6 +29,7 @@ public class FormulaLoopTest {
     @Before public void setUp() {
         
         // Try to create the CS application object
+        CleanSheets.setFlag(true);
         app = new CleanSheets();
         
         // This will create a workbook with 3 sheets

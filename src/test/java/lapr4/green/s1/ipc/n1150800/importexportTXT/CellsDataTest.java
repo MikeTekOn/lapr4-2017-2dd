@@ -28,6 +28,7 @@ public class CellsDataTest {
     
     @Before
     public void setUp() throws IOException {
+        CleanSheets.setFlag(true);
         cleansheet = new CleanSheets();
         
         String[][] spreadsheetContent = new String[1][2];

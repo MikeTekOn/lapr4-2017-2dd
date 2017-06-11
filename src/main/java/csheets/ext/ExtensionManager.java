@@ -83,7 +83,7 @@ public class ExtensionManager {
 			}
 
 		// Loads user extension properties
-		File userExtPropsFile = new File(PROPERTIES_FILENAME);
+		File userExtPropsFile = new File("res/" + PROPERTIES_FILENAME);
 		if (userExtPropsFile.exists())
 			stream = null;
 			try {

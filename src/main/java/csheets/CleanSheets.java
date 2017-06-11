@@ -40,9 +40,12 @@ import javax.swing.SwingUtilities;
 import csheets.core.Workbook;
 import csheets.core.formula.compiler.FormulaCompiler;
 import csheets.core.formula.lang.Language;
+import csheets.ext.Extension;
+import csheets.ext.ExtensionManager;
 import csheets.io.Codec;
 import csheets.io.CodecFactory;
 import csheets.io.NamedProperties;
+import csheets.ui.ctrl.UIController;
 import eapli.framework.persistence.DataConcurrencyException;
 import eapli.framework.persistence.DataIntegrityViolationException;
 import lapr4.red.s1.core.n1150943.contacts.application.BootEventVerifier;
@@ -51,6 +54,7 @@ import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
+import java.util.Set;
 import lapr4.green.s2.core.n1150657.extensions.ui.ExtensionLoadFrame;
 
 /**
@@ -97,6 +101,8 @@ public class CleanSheets implements Observer {
      */
     private NamedProperties props;
 
+    private UIController uiController;
+
     /**
      * The listeners registered to receive events
      */
@@ -116,62 +122,117 @@ public class CleanSheets implements Observer {
         return messages.getString(stringID);
     }
 
+    private ExtensionLoadFrame extensionLoadFrame;
+
+    public static boolean flag = false;
+
     /**
      * Creates the CleanSheets application.
      */
     public CleanSheets() {
-
-        //The Load of the extensions Frame
-        new ExtensionLoadFrame(this);
-        //It will wait for the notify.
-        //The nofity will happen after the loading of the extensions
-        synchronized (this) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                //do nothing
-            }
-
-            // Load resources
-            messages = ResourceBundle.getBundle(DEFAULT_RESOURCE_FILENAME, Locale.getDefault());
-
-            // Loads compilers
-            FormulaCompiler.getInstance();
-
-            // Loads language
-            Language.getInstance();
-
-            // Loads default properties
-            Properties defaultProps = new Properties();
-            InputStream defaultStream = CleanSheets.class.getResourceAsStream(DEFAULT_PROPERTIES_FILENAME);
-            if (defaultStream != null) {
+        if (flag) {
+            runWithouLoadingOption();
+        } else {
+            //The Load of the extensions Frame
+            extensionLoadFrame = new ExtensionLoadFrame(this);
+            //It will wait for the notify.
+            //The nofity will happen after the loading of the extensions
+            synchronized (this) {
                 try {
-                    defaultProps.loadFromXML(defaultStream);
-                } catch (IOException e) {
-                    System.err.println("Could not load default application properties.");
-                } finally {
+                    wait();
+                } catch (InterruptedException e) {
+                    //do nothing
+                }
+
+                // Load resources
+                messages = ResourceBundle.getBundle(DEFAULT_RESOURCE_FILENAME, Locale.getDefault());
+
+                // Loads compilers
+                FormulaCompiler.getInstance();
+
+                // Loads language
+                Language.getInstance();
+
+                // Loads default properties
+                Properties defaultProps = new Properties();
+                InputStream defaultStream = CleanSheets.class.getResourceAsStream(DEFAULT_PROPERTIES_FILENAME);
+                if (defaultStream != null) {
                     try {
-                        if (defaultStream != null) {
-                            defaultStream.close();
-                        }
+                        defaultProps.loadFromXML(defaultStream);
                     } catch (IOException e) {
+                        System.err.println("Could not load default application properties.");
+                    } finally {
+                        try {
+                            if (defaultStream != null) {
+                                defaultStream.close();
+                            }
+                        } catch (IOException e) {
+                        }
                     }
                 }
-            }
 
-            // Loads user properties
-            File propsFile = new File(USER_PROPERTIES_FILENAME);
-            props = new NamedProperties(propsFile, defaultProps);
-            BootEventVerifier bev = new BootEventVerifier();
-            try {
-                bev.verify(props);
-            } catch (DataConcurrencyException e) {
-                e.printStackTrace();
-            } catch (DataIntegrityViolationException e) {
-                e.printStackTrace();
+                // Loads user properties
+                File propsFile = new File(USER_PROPERTIES_FILENAME);
+                props = new NamedProperties(propsFile, defaultProps);
+                BootEventVerifier bev = new BootEventVerifier();
+                try {
+                    bev.verify(props);
+                } catch (DataConcurrencyException e) {
+                    e.printStackTrace();
+                } catch (DataIntegrityViolationException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
+    }
+
+    private void runWithouLoadingOption() {
+        // Load resources
+        messages = ResourceBundle.getBundle(DEFAULT_RESOURCE_FILENAME, Locale.getDefault());
+
+        // Loads compilers
+        FormulaCompiler.getInstance();
+
+        // Loads language
+        Language.getInstance();
+
+        // Loads extensions
+        ExtensionManager.getInstance();
+
+        // Loads default properties
+        Properties defaultProps = new Properties();
+        InputStream defaultStream = CleanSheets.class.getResourceAsStream(DEFAULT_PROPERTIES_FILENAME);
+        if (defaultStream != null) {
+            try {
+                defaultProps.loadFromXML(defaultStream);
+            } catch (IOException e) {
+                System.err.println("Could not load default application properties.");
+            } finally {
+                try {
+                    if (defaultStream != null) {
+                        defaultStream.close();
+                    }
+                } catch (IOException e) {
+                }
+            }
+        }
+
+        // Loads user properties
+        File propsFile = new File(USER_PROPERTIES_FILENAME);
+        props = new NamedProperties(propsFile, defaultProps);
+        BootEventVerifier bev = new BootEventVerifier();
+        try {
+            bev.verify(props);
+        } catch (DataConcurrencyException e) {
+            e.printStackTrace();
+        } catch (DataIntegrityViolationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setFlag(boolean newflag) {
+        flag = newflag;
     }
 
     /**
@@ -217,6 +278,10 @@ public class CleanSheets implements Observer {
         }
     }
 
+    public void setUIController(UIController uiController) {
+        this.uiController = uiController;
+    }
+
     /**
      * Returns the current user properties.
      *
@@ -248,7 +313,7 @@ public class CleanSheets implements Observer {
      * Creates a new workbook.
      */
     public void create() {
-        Workbook workbook = new Workbook(3);
+        Workbook workbook = new Workbook(3, null);
         workbooks.put(workbook, null);
         fireSpreadsheetAppEvent(workbook, null, SpreadsheetAppEvent.Type.CREATED);
     }
@@ -454,6 +519,7 @@ public class CleanSheets implements Observer {
                             listeners.toArray(new SpreadsheetAppListener[listeners.size()])
                     )
             );
+
         }
     }
 

@@ -43,6 +43,7 @@ public class ColumnSortTest {
 
     @Before
     public void setUp() throws Exception {
+        CleanSheets.setFlag(true);
         cleansheet = new CleanSheets();
 
         String[][] spreadsheetContent = new String[1][1];

@@ -51,6 +51,8 @@ public abstract class Extension implements Comparable<Extension>, ExtensionState
 	/**
 	 * Creates a new extension.
 	 * @param name the name of the extension
+        * @param version
+        * @param description
 	 */
 	public Extension(String name, int version, String description) {
 		this.name = name;

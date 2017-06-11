@@ -37,6 +37,7 @@ public class GlobalSearchControllerTest {
     
     @Before
     public void setUp() throws FormulaCompilationException {
+        CleanSheets.setFlag(true);
         CleanSheets app = new CleanSheets();
 
         UIController extensions = new UIController(app);

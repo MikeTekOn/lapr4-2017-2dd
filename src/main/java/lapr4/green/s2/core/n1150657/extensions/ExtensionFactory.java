@@ -11,11 +11,17 @@ import csheets.ext.simple.ExtensionExample;
 import csheets.ext.style.StyleExtension;
 import lapr4.blue.s1.lang.n1151031.formulastools.ConditionalStyleExtension;
 import lapr4.blue.s1.lang.n1151159.macros.MacroExtension;
+import lapr4.blue.s2.ipc.n1060503.chat.ui.ChatParticipantsExtension;
+import lapr4.blue.s2.ipc.n1151031.searchnetwork.SearchWorkbookNetworkExtension;
+import lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.ext.ExtensionFindWorkbook;
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.NetAnalyzerExtension;
 import lapr4.green.s1.ipc.n1150532.comm.CommExtension;
 import lapr4.green.s1.ipc.n1150657.chat.ext.ChatExtension;
 import lapr4.green.s1.ipc.n1150800.importexportTXT.ui.ImportExportExtension;
 import lapr4.green.s1.ipc.n1150838.findworkbooks.ext.ExtensionFindWorkbooks;
 import lapr4.green.s1.ipc.n1150901.search.workbook.SearchWorkbookExtension;
+import lapr4.green.s2.core.n1150838.GlobalSearch.GlobalSearchExtension;
+import lapr4.green.s2.core.n1150901.richCommentsAndHistory.domain.CommentsWithHistoryExtension;
 import lapr4.red.s1.core.n1150613.workbookSearch.SearchExtension;
 import lapr4.white.s1.core.n1234567.comments.CommentsExtension;
 import lapr4.white.s1.core.n4567890.contacts.ContactsExtension;
@@ -60,7 +66,7 @@ public class ExtensionFactory {
             if (criteria2 == version1) {
                 return new ChatExtension();
             } else if (criteria2 == version2) {
-
+                return new ChatParticipantsExtension();
             }
         } else if (criteria1.equals(StyleExtension.NAME)) {
             if (criteria2 == version1) {
@@ -77,6 +83,8 @@ public class ExtensionFactory {
         } else if (criteria1.equals(CommentsExtension.NAME)) {
             if (criteria2 == version1) {
                 return new CommentsExtension();
+            } else if(criteria2 == version2){
+                return new CommentsWithHistoryExtension();
             }
         } else if (criteria1.equals(ContactsExtension.NAME)) {
             if (criteria2 == version1) {
@@ -85,10 +93,14 @@ public class ExtensionFactory {
         } else if (criteria1.equals(ExtensionFindWorkbooks.NAME)) {
             if (criteria2 == version1) {
                 return new ExtensionFindWorkbooks();
+            }else if(criteria2 == version2){
+                return new ExtensionFindWorkbook();
             }
         } else if (criteria1.equals(SearchWorkbookExtension.NAME)) {
             if (criteria2 == version1) {
                 return new SearchWorkbookExtension();
+            }else if(criteria2 == version2){
+                return new SearchWorkbookNetworkExtension();
             }
         } else if (criteria1.equals(ImportExportExtension.NAME)) {
             if (criteria2 == version1) {
@@ -105,10 +117,16 @@ public class ExtensionFactory {
         } else if (criteria1.equals(SearchExtension.NAME)) {
             if (criteria2 == version1) {
                 return new SearchExtension();
+            }else if(criteria2 == version2){
+                return new GlobalSearchExtension();
             }
         } else if (criteria1.equals(ConditionalStyleExtension.NAME)) {
             if (criteria2 == version1) {
-                return new ConditionalStyleExtension();
+                //return new ConditionalStyleExtension(uiControlle);
+            }
+        } else if(criteria1.equals(NetAnalyzerExtension.NAME)){
+            if(criteria2 == version1){
+                return new NetAnalyzerExtension();
             }
         }
 

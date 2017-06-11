@@ -21,12 +21,12 @@ public class ExtensionLoadController {
     /**
      * The extension manager.
      */
-    private ExtensionManager extensionInstance;
+    private ExtensionManager extensionInstance = ExtensionManager.getInstance();;
 
     /**
      * The properties.
      */
-    private Properties properties;
+    private Properties properties  = ExtensionManager.getInstance().getProperties();;
 
     /**
      * The extension option.
@@ -37,8 +37,6 @@ public class ExtensionLoadController {
      * The extension option controller constructor.
      */
     public ExtensionLoadController() {
-        extensionInstance = ExtensionManager.getInstance();
-        properties = ExtensionManager.getInstance().getProperties();
         this.extensionOption = new ExtensionLoad(properties, extensionInstance);
     }
 

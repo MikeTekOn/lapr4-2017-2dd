@@ -253,7 +253,7 @@ public class ExtensionLoadFrame extends JFrame {
                         listSelected.setSelectedIndex(0);
                     }
                     /*Default option, if chat extension is select, verify if Communication is to
-                    Since Chat only works with communication*/
+                    Since Chat only works with communication and search workbook*/
                     String boxText = b.getText();
                     if (boxText.equals(ChatExtension.CHAT_NAME) || boxText.equals(SearchWorkbookExtension.NAME)) {
                         if (b.isSelected()) {
@@ -296,7 +296,7 @@ public class ExtensionLoadFrame extends JFrame {
             }
         }
     }
-
+    
     /**
      * Private inner class that represents the load action.
      */
@@ -317,6 +317,7 @@ public class ExtensionLoadFrame extends JFrame {
                     controller.load(list.getValue().get(listSelected).get(index));
                 }
             }
+            controller.load("lapr4.blue.s1.lang.n1151031.formulastools.ConditionalStyleExtension");//FIXME JoaoCardoso problem resolved
             buttonSelect.setEnabled(true);
             buttonLoad.setEnabled(false);
         }
