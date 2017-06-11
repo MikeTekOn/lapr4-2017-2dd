@@ -79,11 +79,12 @@ public class ShareAction extends BaseAction {
 
         ((HandlerFileNameListDTO) CommUDPServer.getServer().getHandler(fileDTO.getClass())).addObserver(new ShareFrame(uiController));
         CommUDPClient worker = new CommUDPClient(fileDTO, port, 55);
+       
         worker.start();
-
+       
     }
 
-    private Map<String, Integer> fillListOfSharedfiles() throws IOException {
+    public static Map<String, Integer> fillListOfSharedfiles() throws IOException {
         Map<String, Integer> tempMap = new LinkedHashMap<>();
         File folder = new File(ShareConfiguration.getSharedFolder());
         folder.mkdirs();
