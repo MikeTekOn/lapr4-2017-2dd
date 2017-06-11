@@ -35,6 +35,12 @@ public abstract class Extension implements Comparable<Extension>, ExtensionState
 
 	/** The name of the extension */
 	private final String name;
+        
+        /**The version of the extension*/
+        private int version;
+        
+        /**The description of the extension*/
+        private final String description;
 
 	/** The base key to use for properties of the extension */
 	private final String basePropKey;
@@ -46,8 +52,10 @@ public abstract class Extension implements Comparable<Extension>, ExtensionState
 	 * Creates a new extension.
 	 * @param name the name of the extension
 	 */
-	public Extension(String name) {
+	public Extension(String name, int version, String description) {
 		this.name = name;
+                this.version = version;
+                this.description = description;
 
 		// Builds UI extension base property key
 		String basePropKey = "";
@@ -63,7 +71,24 @@ public abstract class Extension implements Comparable<Extension>, ExtensionState
 	public final String getName() {
 		return name;
 	}
-
+        
+        /**
+         * Returns the version of the extension.
+         * @return It returns an int with the version.
+         */ 
+        public int getVersion(){
+            return version;
+        }
+        
+        /**
+         * Return the description of the extension.
+         * @return It returns a string with the description.
+         */
+        public String getDescription(){
+            return description;
+        }
+        
+        
 	/**
 	 * Returns the base key to use for properties of the UI extension.
 	 * @return the base key to use for properties of the UI extension
@@ -135,4 +160,19 @@ public abstract class Extension implements Comparable<Extension>, ExtensionState
 			extensionEnabled();
 		}
 	}
+
+        /**
+         * Sets the version to a new one.
+         * @param version The new version to change.
+         */
+        public void setVersion(int version){
+            this.version = version;
+        }
+
+        /**
+         * If gives the metadata information about the extension.
+         * @return It returns a string with the metadata.
+         */
+        public abstract String metadata();
+        
 }

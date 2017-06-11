@@ -19,13 +19,25 @@ public class ConditionalStyleExtension extends Extension {
     /**
      * The name of the extension
      */
-    public static final String NAME = "Conditional Formatting";
+    public static final String NAME = "Conditional Style";
+    
+     /**
+     * The description of the extension
+     */
+    public static final String DESCRIPTION = "An extension to support conditions on cells.\n"
+            + "An extension must extend the Extension abstract class.\n"
+            + "The class that implements the Extension is the \"bootstrap\" of the extension.";
+    
+    /**
+     * The first version of the conditional style extension.
+     */
+    public static final int VERSION = 1;
 
     /**
      * Creates a new Example extension.
      */
     public ConditionalStyleExtension() {
-        super(NAME);
+        super(NAME, VERSION, DESCRIPTION);
     }
 
     /**
@@ -47,5 +59,13 @@ public class ConditionalStyleExtension extends Extension {
      */
     public UIExtension getUIExtension(UIController uiController) {
         return new ConditionalStyleUIExtension(this, uiController);
+    }
+
+    @Override
+    public String metadata() {
+        return String.format("This is %s with version %d\n"
+                + "This extension has the follow description: %s\n"
+                + "This extension was made by Tiago Correia in Sprint 1 and it is in the package %s",
+                getName(), getVersion(), getDescription(),getClass().getName());
     }
 }

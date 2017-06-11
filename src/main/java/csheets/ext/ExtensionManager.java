@@ -97,14 +97,20 @@ public class ExtensionManager {
 				} catch (IOException e) {}
 			}
 
+                        /*
 		// Loads extensions
 		for (Map.Entry<Object, Object> entry : props.entrySet()) {
 			// Loads class
 			String className = (String)entry.getKey();
 			load(className);
 		}
+                        */
 
 	}
+        
+        public Properties getProperties(){
+            return props;
+        }
 
 	/**
 	 * Returns the singleton instance.

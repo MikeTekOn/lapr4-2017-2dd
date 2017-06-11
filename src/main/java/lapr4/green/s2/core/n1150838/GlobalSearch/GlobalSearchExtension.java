@@ -16,12 +16,15 @@ import csheets.ui.ext.UIExtension;
 public class GlobalSearchExtension extends Extension {
     	/** The name of the extension */
     public static final String NAME = "Workbook Search";
+    
+    public static final String DESCRIPTION = "Workbook Search description";
+    public static final int VERSION = 1;
 
 	/**
 	 * Creates a new Example extension.
 	 */
 	public GlobalSearchExtension() {
-            super(NAME);
+            super(NAME,VERSION,DESCRIPTION);
 	}
 	
 	/**
@@ -32,5 +35,11 @@ public class GlobalSearchExtension extends Extension {
         @Override
 	public UIExtension getUIExtension(UIController uiController) {
             return null;
+        }
+        
+        @Override
+        public String metadata(){
+            return String.format("This is %s with version %d\n"
+                    + "This extension has the follow description: %s.", getName(),getVersion(),getDescription());
         }
 }
