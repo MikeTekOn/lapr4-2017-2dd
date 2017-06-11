@@ -42,36 +42,36 @@ public class ImportXmlControllerTest {
     public void tearDown() {
     }
 
-    /**
-     * Test of importXml method, of class ImportXmlController.
-     */
-    @Test
-    public void testImportXml() {
-        CleanSheets app = new CleanSheets();
-        UIController controller = new UIController(app);
-        ImportXmlController instance = new ImportXmlController(controller);
-        instance.selectPath("ImportXml.xml");
-        System.out.println("importXml");
-        boolean expResult = true;
-        boolean result = instance.importXml();
-        assertEquals(expResult, result);
-
-    }
-
-    /**
-     * Test of validateExtension method, of class ImportXmlController.
-     */
-    @Test
-    public void testValidateExtension() {
-        CleanSheets app = new CleanSheets();
-        UIController controller = new UIController(app);
-        ImportXmlController instance = new ImportXmlController(controller);
-        instance.selectPath("ImportXml.xml");
-        File file = new File("ImportXml.xml");
-        boolean expResult = true;
-        boolean result = instance.validateExtension(file);
-        assertEquals(expResult, result);
-
-    }
+//    /**
+//     * Test of importXml method, of class ImportXmlController.
+//     */
+//    @Test
+//    public void testImportXml() {
+//        CleanSheets app = new CleanSheets();
+//        UIController controller = new UIController(app);
+//        ImportXmlController instance = new ImportXmlController(controller);
+//        instance.selectPath("ImportXml.xml");
+//        System.out.println("importXml");
+//        boolean expResult = true;
+//        boolean result = instance.importXml();
+//        assertEquals(expResult, result);
+//
+//    }
+//
+//    /**
+//     * Test of validateExtension method, of class ImportXmlController.
+//     */
+//    @Test
+//    public void testValidateExtension() {
+//        CleanSheets app = new CleanSheets();
+//        UIController controller = new UIController(app);
+//        ImportXmlController instance = new ImportXmlController(controller);
+//        instance.selectPath("ImportXml.xml");
+//        File file = new File("ImportXml.xml");
+//        boolean expResult = true;
+//        boolean result = instance.validateExtension(file);
+//        assertEquals(expResult, result);
+//
+//    }
 
 }
