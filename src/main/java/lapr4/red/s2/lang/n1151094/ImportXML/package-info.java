@@ -34,9 +34,9 @@
  *
  * In this second sprint I started by analysing the Export XML Use case.
  * <p>
- * Verified that when the spreadsheet is exported to an XML file, only the value of the cells is saved, not their formatting style or formulas.
- * <p>
- * This problem needs to be fixed and then implemented in the XML importation too.
+ * I verified that no matter what kind of exportation the user chooses the exported XML file always have the following hierarchical tree:
+ * 
+ * <img src="tree.png" alt="image">
  * <p>
  * I decided to use the Strategy Pattern because in the future there may be importations and exportations to different file formats.
  * <p>
@@ -66,7 +66,11 @@
  *
  * <h2>4. Design</h2>
  *
- * <h3><b>Sequence Diagrams</b></h3>
+ * <h3>4.1Functional Tests</h3>
+ * <ol>
+ *    <li>testImportXml()</li>
+ *    <li>testValidateExtension()</li>
+ * </ol>
  * <p>
  * <h3>Short Sequence Diagram</h3>
  * <img src="ssd.png" alt="image">
@@ -75,11 +79,11 @@
  * <p>
  * <h3>Detailed Sequence Diagram</h3>
  * <p>
- *
+ * <img src="lang08_02_design.png" alt="image">
  * <p>
  * 
- * <b>Class Diagram</b>
- * 
+ * <h3>Class Diagram</h3>
+ * <img src="lang08_02_design_class_diagram.png" alt="image">
  * <p>
  * 
  * <h2>8. Work Log</h2>
