@@ -59,29 +59,22 @@ public class MonetaryLanguageBaseVisitorImpl extends MonetaryLanguageBaseVisitor
     /**
      * {@inheritDoc}
      */
-    @Override
+    //@Override
     public Expression visitFormula(MonetaryLanguageParser.FormulaContext ctx) {
-        return visitChildren(ctx);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public Expression visitCurrency(MonetaryLanguageParser.CurrencyContext ctx) {
-        currency = ctx.getText();
-        String firstLetter = currency.substring(0, 1);
-        currency = firstLetter.toUpperCase() + currency.substring(1);
-        if (currency.equals("Euro")) {
-            coin = "€";
+      
+        currency = ctx.getChild(1).getText().toLowerCase();
+        
+        if (currency.equals("euro")) {
+            coin = "\\u20AC";
         }
-        if (currency.equals("Dollar")) {
+        if (currency.equals("dollar")) {
             coin = "$";
         }
-        if (currency.equals("Pound")) {
+        if (currency.equals("pound")) {
             coin = "£";
         }
-        return null;
+        Expression a = visitExpression(ctx.expression());
+        return a;
     }
 
     /**
@@ -148,7 +141,6 @@ public class MonetaryLanguageBaseVisitorImpl extends MonetaryLanguageBaseVisitor
         return new BigDecimal(n.substring(0, size - 1)).toString();
     }
 
-
     /**
      * Adds a given message to the visit error.
      *
@@ -166,15 +158,11 @@ public class MonetaryLanguageBaseVisitorImpl extends MonetaryLanguageBaseVisitor
      */
     private String factorToConvert(String currentCoin) {
         String exchange = "";
-        if(currentCoin.contains("\\u20AC")){
-            currentCoin = currentCoin.replaceAll("\\u20AC", "€");
-        }
-        if(currentCoin.contains("\\u0024")){
-            currentCoin = currentCoin.replaceAll("\\u0024", "$");
-        }
-        if(currentCoin.contains("\\u00A3")){
-            currentCoin = currentCoin.replaceAll("\\u00A3", "£");
-        }
+        currency = currency.substring(0, 1).toUpperCase() + currency.substring(1).toLowerCase();
+        currentCoin = currentCoin.replaceAll("\\u20AC", "€");
+        currentCoin = currentCoin.replaceAll("\\u0024", "$");
+        currentCoin = currentCoin.replaceAll("\\u00A3", "£");
+
         if (currentCoin.equals("€")) {
             exchange = currency + "ToEuro";
         }

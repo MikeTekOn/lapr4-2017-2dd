@@ -10,8 +10,6 @@ import csheets.core.Value;
 import csheets.core.formula.Expression;
 import csheets.core.formula.util.ExpressionVisitor;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -19,22 +17,11 @@ import java.util.List;
  */
 public class MonetaryValue implements Expression {
 
-    /**
-     * The expressions of a macro.
-     */
-    private List<Expression> expressions;
-
     private BigDecimal value;
 
     public MonetaryValue(BigDecimal value) {
         this.value = value;
-        this.expressions = new ArrayList<>();
     }
-    
-    public void addExpressions(List<Expression> expressions){
-        this.expressions.addAll(expressions);
-    }
-
     /**
      * Returns the value of the monetary value.
      *
@@ -46,11 +33,7 @@ public class MonetaryValue implements Expression {
 
     @Override
     public Value evaluate() throws IllegalValueTypeException {
-        Value value = null;
-        for (Expression exp : expressions) {
-            value = exp.evaluate();
-        }
-        return value;
+        return new Value(value);
     }
 
     @Override

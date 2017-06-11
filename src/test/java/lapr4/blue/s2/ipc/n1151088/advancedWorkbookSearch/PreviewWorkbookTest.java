@@ -1,5 +1,6 @@
 package lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch;
 
+import lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.PreviewWorkbook;
 import csheets.CleanSheets;
 import csheets.core.Address;
 import csheets.core.Cell;

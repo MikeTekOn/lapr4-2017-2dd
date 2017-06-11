@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import lapr4.blue.s2.ipc.n1060503.chat.profile.UserChatProfile;
 import lapr4.green.s1.ipc.n1150532.comm.CommTCPServer;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
@@ -29,6 +30,7 @@ public class UserChatDTO extends Observable implements  DTO, Serializable {
         try {
             ucp = new UserChatProfile();
             tcpPort = CommTCPServer.getServer().provideConnectionPort();
+
         } catch (IOException ex) {
             Logger.getLogger(UserChatDTO.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -36,6 +38,14 @@ public class UserChatDTO extends Observable implements  DTO, Serializable {
     
     public String getUserChatProfileNickname(){
         return ucp.getNickname();
+    }
+    
+    public String getStatus(){
+        return ucp.getStatus().toString();
+    }
+    
+    public ImageIcon getImage(){
+        return ucp.getImage();
     }
     
     public int getTcoPort()
@@ -46,6 +56,10 @@ public class UserChatDTO extends Observable implements  DTO, Serializable {
     public void buildConnectionID(ConnectionID connection)
     {
         this.connID = connection;
+    }
+    
+    public ConnectionID getConnectionID(){
+        return this.connID;
     }
     
 }

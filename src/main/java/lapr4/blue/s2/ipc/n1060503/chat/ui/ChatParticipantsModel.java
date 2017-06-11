@@ -23,8 +23,7 @@ public class ChatParticipantsModel extends AbstractTableModel {
     private final String[] columns = {        
         "Icon", 
         "Nickname",
-        "Status",
-        "IP Address"};
+        "Status"};
 
     /**
      * The connections list.
@@ -94,7 +93,18 @@ public class ChatParticipantsModel extends AbstractTableModel {
         }
         UserChatDTO ucp = list.get(rowIndex);
         Object data;
-        data = ucp.getUserChatProfileNickname();
+        switch (columnIndex) {
+            case 0:
+                data = "Error";
+//                data = ucp.getImage();
+                break;
+            case 1:
+                data = ucp.getUserChatProfileNickname();
+                break;
+            default:
+                data = ucp.getStatus();
+                break;
+        }
 
         return data;
     }
