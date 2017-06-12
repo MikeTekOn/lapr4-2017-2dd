@@ -32,7 +32,6 @@ public class JpaCompanyContactRepository extends CrmJpaRepositoryBase<CompanyCon
 
     @Override
     public CompanyContact findByCompanyName(CompanyName n) {
-        System.out.println(n);
         Map<String, Object> params = new HashMap();
         params.put("namecpn", n);
         return matchOne("e.companyName = :namecpn", params);
