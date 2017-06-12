@@ -6,7 +6,6 @@ import eapli.framework.application.Controller;
 import java.io.File;
 import java.io.IOException;
 import lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.Directory;
-import lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.PreviewWorkbook;
 import lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.PreviewWorkbookBuilder;
 
 /**

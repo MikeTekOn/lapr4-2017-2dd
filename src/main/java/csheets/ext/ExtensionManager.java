@@ -220,6 +220,7 @@ public class ExtensionManager {
 	public Extension load(String className) {
 		try {
 			Class extensionClass = Class.forName(className);
+                        System.out.println("-----"+extensionClass.getName());
 			return load(extensionClass);
 		} catch (Exception e) {
 			System.err.println("Failed to load extension class " + className + ".");

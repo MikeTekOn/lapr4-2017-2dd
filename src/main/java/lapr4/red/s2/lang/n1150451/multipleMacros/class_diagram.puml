@@ -1,0 +1,4 @@
+@startuml
+Workbook *-> "1..1" MacroList
+MacroList *-> "0..*" Macro
+@enduml

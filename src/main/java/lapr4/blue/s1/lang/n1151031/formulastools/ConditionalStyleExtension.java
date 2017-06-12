@@ -42,6 +42,11 @@ public class ConditionalStyleExtension extends Extension {
         super(NAME, VERSION, DESCRIPTION);
         this.uiController = uiControlle;
     }
+    
+    //FIXME, it exists for the loading. It neads a constructor without parameters
+    public ConditionalStyleExtension(){
+        super(NAME, VERSION, DESCRIPTION);
+    }
 
     /**
      * Makes the given cell condition stylable.

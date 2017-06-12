@@ -49,7 +49,7 @@ public class ColumnSortTest {
         String[][] spreadsheetContent = new String[1][1];
         spreadsheetContent[0][0] = "Hello";
 
-        workbook = new Workbook(null, spreadsheetContent);
+        workbook = new Workbook(spreadsheetContent);
         workbook.getSpreadsheet(0).getCell(0, 0).setContent("Isep");
         workbook.getSpreadsheet(0).getCell(0, 1).setContent("1");
         workbook.getSpreadsheet(0).getCell(0, 2).setContent("2");

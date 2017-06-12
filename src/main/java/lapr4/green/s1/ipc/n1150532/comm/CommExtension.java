@@ -399,6 +399,9 @@ public class CommExtension extends Extension implements Observer {
                 StylableCell stylableCell = (StylableCell)cell.getExtension(StyleExtension.NAME);
                 if (stylableCell != null && dto.getStyleDTO() != null) {
                     Styles.setStyleFromDTO(stylableCell, dto.getStyleDTO());
+                    if (cell instanceof CellImpl) {
+                        ((CellImpl) cell).updateCellStyle();
+                    }
                 }
             }
             if (arg instanceof CellContentDTO) {

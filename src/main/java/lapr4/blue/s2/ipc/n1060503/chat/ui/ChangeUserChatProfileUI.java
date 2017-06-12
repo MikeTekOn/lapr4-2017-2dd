@@ -55,11 +55,11 @@ public class ChangeUserChatProfileUI extends JDialog {
             getPreferredSize();
     private static final int WIDTHW = 300, LENGTH = 200;
 
-    public ChangeUserChatProfileUI() throws IOException {
+    public ChangeUserChatProfileUI(ChangeUserChatProfileController controller) throws IOException {
         setModal(true);
         setTitle("Change User Chat Profile");
 
-        controller = new ChangeUserChatProfileController();
+        this.controller = controller;
 
         add(createComponents());
 
@@ -280,12 +280,12 @@ public class ChangeUserChatProfileUI extends JDialog {
      * execute when Apply Button is cliked
      */
     private void apply() throws IOException {
-        // TODO save icon and info into repository
+
         boolean flag = true;
         if (statusON.isSelected()) {
             flag = controller.changeInfo(txtNickname.getText(), StatusChatProfile.ONLINE);
         }
-        if (statusON.isSelected()) {
+        if (statusOFF.isSelected()) {
             flag = controller.changeInfo(txtNickname.getText(), StatusChatProfile.OFFLINE);
         }
         if (flag) {
