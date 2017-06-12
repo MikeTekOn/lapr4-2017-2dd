@@ -149,7 +149,7 @@ public class IntermediateFunctionWizardUI extends JDialog {
                             
                             txtSyntax.setText(controller.getSyntax(auxIdentifier, 0));
 
-                        } catch (UnknownElementException u) {
+                        } catch (UnknownElementException u) {      
                             defaultTableModel.addRow(new Object[]{"Parameter1", "1st Value"});
                             defaultTableModel.addRow(new Object[]{"Parameter2", "2nd Value"});
                            
