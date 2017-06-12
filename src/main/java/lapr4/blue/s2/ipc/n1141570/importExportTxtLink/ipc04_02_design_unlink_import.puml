@@ -1,0 +1,23 @@
+@startuml ipc04_02_design_import.png
+
+participant "UnlinkImportDataAction" as Action
+participant "Thread" as Thread
+participant "ReaderThread" as RThread
+participant "SetOfThreads" as Threads
+
+activate Action
+Action -> Thread: getAllStackTraces().keySet()
+activate Thread
+Action <- Thread: list
+deactivate Thread
+Action -> RThread: ReaderThread.obtainsThreadId()
+activate RThread
+deactivate RThread
+loop for (Thread thread : setOfThread) 
+Action -> Threads: thread.getId()
+activate Threads
+Action -> RThread: ReaderThread.kill()
+activate RThread
+end
+
+@enduml ipc04_02_design_import.png

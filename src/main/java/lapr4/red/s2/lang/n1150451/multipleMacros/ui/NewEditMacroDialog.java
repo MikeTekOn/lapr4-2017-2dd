@@ -24,7 +24,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import lapr4.red.s2.lang.n1150451.multipleMacros.MacroWithName;
+import lapr4.red.s2.lang.n1150451.multipleMacros.domain.MacroWithName;
 import lapr4.red.s2.lang.n1150451.multipleMacros.ModifyMacroListController;
 
 /**

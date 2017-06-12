@@ -40,6 +40,7 @@ import javax.swing.SwingUtilities;
 import csheets.core.Workbook;
 import csheets.core.formula.compiler.FormulaCompiler;
 import csheets.core.formula.lang.Language;
+import csheets.ext.Extension;
 import csheets.ext.ExtensionManager;
 import csheets.io.Codec;
 import csheets.io.CodecFactory;
@@ -50,17 +51,22 @@ import eapli.framework.persistence.DataIntegrityViolationException;
 import lapr4.red.s1.core.n1150943.contacts.application.BootEventVerifier;
 
 import java.util.Locale;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.ResourceBundle;
+import java.util.Set;
 import lapr4.blue.s2.ipc.n1140822.fileShare.ShareConfiguration;
+import lapr4.green.s2.core.n1150657.extensions.ui.ExtensionLoadFrame;
 
 /**
  * CleanSheets - the main class of the application. The class manages workbooks,
  * performs I/O operations and provides support for notifying listeners when
- * workbooks are created, loaded or saved.
+ * workbooks are created, loaded or saved. The CleanSheet will be a observer
+ * now, that will be updated when the loading is completed.
  *
  * @author Einar Pehrson
  */
-public class CleanSheets {
+public class CleanSheets implements Observer {
 
     public static final String OWN_NAME = System.getProperty("user.name");
 
@@ -96,13 +102,13 @@ public class CleanSheets {
      */
     private NamedProperties props;
 
+    private UIController uiController;
+
     /**
      * The listeners registered to receive events
      */
     private List<SpreadsheetAppListener> listeners
             = new ArrayList<SpreadsheetAppListener>();
-
-    private UIController uiController;
 
     /**
      * Gives access to the localization strings
@@ -117,10 +123,75 @@ public class CleanSheets {
         return messages.getString(stringID);
     }
 
+    private ExtensionLoadFrame extensionLoadFrame;
+
+    public static boolean flag = false;
+
     /**
      * Creates the CleanSheets application.
      */
     public CleanSheets() {
+        if (flag) {
+            runWithouLoadingOption();
+        } else {
+            //The Load of the extensions Frame
+            extensionLoadFrame = new ExtensionLoadFrame(this);
+            //It will wait for the notify.
+            //The nofity will happen after the loading of the extensions
+            synchronized (this) {
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    //do nothing
+                }
+
+                // Load resources
+                messages = ResourceBundle.getBundle(DEFAULT_RESOURCE_FILENAME, Locale.getDefault());
+
+                // Loads compilers
+                FormulaCompiler.getInstance();
+
+                // Loads language
+                Language.getInstance();
+
+                // Loads default properties
+                Properties defaultProps = new Properties();
+                InputStream defaultStream = CleanSheets.class.getResourceAsStream(DEFAULT_PROPERTIES_FILENAME);
+                if (defaultStream != null) {
+                    try {
+                        defaultProps.loadFromXML(defaultStream);
+                    } catch (IOException e) {
+                        System.err.println("Could not load default application properties.");
+                    } finally {
+                        try {
+                            if (defaultStream != null) {
+                                defaultStream.close();
+                            }
+                        } catch (IOException e) {
+                        }
+                    }
+                }
+
+                // Loads user properties
+                File propsFile = new File(USER_PROPERTIES_FILENAME);
+                props = new NamedProperties(propsFile, defaultProps);
+                ShareConfiguration.downloadFolder = props.getProperty("share.download.folder");
+                ShareConfiguration.sharedFolder = props.getProperty("share.shared.folder");
+                ShareConfiguration.setProperties(props);
+                BootEventVerifier bev = new BootEventVerifier();
+                try {
+                    bev.verify(props);
+                } catch (DataConcurrencyException e) {
+                    e.printStackTrace();
+                } catch (DataIntegrityViolationException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+    }
+
+    private void runWithouLoadingOption() {
         // Load resources
         messages = ResourceBundle.getBundle(DEFAULT_RESOURCE_FILENAME, Locale.getDefault());
 
@@ -153,7 +224,6 @@ public class CleanSheets {
 
         // Loads user properties
         File propsFile = new File(USER_PROPERTIES_FILENAME);
-
         props = new NamedProperties(propsFile, defaultProps);
         ShareConfiguration.downloadFolder = props.getProperty("share.download.folder");
         ShareConfiguration.sharedFolder = props.getProperty("share.shared.folder");
@@ -168,8 +238,8 @@ public class CleanSheets {
         }
     }
 
-    public void setUIController(UIController uiController){
-        this.uiController = uiController;
+    public static void setFlag(boolean newflag) {
+        flag = newflag;
     }
 
     /**
@@ -199,6 +269,24 @@ public class CleanSheets {
         // Creates user interface
         new csheets.ui.Frame.Creator(app).createAndWait();
         app.create();
+    }
+
+    /**
+     * It will update the observer, notifying it so the rest of the app
+     * continue.
+     *
+     * @param o
+     * @param arg
+     */
+    @Override
+    public void update(Observable o, Object arg) {
+        synchronized (this) {
+            notify();
+        }
+    }
+
+    public void setUIController(UIController uiController) {
+        this.uiController = uiController;
     }
 
     /**
@@ -438,6 +526,7 @@ public class CleanSheets {
                             listeners.toArray(new SpreadsheetAppListener[listeners.size()])
                     )
             );
+
         }
     }
 

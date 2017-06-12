@@ -5,6 +5,8 @@
  */
 package lapr4.red.s2.lang.n1150451.multipleMacros;
 
+import lapr4.red.s2.lang.n1150451.multipleMacros.domain.MacroWithName;
+import lapr4.red.s2.lang.n1150451.multipleMacros.domain.MacroList;
 import csheets.core.Spreadsheet;
 import csheets.core.Workbook;
 import java.util.ArrayList;

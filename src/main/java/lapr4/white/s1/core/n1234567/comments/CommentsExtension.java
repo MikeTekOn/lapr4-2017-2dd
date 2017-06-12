@@ -24,12 +24,24 @@ public class CommentsExtension extends Extension {
 
 	/** The name of the extension */
 	public static final String NAME = "Comments";
+        
+        /**
+        * The description of the extension
+        */
+        public static final String DESCRIPTION = "An extension to support comments on cells.\n"
+                + "An extension must extend the Extension abstract class.\n"
+                + "The class that implements the Extension is the \"bootstrap\" of the extension.\n";
+        
+        /**
+        * The first version of the dependency trees extension.
+        */
+        public static final int VERSION = 1;
 
 	/**
 	 * Creates a new Example extension.
 	 */
 	public CommentsExtension() {
-		super(NAME);
+		super(NAME,VERSION,DESCRIPTION);
 	}
 	
 	/**
@@ -58,6 +70,14 @@ public class CommentsExtension extends Extension {
 	public UIExtension getUIExtension(UIController uiController) {
 		return new UIExtensionComments(this, uiController);
 	}
+        
+        @Override
+        public String metadata() {
+            return String.format("This is %s with version %d\n"
+                    + "This extension has the follow description: %s\n"
+                    + "This extension was made by Alexandre Braganca & Einar Pehrson and it is in the package %s",
+                    getName(), getVersion(), getDescription(),getClass().getName());
+        }
 }
 
 

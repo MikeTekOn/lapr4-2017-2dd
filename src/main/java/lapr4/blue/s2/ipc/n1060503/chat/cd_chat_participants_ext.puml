@@ -1,0 +1,54 @@
+@startuml cd_chat_participants_ext.png
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false  
+
+
+
+class Extension{
+}
+class ChatParticipantsExtension{
+}
+class UIChatParticipantsExtension{
+}
+class ChatParticipantsPanel{
+}
+class ChangeProfileAction{
+}
+class ChangeUserChatProfileUI{
+}
+class SearchUserAction{
+}
+class ChatParticipantsAction{
+}
+class UserChatDTO{
+}
+class HandlerUserChatDTO{
+}
+class ConnectionDetailsResponseDTO{
+}
+class CommUDPClient{
+}
+class ChangeUserChatProfileController{
+}
+class UserChatProfile{
+}
+
+
+Extension --> ChatParticipantsExtension
+ChatParticipantsExtension -> UIChatParticipantsExtension
+UIChatParticipantsExtension --> ChatParticipantsPanel
+ChatParticipantsPanel --> ChangeProfileAction
+ChatParticipantsPanel --> SearchUserAction
+ChatParticipantsPanel -> UserChatProfile : create
+ChatParticipantsPanel -> ChangeUserChatProfileController : create
+ChangeProfileAction --> ChangeUserChatProfileUI
+SearchUserAction --> ChatParticipantsAction
+ChatParticipantsAction --> UserChatDTO
+ChatParticipantsAction --> HandlerUserChatDTO
+CommUDPClient --> ConnectionDetailsResponseDTO
+ChatParticipantsAction --> CommUDPClient
+
+@enduml

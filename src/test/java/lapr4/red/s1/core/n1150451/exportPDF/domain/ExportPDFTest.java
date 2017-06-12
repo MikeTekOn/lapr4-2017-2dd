@@ -53,6 +53,7 @@ public class ExportPDFTest {
 
     @Before
     public void setUp() {
+        CleanSheets.setFlag(true);
         CleanSheets csheets = new CleanSheets();
         csheets.create();
         Workbook w = csheets.getWorkbooks()[0];

@@ -6,7 +6,7 @@ participant "ExportDataController" as Controller
 participant "UIController" as UIController
 participant "Spreadsheet" as Spreadsheet
 participant "CellDTO" as CellDTO
-participant "LinkTxtController" as Controller
+participant "LinkTxtExportController" as Controller
 participant "WriterThread" as Thread
 
 activate UI
@@ -25,11 +25,12 @@ loop for (cell in range)
     Controller -> CellDTO : createFromCell(cell)
 end
 Controller -> Controller : setFileData(cellList)
-Controller -> LinkTxtController : fireWriterLinkThread()
-activate LinkTxtController
-LinkTxtController -> WriterThread : new()
+Controller -> LinkTxtExportController : new()
+activate LinkTxtExportController
+Controller -> LinkTxtExportController : fireLinkWriterThread()
+LinkTxtExportController -> WriterThread : new()
 activate WriterThread
-LinkTxtController -> WriterThread : run()
+WriterThread -> WriterThread : start()
 UI <-- Controller : success
 deactivate Controller
 deactivate UI
