@@ -239,7 +239,7 @@ public class MacroDialog extends JDialog {
                                     return;
                                 }
                             } catch (NullPointerException e) {
-                                JOptionPane.showMessageDialog(rootPane, "Recursivity found.");
+                                //JOptionPane.showMessageDialog(rootPane, "Recursivity found.");
                                 return;
                             }
                             macroOutputTextField.setText(value.toString());

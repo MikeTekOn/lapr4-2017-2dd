@@ -9,7 +9,6 @@ import java.nio.file.PathMatcher;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import lapr4.green.s1.ipc.n1150838.findworkbooks.FileDTO;
-import lapr4.green.s1.ipc.n1150838.findworkbooks.FindWorkbooksPublisher;
 
 /**
  *

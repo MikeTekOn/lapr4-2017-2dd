@@ -18,7 +18,7 @@ public class ControllerFindWorkbooks implements Controller {
     
     /**The builder of workbook*/
     private PreviewWorkbookBuilder previewBuilder;
-    private Thread files, preview;
+    private Thread files;
     
     public ControllerFindWorkbooks(String rootPath){
         this.rootPath = new Directory(new File(rootPath));
@@ -44,25 +44,4 @@ public class ControllerFindWorkbooks implements Controller {
     public Workbook load(String filePath) throws IOException, ClassNotFoundException{
         return this.rootPath.load(new File(filePath));
     }
-    
-           /**
-     * Build the preview workbook with first non-empty cells
-     * @param workbook workbook to preview
-     * @return the preview builded
-     * @throws IllegalValueTypeException if there arent cells filled
-     */
-    public void buildWorkbookPreview(Workbook workbook) throws IllegalValueTypeException{
-        preview= new Thread("preview");
-        preview.start();
-        previewBuilder=new PreviewWorkbookBuilder(workbook);
-        previewBuilder.previewWorkbook();
-    }
-    
-    /**
-     * Stop the preview thread
-     */
-    public void stopPreview(){
-        if(preview!=null)preview.stop();
-    }
-    
 }
