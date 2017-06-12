@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lapr4.blue.s2.ipc.n1140822.fileShare;
 
 import java.io.Serializable;
@@ -18,8 +13,19 @@ import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionIDImpl;
  */
 public class FileNameListDTO extends Observable implements Serializable {
 
+    /**
+     * The file data map.
+     */
     private Map<String, Integer> fileDataMap;
+    
+    /**
+     * The connection id.
+     */
     private ConnectionID connection;
+    
+    /**
+     * The TCP port.
+     */
     private int tcpPort;
 
     public FileNameListDTO(Map<String, Integer> fileDataMap, int tcpPort) {
@@ -28,27 +34,58 @@ public class FileNameListDTO extends Observable implements Serializable {
 
     }
 
-    
+    /**
+     * Obtains the TCP port.
+     * 
+     * @return the TCP port
+     */
     public int tcpPort()
     {
         return this.tcpPort;
     }
+    
+    /**
+     * Obtains the files map.
+     * 
+     * @return the files map
+     */
     public Map<String, Integer> filesMap() {
         return this.fileDataMap;
     }
 
+    /**
+     * Obtains the connection owner.
+     * 
+     * @return the connection owner
+     */
     public String getConnectionOwner() {
         return connection.getAddress().toString();
     }
 
+    /**
+     * Builds the connection id from InetAddress.
+     * 
+     * @param addr the InetAddress
+     */
     public void buildConnectionID(InetAddress addr) {
         this.connection = new ConnectionIDImpl(addr, tcpPort);
     }
 
+    /**
+     * Obtains the connection id.
+     * 
+     * @return 
+     */
     public ConnectionID connID() {
         return connection;
     }
 
+    /**
+     * Obtains true if equals to the object passed as parameter, false otherwise.
+     * 
+     * @param otherObject the object passed as parameter.
+     * @return true if equals to the object passed as parameter, false otherwise.
+     */
     public boolean equals(Object otherObject) {
         FileNameListDTO otherFileList = (FileNameListDTO) otherObject;
         return this.fileDataMap.equals(otherFileList.fileDataMap);

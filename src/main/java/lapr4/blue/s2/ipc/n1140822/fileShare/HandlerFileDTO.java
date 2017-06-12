@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lapr4.blue.s2.ipc.n1140822.fileShare;
 
 import java.io.File;
@@ -25,6 +20,9 @@ import lapr4.green.s1.ipc.n1150532.comm.connection.SocketEncapsulatorDTO;
  */
 public class HandlerFileDTO extends Observable implements CommHandler {
 
+    /**
+     * The last received DTO.
+     */
     private Object lastReceivedDto;
 
     @Override

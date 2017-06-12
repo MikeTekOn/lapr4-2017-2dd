@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lapr4.blue.s2.ipc.n1140822.fileShare;
 
 import java.io.Serializable;
@@ -23,14 +18,29 @@ public class FileDTO implements Serializable {
         this.fileData = fileData;
     }
 
+    /**
+     * Obtains the file name.
+     *
+     * @return the file name
+     */
     public String getFileName() {
         return fileName;
     }
 
+    /**
+     * Obtains the file size.
+     *
+     * @return the file size
+     */
     public int getFileSize() {
         return fileSize;
     }
 
+    /**
+     * Obtains the file data.
+     *
+     * @return the file data.
+     */
     public byte[] getFileData() {
         return fileData;
     }

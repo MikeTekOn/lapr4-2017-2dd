@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lapr4.blue.s2.ipc.n1140822.fileShare;
 
 import java.util.Properties;
@@ -15,36 +10,66 @@ import java.io.IOException;
  */
 public class ShareConfiguration {
 
-//    public static String getSharedFolder()
-//    {
-//        return "C:\\Users\\Renato\\Desktop\\Shared";
-//    }
-//      public static String getDownloadFolder()
-//    {
-//        return "C:\\Users\\Renato\\Desktop\\Download";
-//    }
+    /**
+     * The download folder.
+     */
     public static String downloadFolder;
+
+    /**
+     * The shared folder.
+     */
     public static String sharedFolder;
+
+    /**
+     * The properties.
+     */
     private static Properties properties;
 
+    /**
+     * Obtains the shared folder.
+     *
+     * @return the shared folder
+     */
     public static String getSharedFolder() {
         return sharedFolder;
     }
 
+    /**
+     * Obtains the download folder.
+     *
+     * @return the download folder
+     */
     public static String getDownloadFolder() {
         return downloadFolder;
     }
 
+    /**
+     * Modifies the properties.
+     *
+     * @param props the new properties
+     */
     public static void setProperties(Properties props) {
         properties = props;
     }
 
+    /**
+     * Changes the path to a new download folder.
+     *
+     * @param path the new path
+     * @throws IOException throws an IO exception if input or output gone wrong
+     */
     public static void changeDownloadFolder(String path) throws IOException {
         downloadFolder = path;
         properties.put("share.download.folder", path);
         ((NamedProperties) properties).store("");
     }
 
+    /**
+     * Changes the path to a new shared folder.
+     *
+     * @param path the new path
+     * @throws IOException throws an IO exception if input or output gone wrong
+     */
     public static void changeSharedFolder(String path) throws IOException {
         sharedFolder = path;
         properties.put("share.shared.folder", path);

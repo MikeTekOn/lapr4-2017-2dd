@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lapr4.blue.s2.ipc.n1140822.fileShare;
 
 import csheets.ui.ctrl.UIController;
@@ -45,14 +40,49 @@ import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
  */
 public class ShareFrame extends JFrame implements Observer {
 
+    /**
+     * The UI controller.
+     */
     private UIController controller;
+
+    /**
+     * The list files.
+     */
     private JList listFiles;
+
+    /**
+     * The share controller.
+     */
     private FileSharingController shareController;
+
+    /**
+     * The default list model.
+     */
     private DefaultListModel model;
+
+    /**
+     * The default table model.
+     */
     private DefaultTableModel tableModel;
+
+    /**
+     * The default table model for downloads.
+     */
     private DefaultTableModel dlTableModel;
+
+    /**
+     * The table of shares.
+     */
     private JTable table;
+
+    /**
+     * The downloads table.
+     */
     private JTable dlTable;
+
+    /**
+     * The download button.
+     */
     private JButton button;
 
     public ShareFrame(UIController controller) {
@@ -69,6 +99,9 @@ public class ShareFrame extends JFrame implements Observer {
         setVisible(true);
     }
 
+    /**
+     * Creates the components.
+     */
     private void createComponents() {
         JMenu menu = new JMenu("Configuration");
         JMenuItem itemChangeDownload = new JMenuItem("Change download folder");
@@ -207,6 +240,11 @@ public class ShareFrame extends JFrame implements Observer {
 
     }
 
+    /**
+     * Obtains a download JButton.
+     *
+     * @return the download JButton
+     */
     public JButton createDownloadButton() {
         JButton button = new JButton("Download");
 
@@ -231,6 +269,12 @@ public class ShareFrame extends JFrame implements Observer {
         return button;
     }
 
+    /**
+     * Fills the download table the filenames, size, hosts and states.
+     *
+     * @throws IOException throws an IO exception of exception occurs on input
+     * or output
+     */
     public void fillDownloadTable() throws IOException {
         dlTableModel.setRowCount(0);
         Map<String, Integer> tempMap = new LinkedHashMap<>();

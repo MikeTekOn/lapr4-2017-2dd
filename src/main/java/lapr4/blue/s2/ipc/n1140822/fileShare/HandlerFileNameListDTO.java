@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lapr4.blue.s2.ipc.n1140822.fileShare;
 
 import csheets.CleanSheets;
@@ -18,8 +13,6 @@ import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
-import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionIDImpl;
-import lapr4.green.s1.ipc.n1150532.comm.connection.HandlerConnectionDetailsResponseDTO;
 import lapr4.green.s1.ipc.n1150532.comm.connection.PacketEncapsulatorDTO;
 
 /**
@@ -28,6 +21,9 @@ import lapr4.green.s1.ipc.n1150532.comm.connection.PacketEncapsulatorDTO;
  */
 public class HandlerFileNameListDTO extends Observable implements CommHandler, Serializable {
 
+    /**
+     * The last received DTO.
+     */
     private Object lastReceivedDTO;
 
     @Override
@@ -35,10 +31,10 @@ public class HandlerFileNameListDTO extends Observable implements CommHandler, S
 
         FileNameListDTO fileNamesListDTO = (FileNameListDTO) ((PacketEncapsulatorDTO) dto).getDTO();
         Logger.getLogger(HandlerFileNameListDTO.class.getName()).log(Level.INFO, CleanSheets.getString("received_object"), dto.getClass().toString());
-       
+
         if (isOutsiderAnnouncement(((PacketEncapsulatorDTO) dto).getPacket().getAddress())) {
-            fileNamesListDTO.buildConnectionID(((PacketEncapsulatorDTO)dto).getPacket().getAddress());
-             lastReceivedDTO = fileNamesListDTO;
+            fileNamesListDTO.buildConnectionID(((PacketEncapsulatorDTO) dto).getPacket().getAddress());
+            lastReceivedDTO = fileNamesListDTO;
             setChanged();
             notifyObservers(fileNamesListDTO);
         }

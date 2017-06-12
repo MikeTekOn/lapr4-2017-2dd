@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lapr4.blue.s2.ipc.n1140822.fileShare;
 
 import java.io.ByteArrayInputStream;
@@ -27,7 +22,8 @@ import lapr4.green.s1.ipc.n1150532.comm.connection.PacketEncapsulatorDTO;
 /**
  * A UDP client to send a broadcast and wait for replies.
  *
- * @author Manuel Meireles (1150532@isep.ipp.pt)
+ * @author Manuel Meireles (1150532@isep.ipp.pt) e Renato Oliveira
+ * (1140822@isep.ipp.pt)
  */
 public class CommUDPClient extends Thread implements Observer {
 
@@ -92,7 +88,7 @@ public class CommUDPClient extends Thread implements Observer {
      */
     public CommUDPClient(Object dtoToSend, int thePortNumber, int theWaitingTime) {
         dto = dtoToSend;
-        ((FileNameListDTO)dto).addObserver(this);
+        ((FileNameListDTO) dto).addObserver(this);
         portNumber = thePortNumber;
         waitingTime = theWaitingTime;
         handlers = new HashMap<>();
@@ -202,13 +198,15 @@ public class CommUDPClient extends Thread implements Observer {
         this.dto = o1;
     }
 
-    private void updateDto()
-    {
+    /**
+     * Updates the DTO to send.
+     */
+    private void updateDto() {
         try {
-            this.dto = new FileNameListDTO(ShareAction.fillListOfSharedfiles(), ((FileNameListDTO)dto).tcpPort());
+            this.dto = new FileNameListDTO(ShareAction.fillListOfSharedfiles(), ((FileNameListDTO) dto).tcpPort());
         } catch (IOException ex) {
             Logger.getLogger(CommUDPClient.class.getName()).log(Level.SEVERE, null, ex);
-}
+        }
     }
 
 }

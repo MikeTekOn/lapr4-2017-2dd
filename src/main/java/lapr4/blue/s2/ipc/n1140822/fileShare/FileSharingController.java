@@ -1,16 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package lapr4.blue.s2.ipc.n1140822.fileShare;
 
-import csheets.CleanSheets;
-import csheets.io.NamedProperties;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
 import lapr4.green.s1.ipc.n1150532.comm.CommTCPClientsManager;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
 
@@ -20,16 +9,24 @@ import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
  */
 public class FileSharingController {
 
+    /**
+     * The connection id.
+     */
     private ConnectionID connection;
 
     public FileSharingController(ConnectionID connection) {
         this.connection = connection;
     }
 
+    /**
+     * Requests a file from another client.
+     * 
+     * @param fileName the filename from the file that was requested
+     * @return true if requested went ok, false otherwise.
+     */
     public boolean requestFile(String fileName) {
         CommTCPClientsManager.getManager().requestFile(connection, fileName);
         return true;
     }
-    
-   
+
 }
