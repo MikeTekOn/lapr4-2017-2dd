@@ -223,7 +223,7 @@ public class ChatParticipantsPanel extends JPanel {
             try{
                 table.clear();            
                 (new ChatParticipantsAction(table, 15310, ucp)).actionPerformed(e);
-                btSearch.setEnabled(false);
+//                btSearch.setEnabled(false);
             } catch (NullPointerException n){
                 JOptionPane.showMessageDialog(null, "Go to Network Tab and click Activate");
             }

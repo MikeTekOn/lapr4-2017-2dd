@@ -20,7 +20,8 @@ import lapr4.red.s1.core.n1150690.comments.domain.User;
  * authors.
  *
  * @author Sofia Silva [1150690@isep.ipp.pt]
- * @edit Miguel Silva (1150901) Sprint 2 - I've edited this class to allow to
+ * EDIT:
+ * @author Miguel Silva (1150901) Sprint 2 - I've edited this class to allow to
  * update the history of comments.
  */
 public class CommentableCellWithMultipleUsers extends CommentableCell {
