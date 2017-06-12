@@ -54,9 +54,9 @@ public class ExportDataAction extends BaseAction {
                     JOptionPane.showMessageDialog(fileChooser, "Chosen file is not valid!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
-        } else{
+        } else {
             JOptionPane.showMessageDialog(null, "Cannot export data while importing!", "Error", JOptionPane.ERROR_MESSAGE);
         }
-
     }
+
 }
