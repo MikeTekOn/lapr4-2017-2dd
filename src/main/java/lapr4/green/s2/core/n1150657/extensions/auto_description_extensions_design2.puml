@@ -1,0 +1,25 @@
+@startuml auto_description_extensions_design2.png
+    participant "app:CleanSheet" as CS
+    participant ExtensionLoadFrame as elf
+    participant ExtensionLoadController as elc
+    participant ExtensionLoad as el
+
+-> CS : start() : false
+create elf
+note right: waits for the final extension loading
+    CS -> elf : create(this)
+note right: creates the new frame
+create elc
+    elf -> elc : create(app)
+create el
+    elc -> el : create()
+    el -> el : addExtensionNameToMap()
+    elf -> elc : ext : getExtensions()
+    elc -> el : ext : getExtensions()
+note left : after choosing the extensions
+loop
+    elc -> el : load(ext.getName())
+end loop
+
+
+@enduml

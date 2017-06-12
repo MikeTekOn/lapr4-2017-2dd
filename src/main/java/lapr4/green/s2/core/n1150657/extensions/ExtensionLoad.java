@@ -107,7 +107,11 @@ public class ExtensionLoad {
      * @return It returns an int with the number of versions.
      */
     public int numberVersionsByExtension(String extensionName) {
-        return extensions.get(extensionName).size();
+        if (extensions.get(extensionName) != null) {
+            return extensions.get(extensionName).size();
+        } else {
+            return 0;
+        }
     }
 
     /**
