@@ -55,7 +55,7 @@ public class OutgoingCommsTableModel extends AbstractTableModel  implements Obse
             case 0:
                 return wk.getServerIPAddress();
             case 1:
-                return wk.getTransmissionContext().securityDesc();
+                return wk.getTransmissionContext().isSecured();
             case 2:
                 return "...";
         }

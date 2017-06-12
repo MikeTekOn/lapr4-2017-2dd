@@ -110,7 +110,8 @@ public class CleanSheets implements Observer {
     private List<SpreadsheetAppListener> listeners
             = new ArrayList<SpreadsheetAppListener>();
 
-    /**
+
+ /**
      * Gives access to the localization strings
      *
      * @param stringID string id
@@ -241,7 +242,7 @@ public class CleanSheets implements Observer {
     public static void setFlag(boolean newflag) {
         flag = newflag;
     }
-    
+
     public static boolean getFlag(){
         return flag;
     }
@@ -252,7 +253,7 @@ public class CleanSheets implements Observer {
      * @param args the command-line arguments (not used)
      */
     public static void main(String[] args) {
-        //CleanSheets.setFlag(true); if the beggining of the app is without the loading 
+        //CleanSheets.setFlag(true); if the beggining of the app is without the loading
         CleanSheets app = new CleanSheets();
 
         // Configures look and feel
@@ -325,7 +326,7 @@ public class CleanSheets implements Observer {
      * Creates a new workbook.
      */
     public void create() {
-        Workbook workbook = new Workbook(3, null);
+        Workbook workbook = new Workbook(3, uiController);
         workbooks.put(workbook, null);
         fireSpreadsheetAppEvent(workbook, null, SpreadsheetAppEvent.Type.CREATED);
     }

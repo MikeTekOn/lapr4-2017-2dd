@@ -11,6 +11,8 @@ import java.nio.file.attribute.UserDefinedFileAttributeView;
 import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
 import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
 import lapr4.green.s1.ipc.n1150532.comm.connection.SocketEncapsulatorDTO;
 
@@ -26,7 +28,7 @@ public class HandlerFileDTO extends Observable implements CommHandler {
     private Object lastReceivedDto;
 
     @Override
-    public void handleDTO(Object dto, ObjectOutputStream outStream) {
+    public void handleDTO(Object dto, TrafficOutputStream outStream) {
         FileOutputStream fileOut = null;
         try {
             FileDTO fileDTO = (FileDTO) ((SocketEncapsulatorDTO) dto).getDTO();

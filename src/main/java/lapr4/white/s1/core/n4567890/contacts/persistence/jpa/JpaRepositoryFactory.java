@@ -9,6 +9,8 @@ package lapr4.white.s1.core.n4567890.contacts.persistence.jpa;
  *
  * @author alexandrebraganca
  */
+import lapr4.green.s2.core.n1150738.contacts.persistence.CompanyContactRepository;
+import lapr4.green.s2.core.n1150738.contacts.persistence.jpa.JpaCompanyContactRepository;
 import lapr4.white.s1.core.n4567890.contacts.ExtensionSettings;
 import lapr4.white.s1.core.n4567890.contacts.persistence.ContactRepository;
 import lapr4.white.s1.core.n4567890.contacts.persistence.RepositoryFactory;
@@ -29,5 +31,11 @@ public class JpaRepositoryFactory implements RepositoryFactory {
     public ContactRepository contacts() {
         return new JpaContactRepository(this.settings);
     }
+
+    @Override
+    public CompanyContactRepository companyContacts() {
+        return new JpaCompanyContactRepository(this.settings);
+    }
+
 
 }

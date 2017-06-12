@@ -119,7 +119,7 @@ public class UserChatProfile implements AggregateRoot<Long>, Serializable {
     /**
      * set the icon 
      * @param icon
-     * @throws IOException 
+     * @throws IOException
      */
     public void setIcon(ImageIcon icon) throws IOException{  
         iconBytes = extractBytes(resizeIcon(icon)); 
@@ -141,7 +141,7 @@ public class UserChatProfile implements AggregateRoot<Long>, Serializable {
      * convert icon to byte[]
      * @param icon
      * @return byte[] of an icon
-     * @throws IOException 
+     * @throws IOException
      */
     private static byte[] extractBytes(ImageIcon icon) throws IOException {
         BufferedImage bufferedImage = new BufferedImage(icon.getIconWidth(),

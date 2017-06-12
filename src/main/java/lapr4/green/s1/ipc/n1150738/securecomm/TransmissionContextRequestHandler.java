@@ -1,12 +1,12 @@
 package lapr4.green.s1.ipc.n1150738.securecomm;
 
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
 import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
 import lapr4.green.s1.ipc.n1150532.comm.connection.SocketEncapsulatorDTO;
 import lapr4.green.s1.ipc.n1150738.securecomm.trash.IllegalDataTransmissionContextEvent;
 import lapr4.green.s1.ipc.n1150738.securecomm.trash.SwitchDataTransmissionContextEvent;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,7 +23,7 @@ public class TransmissionContextRequestHandler extends Observable implements Com
      * @param outStream the output stream to be used to send a reply/response to the socket
      */
     @Override
-    public void handleDTO(Object dto, ObjectOutputStream outStream) {
+    public void handleDTO(Object dto, TrafficOutputStream outStream) {
         SocketEncapsulatorDTO receivedDTO = (SocketEncapsulatorDTO) dto;
         TransmissionContextRequestDTO request = (TransmissionContextRequestDTO) receivedDTO.getDTO();
         TransmissionContextResponseDTO response;
@@ -40,7 +40,7 @@ public class TransmissionContextRequestHandler extends Observable implements Com
         }
 
         try {
-            outStream.writeObject(response);
+            outStream.write(response);
             setChanged();
             notifyObservers(event);
         } catch (IOException ex) {

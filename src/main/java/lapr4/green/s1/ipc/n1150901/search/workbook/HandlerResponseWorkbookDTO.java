@@ -7,6 +7,8 @@ package lapr4.green.s1.ipc.n1150901.search.workbook;
 
 import java.io.ObjectOutputStream;
 import java.util.Observable;
+
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
 import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
 
 /**
@@ -28,7 +30,7 @@ public class HandlerResponseWorkbookDTO extends Observable implements CommHandle
      * @param outStream The output in which to write the object.
      */
     @Override
-    public void handleDTO(Object dto, ObjectOutputStream outStream) {
+    public void handleDTO(Object dto, TrafficOutputStream outStream) {
         lastReceivedDTO = dto;
         ResponseWorkbookDTO reply = (ResponseWorkbookDTO) dto;
 

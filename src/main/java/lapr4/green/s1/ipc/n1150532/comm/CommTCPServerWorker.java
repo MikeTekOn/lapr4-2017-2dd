@@ -1,19 +1,18 @@
 package lapr4.green.s1.ipc.n1150532.comm;
 
-import lapr4.green.s1.ipc.n1150738.securecomm.BasicDataTransmissionContext;
-import lapr4.green.s1.ipc.n1150738.securecomm.DataTransmissionContext;
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficInputStream;
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.transmission.OpenTransmission;
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.transmission.TransmissionStrategy;
 
 import java.io.*;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import lapr4.green.s1.ipc.n1150532.comm.connection.SocketEncapsulatorDTO;
-import lapr4.green.s1.ipc.n1150738.securecomm.SecureAESDataTransmissionContext;
-import lapr4.green.s1.ipc.n1150738.securecomm.trash.streams.NonClosingInputStreamWrapper;
-import lapr4.green.s1.ipc.n1150738.securecomm.trash.streams.NonClosingOutputStreamWrapper;
 
 /**
  * A TCP server dedicated to one specific client.
@@ -35,13 +34,13 @@ public class CommTCPServerWorker extends Thread {
     /**
      * The worker input stream. It is attached to the socket input stream.
      */
-    private ObjectInputStream inStream;
+    private TrafficInputStream inStream;
 
     /**
      * The worker output stream. It is attached to the socket output stream.
      */
-    private ObjectOutputStream outStream;
-    private DataTransmissionContext transmissionContext;
+    private TrafficOutputStream outStream;
+    private TransmissionStrategy transmissionContext;
     private OutputStream socketOut;
     private InputStream socketIn;
 
@@ -56,24 +55,27 @@ public class CommTCPServerWorker extends Thread {
         server = theServer;
         inStream = null;
         outStream = null;
+
         try {
             socketOut = socket.getOutputStream();
             socketIn = socket.getInputStream();
-            byte[] sec = new byte[4];
-            sec[0] = (byte)socketIn.read();
-            sec[1] = (byte)socketIn.read();
-            sec[2] = (byte)socketIn.read();
-            sec[3] = (byte)socketIn.read();
-            if(sec[0] == (byte)0 && sec[1] == (byte)0 && sec[2] == (byte)0 && sec[3] == (byte)0){
-                System.out.println("SecureMode");
-                transmissionContext = new SecureAESDataTransmissionContext();
-            } else {
-                System.out.println("Unsecure");
-                transmissionContext = new BasicDataTransmissionContext();
-            }
+
+//            socketIn.mark(0);
+//
+//            int transmission = socketIn.read();
+//            socketIn.reset();
+
+//            if (transmission > 0) {
+//                transmissionContext = new AESEncryptedTransmission();
+//            } else {
+                transmissionContext = new OpenTransmission();
+//            }
+
+//            outStream = new TrafficOutputStream(new ObjectOutputStream(socketOut), theSocket.getInetAddress(), theSocket.getPort(), transmissionContext);
+//            inStream = new TrafficInputStream(socketIn, theSocket.getInetAddress(), theSocket.getPort(), strategy);
+
         } catch (IOException e) {
             Logger.getLogger(CommTCPClientWorker.class.getName()).log(Level.SEVERE, null, e);
-            ;
         }
     }
 
@@ -85,10 +87,10 @@ public class CommTCPServerWorker extends Thread {
     @Override
     public void run() {
         try {
-            outStream = transmissionContext.outputStream(socketOut);
-            inStream = transmissionContext.inputStream(socketIn);
+            outStream = new TrafficOutputStream(socket.getOutputStream(), socket.getInetAddress(), socket.getPort(), transmissionContext);
+            inStream = new TrafficInputStream(socket.getInputStream(), socket.getInetAddress(), socket.getPort(), transmissionContext);
             while (true) {
-                Object dto = inStream.readObject();
+                Object dto = inStream.readObjectOvveride();
                 processIncommingDTO(dto);
             }
         } catch (SocketException ex) {
@@ -159,16 +161,17 @@ public class CommTCPServerWorker extends Thread {
         }
     }
 
-    /**
-     * Henrique Oliveira [1150738@isep.ipp.pt]
-     * @param s
-     * @return
-     */
-    public boolean hasSocket(Socket s){
-        return socket == s;
-    }
-
 //    /**
+//     * Henrique Oliveira [1150738@isep.ipp.pt]
+//     *
+//     * @param s
+//     * @return
+//     */
+//    public boolean hasSocket(Socket s) {
+//        return socket == s;
+//    }
+
+    //    /**
 //     * @author Henrique Oliveira [1150738@isep.ipp.pt]
 //     *
 //     * @param ctx
@@ -187,11 +190,11 @@ public class CommTCPServerWorker extends Thread {
 //            e.printStackTrace();
 //        }
 //    }
-    public SocketAddress getRemoteAdress(){
+    public SocketAddress getRemoteAdress() {
         return socket.getRemoteSocketAddress();
     }
 
-    public DataTransmissionContext getTransmissionContext() {
+    public TransmissionStrategy getTransmissionContext() {
         return transmissionContext;
     }
 }

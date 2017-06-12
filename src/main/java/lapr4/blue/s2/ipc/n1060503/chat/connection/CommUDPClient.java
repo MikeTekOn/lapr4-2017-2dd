@@ -5,16 +5,13 @@
  */
 package lapr4.blue.s2.ipc.n1060503.chat.connection;
 
-import lapr4.blue.s2.ipc.n1140822.fileShare.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +19,10 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficInputStream;
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.transmission.OpenTransmission;
 import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
 import lapr4.green.s1.ipc.n1150532.comm.connection.PacketEncapsulatorDTO;
 
@@ -50,7 +51,7 @@ public class CommUDPClient extends Thread implements Observer {
     /**
      * An output stream to write objects to a byte array output stream.
      */
-    private ObjectOutputStream out = null;
+    private TrafficOutputStream out = null;
 
     /**
      * An input stream to read bytes from a byte array.
@@ -60,7 +61,7 @@ public class CommUDPClient extends Thread implements Observer {
     /**
      * An input stream to read objects from a byte array input stream.
      */
-    private ObjectInputStream in = null;
+    private TrafficInputStream in = null;
 
     /**
      * The port number in which to send the broadcast.
@@ -130,8 +131,8 @@ public class CommUDPClient extends Thread implements Observer {
                 sock = new DatagramSocket();
                 sock.setBroadcast(true);
                 bos = new ByteArrayOutputStream();
-                out = new ObjectOutputStream(bos);
-                out.writeObject(dto);
+                out = new TrafficOutputStream(bos, InetAddress.getLocalHost(), portNumber, new OpenTransmission());
+                out.write(dto);
                 byte[] data = bos.toByteArray();
                 DatagramPacket udpPacket = new DatagramPacket(data, data.length, InetAddress.getByName(BROADCAST_ADDRESS), portNumber);
                 sock.send(udpPacket);
@@ -140,11 +141,7 @@ public class CommUDPClient extends Thread implements Observer {
             }
         } catch (SocketTimeoutException ex) {
             // There are no more replies, the client should finish its execution
-        } catch (SocketException ex) {
-            Logger.getLogger(CommUDPClient.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(CommUDPClient.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InterruptedException ex) {
+        } catch (IOException | InterruptedException ex) {
             Logger.getLogger(CommUDPClient.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             terminateExecution();

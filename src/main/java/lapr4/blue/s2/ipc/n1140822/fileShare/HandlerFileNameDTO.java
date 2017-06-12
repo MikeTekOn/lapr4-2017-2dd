@@ -3,11 +3,12 @@ package lapr4.blue.s2.ipc.n1140822.fileShare;
 import csheets.CleanSheets;
 import java.io.File;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
 import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
 import lapr4.green.s1.ipc.n1150532.comm.connection.SocketEncapsulatorDTO;
 
@@ -23,7 +24,7 @@ public class HandlerFileNameDTO implements CommHandler, Serializable {
     private Object lastReceivedDTO;
 
     @Override
-    public void handleDTO(Object dto, ObjectOutputStream outStream) {
+    public void handleDTO(Object dto, TrafficOutputStream outStream) {
         FileNameDTO nameDTO = (FileNameDTO) ((SocketEncapsulatorDTO) dto).getDTO();
         lastReceivedDTO = nameDTO;
         File fileToSend = findFile(nameDTO.fileName);
@@ -31,7 +32,7 @@ public class HandlerFileNameDTO implements CommHandler, Serializable {
             byte[] fileData;
             fileData = Files.readAllBytes(fileToSend.toPath());
             FileDTO fileDTO = new FileDTO(nameDTO.fileName, fileData.length, fileData);
-            outStream.writeObject(fileDTO);
+            outStream.write(fileDTO);
         } catch (IOException ex) {
             Logger.getLogger(HandlerFileNameDTO.class.getName()).log(Level.SEVERE, null, ex);
         }

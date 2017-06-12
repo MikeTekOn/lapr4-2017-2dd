@@ -1,12 +1,13 @@
 package lapr4.green.s1.ipc.n1150532.comm.connection;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.InetAddress;
 import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
 import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
 
 /**
@@ -30,7 +31,7 @@ public class HandlerConnectionRequestDTO extends Observable implements CommHandl
      * @param outStream The output in which to write the object.
      */
     @Override
-    public void handleDTO(Object dto, ObjectOutputStream outStream) {
+    public void handleDTO(Object dto, TrafficOutputStream outStream) {
         lastReceivedDTO = dto;
 
         SocketEncapsulatorDTO encapsulator = (SocketEncapsulatorDTO) dto;
@@ -43,7 +44,7 @@ public class HandlerConnectionRequestDTO extends Observable implements CommHandl
 
         ConnectionResponseDTO reply = new ConnectionResponseDTO(true, request.getServerIPAddress(), request.getServerPortNumber());
         try {
-            outStream.writeObject(reply);
+            outStream.write(reply);
         } catch (IOException ex) {
             Logger.getLogger(HandlerConnectionRequestDTO.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
 import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
 import lapr4.green.s1.ipc.n1150532.comm.connection.HandlerConnectionDetailsResponseDTO;
 import lapr4.green.s1.ipc.n1150532.comm.connection.PacketEncapsulatorDTO;
@@ -36,7 +38,7 @@ public class HandlerSearchWorkbookResponseDTO extends Observable implements Comm
      * @param outStream The output stream to write the reply.
      */
     @Override
-    public void handleDTO(Object dto, ObjectOutputStream outStream) {
+    public void handleDTO(Object dto, TrafficOutputStream outStream) {
         lastReceivedDTO = dto;
         PacketEncapsulatorDTO reply = (PacketEncapsulatorDTO) dto;
         InetAddress serverIP = reply.getPacket().getAddress();

@@ -68,7 +68,7 @@ public class ExportDataController implements Controller {
 
     /**
      * This method writes in the file the data provided from a range of cells
-     * @throws IOException 
+     * @throws IOException
      */
     public void writeData() throws IOException {
         activeSpreadsheet = uiController.getActiveSpreadsheet();

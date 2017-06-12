@@ -2,6 +2,8 @@ package lapr4.blue.s2.ipc.n1151452.netanalyzer.domain;
 
 import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.transmission.OpenTransmission;
 import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.transmission.TransmissionStrategy;
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.watchdogs.TrafficCounter;
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.watchdogs.TrafficLogger;
 import lapr4.blue.s2.ipc.n1151452.netanalyzer.util.CustomUtil;
 
 import java.io.IOException;
@@ -20,9 +22,8 @@ import java.util.concurrent.Executors;
  * @author Daniel Gonçalves [1151452@isep.ipp.pt]
  *         on 09/06/17.
  */
-public class TrafficOutputStream extends OutputStream {
+public class TrafficOutputStream extends ObjectOutputStream {
 
-    private ObjectOutputStream stream;
     private boolean isSecured;
 
     private final ExecutorService publisherPool;
@@ -39,15 +40,19 @@ public class TrafficOutputStream extends OutputStream {
      * @throws IOException I/O exception
      */
     public TrafficOutputStream(OutputStream out, InetAddress ipAddress, int tcpPort, TransmissionStrategy strategy) throws IOException {
-        super();
+        super(out);
+        this.flush();
 
-        stream = (strategy == null) ? new OpenTransmission().stream(out) : strategy.stream(out);
+//        stream = (strategy == null) ? new OpenTransmission().stream(out) : strategy.stream(out);
         isSecured = strategy != null && strategy.isSecured();
 
         address = ipAddress;
         port = tcpPort;
         publisherPool = Executors.newCachedThreadPool(new TrafficPublisherFactory());
         subscribers = new HashSet<>();
+
+        subscribers.add(TrafficLogger.getInstance());
+        subscribers.add(TrafficCounter.getInstance());
     }
 
     /**
@@ -56,16 +61,16 @@ public class TrafficOutputStream extends OutputStream {
      * @throws IOException            I/O Exception
      * @throws ClassNotFoundException Class not found
      */
-    public void writeObject(Object object) throws IOException, ClassNotFoundException {
+    public void write(Object object) throws IOException {
 
-        stream.writeObject(object);
+        super.writeObject(object);
         publishTraffic(CustomUtil.length(object), isSecured);
     }
 
     @Override
     public void write(int b) throws IOException {
 
-        stream.write(b);
+        super.write(b);
         publishTraffic(CustomUtil.length(b), isSecured);
     }
 

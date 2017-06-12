@@ -1,5 +1,6 @@
 package lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.comm;
 
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
 import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
 import lapr4.green.s1.ipc.n1150532.comm.connection.SocketEncapsulatorDTO;
 
@@ -19,7 +20,7 @@ public class HandlerCellContentDTO extends Observable implements CommHandler {
     private Object lastReceivedDTO;
 
     @Override
-    public void handleDTO(Object dto, ObjectOutputStream outStream) {
+    public void handleDTO(Object dto, TrafficOutputStream outStream) {
         SocketEncapsulatorDTO receivedDTO = (SocketEncapsulatorDTO) dto;
         CellContentDTO cellContentDTO = (CellContentDTO) receivedDTO.getDTO();
         lastReceivedDTO = cellContentDTO;

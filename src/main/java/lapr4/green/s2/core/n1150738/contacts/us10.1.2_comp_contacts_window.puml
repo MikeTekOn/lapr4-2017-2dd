@@ -23,10 +23,9 @@ CompanyContactUI -> CompanyContactUI: renders list
 ... ...
 CompanyContactUI -> CompanyContactController: companyAgenda()
 activate CompanyContactController
-    CompanyContactController -> ContactRepository: allEventsOfContacts
-        activate ContactRepository
-        CompanyContactController <-- ContactRepository: List<Event>
-        deactivate ContactRepository
+    CompanyContactController -> CompanyContactController: allRelatedToCompany(c)
+    CompanyContactController -> CompanyContactController:foreach(Agenda of Contact): list::addEvent
+
 CompanyContactUI <-- CompanyContactController: List<Event>
 deactivate CompanyContactController
 CompanyContactUI -> CompanyContactUI: renders list

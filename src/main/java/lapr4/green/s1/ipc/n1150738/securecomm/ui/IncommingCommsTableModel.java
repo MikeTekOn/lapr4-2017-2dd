@@ -47,7 +47,7 @@ public class IncommingCommsTableModel extends AbstractTableModel  implements Obs
             case 0:
                 return wk.getRemoteAdress();
             case 1:
-                return wk.getTransmissionContext().securityDesc();
+                return wk.getTransmissionContext().isSecured();
             case 2:
                 return "...";
         }

@@ -1,5 +1,6 @@
 package lapr4.green.s1.ipc.n1150532.comm.connection;
 
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
 import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
 
 import java.io.ObjectOutputStream;
@@ -33,7 +34,7 @@ public class HandlerConnectionDetailsResponseDTO extends Observable implements C
      * @param outStream The output stream to write the reply.
      */
     @Override
-    public void handleDTO(Object dto, ObjectOutputStream outStream) {
+    public void handleDTO(Object dto, TrafficOutputStream outStream) {
         lastReceivedDTO = dto;
         PacketEncapsulatorDTO reply = (PacketEncapsulatorDTO) dto;
         InetAddress serverIP = reply.getPacket().getAddress();

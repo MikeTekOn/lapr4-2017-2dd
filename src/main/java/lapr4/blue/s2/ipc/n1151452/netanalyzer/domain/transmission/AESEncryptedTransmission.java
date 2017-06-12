@@ -10,6 +10,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 /**
  * Represents a AES encrypted transmission
@@ -18,7 +19,7 @@ import java.util.logging.Logger;
  *         on 09/06/17.
  * @author Henrique [1150738@isep.ipp.pt]
  */
-public class AESEncryptedTransmission implements TransmissionStrategy {
+public class AESEncryptedTransmission implements TransmissionStrategy, Serializable {
 
     private static final byte[] raw = "cleansheetslapr4".getBytes(); // 16 bytes
 

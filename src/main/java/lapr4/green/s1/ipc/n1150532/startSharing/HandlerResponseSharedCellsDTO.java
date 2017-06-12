@@ -1,5 +1,6 @@
 package lapr4.green.s1.ipc.n1150532.startSharing;
 
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
 import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
 import lapr4.green.s1.ipc.n1150532.comm.connection.SocketEncapsulatorDTO;
 
@@ -24,7 +25,7 @@ public class HandlerResponseSharedCellsDTO implements CommHandler {
      * @param outStream Not used.
      */
     @Override
-    public void handleDTO(Object dto, ObjectOutputStream outStream) {
+    public void handleDTO(Object dto, TrafficOutputStream outStream) {
         SocketEncapsulatorDTO encapsulator = (SocketEncapsulatorDTO) dto;
         lastReceivedDTO = encapsulator.getDTO();
     }

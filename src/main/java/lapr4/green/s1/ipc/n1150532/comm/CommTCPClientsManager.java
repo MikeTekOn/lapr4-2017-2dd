@@ -105,7 +105,7 @@ public class CommTCPClientsManager extends Observable implements Serializable {
             ConnectionRequestDTO request = new ConnectionRequestDTO(CommTCPServer.getServer().provideConnectionPort(), theConnection.getAddress(), theConnection.getPortNumber(), secure);
             worker.start();
             try {
-                worker.getObjectOutputStream().writeObject(request);
+                worker.getObjectOutputStream().write(request);
             } catch (IOException ex) {
                 Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -128,7 +128,7 @@ public class CommTCPClientsManager extends Observable implements Serializable {
             addSharingListeners(connection, spreadsheet, firstAddress, lastAddress);
             RequestSharedCellsDTO request = new RequestSharedCellsDTO(spreadsheet.getTitle(), spreadsheet, firstAddress, lastAddress);
             try {
-                worker.getObjectOutputStream().writeObject(request);
+                worker.getObjectOutputStream().write(request);
             } catch (IOException ex) {
                 Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -165,7 +165,7 @@ public class CommTCPClientsManager extends Observable implements Serializable {
         if (worker != null) {
             CellStyleDTO cellStyleDTO = CellStyleDTO.createFromCell(cell);
             try {
-                worker.getObjectOutputStream().writeObject(cellStyleDTO);
+                worker.getObjectOutputStream().write(cellStyleDTO);
             } catch (IOException e) {
                 Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, e);
             }
@@ -183,7 +183,7 @@ public class CommTCPClientsManager extends Observable implements Serializable {
         if (worker != null) {
             CellContentDTO cellContentDTO = CellContentDTO.createFromCell(cell);
             try {
-                worker.getObjectOutputStream().writeObject(cellContentDTO);
+                worker.getObjectOutputStream().write(cellContentDTO);
             } catch (IOException e) {
                 Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, e);
             }
@@ -204,7 +204,7 @@ public class CommTCPClientsManager extends Observable implements Serializable {
         if (worker != null) {
             RequestWorkbookDTO request = new RequestWorkbookDTO(workbookName);
             try {
-                worker.getObjectOutputStream().writeObject(request);
+                worker.getObjectOutputStream().write(request);
                 //TODO return workbook object found and replace "return null"
                 return null;
             } catch (IOException ex) {
@@ -260,7 +260,7 @@ public class CommTCPClientsManager extends Observable implements Serializable {
         if (worker != null) {
             RequestMessageDTO dto = new RequestMessageDTO(message);
             try {
-                worker.getObjectOutputStream().writeObject(dto);
+                worker.getObjectOutputStream().write(dto);
             } catch (IOException ex) {
                 Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -273,7 +273,7 @@ public class CommTCPClientsManager extends Observable implements Serializable {
         if (worker != null) {
             try {
                 FileNameDTO nameDTO = new FileNameDTO(fileName);
-                worker.getObjectOutputStream().writeObject(nameDTO);
+                worker.getObjectOutputStream().write(nameDTO);
             } catch (IOException ex) {
                 Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, ex);
             }
