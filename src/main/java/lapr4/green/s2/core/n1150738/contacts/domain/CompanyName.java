@@ -2,11 +2,14 @@ package lapr4.green.s2.core.n1150738.contacts.domain;
 
 import eapli.framework.domain.ValueObject;
 
+import javax.persistence.Embeddable;
+
 /**
  * Value Object that represents a non null or empty Name.
  *
  * @author Henrique Oliveira [1150738@isep.ipp.pt]
  */
+@Embeddable
 public class CompanyName implements ValueObject{
 
     /**
@@ -24,7 +27,7 @@ public class CompanyName implements ValueObject{
         if(eapli.util.Strings.isNullOrEmpty(name)){
             throw new IllegalArgumentException("Invalid Name!");
         }
-        this.value = value;
+        this.value = name;
     }
 
     /**
@@ -52,5 +55,9 @@ public class CompanyName implements ValueObject{
     @Override
     public int hashCode() {
         return value.hashCode();
+    }
+
+    public String name(){
+        return value;
     }
 }

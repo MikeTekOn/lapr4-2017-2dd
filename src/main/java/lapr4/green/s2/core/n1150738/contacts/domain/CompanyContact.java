@@ -30,15 +30,29 @@ public class CompanyContact implements AggregateRoot<CompanyName> {
     private Image image;
 
     /**
+     * The email of the contact.
+     */
+    private EmailAddress mail;
+
+    /**
+     * The phone number.
+     */
+    private PhoneNumber phoneNumber;
+
+    /**
      * Constructs a CompanyContact with a given name and image.
      *
      * @param image the company's image
      * @param name the company name
      */
-    public CompanyContact(CompanyName name, Image image){
-        if(name == null || image == null){
+    public CompanyContact(CompanyName name, EmailAddress email, PhoneNumber number, Image image){
+        if(name == null || email == null || number == null){
             throw new IllegalArgumentException("CampanyContact cannot have null attributes");
         }
+        this.companyName = name;
+        this.mail = email;
+        this.phoneNumber = number;
+        this.image = image == null ? Image.defaultImage() : image;
     }
 
     /**
@@ -47,8 +61,8 @@ public class CompanyContact implements AggregateRoot<CompanyName> {
      * @see Image@defaultImage
      * @param name the company name
      */
-    public CompanyContact(CompanyName name){
-        this(name, Image.defaultImage());
+    public CompanyContact(CompanyName name, EmailAddress email, PhoneNumber number){
+        this(name, email, number, Image.defaultImage());
     }
 
     /**
@@ -58,6 +72,10 @@ public class CompanyContact implements AggregateRoot<CompanyName> {
         //ORM
     }
 
+    @Override
+    public String toString() {
+        return companyName.toString();
+    }
 
     @Override
     public boolean is(CompanyName id) {
@@ -87,5 +105,32 @@ public class CompanyContact implements AggregateRoot<CompanyName> {
     @Override
     public int hashCode() {
         return companyName.hashCode();
+    }
+
+    public CompanyName companyName() {
+        return companyName;
+    }
+
+    public Image image() {
+        return image;
+    }
+
+    public EmailAddress mail() {
+        return mail;
+    }
+
+    public PhoneNumber phoneNumber() {
+        return phoneNumber;
+    }
+
+    public boolean update(CompanyName name, EmailAddress email, PhoneNumber number, Image image){
+        if(name == null || email == null || number == null || image == null){
+            throw new IllegalArgumentException("CampanyContact cannot have null attributes");
+        }
+        this.companyName = name;
+        this.mail = email;
+        this.phoneNumber = number;
+        this.image = image;
+        return true;
     }
 }

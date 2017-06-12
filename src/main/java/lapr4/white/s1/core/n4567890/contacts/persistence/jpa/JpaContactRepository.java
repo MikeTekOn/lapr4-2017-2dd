@@ -16,9 +16,7 @@ import lapr4.white.s1.core.n4567890.contacts.ExtensionSettings;
 import lapr4.white.s1.core.n4567890.contacts.domain.Contact;
 import lapr4.white.s1.core.n4567890.contacts.persistence.ContactRepository;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -61,6 +59,9 @@ class JpaContactRepository extends CrmJpaRepositoryBase<Contact, Long> implement
 
     @Override
     public Iterable<Contact> allRelatedToCompany(CompanyContact c) {
-        return null;
+        System.out.println(c);
+        Map<String, Object> params = new HashMap();
+        params.put("company", c);
+        return match("e.companyContact = :company", params);
     }
 }

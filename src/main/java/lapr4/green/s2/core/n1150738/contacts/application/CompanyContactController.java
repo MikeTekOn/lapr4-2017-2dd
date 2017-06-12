@@ -1,6 +1,8 @@
 package lapr4.green.s2.core.n1150738.contacts.application;
 
-import lapr4.green.s2.core.n1150738.contacts.domain.CompanyContact;
+import eapli.framework.persistence.DataConcurrencyException;
+import eapli.framework.persistence.DataIntegrityViolationException;
+import lapr4.green.s2.core.n1150738.contacts.domain.*;
 import lapr4.green.s2.core.n1150738.contacts.persistence.CompanyContactRepository;
 import lapr4.white.s1.core.n4567890.contacts.ExtensionSettings;
 import lapr4.white.s1.core.n4567890.contacts.domain.Contact;
@@ -41,18 +43,44 @@ public class CompanyContactController {
     }
 
     public List<Contact> allContactsRelatedTo(CompanyContact c) {
-        Iterable<Contact> contacts = contactRepository.allRelatedToCompany(c);
+        CompanyContact ct = getContactById(c.companyName());
+        Iterable<Contact> contacts = contactRepository.allRelatedToCompany(ct);
         LinkedList<Contact> list = new LinkedList();
         contacts.forEach(list::add);
         return list;
     }
 
-    private List<Event> companyAgenda(CompanyContact c) {
-        Iterable<Contact> contacts = contactRepository.allRelatedToCompany(c);
+    public List<Event> companyAgenda(CompanyContact c) {
+        CompanyContact ct = getContactById(c.companyName());
+        Iterable<Contact> contacts = contactRepository.allRelatedToCompany(ct);
         LinkedList<Event> list = new LinkedList();
         contacts.forEach((Contact cnt)->{cnt.agenda().events().forEach(list::add);});
         return list;
         //TODO
     }
 
+    public CompanyContact getContactById(CompanyName id) {
+        return companyContactRepository.findByCompanyName(id);
+    }
+
+    public CompanyContact addContact(String name, String email, String phone, byte[] image) throws DataConcurrencyException, DataIntegrityViolationException {
+        CompanyContact c = new CompanyContact(new CompanyName(name), new EmailAddress(email), new PhoneNumber(phone), image == null ? null : new Image(image));
+        c = companyContactRepository.save(c);
+        return c;
+    }
+
+    public boolean removeContact(CompanyContact contact) throws DataConcurrencyException, DataIntegrityViolationException {
+        List<Contact> related = allContactsRelatedTo(contact);
+        for(Contact c : related){
+            c.setCompanyContact(null);
+            contactRepository.save(c);
+        }
+        return companyContactRepository.remove(contact);
+    }
+
+    public CompanyContact updateContact(CompanyContact c, String name, String email, String phone, byte[] image) throws DataConcurrencyException, DataIntegrityViolationException {
+        c.update(new CompanyName(name), new EmailAddress(email), new PhoneNumber(phone), image == null ? null : new Image(image));
+        companyContactRepository.save(c);
+        return c;
+    }
 }

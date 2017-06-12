@@ -15,12 +15,7 @@ import lapr4.green.s2.core.n1150738.contacts.domain.CompanyContact;
 import lapr4.green.s2.core.n1150738.contacts.domain.Profession;
 
 import java.io.Serializable;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
 
 /**
  * Contact
@@ -57,6 +52,7 @@ public class Contact implements AggregateRoot<Long>, Serializable {
     @OneToOne(cascade = CascadeType.ALL) //(cascade = CascadeType.MERGE)
     private Agenda agenda=null;
 
+    @ManyToOne(optional = true, fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private CompanyContact companyContact = null;
 
     private Profession profession = null;

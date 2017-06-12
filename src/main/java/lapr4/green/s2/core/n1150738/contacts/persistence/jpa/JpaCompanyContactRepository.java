@@ -6,15 +6,18 @@
 package lapr4.green.s2.core.n1150738.contacts.persistence.jpa;
 
 /**
- *
  * @author alexandrebraganca
  */
 
+import eapli.framework.persistence.DataIntegrityViolationException;
 import lapr4.green.s2.core.n1150738.contacts.domain.CompanyContact;
 import lapr4.green.s2.core.n1150738.contacts.domain.CompanyName;
 import lapr4.green.s2.core.n1150738.contacts.persistence.CompanyContactRepository;
 import lapr4.white.s1.core.n4567890.contacts.ExtensionSettings;
 import lapr4.white.s1.core.n4567890.contacts.persistence.jpa.CrmJpaRepositoryBase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -29,6 +32,21 @@ public class JpaCompanyContactRepository extends CrmJpaRepositoryBase<CompanyCon
 
     @Override
     public CompanyContact findByCompanyName(CompanyName n) {
-        return null;
+        System.out.println(n);
+        Map<String, Object> params = new HashMap();
+        params.put("namecpn", n);
+        return matchOne("e.companyName = :namecpn", params);
+
     }
+
+    @Override
+    public boolean remove(CompanyContact c) throws DataIntegrityViolationException {
+        try {
+            delete(c);
+        } catch (Exception ex) {
+            throw new DataIntegrityViolationException(ex);
+        }
+        return true;
+    }
+
 }
