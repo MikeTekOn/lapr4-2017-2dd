@@ -1,0 +1,47 @@
+@startuml share_cell_content_sd.png
+
+'http://plantuml.com/skinparam.html'
+skinparam handwritten true
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+
+participant "CommTCPServerWorker" as worker << Worker >>
+participant "CommTCPServer" as srv << Singleton >>
+participant "dtoEnc : SocketEncapsulatorDTO" as dtoEnc << DTO >>
+participant "handler : HandlerCellContentDTO" as handler << Handler >>
+
+
+note over worker
+    A DTO has arrived.
+end note
+
+-> worker : processIncommingDTO(dto)
+activate worker
+
+create dtoEnc
+worker -> dtoEnc : dtoEnc = new(dto)
+worker -> srv : handler = getHandler(dtoEnc)
+activate srv
+deactivate srv
+
+worker -> handler : handleDTO(dto, outStream)
+activate handler
+
+handler -> dtoEnc : getDTO()
+activate dtoEnc
+
+deactivate dtoEnc
+handler -> handler : setChanged()
+handler -> handler : notifyObservers(dto)
+
+note over handler
+    The CommExtension is the observer of
+    this event. Now he receives the dto
+    and sets the cell content.
+end note
+
+deactivate handler
+deactivate worker
+
+@enduml
