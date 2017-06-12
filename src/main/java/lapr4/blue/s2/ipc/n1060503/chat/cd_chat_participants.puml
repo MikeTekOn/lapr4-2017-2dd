@@ -1,0 +1,35 @@
+@startuml cd_chat_participants.png
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false  
+
+class ChangeUserChatProfileUI{    
+}
+class ChangeUserChatProfileController{
+    +changeInfo(nickname, image, etc..)
+}
+class UserChatRepository{
+    +ucp = getUserChatProfile()
+    +update(ucp)
+    -save(ucp)
+}
+class UserChatProfile{
+    -username
+    -nickname
+    -image
+    -status
+    +boolean : changeInfo(nickname, image, etc..)
+}
+enum StatusChatProfile{
+    -ONLINE
+    -OFFLINE
+}
+ChangeUserChatProfileUI -> ChangeUserChatProfileController : create
+ChangeUserChatProfileController --> UserChatRepository
+ChangeUserChatProfileController --> UserChatProfile
+UserChatRepository -> UserChatProfile : save
+UserChatProfile o- StatusChatProfile
+
+@enduml

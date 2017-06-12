@@ -21,12 +21,22 @@ public class ChatExtension extends Extension {
      * The name of the extension
      */
     public static final String CHAT_NAME = "Chat";
+    
+    /**
+     * The description of the extension
+     */
+    public static final String DESCRIPTION = "It represents an extension to support a chat.";
+    
+    /**
+     * The first version of the chat extension.
+     */
+    public static final int VERSION = 1;
 
     /**
      * Creates a new Chat Extension
      */
     public ChatExtension() {
-        super(CHAT_NAME);
+        super(CHAT_NAME, VERSION, DESCRIPTION);
     }
 
     /**
@@ -43,6 +53,14 @@ public class ChatExtension extends Extension {
             throw new NullPointerException("Extension from chat can't be build.");
         }
         return ui;
+    }
+
+    @Override
+    public String metadata() {
+        return String.format("This is %s with version %d\n"
+                + "This extension has the follow description: %s\n"
+                + "This extension was made by Sofia Gonçalves in Sprint 1 and it is in the package %s",
+                getName(), getVersion(), getDescription(),getClass().getName());
     }
 
 }

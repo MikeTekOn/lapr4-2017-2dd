@@ -23,6 +23,7 @@ public class PreviewWorkbookTest {
     @Before
     public void setUp() throws FormulaCompilationException {
          // Try to create the CS application object
+         CleanSheets.setFlag(true);
         app = new CleanSheets();
         // This will create a workbook with 3 sheets
         app.create();        

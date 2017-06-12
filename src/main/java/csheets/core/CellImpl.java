@@ -39,6 +39,7 @@ import csheets.ext.CellExtension;
 import csheets.ext.Extension;
 import csheets.ext.ExtensionManager;
 import csheets.ui.ctrl.UIController;
+import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.ShareContentCellListener;
 import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.StyleListener;
 
 /**
@@ -198,6 +199,17 @@ public class CellImpl implements Cell {
 	private void fireStyleChanged() {
 		for (StyleListener listener: styleListeners) {
 			listener.styleModified(this);
+		}
+	}
+
+	/**
+	 * Updates the style of the cell. If the cell is being shared with an host, the content won't be send.
+	 */
+	public void updateCellStyle() {
+		for (CellListener listener: listeners) {
+			if (!(listener instanceof ShareContentCellListener)) {
+				listener.valueChanged(this);
+			}
 		}
 	}
 

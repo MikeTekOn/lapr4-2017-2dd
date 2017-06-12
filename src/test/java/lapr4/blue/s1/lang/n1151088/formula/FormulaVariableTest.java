@@ -21,6 +21,7 @@ public class FormulaVariableTest {
     public void setUp() throws Exception {
 
         // Try to create the CS application object
+        CleanSheets.setFlag(true);
         app = new CleanSheets();
         // This will create a workbook with 3 sheets
         app.create();
