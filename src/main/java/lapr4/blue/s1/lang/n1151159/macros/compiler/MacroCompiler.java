@@ -59,8 +59,6 @@ public class MacroCompiler {
     }
 
     public Macro compile(Spreadsheet spreadsheet, UIController uiController, String source, String macroName, ArrayList<String> macrosUsed) throws MacroCompilationException {
-        System.out.println(macroName);
-        System.out.println("lista: " + macrosUsed.toString());
         if (macrosUsed.contains(macroName)) {
             return null;
         }

@@ -317,7 +317,6 @@ public class ExtensionLoadFrame extends JFrame {
                     controller.load(list.getValue().get(listSelected).get(index));
                 }
             }
-            controller.load("lapr4.blue.s1.lang.n1151031.formulastools.ConditionalStyleExtension");//FIXME JoaoCardoso problem resolved
             buttonSelect.setEnabled(true);
             buttonLoad.setEnabled(false);
         }
