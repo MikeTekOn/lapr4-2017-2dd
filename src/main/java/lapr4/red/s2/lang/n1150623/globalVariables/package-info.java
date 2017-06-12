@@ -19,10 +19,10 @@
  * <h2>2. Requirement</h2>
  * <p>
  * Add support for global variables:
- * -> Global variables are variables that exist in the context of the workbook and are persisted with the workbook.
- * -> The name of global variables must start with the "@" sign.
- * -> When a variable is referred in a formula for the first time it is created.
- * -> To set the value of a variable it must be used on the left of the assign operator (":=").
+ * -&gt; Global variables are variables that exist in the context of the workbook and are persisted with the workbook.
+ * -&gt; The name of global variables must start with the "@" sign.
+ * -&gt; When a variable is referred in a formula for the first time it is created.
+ * -&gt; To set the value of a variable it must be used on the left of the assign operator (":=").
  *
  * <p>
  *
@@ -65,7 +65,7 @@
  *
  * <b>3.1.1 storeContent</b>
  * <p>
- *      Executes <b><i>formula = FormulaCompiler.getInstance().compile(content)</i></b>   => this will select the instance of ExpressionCompiler based on the "starter char". In this case we have "@".
+ *      Executes <b><i>formula = FormulaCompiler.getInstance().compile(content)</i></b>   =&gt; this will select the instance of ExpressionCompiler based on the "starter char". In this case we have "@".
  *
  *      The global variables will be stored in a variable contentor in the WorkBook and will be persisted with it
  * <p>
@@ -100,9 +100,9 @@
  *   <li>testAssignmentOperatorWithGlobal() -&gt; example "@Var:=A1"</li>
  *   <li>testFunctionExpressionWithGlobal() -&gt; example "@Var:= sum(A2:A4)"</li>
  *    <li>testFormulaBlocksWithGlobal() -&gt; ex: "= {A=1+2; @Var:= 1+A ;"
- *    <li>testFormulaManyGlobalVariables() -&gt; ex: "={/@Var1:=2; @Var2:=3; @Var3:=@Var1+@Var2; A= @Var+3}"
- *   < li>testItSelfCall() -&gt; ex:"={\@a:=1);(@a:=@a+1);_a }"
- *   < li>formulaWithTemporaryVariable() -&gt; ex:"={(@Var1:=2);(@Var2:=1); MAX(@Var1, @Var2)}" </li
+ *    <li>testFormulaManyGlobalVariables() -&gt; ex: "={/@Var1:=2; @Var2:=3; @Var3:=@Var1+@Var2; A= @Var+3}"</li>
+ *   <li>testItSelfCall() -&gt; ex:"={\@a:=1);(@a:=@a+1);_a }"</li>
+ *   <li>formulaWithTemporaryVariable() -&gt; ex:"={(@Var1:=2);(@Var2:=1); MAX(@Var1, @Var2)}" </li>
  * </ol>
  *
  *  <b>Functional Tests </b>
@@ -138,8 +138,8 @@
  * As said in the Design, TemporaryVariable and TemporaryVarContentor are similar to the classes needed in this UC, as we need a "GlobalVariable" and a "GlobalVarContentor".
  * Since they would have the same behaviour, we can create a general Variable class and a general VarContentor class that will be used for both cases.
  * Of course there will be no mixture of both since the local were they will be saved and called will be different.
- *  -> The global variable will be automatically saved in the workbook in a VarContentor
- *  -> The local variables will saved in a VarContentor in FormulaEvalVisitor.
+ *  -&gt; The global variable will be automatically saved in the workbook in a VarContentor
+ *  -&gt; The local variables will saved in a VarContentor in FormulaEvalVisitor.
  *
  * They will be differentiated by how the name is composed: if it starts with '_' goes to the local variables contentor and if it's a '@' goes to the workbook's variable contentor.
  *
@@ -151,14 +151,14 @@
  *
  * <h3>Resumed Description of Variable and VarContentor Classes</h3>
  table, th, td {  border: 1px solid black; }
- * <table>
+ * <table summary="">
  *
  *     <tr>
  *         <th>
  *              <b>Class</b>
  *         </th>
  *         <th>
- *              <b>Description<b>
+ *              <b>Description</b>
  *         </th>
  *     </tr>
  *     <tr>

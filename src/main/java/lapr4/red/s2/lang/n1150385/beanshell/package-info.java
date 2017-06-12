@@ -46,9 +46,9 @@
  *
  * <h2>4. Design</h2>
  *   In order for the shell code not be confused by any other element in the text to be parsed, a special code syntax
- * will be needed. I took inspiration from XML's <i>&lt![CDATA[ ... ]]&gt</i> approach and created two very similar
- * tags, one for synchronous BeanShell code, and another for asynchronous. The synchronous tag is <i>&lt[SHELL[</i> and
- * the asynchronous tag is <i>&lt![SHELL[</i>, and this is the syntax used in both the macros and the formulas
+ * will be needed. I took inspiration from XML's <i>&lt;![CDATA[ ... ]]&gt;</i> approach and created two very similar
+ * tags, one for synchronous BeanShell code, and another for asynchronous. The synchronous tag is <i>&lt;[SHELL[</i> and
+ * the asynchronous tag is <i>&lt;![SHELL[</i>, and this is the syntax used in both the macros and the formulas
  * grammar.
  * <p>
  *   Notice that the only difference between the two tags is the existence of an exclamation mark before the first

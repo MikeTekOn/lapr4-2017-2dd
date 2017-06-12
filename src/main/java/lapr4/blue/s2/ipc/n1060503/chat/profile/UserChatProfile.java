@@ -77,7 +77,6 @@ public class UserChatProfile implements AggregateRoot<Long>, Serializable {
      * change all info of user chat profile
      *
      * @param nickname
-     * @param image_path
      * @param status
      * @return changed user chat profile
      * @throws java.net.MalformedURLException

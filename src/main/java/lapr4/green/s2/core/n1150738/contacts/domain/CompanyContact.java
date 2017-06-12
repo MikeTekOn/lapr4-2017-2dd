@@ -58,7 +58,6 @@ public class CompanyContact implements AggregateRoot<CompanyName> {
     /**
      * Constructs a CompanyContact with a given name and a default user image.
      *
-     * @see Image@defaultImage
      * @param name the company name
      */
     public CompanyContact(CompanyName name, EmailAddress email, PhoneNumber number){
