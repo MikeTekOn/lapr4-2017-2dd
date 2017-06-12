@@ -54,6 +54,10 @@
  *     <li>Profession::ensureProfessionIsNotEmpty</li>
  *     <li>Image::ensureImageIsNonNull</li>
  *     <li>Image::ensureDefaultImageCanBeConstructed</li>
+ *     <li>CompanyName::ensureNameIsNonNull</li>
+ *     <li>CompanyContact::ensureEmailIsNonNull</li>
+ *     <li>CompanyContact::ensurePhoneNumberIsNonNull</li>
+ *     <li>CompanyContact::ensureImageCanBeNull</li>
  * </ul>
  *
  * <b>Design</b><p>
