@@ -61,7 +61,7 @@ public class ExtensionManager {
 
 	/** The class loader used to load extensions */
 	private Loader loader = new Loader();
-
+        
 	/**
 	 * Creates the extension manager.
 	 */
@@ -97,14 +97,14 @@ public class ExtensionManager {
 				} catch (IOException e) {}
 			}
 
-                        /*
-		// Loads extensions
-		for (Map.Entry<Object, Object> entry : props.entrySet()) {
-			// Loads class
-			String className = (String)entry.getKey();
-			load(className);
-		}
-                        */
+                if(CleanSheets.getFlag()){        
+                    // Loads extensions
+                    for (Map.Entry<Object, Object> entry : props.entrySet()) {
+                            // Loads class
+                            String className = (String)entry.getKey();
+                            load(className);
+                    }
+                }
 
 	}
         

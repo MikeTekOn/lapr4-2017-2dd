@@ -47,6 +47,21 @@
  *     <li>CompanyContactService::ensureAllRelatedContactsAreFound</li>
  *     <li>CompanyContactService::ensureAllRelatedContactsEventsAreInCompanyAgenda</li>
  *     <li>CompanyContactService::ensureCompanyAgendaIsReadOnly</li>
+ *
+ *     <li>CompanyName::ensureNameIsNonNull</li>
+ *     <li>CompanyName::ensureNameIsNotEmpty</li>
+ *     <li>Profession::ensureProfessionIsNonNull</li>
+ *     <li>Profession::ensureProfessionIsNotEmpty</li>
+ *     <li>PhoneNumber::ensureProfessionIsNonNull</li>
+ *     <li>PhoneNumber::ensureProfessionIsNotEmpty</li>
+ *     <li>EmailAddress::ensureProfessionIsNonNull</li>
+ *     <li>EmailAddress::ensureProfessionIsNotEmpty</li>
+ *     <li>Image::ensureImageIsNonNull</li>
+ *     <li>Image::ensureDefaultImageCanBeConstructed</li>
+ *     <li>CompanyName::ensureNameIsNonNull</li>
+ *     <li>CompanyContact::ensureEmailIsNonNull</li>
+ *     <li>CompanyContact::ensurePhoneNumberIsNonNull</li>
+ *     <li>CompanyContact::ensureImageCanBeNull</li>
  * </ul>
  *
  * <b>Design</b><p>
@@ -55,5 +70,5 @@
  * <p>
  * @author Henrique Oliveira [1150738@isep.ipp.pt]
  */
-package lapr4.green.s2.core.n1150738.contacts.company;
+package lapr4.green.s2.core.n1150738.contacts;
 

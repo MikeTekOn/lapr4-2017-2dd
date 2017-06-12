@@ -8,16 +8,23 @@ package lapr4.white.s1.core.n4567890.contacts.application;
 import eapli.framework.application.Controller;
 import eapli.framework.persistence.DataConcurrencyException;
 import eapli.framework.persistence.DataIntegrityViolationException;
-import java.util.Calendar;
-import java.util.Optional;
-import java.util.Properties;
+
+import java.io.IOException;
+import java.util.*;
+
+import lapr4.green.s2.core.n1150738.contacts.application.ProfessionImporterService;
+import lapr4.green.s2.core.n1150738.contacts.domain.CompanyContact;
+import lapr4.green.s2.core.n1150738.contacts.domain.Profession;
+import lapr4.green.s2.core.n1150738.contacts.persistence.CompanyContactRepository;
 import lapr4.white.s1.core.n4567890.contacts.ExtensionSettings;
 import lapr4.white.s1.core.n4567890.contacts.domain.Contact;
 import lapr4.white.s1.core.n4567890.contacts.domain.Event;
 import lapr4.white.s1.core.n4567890.contacts.persistence.ContactRepository;
 import lapr4.white.s1.core.n4567890.contacts.persistence.PersistenceContext;
+import org.xml.sax.SAXException;
 
 import javax.swing.*;
+import javax.xml.parsers.ParserConfigurationException;
 
 import static csheets.CleanSheets.OWN_NAME;
 
@@ -40,8 +47,35 @@ public class ContactController implements Controller {
         this.contactsRepository=this.persistenceContext.repositories().contacts();
     }
 
-    public Contact addContact(String name, String firstName, String lastName, String photo, String address, String email, String phone) throws DataConcurrencyException, DataIntegrityViolationException {
-        return this.contactsRepository.save(new Contact(name, firstName, lastName, photo, address, email, phone));
+    /**
+     * Returns the list of professions imported from external xml
+     * @see ProfessionImporterService
+     *
+     * @return list of professions
+     * @throws ParserConfigurationException exception parsing professions file
+     * @throws SAXException                 exception parsing professions file
+     * @throws IOException                  exception parsing professions file
+     * @author Henrique Oliveira [1150738@isep.ipp.pt]
+     */
+    public List<Profession> professions() throws ParserConfigurationException, SAXException, IOException {
+        ProfessionImporterService svc = new ProfessionImporterService();
+        return svc.professions();
+    }
+
+    /**
+     * Returns a list with all company contacts existing for a contact be associated with.
+     * @return  Returns a list with all company.
+     * @author Henrique Oliveira [1150738@isep.ipp.pt]
+     */
+    public List<CompanyContact> companyContacts(){
+        CompanyContactRepository companyContactRepository = persistenceContext.repositories().companyContacts();
+        List<CompanyContact> list = new LinkedList<>();
+        companyContactRepository.findAll().forEach(list::add);
+        return list;
+    }
+
+    public Contact addContact(String name, String firstName, String lastName, String photo, String address, String email, String phone, CompanyContact companyContact, Profession profession) throws DataConcurrencyException, DataIntegrityViolationException {
+        return this.contactsRepository.save(new Contact(name, firstName, lastName, photo, address, email, phone, profession, companyContact));
     }
 
     public boolean removeContact(Contact contact) throws DataConcurrencyException, DataIntegrityViolationException, IllegalAccessException {
@@ -54,7 +88,7 @@ public class ContactController implements Controller {
         return this.contactsRepository.removeContact(contact);
     }
     
-    public Contact updateContact(Contact contact, String fullName, String firstName, String lastName, String photo, String address, String email, String phone) throws DataConcurrencyException, DataIntegrityViolationException, IllegalAccessException {
+    public Contact updateContact(Contact contact, String fullName, String firstName, String lastName, String photo, String address, String email, String phone,CompanyContact companyContact, Profession profession ) throws DataConcurrencyException, DataIntegrityViolationException, IllegalAccessException {
         if(contact.name().equals(OWN_NAME)){
             throw new IllegalAccessException();
         }
@@ -65,6 +99,8 @@ public class ContactController implements Controller {
         contact.setPhoto(photo);
         contact.setEmail(email);
         contact.setPhone(phone);
+        contact.setCompanyContact(companyContact);
+        contact.setProfession(profession);
         return this.contactsRepository.save(contact);
     }    
 

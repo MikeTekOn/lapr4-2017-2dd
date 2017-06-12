@@ -54,6 +54,16 @@ public class MacroList implements Serializable {
         return macroList.remove(getMacroByName(m));
     }
 
+    /**
+     * Atemps to remove the macro with the old name. If suceeded, the new Macro
+     * is added.
+     *
+     * @param previousMacroName
+     * @param name
+     * @param code
+     * @param s
+     * @return
+     */
     public boolean updateMacro(String previousMacroName, String name, String code, Spreadsheet s) {
         if (removeMacro(previousMacroName)) {
             return addMacro(name, code, s);
@@ -70,6 +80,12 @@ public class MacroList implements Serializable {
         return false;
     }
 
+    /**
+     * Returns the Macro with the given name.
+     *
+     * @param name
+     * @return
+     */
     public MacroWithName getMacroByName(String name) {
         for (int i = 0; i < macroList.size(); i++) {
             if (name.equals(macroList.get(i).getName())) {
@@ -80,6 +96,6 @@ public class MacroList implements Serializable {
     }
 
     public void setUIController(UIController uiC) {
-        this.uiController=uiC;
+        this.uiController = uiC;
     }
 }

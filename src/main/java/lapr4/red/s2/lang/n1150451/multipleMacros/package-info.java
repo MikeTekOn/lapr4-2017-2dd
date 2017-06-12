@@ -72,8 +72,14 @@
  * the old one.
  * <p>
  * <h3>4.1. Functional Tests</h3>
- * Test plan:
- * Create a macro named 
+ * Test plan: Create a macro named "test1"<br/>
+ * In the code write: "C1:=5".<br/>
+ * In the Macro Running window, invoke the macro using [test1].<br/>
+ *
+ * Test plan (recursivity): Create a macro named "test1"<br/>
+ * In the code write: "C1:=5" and "[mac2]".<br/>
+ * Create a macro named "mac2" with the code "[test1]".<br/>
+ * Run "test1" and verify that the Recursivity warning appears.<br/>
  * <p>
  * <h3>4.2. UC Realization</h3>
  * Sequence Diagram
@@ -134,6 +140,11 @@
  * <p>
  * Also, since it wasn't possible to extend the class, the MacroList was added
  * as an attribute in the WorkBook class, to reflect the analysis/design made.
+ * <p>
+ * To prevent the recursivity, a List with the macro names was used. Before the
+ * compilation process, the macro checks if its name is on the list, if it is,
+ * tere is recursivity, else the name is added and the macro can proceed
+ * normally.
  * <p>
  * <h2>6. Integration/Demonstration</h2>
  * <p>

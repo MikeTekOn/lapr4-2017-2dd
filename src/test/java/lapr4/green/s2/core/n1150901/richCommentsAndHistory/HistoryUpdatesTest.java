@@ -16,22 +16,23 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
+ * Unit tests for use story Core02.3 - Rich Comments and History.
  *
  * @author Miguel Silva - 1150901
  */
 public class HistoryUpdatesTest {
-    
+
     private CommentableCellWithMultipleUsers comm;
-    
+
     private Workbook w;
-    
+
     private Address a;
-    
+
     private User user;
 
     public HistoryUpdatesTest() {
     }
-    
+
     @Before
     public void setUp() {
         w = new Workbook(1, null);
@@ -44,17 +45,20 @@ public class HistoryUpdatesTest {
     public void tearDown() {
     }
 
+    /**
+     * Testing that history map updates when a comment is edited.
+     */
     @Test
     public void historyUpdatesWhenUserEditsCommentTest() {
-        
+
         comm.addUsersComment("comment1", user);
         comm.changeUserComment(user.name(), user, "comment1", "comment1Changed");
-        
+
         boolean result = false;
-        
+
         List<String> h = comm.history().get(user).get("comment1Changed");
-        for (String s : h){
-            if (s.equals("comment1")){
+        for (String s : h) {
+            if (s.equals("comment1")) {
                 result = true;
             }
         }
