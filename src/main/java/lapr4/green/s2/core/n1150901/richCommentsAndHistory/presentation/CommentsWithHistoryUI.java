@@ -104,18 +104,20 @@ public class CommentsWithHistoryUI extends CommentsWithUserUI implements Comment
 
         TitledBorder border = BorderFactory.createTitledBorder("History");
         border.setTitleJustification(TitledBorder.CENTER);
+        history.setLayout(new GridLayout(1, 1));
         history.setBorder(border);
         history.add(historyPanel());
 
         TitledBorder border2 = BorderFactory.createTitledBorder("Search Comment");
         border2.setTitleJustification(TitledBorder.CENTER);
+        search.setLayout(new BorderLayout());
         search.setBorder(border2);
-        search.add(searchPanel());
-        search.add(searchList());
+        search.add(searchList(), BorderLayout.CENTER);
+        search.add(searchPanel(), BorderLayout.SOUTH);
 
-        add(formatAndStyle);
-        add(history);
-        add(search);
+        add(formatAndStyle, BorderLayout.NORTH);
+        add(history, BorderLayout.CENTER);
+        add(search, BorderLayout.SOUTH);
     }
 
     /**
@@ -255,7 +257,8 @@ public class CommentsWithHistoryUI extends CommentsWithUserUI implements Comment
      *
      * @return The panel containing the search list.
      */
-    private JScrollPane searchList() {
+    private JPanel searchList() {
+        JPanel panelList = new JPanel(new GridLayout(1, 1));
         searchModel = new DefaultListModel();
         searchList = new JList();
         searchList.setModel(searchModel);
@@ -274,7 +277,8 @@ public class CommentsWithHistoryUI extends CommentsWithUserUI implements Comment
             }
         });
 
-        return new JScrollPane(searchList);
+        panelList.add(new JScrollPane(searchList));
+        return panelList;
     }
 
     /**
