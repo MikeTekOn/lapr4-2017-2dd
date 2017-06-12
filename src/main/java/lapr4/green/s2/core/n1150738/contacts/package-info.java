@@ -52,6 +52,10 @@
  *     <li>CompanyName::ensureNameIsNotEmpty</li>
  *     <li>Profession::ensureProfessionIsNonNull</li>
  *     <li>Profession::ensureProfessionIsNotEmpty</li>
+ *     <li>PhoneNumber::ensureProfessionIsNonNull</li>
+ *     <li>PhoneNumber::ensureProfessionIsNotEmpty</li>
+ *     <li>EmailAddress::ensureProfessionIsNonNull</li>
+ *     <li>EmailAddress::ensureProfessionIsNotEmpty</li>
  *     <li>Image::ensureImageIsNonNull</li>
  *     <li>Image::ensureDefaultImageCanBeConstructed</li>
  *     <li>CompanyName::ensureNameIsNonNull</li>
