@@ -1,9 +1,9 @@
 package lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.ext;
 
+import lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.ui.UIFindWorkbooksExtension;
 import csheets.ext.Extension;
 import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.UIExtension;
-import lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.ui.UIFindWorkbooksExtension;
 
 /**
  * @author Diana Silva [1151088@isep.ipp.pt]
@@ -29,5 +29,5 @@ public class ExtensionFindWorkbook extends Extension {
     @Override
     public UIExtension getUIExtension(UIController uiController) {
             return new UIFindWorkbooksExtension(this, uiController);
-    }    
+    }   
 }

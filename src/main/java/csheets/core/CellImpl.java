@@ -500,4 +500,9 @@ public class CellImpl implements Cell {
 		for (CellExtension extension : extensions.values())
 			stream.writeObject(extension);
 	}
+      
+        public String getPreviewText(){
+            return value.toString();
+        }
+        
 }

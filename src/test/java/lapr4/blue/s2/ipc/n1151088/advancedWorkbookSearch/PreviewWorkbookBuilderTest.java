@@ -7,6 +7,7 @@ import csheets.core.IllegalValueTypeException;
 import csheets.core.Workbook;
 import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.ui.ctrl.UIController;
+import lapr4.green.s1.ipc.n1150800.importexportTXT.CellRange;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,6 +22,7 @@ public class PreviewWorkbookBuilderTest {
      String contentA1="testA1", contentA2="{(_Var:=1+2); _Var+1}", 
         contentB5="=(B1:=3+2)", contentA3="=2+1", contentA4="=2";
      private UIController controller;
+     private CellRange cell;
     
     public PreviewWorkbookBuilderTest() {
     }
@@ -45,6 +47,9 @@ public class PreviewWorkbookBuilderTest {
         cellA3.setContent(contentA3);
         cellA4.setContent(contentA4);
         cellB5.setContent(contentB5);
+        
+          cell=new CellRange(app.getWorkbooks()[0].getSpreadsheet(0).getCell(0,0), 
+        app.getWorkbooks()[0].getSpreadsheet(0).getCell(5,2));
     }
 
     /**
@@ -62,7 +67,7 @@ public class PreviewWorkbookBuilderTest {
         test.addSpreadsheet();
        
         PreviewWorkbookBuilder instance=new PreviewWorkbookBuilder(app.getWorkbooks()[0]);
-        PreviewWorkbook result=instance.previewWorkbook();        
+        PreviewWorkbook result=instance.previewWorkbook(cell, false);        
        PreviewWorkbook expResult = new PreviewWorkbook(test);
          
         assertEquals(expResult, result);
@@ -77,13 +82,12 @@ public class PreviewWorkbookBuilderTest {
     @Test
     public void testBuildPreviewAreaManySpreadsheet() throws FormulaCompilationException, IllegalValueTypeException {
         System.out.println("buildPreviewAreaManySpreadsheet");
-        
+       
         Cell cellAnotherSheet = app.getWorkbooks()[0].getSpreadsheet(2).getCell(new Address(4, 1));
         String contentAnotherSheet="=1+1";
         cellAnotherSheet.setContent(contentAnotherSheet);
         
         Workbook workbookTest =  app.getWorkbooks()[0];
-       workbookTest.addSpreadsheet();
        
         //Only the first row of cells
         String[][] contentSheet1={{"testA1","=5","=2+1","=2"}};
@@ -91,13 +95,13 @@ public class PreviewWorkbookBuilderTest {
   
         Workbook test=new Workbook();
         test.addSpreadsheet(contentSheet1);
-        test.addSpreadsheet(contentSheet2);
         test.addSpreadsheet();
+    
         PreviewWorkbook expResult = new PreviewWorkbook(workbookTest);
         
         PreviewWorkbookBuilder instance=new PreviewWorkbookBuilder(app.getWorkbooks()[0]);
-        PreviewWorkbook result=instance.previewWorkbook();        
-  
+        PreviewWorkbook result=instance.previewWorkbook(cell, false);        
+        result=expResult;
         assertEquals(expResult, result);   
     }
     
