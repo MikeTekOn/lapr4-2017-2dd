@@ -11,6 +11,7 @@ import csheets.core.formula.Expression;
 import csheets.core.formula.util.ExpressionVisitor;
 import eapli.util.Strings;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
@@ -20,7 +21,7 @@ import java.util.Objects;
  *
  * @author Guilherme Ferreira 1150623 - Made changes to class so it would be a subclass of Variable [on 08/06/2017]
  */
-public class Variable implements Expression {
+public class Variable implements Expression, Serializable {
 
     /**expression of variable*/
     Expression expression;

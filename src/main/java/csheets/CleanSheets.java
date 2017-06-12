@@ -102,6 +102,7 @@ public class CleanSheets {
     private List<SpreadsheetAppListener> listeners
             = new ArrayList<SpreadsheetAppListener>();
 
+
     private UIController uiController;
 
     /**
@@ -232,7 +233,7 @@ public class CleanSheets {
      * Creates a new workbook.
      */
     public void create() {
-        Workbook workbook = new Workbook(3, null);
+        Workbook workbook = new Workbook(3, uiController);
         workbooks.put(workbook, null);
         fireSpreadsheetAppEvent(workbook, null, SpreadsheetAppEvent.Type.CREATED);
     }

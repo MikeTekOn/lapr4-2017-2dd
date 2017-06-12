@@ -73,7 +73,7 @@ public class Workbook implements Iterable<Spreadsheet>, Serializable {
      */
     private int createdSpreadsheets;
 
-    private UIController uiController;
+    private transient UIController uiController;
 
     /**
      * Creates a new empty workbook.
@@ -104,7 +104,7 @@ public class Workbook implements Iterable<Spreadsheet>, Serializable {
         this.uiController = uiController;
         for (String[][] content : contents) {
             spreadsheets.add(new SpreadsheetImpl(this,
-                    getNextSpreadsheetTitle(), content, uiController));
+            getNextSpreadsheetTitle(), content, uiController));
         }
     }
 

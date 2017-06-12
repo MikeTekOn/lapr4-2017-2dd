@@ -5,6 +5,7 @@ import csheets.core.Address;
 import csheets.core.Cell;
 import csheets.core.IllegalValueTypeException;
 import csheets.core.formula.compiler.FormulaCompilationException;
+import csheets.ui.ctrl.UIController;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,8 +23,11 @@ public class FormulaVariableTest {
 
         // Try to create the CS application object
         app = new CleanSheets();
+
         // This will create a workbook with 3 sheets
         app.create();
+
+        app.setUIController(new UIController(app));
     }
 
     /**
@@ -100,10 +104,11 @@ public class FormulaVariableTest {
      * @throws FormulaCompilationException
      * @throws IllegalValueTypeException
      */
+    @Test
     public void testFormulaWithTemporaryVariable() throws FormulaCompilationException, IllegalValueTypeException {
         Cell cellTest= app.getWorkbooks()[0].getSpreadsheet(0).getCell(new Address(1, 0));
 
-        String content= "={(_Var1:=2);( _Var2:=1); MAX(_Var1, _Var2}";
+        String content= "={(_Var1:=2);( _Var2:=1); MAX(_Var1; _Var2)}";
         cellTest.setContent(content);
 
         //Test temporary variable value
