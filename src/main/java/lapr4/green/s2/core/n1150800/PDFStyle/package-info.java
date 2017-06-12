@@ -26,6 +26,16 @@
  * }
  * </pre>
  * 
+ * <p>
+ * Regarding the application functionality itself, a new Menu (and not an
+ * extension) should be created for this new requirement, with a new option
+ * "Export to PDF". Clicking on it, a pop-up window should appear allowing
+ * the user to select the "range" of the export: the workbook, a specific
+ * worksheet or a range of cells and, more specific to this iteration, the user
+ * should select the type of border line he wants for the output document, 
+ * along with its color. Independently of the chosen option, a File Chooser 
+ * should appear allowing the user to select the destination path.
+ * 
  * <h2>2.1 Concepts Description:</h2>
  * 
  * <ul>
@@ -77,8 +87,34 @@
  * For this, we need to be able to get the content of the cells and the style in which they're formatted.
  * As usual, in a test driven development approach tests normally fail in the beginning. The idea is that the tests will pass in the end. <p>
  * 
- * <b>To be developed</b>
+ * <h2>3.1 Unitary Tests</h2>
  * 
+ * <b>Ensure the border line is chosen</b>: This test consists in veryfing
+ * that the border line option presented in the user interface when the use
+ * case functionality option is selected, should be chosen. In order to be
+ * reliable, the test is expecting an exception thrown because it's given
+ * no border line option to the strategy class method.
+ * 
+ * <h2>3.2 Functional Tests</h>
+ * 
+ * <b>Getting the stylable cells from a workbook</b>: This test consists in
+ * verifying that the cells style of a given workbook are returned when the
+ * method being tested is called. In order to be reliable, it were created
+ * a workbook and it was given some cells from it a few styles, like, cell
+ * background, cell foreground, font style, font size, etc.<p>
+ * 
+ * </b>Getting the stylable cells from a spreadsheet</b>: This test consists in
+ * verifying that the cells style of a given spreadsheet are returned when the
+ * method being tested is called. In order to be reliable, it were created
+ * a spreadsheet and it was given some cells from it a few styles, like, cell
+ * background, cell foreground, font style, font size, etc.<p>
+ * 
+ * </b>Getting the stylable cells from a cell range</b>: This test consists in
+ * verifying that the cells style of a given spreadsheet are returned when the
+ * method being tested is called. In order to be reliable, it were created
+ * a spreadsheet, and a cell range in a string format and it was given the cells 
+ * from the range a few styles, like, cell background, cell foreground, 
+ * font style, font size, etc.
  * 
  * 
  * <h1><u>4. Design</u></h1>

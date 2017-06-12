@@ -5,11 +5,10 @@ skinparam packageStyle rect
 skinparam shadowing false
 
 hide methods
-class CompanyContactID <<value object>>
+class CompanyName <<value object>>
 class Profession <<value object>>
-class CompanyContact <<aggregate root>>{
-    companyName
-}
+class CompanyContact <<aggregate root>> <<CompanyName>>
+class Image  <<value object>>
 interface Contact
 class PersonContact <<aggregate root>> {
     firstName
@@ -27,8 +26,9 @@ class Event {
 
 Contact <.. CompanyContact
 Contact <.. PersonContact
-CompanyContact -> CompanyContactID
-CompanyContactID <-  PersonContact
+CompanyContact -> CompanyName
+CompanyContact --> Image
+CompanyName <-  PersonContact
 PersonContact *--> Profession
 PersonContact *--> "1" Agenda
 Agenda *--> "*" Event
