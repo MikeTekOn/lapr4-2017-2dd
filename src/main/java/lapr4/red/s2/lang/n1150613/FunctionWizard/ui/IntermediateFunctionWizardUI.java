@@ -5,6 +5,7 @@
  */
 package lapr4.red.s2.lang.n1150613.FunctionWizard.ui;
 
+import csheets.core.IllegalValueTypeException;
 import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.core.formula.lang.UnknownElementException;
 import csheets.ui.ctrl.UIController;
@@ -139,13 +140,22 @@ public class IntermediateFunctionWizardUI extends JDialog {
                         }
                     }
 
-                    if (controller.getDescription(auxIdentifier).size() > 0) {
+                    if (auxIdentifier != null) {
                         defaultTableModel.fireTableDataChanged();
-                        for (Map.Entry<String, String> entry : controller.getDescription(auxIdentifier).entrySet()) {
-                            defaultTableModel.addRow(new Object[]{entry.getKey(), entry.getValue()});
+                        try {
+                            for (Map.Entry<String, String> entry : controller.getDescription(auxIdentifier).entrySet()) {
+                                defaultTableModel.addRow(new Object[]{entry.getKey(), entry.getValue()});
+                            }
+                            
+                            txtSyntax.setText(controller.getSyntax(auxIdentifier, 0));
+
+                        } catch (UnknownElementException u) {      
+                            defaultTableModel.addRow(new Object[]{"Parameter1", "1st Value"});
+                            defaultTableModel.addRow(new Object[]{"Parameter2", "2nd Value"});
+                           
+                            txtSyntax.setText(controller.getSyntax(auxIdentifier, 1));
                         }
 
-                        txtSyntax.setText(controller.getSyntax(auxIdentifier));
                         applyBtn.setEnabled(true);
 
                         defaultTableModel.addTableModelListener(
@@ -156,15 +166,15 @@ public class IntermediateFunctionWizardUI extends JDialog {
                                 int tam = defaultTableModel.getRowCount();
                                 for (int j = 0; j < tam; j++) {
                                     if (j != tam - 1) {
-                                        System.out.println(tableHelpText.getValueAt(j, 0).toString());
+
                                         s = s + tableHelpText.getValueAt(j, 0).toString() + ";";
                                     } else {
                                         s = s + tableHelpText.getValueAt(j, 0).toString();
-                                       
+
                                     }
                                     try {
-                                        resultField.setText( controller.calculateResult(s, txtSyntax.getText()));
-                                    } catch (FormulaCompilationException ex) {
+                                        resultField.setText(controller.calculateResult(s, txtSyntax.getText()));
+                                    } catch (FormulaCompilationException | IllegalValueTypeException | ArrayIndexOutOfBoundsException ex) {
                                         resultField.setText("Invalid parameters");
                                     }
                                 }

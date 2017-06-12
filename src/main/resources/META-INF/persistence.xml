@@ -5,6 +5,7 @@
     <class>lapr4.white.s1.core.n4567890.contacts.domain.Contact</class>
     <class>lapr4.white.s1.core.n4567890.contacts.domain.Agenda</class>
     <class>lapr4.white.s1.core.n4567890.contacts.domain.Event</class>
+    <class>lapr4.green.s2.core.n1150738.contacts.domain.CompanyContact</class>
     <properties>
       <!--<property name="javax.persistence.jdbc.url" value="jdbc:h2:../db/demoapplication;MV_STORE=FALSE"/>-->
       <property name="javax.persistence.jdbc.url" value="jdbc:h2:..\db\csheets-crm-extension;MV_STORE=FALSE"/>

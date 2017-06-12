@@ -104,9 +104,6 @@ public class ReaderThread implements Runnable {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-
-                //Thread.currentThread().wait(Long.MAX_VALUE);
-                // Thread.currentThread().interrupt();
             }
         }
         threadId = -1;

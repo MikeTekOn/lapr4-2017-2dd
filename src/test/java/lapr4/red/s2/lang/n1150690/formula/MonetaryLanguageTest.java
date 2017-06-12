@@ -26,6 +26,7 @@ public class MonetaryLanguageTest {
     public void setUp() throws Exception {
 
         // Try to create the CS application object
+        CleanSheets.setFlag(true);
         app = new CleanSheets();
         // This will create a workbook with 3 sheets
         app.create();
@@ -49,14 +50,16 @@ public class MonetaryLanguageTest {
 
    /*@Test
     public void ensureCalculationsAreWellDone() throws FormulaCompilationException, IllegalValueTypeException {
-
+       
         // Get A1 cell
         Cell cellA1 = app.getWorkbooks()[0].getSpreadsheet(0).getCell(new Address(0, 0));
 
-        String expression = "#euro{3.00£ * 2 + 1.20€}";
+        MonetaryLanguageBaseVisitorImpl visitor = new MonetaryLanguageBaseVisitorImpl(cellA1);
+        String expression = "#euro{2.00€ + 1.20€}";
         cellA1.setContent(expression);
-        Double expectedResult = 8.02764;
-        assertEquals(cellA1.getValue().toDouble(), expectedResult, 0.001);
+        Double expectedResult = 3.20;
+        Double result = cellA1.getValue().toDouble();
+        assertEquals(result, expectedResult);
     }*/
 
 }

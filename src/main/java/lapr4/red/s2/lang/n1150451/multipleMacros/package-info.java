@@ -72,6 +72,14 @@
  * the old one.
  * <p>
  * <h3>4.1. Functional Tests</h3>
+ * Test plan: Create a macro named "test1"<br/>
+ * In the code write: "C1:=5".<br/>
+ * In the Macro Running window, invoke the macro using [test1].<br/>
+ *
+ * Test plan (recursivity): Create a macro named "test1"<br/>
+ * In the code write: "C1:=5" and "[mac2]".<br/>
+ * Create a macro named "mac2" with the code "[test1]".<br/>
+ * Run "test1" and verify that the Recursivity warning appears.<br/>
  * <p>
  * <h3>4.2. UC Realization</h3>
  * Sequence Diagram
@@ -96,33 +104,56 @@
  *
  * To support the Invocation of Macros, the previous grammar must be changed.
  * With that, a new rule has to be created to support their "detection". Having
- * decided that the macros needs to be inside "[ ]", the rule should be: <br/><br/>
+ * decided that the macros needs to be inside "[ ]", the rule should be:
+ * <br/><br/>
  * <code>
  * macro_invoked : LPAR_SQUARE (~(LPAR_SQUARE | RPAR_SQUARE))+ RPAR_SQUARE ;
- * </code><br/><br/> This means that the macro should be between a LPAR_SQUARE ("[") and a
- * RPAR_SQUARE ("]"), and, its name, can be anything except the delimiter
- * chars.<br/>
+ * </code><br/><br/> This means that the macro should be between a LPAR_SQUARE
+ * ("[") and a RPAR_SQUARE ("]"), and, its name, can be anything except the
+ * delimiter chars.<br/>
  *
  * Also, a new visitor for the rule should be created. The visitor should be
  * base in the next excerpt of code: <br/> <br/><code>
  * s = new StringBuilder();
  * for (i=0 until childNumber)
  * if (i!=0 and i!=childNumber-1) s.append(child(i));
- * </code> <br/><br/>It is needed to use the cicle, and not just child(1), since the macro
- * name could be a combination of letters and numbers and, in that case, more
- * than one token would be detected.
+ * </code> <br/><br/>It is needed to use the cicle, and not just child(1), since
+ * the macro name could be a combination of letters and numbers and, in that
+ * case, more than one token would be detected.
+ *
+ * <img src="domain_diagram.png" alt="image"/>
  *
  * <h3>4.3. Classes</h3>
  * <p>
+ * Two new classes were made in this iteration. The following is a UML
+ * representation of them:
+ * <img src="class_diagram.png" alt="image"/>
+ *
  * <h3>4.4. Design Patterns and Best Practices</h3>
  * <p>
  * <h2>5. Implementation</h2>
  * <p>
+ * Regarding the implementation, a change was made in the previously developed
+ * UI. It was added a JComboBox do the dialog in order to choose the macro. The
+ * controller was extended in a new class to supported the executeMacro method
+ * with the Macro's name as a parameter.
+ * <p>
+ * Also, since it wasn't possible to extend the class, the MacroList was added
+ * as an attribute in the WorkBook class, to reflect the analysis/design made.
+ * <p>
+ * To prevent the recursivity, a List with the macro names was used. Before the
+ * compilation process, the macro checks if its name is on the list, if it is,
+ * tere is recursivity, else the name is added and the macro can proceed
+ * normally.
  * <p>
  * <h2>6. Integration/Demonstration</h2>
  * <p>
  *
  * <h2>7. Final Remarks</h2>
+ * In terms of conclusion, the functionality was made with sucess having the
+ * output as required by the Product Owner. Also, it is important to note that
+ * two extra features were implemented: the Edition and Deletion of Macros Added
+ * to the Workbook. On top of that, the Macro name is also unique.
  * <p>
  *
  * <h2>8. Work Log</h2>

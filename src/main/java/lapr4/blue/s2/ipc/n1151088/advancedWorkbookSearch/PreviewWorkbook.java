@@ -51,7 +51,10 @@ public final class PreviewWorkbook{
     }
     
     public int nrSpreadSheetsFilled(){
-        return this.previewWorkbook.getSpreadsheetCount();
+       if (this.previewWorkbook.getSpreadsheetCount()>1){
+           return this.previewWorkbook.getSpreadsheetCount()-1;
+       }
+       return this.previewWorkbook.getSpreadsheetCount();
     }
     
     public Workbook getWorkbook(){
@@ -70,11 +73,12 @@ public final class PreviewWorkbook{
             Spreadsheet spreadSheet= this.getWorkbook().getSpreadsheet(i);
             Spreadsheet otherSpreadSheet=otherPreview.getWorkbook().getSpreadsheet(i);
             
-           for(int row=0; row<spreadSheet.getColumnCount();row++){ 
+           for(int row=0; row<spreadSheet.getRowCount();row++){ 
                 for(int column=0; column<spreadSheet.getColumnCount(); column++){
-                    if(spreadSheet.getCell(column, row).getContent() == null ? 
-                            otherSpreadSheet.getCell(column, row).getContent() != null : 
-                            !spreadSheet.getCell(column, row).getContent().equals(otherSpreadSheet.getCell(column, row).getContent())){
+                    if(spreadSheet.getCell(column, row).getValue() == null ? 
+                            otherSpreadSheet.getCell(column, row).getValue() != null : 
+                            !spreadSheet.getCell(column, row).getValue().toString().
+                                    equals(otherSpreadSheet.getCell(column, row).getValue().toString())){
                         return false;
                     }
                 }

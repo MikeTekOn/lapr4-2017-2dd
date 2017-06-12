@@ -30,7 +30,8 @@ import lapr4.green.s2.core.n1150901.richCommentsAndHistory.application.CommentsW
  * A panel for adding or editing comments for a cell.
  *
  * @author Sofia Silva [1150690@isep.ipp.pt]
- * @edit Miguel Silva - 1150901 I've made some changes in this class to be able
+ * EDIT:
+ * @author Miguel Silva - 1150901 I've made some changes in this class to be able
  * to implemet the comment's history.
  */
 public class CommentsWithUserUI extends JPanel implements SelectionListener, CommentableCellListener {
@@ -93,7 +94,6 @@ public class CommentsWithUserUI extends JPanel implements SelectionListener, Com
     protected int flag = 0;
 
     /* ----------------------- */
-
     /**
      * Creates a new comment panel.
      *
@@ -173,6 +173,10 @@ public class CommentsWithUserUI extends JPanel implements SelectionListener, Com
                 selectedUser = data[0].trim();
                 selectedComment = data[1].trim();
                 commentField.setText(selectedComment);
+
+                if (evt.getClickCount() == 2) {
+                    cell.fireHistoryChanged();
+                }
             }
         });
         return new JScrollPane(panelComments);
@@ -282,7 +286,7 @@ public class CommentsWithUserUI extends JPanel implements SelectionListener, Com
     }
 
     /* THIS IS A CHANGE MIGUEL MADE */
-    public class ComplexCellRenderer extends DefaultListCellRenderer{
+    public class ComplexCellRenderer extends DefaultListCellRenderer {
 
         public ComplexCellRenderer() {
             setOpaque(true);
@@ -294,16 +298,21 @@ public class CommentsWithUserUI extends JPanel implements SelectionListener, Com
                 int index,
                 boolean isSelected,
                 boolean cellHasFocus) {
-            
+
             super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-            setText(value.toString());
-            if (flag == 1) {
-                setFont(font);
-            } else if (flag == 2) {
-                setForeground(color);
-            } else if (flag == 3){
-                setBackground(color);
+            switch (flag) {
+                case 1:
+                    setFont(font);
+                    break;
+                case 2:
+                    setForeground(color);
+                    break;
+                case 3:
+                    setBackground(color);
+                    break;
+                default:
+                    break;
             }
 
             return this;

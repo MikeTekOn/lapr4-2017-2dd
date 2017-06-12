@@ -27,26 +27,48 @@ import csheets.ui.ext.UIExtension;
 
 /**
  * The extension for dependency trees.
+ *
  * @author Einar Pehrson
  */
 public class DependencyTreeExtension extends Extension {
 
-	/** The name of the extension */
-	public static final String NAME = "Dependencies";
+    /**
+     * The name of the extension
+     */
+    public static final String NAME = "Dependencies";
 
-	/**
-	 * Creates a new assertion extension.
-	 */
-	public DependencyTreeExtension() {
-		super(NAME);
-	}
+    /**
+     * The description of the extension
+     */
+    public static final String DESCRIPTION = "The extension for dependency trees.";
 
-	/**
-	 * Returns a user interface extension for dependency trees.
-	 * @param uiController the user interface controller
-	 * @return a user interface extension for dependency trees
-	 */
-	public UIExtension getUIExtension(UIController uiController) {
-		return new DependencyTreeUIExtension(this, uiController);
-	}
+    /**
+     * The first version of the dependency trees extension.
+     */
+    public static final int VERSION = 1;
+
+    /**
+     * Creates a new assertion extension.
+     */
+    public DependencyTreeExtension() {
+        super(NAME, VERSION, DESCRIPTION);
+    }
+
+    /**
+     * Returns a user interface extension for dependency trees.
+     *
+     * @param uiController the user interface controller
+     * @return a user interface extension for dependency trees
+     */
+    public UIExtension getUIExtension(UIController uiController) {
+        return new DependencyTreeUIExtension(this, uiController);
+    }
+
+    @Override
+    public String metadata() {
+        return String.format("This is %s with version %d\n"
+                + "This extension has the follow description: %s\n"
+                + "This extension was made by Einar Pehrson and it is in the package %s", 
+                getName(), getVersion(), getDescription(),getClass().getName());
+    }
 }

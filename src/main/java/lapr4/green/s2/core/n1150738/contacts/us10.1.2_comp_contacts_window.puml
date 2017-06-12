@@ -1,0 +1,34 @@
+@startuml us10.1.2_comp_contacts_window.png
+
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam shadowing false
+hide footbox
+
+title Company Contact Window
+
+participant CompanyContactUI
+participant CompanyContactController
+participant ContactRepository
+
+CompanyContactUI -> CompanyContactController : allPersonalContactsRelated()
+activate CompanyContactController
+    CompanyContactController -> ContactRepository: allRelatedToCompany(c)
+    activate ContactRepository
+    CompanyContactController <-- ContactRepository: List<PersonalContact>
+    deactivate ContactRepository
+CompanyContactUI <-- CompanyContactController: List<PersonalContact>
+deactivate CompanyContactController
+CompanyContactUI -> CompanyContactUI: renders list
+... ...
+CompanyContactUI -> CompanyContactController: companyAgenda()
+activate CompanyContactController
+    CompanyContactController -> CompanyContactController: allRelatedToCompany(c)
+    CompanyContactController -> CompanyContactController:foreach(Agenda of Contact): list::addEvent
+
+CompanyContactUI <-- CompanyContactController: List<Event>
+deactivate CompanyContactController
+CompanyContactUI -> CompanyContactUI: renders list
+
+
+@enduml

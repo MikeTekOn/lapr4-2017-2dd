@@ -30,7 +30,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import lapr4.red.s2.lang.n1150451.multipleMacros.MacroList;
+import lapr4.red.s2.lang.n1150451.multipleMacros.domain.MacroList;
 
 /**
  * A workbook which can contain several spreadsheets.
@@ -80,6 +80,17 @@ public class Workbook implements Iterable<Spreadsheet>, Serializable {
      */
     public Workbook() {
     }
+
+    /**
+	 * Creates a new workbook, using the given content matrix to create
+	 * spreadsheets initially.
+	 * @param contents the content matrices to use when creating spreadsheets
+	 */
+	public Workbook(String[][]... contents) {
+		for (String[][] content : contents)
+			spreadsheets.add(new SpreadsheetImpl(this,
+				getNextSpreadsheetTitle()));
+	}
 
     /**
      * Creates a new workbook, which initially contains the given number of

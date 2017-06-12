@@ -34,6 +34,7 @@ public class VarContentorTest {
     public void setUp() throws FormulaCompilationException {
         contentor = new VarContentor();
         // Try to create the CS application object
+        CleanSheets.setFlag(true);
         app = new CleanSheets();
         // This will create a workbook with 3 sheets
         app.create();

@@ -29,12 +29,6 @@ public class Variable implements Expression, Serializable {
     /**Name of variable*/
     String name;
 
-
-    //FIXME
-    /** The unique version identifier used for serialization */
-    //private static final long serialVersionUID = 7854180857828149859L;
-
-
     public Variable(String name, Expression expression){
 
         if(Strings.isNullOrEmpty(name) | expression == null){

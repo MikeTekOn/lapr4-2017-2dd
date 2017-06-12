@@ -97,7 +97,20 @@ public class CommExtension extends Extension implements Observer {
      * The name of the extension.
      */
     public static final String NAME = "Network";
-
+    
+    /**
+     * The description of the extension
+     */
+    public static final String DESCRIPTION = "The Communication extension.\n"
+            + "It manages all the servers and clients of the application.\n"
+            + "It allows for a UDP broadcast to search for other instances in the local network.\n"
+            + "It allows for TCP connections to be performed and maintained for other uses like cells sharing.\n"
+            + "This class listens to the events launched by the handlers and deals with them using the UI Controller.";
+    
+    /**
+     * The first version of the communication extension.
+     */
+    public static final int VERSION = 1;
     /**
      * The TCP server. It is a singleton.
      */
@@ -124,7 +137,7 @@ public class CommExtension extends Extension implements Observer {
      * The extension constructor.
      */
     public CommExtension() {
-        super(NAME);
+        super(NAME, VERSION, DESCRIPTION);
         threadsList = new HashMap<>();
     }
 
@@ -386,6 +399,9 @@ public class CommExtension extends Extension implements Observer {
                 StylableCell stylableCell = (StylableCell)cell.getExtension(StyleExtension.NAME);
                 if (stylableCell != null && dto.getStyleDTO() != null) {
                     Styles.setStyleFromDTO(stylableCell, dto.getStyleDTO());
+                    if (cell instanceof CellImpl) {
+                        ((CellImpl) cell).updateCellStyle();
+                    }
                 }
             }
             if (arg instanceof CellContentDTO) {
@@ -399,6 +415,18 @@ public class CommExtension extends Extension implements Observer {
                 }
             }
         }
+    }
+    
+    @Override
+    public String metadata() {
+        return String.format("This is %s with version %d\n"
+                + "This extension has the follow description: %s\n"
+                + "This extension has also a: \n-- default tcp port number: %d\n"
+                + "-- default udp port number: %d\n"
+                + "This extension was made by Manuel Meireles in Sprint 1 and it is in the package %s",
+                getName(), getVersion(), getDescription(),
+                DEFAULT_TCP_PORT_NUMBER, DEFAULT_UDP_PORT_NUMBER,
+                getClass().getName());
     }
 
 }

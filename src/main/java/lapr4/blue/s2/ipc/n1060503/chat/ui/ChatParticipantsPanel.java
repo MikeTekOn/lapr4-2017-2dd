@@ -23,12 +23,13 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.TitledBorder;
+import lapr4.blue.s2.ipc.n1060503.chat.ChangeUserChatProfileController;
+import lapr4.blue.s2.ipc.n1060503.chat.connection.UserChatDTO;
+import lapr4.blue.s2.ipc.n1060503.chat.profile.UserChatProfile;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
 import lapr4.green.s1.ipc.n1150532.comm.ui.ConnectToPeerAction;
 import lapr4.green.s1.ipc.n1150657.chat.ControllerConnection;
-import lapr4.green.s1.ipc.n1150657.chat.ext.ChatExtension;
 import lapr4.green.s1.ipc.n1150657.chat.ui.ChatAction;
-import lapr4.green.s1.ipc.n1150657.chat.ui.NewMessageFrame;
 
 /**
  * It represents the Panel for the chat.
@@ -78,7 +79,7 @@ public class ChatParticipantsPanel extends JPanel {
     /**
      * The button to connect to a peer.
      */
-    private JButton btConnect;
+    private JButton btMessage;
     
     private UserChatListTable table;
     
@@ -91,16 +92,21 @@ public class ChatParticipantsPanel extends JPanel {
      * The extension.
      */
     private final ChatParticipantsExtension theExtension;
+    
+    private ChangeUserChatProfileController controllerChangeUser;
+    private UserChatProfile ucp;
     /**
      * The ChatPanel constructor.
      *
      * @param uiController The ui controller.
      * @param extension
      */
-    public ChatParticipantsPanel(UIController uiController, Extension extension) {
+    public ChatParticipantsPanel(UIController uiController, Extension extension) throws IOException {
         super(new BorderLayout());
         theController = uiController;
         theExtension = (ChatParticipantsExtension) extension;
+        ucp = new UserChatProfile();
+        controllerChangeUser = new ChangeUserChatProfileController(ucp);
         buildPanel();
         changeComponentName(ChatParticipantsExtension.CHAT_NAME);
         createInteractions();
@@ -157,23 +163,29 @@ public class ChatParticipantsPanel extends JPanel {
      */
     private JPanel createNetworkBottomButtonsPanel() {
         final String searchBtText = "Turn On / Search";
-        final String connectBtText = "Connect";
+        final String newMessageBtText = "New Message";
         final String changeProfile = "Change Profile";
         final int allignment = FlowLayout.CENTER;
         final JPanel panel = new JPanel(new GridLayout(1, 2));
         final JPanel p1 = new JPanel(new FlowLayout(allignment));
         final JPanel p2 = new JPanel(new FlowLayout(allignment));
-        final JPanel p3 = new JPanel(new FlowLayout(allignment));
+        final JPanel p3 = new JPanel(new BorderLayout());
         btSearch = new JButton(searchBtText);
-        btConnect = new JButton(connectBtText);
+        btMessage = new JButton(newMessageBtText);
         btChangeProfile = new JButton(changeProfile);
+        final JPanel p4 = new JPanel(new FlowLayout(allignment));
+        p4.add(btChangeProfile);
+        
         p1.add(btSearch);
-        p2.add(btConnect);
-        p3.add(btChangeProfile);
+        p2.add(btMessage);
+        
         panel.add(p1);
         panel.add(p2);
-        panel.add(p3);
-        return panel;
+        
+        p3.add(panel, BorderLayout.CENTER);
+        p3.add(p4, BorderLayout.SOUTH);
+        
+        return p3;
     }
     
     /**
@@ -181,7 +193,7 @@ public class ChatParticipantsPanel extends JPanel {
      */
     private void createInteractions() {
         btSearch.addActionListener(new ChatParticipantsPanel.SearchUserAction());
-        btConnect.addActionListener(new ChatParticipantsPanel.ConnectAction());
+        btMessage.addActionListener(new ChatParticipantsPanel.ConnectAction());
         btChangeProfile.addActionListener(new ChatParticipantsPanel.ChangeProfileAction());
     }
     
@@ -193,7 +205,7 @@ public class ChatParticipantsPanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
-                final ChangeUserChatProfileUI cucp = new ChangeUserChatProfileUI();
+                final ChangeUserChatProfileUI cucp = new ChangeUserChatProfileUI(controllerChangeUser);
             } catch (IOException ex) {
                 Logger.getLogger(ChatParticipantsPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -210,8 +222,8 @@ public class ChatParticipantsPanel extends JPanel {
         public void actionPerformed(ActionEvent e) {
             try{
                 table.clear();            
-                (new ChatParticipantsAction(table, 15310)).actionPerformed(e);
-                btSearch.setEnabled(false);
+                (new ChatParticipantsAction(table, 15310, ucp)).actionPerformed(e);
+//                btSearch.setEnabled(false);
             } catch (NullPointerException n){
                 JOptionPane.showMessageDialog(null, "Go to Network Tab and click Activate");
             }
@@ -225,17 +237,21 @@ public class ChatParticipantsPanel extends JPanel {
     private class ConnectAction implements ActionListener {
 
         @Override
-        public void actionPerformed(ActionEvent e) {                
-            if(table.getSelectedRowFile().getStatus().equals("OFFLINE")){
-                JOptionPane.showMessageDialog(null, table.getSelectedRowFile().getUserChatProfileNickname()
-                        +" is OFFLINE","Error",JOptionPane.INFORMATION_MESSAGE);
-            }else{         
-                ConnectionID connection = table.getSelectedRowFile().getConnectionID();
-                if (connection != null) {
-                    ControllerConnection.setChatController(connection);
-                    (new ConnectToPeerAction(connection)).actionPerformed(e);
-                    (new ChatAction(connection, theController)).actionPerformed(e);
+        public void actionPerformed(ActionEvent e) {   
+            if(table.getSelectedRowFile() instanceof UserChatDTO){                
+                if(table.getSelectedRowFile().getStatus().equals("OFFLINE")){
+                    JOptionPane.showMessageDialog(null, table.getSelectedRowFile().getUserChatProfileNickname()
+                            +" is OFFLINE","Error",JOptionPane.INFORMATION_MESSAGE);
+                }else{         
+                    ConnectionID connection = table.getSelectedRowFile().getConnectionID();
+                    if (connection != null) {
+                        ControllerConnection.setChatController(connection);
+                        (new ConnectToPeerAction(connection)).actionPerformed(e);
+                        (new ChatAction(connection, theController)).actionPerformed(e);
+                    }
                 }
+            }else{
+                JOptionPane.showMessageDialog(null, "You must select a line!","Error",JOptionPane.ERROR_MESSAGE);
             }
         }
 

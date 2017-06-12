@@ -17,15 +17,15 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import lapr4.white.s1.core.n4567890.contacts.ExtensionSettings;
 
-abstract class CrmJpaRepositoryBase<T, K extends Serializable> extends JpaTxRepository<T, K> {
+public abstract class CrmJpaRepositoryBase<T, K extends Serializable> extends JpaTxRepository<T, K> {
 
     private ExtensionSettings settings=null;
-    
-    CrmJpaRepositoryBase(String persistenceUnitName) {
+
+    public CrmJpaRepositoryBase(String persistenceUnitName) {
         super(persistenceUnitName);
     }
 
-    CrmJpaRepositoryBase(ExtensionSettings settings) {
+    public CrmJpaRepositoryBase(ExtensionSettings settings) {
         super(settings.getPersistenceUnitName());
         this.settings=settings;
     }

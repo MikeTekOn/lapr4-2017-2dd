@@ -11,21 +11,31 @@ import csheets.ui.ext.UIExtension;
 
 /**
  * Represents an extension to support chat participants
- * 
+ *
  * @author Pedro Fernandes
  */
-public class ChatParticipantsExtension extends Extension{
-    
+public class ChatParticipantsExtension extends Extension {
+
     /**
      * The name of the extension
      */
     public static final String CHAT_NAME = "Chat Participants";
-
+    
+     /**
+     * The description of the extension
+     */
+    public static final String DESCRIPTION = "An extension to support chat participants.";
+    
+    /**
+     * The first version of the conditional style extension.
+     */
+    public static final int VERSION = 1;
+    
     /**
      * Creates a new Chat Extension
      */
     public ChatParticipantsExtension() {
-        super(CHAT_NAME);
+        super(CHAT_NAME,VERSION,DESCRIPTION);
     }
 
     /**
@@ -43,5 +53,14 @@ public class ChatParticipantsExtension extends Extension{
         }
         return ui;
     }
-    
+
+    @Override
+    public String metadata() {
+        return String.format("This is %s with version %d\n"
+                + "This extension has the follow description: %s\n"
+                + "This extension was made by Pedro Fernandes in Sprint 2 and it is in the package %s\n"
+                + "This Chat has participants but needs the Extension Chat",
+                getName(), getVersion(), getDescription(), getClass().getName());
+    }
+
 }
