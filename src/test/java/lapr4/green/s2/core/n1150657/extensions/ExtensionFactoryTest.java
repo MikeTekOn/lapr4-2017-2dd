@@ -68,11 +68,6 @@ public class ExtensionFactoryTest {
         Extension result = ExtensionFactory.getExtension(criteria1, criteria2);
         assertEquals(expResult.getName(), result.getName());
         
-        criteria2 = 2;
-        expResult = new ChatParticipantsExtension();
-        result = ExtensionFactory.getExtension(criteria1, criteria2);
-        assertEquals(expResult.getName(), result.getName());
-        
         criteria1 = StyleExtension.NAME;
         criteria2 = 1;
         expResult = new StyleExtension();
