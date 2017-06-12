@@ -118,9 +118,9 @@ protected ActionListener[] buttonListeners;
                     
                     try {
                         Workbook wb =findController.load(dto.getFilePath());
-                        
+                                 
                         RangeDialog j=new RangeDialog(findExtension, wb, tablePreview);
-                        if(previewController!=null)previewController.stopPreview();
+                        //if(previewController!=null)previewController.stopPreview();
                         
       
                   
