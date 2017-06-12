@@ -48,6 +48,9 @@ public class SearchPattern {
         if(!t.matches(PATTERN_EXTENSION)){
             return false;
         }
+        
+        if(filename.charAt(0)=='$')
+            return false;
        
         return true;
     }
