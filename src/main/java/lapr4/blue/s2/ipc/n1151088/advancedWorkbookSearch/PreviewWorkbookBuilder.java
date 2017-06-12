@@ -5,6 +5,7 @@ import csheets.core.IllegalValueTypeException;
 import csheets.core.Spreadsheet;
 import csheets.core.Workbook;
 import java.util.Iterator;
+import lapr4.green.s1.ipc.n1150800.importexportTXT.CellRange;
 import lapr4.white.s1.core.n4567890.contacts.ui.ContactDialog;
 
 /**
@@ -33,11 +34,13 @@ public class PreviewWorkbookBuilder{
     
     /**
      * Public method to call a private and recursive preview
+     * @param cellRange
+     * @param column
      * @return preview workbook
      * @throws IllegalValueTypeException workbook not filled
      */
-    public PreviewWorkbook previewWorkbook() throws IllegalValueTypeException{
-        return buildPreviewArea();
+    public PreviewWorkbook previewWorkbook(CellRange cellRange, boolean column) throws IllegalValueTypeException{
+        return buildPreviewArea(cellRange, column);
     }
     
   
@@ -46,7 +49,7 @@ public class PreviewWorkbookBuilder{
      * @return 
      * @throws csheets.core.IllegalValueTypeException 
      */
-    private PreviewWorkbook buildPreviewArea() throws IllegalValueTypeException{
+    private PreviewWorkbook buildPreviewArea(CellRange cellRange, boolean column) throws IllegalValueTypeException{
         int i;
         int nSheets=this.originalWorkbook.getSpreadsheetCount(), sheetAddedCount=0;
         Workbook workbookBuilded=new Workbook();
@@ -78,10 +81,6 @@ public class PreviewWorkbookBuilder{
        
     }
     
-    private void notityObservers(Object w){
-        
-    }   
-    
     /**
      * Build a matrix with the content of the first cells
      * @param spreadsheet spreadsheet searched
@@ -92,17 +91,16 @@ public class PreviewWorkbookBuilder{
         String[][] firstFilledContent= new String[DEFAULT_NUMBER_ROWS][DEFAULT_NUMBER_COLUMNS];
    
         //verifies the first row cells
-        for(row=0; row<spreadsheet.getRowCount(); row++){
+        for(row=0; row<spreadsheet.getRowCount()-1; row++){
             
             //verifies the first columns
-            for(column=0;column<spreadsheet.getColumnCount(); column++) {
+            for(column=0;column<spreadsheet.getColumnCount()-1; column++) {
                 try{                  
                     Cell cell=spreadsheet.getRow(row)[column];
                     
                     //verifies if it´s non-filled cell
                     if(cellIsFilled(cell)){
-                        
-                         
+    
                         if(cell.getValue()!=null)
                             firstFilledContent[contentRow][contentColumn]=cell.getValue().toString();
                         else
@@ -120,9 +118,7 @@ public class PreviewWorkbookBuilder{
                         if(contentRow==DEFAULT_NUMBER_ROWS-1 && contentColumn==DEFAULT_NUMBER_COLUMNS)
                             return firstFilledContent;
                         
-                        //FIXME think about update original document at moment
-                       // if(firstFilledCells[row][column].getCellListeners()!=null){                
-                    }      
+                       }      
                 }catch(IllegalArgumentException e) {}
             }
         }

@@ -68,7 +68,11 @@ public class Directory implements Runnable{
                 if (temp.isDirectory()) {
                     search(temp);
                 } else {
-                    if (isExtensionFile(temp.getName())) {
+                  
+                    SearchPattern sp=new SearchPattern(temp.getName());
+                    
+                    if (sp.acceptExp()) {
+                        
                         FileDTO dto = new FileDTO(temp.getName(), temp.getAbsolutePath());
                         FindWorkbooksPublisher.getInstance().notifyObservers(dto);
                     }

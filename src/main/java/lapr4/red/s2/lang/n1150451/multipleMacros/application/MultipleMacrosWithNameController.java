@@ -21,7 +21,6 @@ import lapr4.blue.s1.lang.n1151159.macros.compiler.MacroCompiler;
  */
 public class MultipleMacrosWithNameController extends MacroController {
 
-
     /**
      * Executes a given macro.
      *
@@ -42,7 +41,13 @@ public class MultipleMacrosWithNameController extends MacroController {
         }
         return macro.evaluate();
     }
-    public void emptyList(){
-        macroList=null;
+
+    /**
+     * Empties (nulls) the list. This method is used, before running a macro for
+     * the first time. This means that the list only exists during the macro
+     * runtime, and it can be used in other macro "runnings".
+     */
+    public void emptyList() {
+        macroList = null;
     }
 }
