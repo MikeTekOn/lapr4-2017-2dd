@@ -37,7 +37,8 @@ public class User implements Serializable {
     }
 
     /**
-     * @edit Miguel Silva (1150901) Sprint 2 - I've added the equals method
+     * EDIT:
+     * @author Miguel Silva (1150901) Sprint 2 - I've added the equals method
      * necessary for my user story.
      */
     @Override

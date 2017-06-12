@@ -40,12 +40,12 @@ public class WorkbookWithStylesHandlerTest {
     private StylableCell stylableCell2;
     private StylableCell stylableCell3;
     private StylableCell stylableCell4;
-/*    
+    
     @Before
     public void setUp() throws IOException, FormulaCompilationException {
         CleanSheets.setFlag(true);
         cleansheet = new CleanSheets();
-        //uiC = new UIController(cleansheet);
+        uiC = new UIController(cleansheet);
         workbook = new Workbook();
         workbook.addSpreadsheet();
         workbook.addSpreadsheet();
@@ -71,11 +71,11 @@ public class WorkbookWithStylesHandlerTest {
         stylableCell4 = (StylableCell) spreadsheet1.getCell(1, 0).getExtension(StyleExtension.NAME);
         stylableCell4.setContent("World");
     }
-*/
+
     /**
      * Test of getStylableCellsFromWorkbook method, of class WorkbookWithStylesHandler.
      */
- /*   @Test
+    @Test
     public void testGetStylableCellsFromWorkbook() {
         System.out.println("getStylableCellsFromWorkbook");
         WorkbookWithStylesHandler instance = new WorkbookWithStylesHandler(workbook);
@@ -129,11 +129,11 @@ public class WorkbookWithStylesHandlerTest {
         assertEquals(stylableCell4.getFont(), c4.getFont());
         assertEquals(stylableCell4.getHorizontalAlignment(), c4.getHorizontalAlignment());
     }
-*/
+
     /**
      * Test of getStylableCellsFrom method, of class WorkbookWithStylesHandler.
      */
- /*   @Test
+    @Test
     public void testGetStylableCellsFrom() {
         System.out.println("getStylableCellsFrom");
         WorkbookWithStylesHandler instance = new WorkbookWithStylesHandler(workbook);
@@ -149,29 +149,29 @@ public class WorkbookWithStylesHandlerTest {
         assertEquals(stylableCell1.getBackgroundColor(), c1.getBackgroundColor());
         assertEquals(stylableCell1.getForegroundColor(), c1.getForegroundColor());
     }
-*/
+
     /**
      * Test of getStylableCellsFromSpreadsheetWithinRange method, of class WorkbookWithStylesHandler.
      */
-//    @Test
-//    public void testGetStylableCellsFromSpreadsheetWithinRange() {
-//        System.out.println("getStylableCellsFromSpreadsheetWithinRange");
-//        String strRange = "A1:B1";
-//        uiC.setActiveSpreadsheet(spreadsheet2);
-//        ExportStylePDF ePDF = new ExportStylePDF();
-//        WorkbookWithStylesHandler instance = new WorkbookWithStylesHandler(workbook);
-//        List<StylableCell> cells = instance.getStylableCellsFromSpreadsheetWithinRange(spreadsheet2, strRange, uiC, ePDF);
-//        
-//        StylableCell c1 = null;
-//        for (StylableCell cell : cells) {
-//            if(cell.getAddress().equals(stylableCell1.getAddress())) {
-//                c1 = cell;
-//            }
-//        }
-//        
-//        assertEquals(stylableCell1.getBackgroundColor(), c1.getBackgroundColor());
-//        assertEquals(stylableCell1.getForegroundColor(), c1.getForegroundColor());
-//    }
+    @Test
+    public void testGetStylableCellsFromSpreadsheetWithinRange() {
+        System.out.println("getStylableCellsFromSpreadsheetWithinRange");
+        String strRange = "A1:B1";
+        uiC.setActiveSpreadsheet(spreadsheet2);
+        ExportStylePDF ePDF = new ExportStylePDF();
+        WorkbookWithStylesHandler instance = new WorkbookWithStylesHandler(workbook);
+        List<StylableCell> cells = instance.getStylableCellsFromSpreadsheetWithinRange(spreadsheet2, strRange, uiC, ePDF);
+        
+        StylableCell c1 = null;
+        for (StylableCell cell : cells) {
+            if(cell.getAddress().equals(stylableCell1.getAddress())) {
+                c1 = cell;
+            }
+        }
+        
+        assertEquals(stylableCell1.getBackgroundColor(), c1.getBackgroundColor());
+        assertEquals(stylableCell1.getForegroundColor(), c1.getForegroundColor());
+    }
     
     @After
     public void cleanUp() {
