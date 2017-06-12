@@ -1,4 +1,4 @@
-@startuml cd_user_chat_profile.png
+@startuml cd_chat_participants.png
 skinparam handwritten true
 skinparam monochrome true
 skinparam packageStyle rect
