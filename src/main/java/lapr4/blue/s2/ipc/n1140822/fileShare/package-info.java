@@ -121,9 +121,9 @@
  * Integration with the current networking structure was very harsh, there was a need to study this structure and respect the domain rules imposed by it, as such, when implementing this FI we tried to ensure these rules were enforced.
  * 
  * <h2>7. Final Remarks</h2>
- * Future possible changes and improvements: Total domain interaction as depicted in the CleanSheets API UC, improve reading method to allow method implementations on different lines.
+ * Future possible changes and improvements: Like depicted in the second FI. Progress bar, permanent downloads
  * <p>
- * As an extra this use case already allows for many scripts to run, and allows unprotected acess (for now) to domain objects.
+ * As an extra this use case already allows for downloads. It already tells the user if the file is up to date or outdated.
  * 
  * 
  * <h2>8. Work Log</h2> 
@@ -136,7 +136,7 @@
  * <p>
  * Today
  * <p>
- * 1. Analysis of the use case and cleansheets application.
+ * 1. Analysis of the use case
  * <p>
  * Blocking:
  * <p>
@@ -146,7 +146,7 @@
  * <p>
  * Yesterday I worked on: 
  * <p>
- * 1. Analysis of the use case and cleansheets application.
+ * 1. Analysis of the use case
  * <p>
  * Today
  * <p>

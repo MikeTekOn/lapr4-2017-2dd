@@ -1,2 +1,27 @@
 @startuml
+Client1->UI : start sharing
+UI -> UIAction1 : create()
+UIAction1 -> UIAction1 : fill list of shared files
+UIAction1-> CommUDPClient1 : create(list of files)
+CommUDPClient1 -> CommUDPServer2 : Broadcasts Available files
+Client2->UI2 : start sharing
+CommUDPServer2 ->CommUDPServer2 : Receives DTO
+CommUDPServer2-> FileNamesListDTOHandler :HandleDTO(dto)
+FileNamesListDTOHandler -> UI2 : notifyObservers() -> notifies UI class to fill the list
+UI2 -> UI2 : update(Observable o, DTO dto) -> updates the list of file names
+Client2 -> UI2 : Chooses a file
+UI2->FileShareController : requestFile(file name dto)
+FileShareController -> CommTCPClientsManager : requestFile(file name dto)
+CommTCPClientsManager -> CommTCPClientsManager : requestConnection(udp client info);
+CommTCPClientsManager -> CommTCPClientWorker : create(dto)
+CommTCPClientsManager ->CommTCPClientWorker : writeObject(dto)
+CommTCPServer2 -> CommTCPServer2 : read(dto)
+CommTCPServer2 -> HandlerFileNameDTO : handleDTO(dto)
+ HandlerFileNameDTO ->  HandlerFileNameDTO : searchFileByName(dto.getFileName())
+ HandlerFileNameDTO -> FileDTO: create(fileName,fileData)
+ HandlerFileNameDTO ->  HandlerFileNameDTO : out.writeObject(fileDTO)
+CommTCPClientWorker ->  CommTCPClientWorker : read(fileDTO)
+CommTCPClientWorker -> HandlerFileDTO : handleDTO(fileDTO)
+HandlerFileDTO -> HandlerFileDTO : reads file data and builds file
+HandlerFileDTO ->UI : notifyObservers() -> updates downloaded list on the UI
 @enduml

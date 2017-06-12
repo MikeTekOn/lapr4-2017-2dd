@@ -79,7 +79,7 @@ public class ShareAction extends BaseAction {
 
         ShareFrame frame = new ShareFrame(uiController);
         ((HandlerFileNameListDTO) CommUDPServer.getServer().getHandler(fileDTO.getClass())).addObserver(frame);
-         ((HandlerFileDTO) CommTCPClientsManager.getManager().getHandler(FileDTO.class)).addObserver(frame);
+        ((HandlerFileDTO) CommTCPClientsManager.getManager().getHandler(FileDTO.class)).addObserver(frame);
         CommUDPClient worker = new CommUDPClient(fileDTO, port, 55);
 
         worker.start();
@@ -88,13 +88,18 @@ public class ShareAction extends BaseAction {
 
     public static Map<String, Integer> fillListOfSharedfiles() throws IOException {
         Map<String, Integer> tempMap = new LinkedHashMap<>();
-        File folder = new File(ShareConfiguration.getSharedFolder());
-        folder.mkdirs();
-        File[] files = folder.listFiles();
-        for (File file : files) {
-            byte[] fileSize = Files.readAllBytes(file.toPath());
-            tempMap.put(file.getName(), fileSize.length);
+        try {
+            File folder = new File(ShareConfiguration.getSharedFolder());
+            folder.mkdirs();
+            File[] files = folder.listFiles();
+            for (File file : files) {
+                byte[] fileSize = Files.readAllBytes(file.toPath());
+                tempMap.put(file.getName(), fileSize.length);
+            }
+        } catch (Exception ex) {
+            return tempMap;
         }
         return tempMap;
     }
+
 }
