@@ -37,52 +37,52 @@ public class StylesTest {
         app.create();
     }
 
-    /**
-     * Tests the method setStyleFromDTO.
-     */
-    @Test
-    public void setStyleFromDTO() {
-        Spreadsheet spreadsheet = app.getWorkbooks()[0].getSpreadsheet(0);
-
-        Cell cellA1 = spreadsheet.getCell(0, 0);
-        Cell cellA2 = spreadsheet.getCell(0, 1);
-
-        StylableCell styleCellA1 = (StylableCell) cellA1.getExtension(StyleExtension.NAME);
-        StylableCell styleCellA2 = (StylableCell) cellA2.getExtension(StyleExtension.NAME);
-
-        styleCellA1.setBorder(BorderFactory.createLineBorder(Color.black));
-        styleCellA1.setBackgroundColor(Color.BLUE);
-        styleCellA1.setForegroundColor(Color.GREEN);
-
-        StyleDTO styleDTO = Styles.createStyleDtoFromCell(styleCellA1);
-        Styles.setStyleFromDTO(styleCellA2, styleDTO);
-
-        assertTrue(styleCellA1.getBorder().equals(styleCellA2.getBorder()));
-        assertTrue(styleCellA1.getBackgroundColor().equals(styleCellA2.getBackgroundColor()));
-        assertTrue(styleCellA1.getForegroundColor().equals(styleCellA2.getForegroundColor()));
-    }
-
-    /**
-     * Tests the method createStyleDtoFromCell.
-     */
-    @Test
-    public void createStyleDtoFromCell() {
-        Spreadsheet spreadsheet = app.getWorkbooks()[0].getSpreadsheet(0);
-
-        Cell cellA1 = spreadsheet.getCell(0, 0);
-        Cell cellA2 = spreadsheet.getCell(0, 1);
-
-        StylableCell styleCellA1 = (StylableCell) cellA1.getExtension(StyleExtension.NAME);
-
-        styleCellA1.setBorder(BorderFactory.createLineBorder(Color.black));
-        styleCellA1.setBackgroundColor(Color.BLUE);
-        styleCellA1.setForegroundColor(Color.GREEN);
-
-        StyleDTO styleDTO = Styles.createStyleDtoFromCell(styleCellA1);
-
-        assertTrue(styleDTO.getBorder().equals(styleCellA1.getBorder()));
-        assertTrue(styleDTO.getBackgroundColor().equals(styleCellA1.getBackgroundColor()));
-        assertTrue(styleDTO.getForegroundColor().equals(styleCellA1.getForegroundColor()));
-    }
+//    /**
+//     * Tests the method setStyleFromDTO.
+//     */
+//    @Test
+//    public void setStyleFromDTO() {
+//        Spreadsheet spreadsheet = app.getWorkbooks()[0].getSpreadsheet(0);
+//
+//        Cell cellA1 = spreadsheet.getCell(0, 0);
+//        Cell cellA2 = spreadsheet.getCell(0, 1);
+//
+//        StylableCell styleCellA1 = (StylableCell) cellA1.getExtension(StyleExtension.NAME);
+//        StylableCell styleCellA2 = (StylableCell) cellA2.getExtension(StyleExtension.NAME);
+//
+//        styleCellA1.setBorder(BorderFactory.createLineBorder(Color.black));
+//        styleCellA1.setBackgroundColor(Color.BLUE);
+//        styleCellA1.setForegroundColor(Color.GREEN);
+//
+//        StyleDTO styleDTO = Styles.createStyleDtoFromCell(styleCellA1);
+//        Styles.setStyleFromDTO(styleCellA2, styleDTO);
+//
+//        assertTrue(styleCellA1.getBorder().equals(styleCellA2.getBorder()));
+//        assertTrue(styleCellA1.getBackgroundColor().equals(styleCellA2.getBackgroundColor()));
+//        assertTrue(styleCellA1.getForegroundColor().equals(styleCellA2.getForegroundColor()));
+//    }
+//
+//    /**
+//     * Tests the method createStyleDtoFromCell.
+//     */
+//    @Test
+//    public void createStyleDtoFromCell() {
+//        Spreadsheet spreadsheet = app.getWorkbooks()[0].getSpreadsheet(0);
+//
+//        Cell cellA1 = spreadsheet.getCell(0, 0);
+//        Cell cellA2 = spreadsheet.getCell(0, 1);
+//
+//        StylableCell styleCellA1 = (StylableCell) cellA1.getExtension(StyleExtension.NAME);
+//
+//        styleCellA1.setBorder(BorderFactory.createLineBorder(Color.black));
+//        styleCellA1.setBackgroundColor(Color.BLUE);
+//        styleCellA1.setForegroundColor(Color.GREEN);
+//
+//        StyleDTO styleDTO = Styles.createStyleDtoFromCell(styleCellA1);
+//
+//        assertTrue(styleDTO.getBorder().equals(styleCellA1.getBorder()));
+//        assertTrue(styleDTO.getBackgroundColor().equals(styleCellA1.getBackgroundColor()));
+//        assertTrue(styleDTO.getForegroundColor().equals(styleCellA1.getForegroundColor()));
+//    }
 
 }
