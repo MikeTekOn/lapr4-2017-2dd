@@ -43,6 +43,8 @@ import csheets.ext.ExtensionManager;
 import csheets.ui.ext.UIExtension;
 import csheets.ui.sheet.CellTransferHandler;
 import java.io.File;
+
+import lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionEvent;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionStateListener;
 

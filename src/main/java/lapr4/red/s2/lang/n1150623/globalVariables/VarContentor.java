@@ -5,9 +5,7 @@ import lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable;
 import lapr4.blue.s1.lang.n1151452.formula.compiler.BlueFormulaBaseVisitor;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 
 /**
@@ -17,24 +15,22 @@ import java.util.Set;
 public class VarContentor extends BlueFormulaBaseVisitor<Expression> implements Serializable {
 
     /** The temporary variables that have been collected */
-    private Set<Variable> variables;
+    private List<Variable> variables;
 
 
     public VarContentor(){
-        variables = new HashSet<>();
+        variables = new ArrayList<>();
     }
 
-    public Set<Variable> variables(){
+    public List<Variable> variables(){
         return this.variables;
     }
 
     public Expression getExpressionOfVariable(String tempVarName){
-        Iterator it=variables.iterator();
-        Variable tempVar;
-        while(it.hasNext()){
-            tempVar=(Variable) it.next();
-            if (tempVar.getName().equalsIgnoreCase(tempVarName)) {
-                return tempVar.getExpression();
+
+        for(Variable v : variables){
+            if (v.getName().equalsIgnoreCase(tempVarName)) {
+                return v.getExpression();
             }
         }
         throw new IllegalArgumentException("Unknown temporary variable");

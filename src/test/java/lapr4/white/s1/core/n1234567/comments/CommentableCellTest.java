@@ -23,7 +23,6 @@ public class CommentableCellTest {
 	 * A method that tests the property hasComment.
 	 */
 	@Test public void testHasComment() {
-		
 		// create a workbook with 2 sheets
 		Workbook wb=new Workbook(2, null);
 		Spreadsheet s=wb.getSpreadsheet(0);
@@ -41,14 +40,13 @@ public class CommentableCellTest {
 
 		hasComment=cc.hasComment();
 		
-		assertTrue(hasComment);		
+		assertTrue(hasComment);	
 	}
 
 	/**
 	 * A method that tests the setter and getter of the user comment.
 	 */
 	@Test public void testSetGetUserComment() {
-		
 		// create a workbook with 2 sheets
 		Workbook wb=new Workbook(2, null);
 		Spreadsheet s=wb.getSpreadsheet(0);
@@ -60,7 +58,7 @@ public class CommentableCellTest {
 
 		cc.setUserComment("Hello");
 		
-		assertTrue("Hello".compareTo(cc.getUserComment())==0);		
+		assertTrue("Hello".compareTo(cc.getUserComment())==0);	
 	}
 	
 	/**
@@ -68,7 +66,6 @@ public class CommentableCellTest {
 	 * @see CommentableCellListener
 	 */	
 	@Test public void testCommentableCellListenner() {
-		
 		// create a workbook with 2 sheets
 		Workbook wb=new Workbook(2, null);
 		Spreadsheet s=wb.getSpreadsheet(0);
@@ -85,7 +82,7 @@ public class CommentableCellTest {
 		// modify the cell... this should create an event
 		cc.setUserComment("Hello");
 		
-		assertTrue(isNotified);		
+		assertTrue(isNotified);	
 	}
 
 	/**

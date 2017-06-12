@@ -125,7 +125,7 @@ public class ExtensionFactory {
             }
         } else if (criteria1.equals(ConditionalStyleExtension.NAME)) {
             if (criteria2 == version1) {
-                //return new ConditionalStyleExtension(uiControlle);
+                return new ConditionalStyleExtension();
             }
         } else if (criteria1.equals(NetAnalyzerExtension.NAME)) {
             if (criteria2 == version1) {

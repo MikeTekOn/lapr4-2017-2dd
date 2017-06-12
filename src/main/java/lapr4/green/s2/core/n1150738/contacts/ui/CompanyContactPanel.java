@@ -228,7 +228,6 @@ public class CompanyContactPanel extends JPanel implements ActionListener {
         if(index > -1){
             CompanyContact c;
             c = contactsModel.getElementAt(index);
-            System.out.println(c);
             eventsModel.clear();
             contactRelatedModel.clear();
             for (Event ev : controller.companyAgenda(c)) {
@@ -294,7 +293,6 @@ public class CompanyContactPanel extends JPanel implements ActionListener {
                 if (CompanyContactDialog.successResult()) {
                     c = CompanyContactDialog.contact();
                     // Update the model of the JList
-                    System.out.println("add to model");
                     contactsModel.addElement(c);
                 }
             }
@@ -363,7 +361,6 @@ public class CompanyContactPanel extends JPanel implements ActionListener {
                             }
                         }
                     }
-                    System.out.println(contactsModel);
                 } else {
 
                     for (CompanyContact con : contacts) {

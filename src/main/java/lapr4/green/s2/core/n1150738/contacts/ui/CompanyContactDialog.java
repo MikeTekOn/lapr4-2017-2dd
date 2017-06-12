@@ -229,7 +229,7 @@ public class CompanyContactDialog extends JDialog implements ActionListener {
                                 try(FileInputStream fis = new FileInputStream(new File(photo_path))){
                                     image = IOUtils.toByteArray(fis);
                                 } catch (IOException ex){
-                                    Logger.getLogger(CompanyContactDialog.class.getName()).log(Level.SEVERE, "Cannot read file", ex);
+                                    Logger.getLogger(CompanyContactDialog.class.getName()).log(Level.FINEST, "Cannot read image file", ex);
                                 }
                             }
 

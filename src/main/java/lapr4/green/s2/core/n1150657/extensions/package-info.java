@@ -73,11 +73,11 @@
  *  
  * <p>
  * <img src="auto_description_extensions_design1.png" alt="image">
- * <p>
+ * </p>
  * 
  * <p>
  * <img src="auto_description_extensions_design2.png" alt="image">
- * <p>
+ * </p>
  *
  * <h2>5. Code</h2>
  * 
