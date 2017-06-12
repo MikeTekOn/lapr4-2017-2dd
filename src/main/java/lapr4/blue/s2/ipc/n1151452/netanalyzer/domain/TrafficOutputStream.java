@@ -22,9 +22,8 @@ import java.util.concurrent.Executors;
  * @author Daniel Gonçalves [1151452@isep.ipp.pt]
  *         on 09/06/17.
  */
-public class TrafficOutputStream extends OutputStream {
+public class TrafficOutputStream extends ObjectOutputStream {
 
-    private ObjectOutputStream stream;
     private boolean isSecured;
 
     private final ExecutorService publisherPool;
@@ -41,9 +40,10 @@ public class TrafficOutputStream extends OutputStream {
      * @throws IOException I/O exception
      */
     public TrafficOutputStream(OutputStream out, InetAddress ipAddress, int tcpPort, TransmissionStrategy strategy) throws IOException {
-        super();
+        super(out);
+        this.flush();
 
-        stream = (strategy == null) ? new OpenTransmission().stream(out) : strategy.stream(out);
+//        stream = (strategy == null) ? new OpenTransmission().stream(out) : strategy.stream(out);
         isSecured = strategy != null && strategy.isSecured();
 
         address = ipAddress;
@@ -61,16 +61,16 @@ public class TrafficOutputStream extends OutputStream {
      * @throws IOException            I/O Exception
      * @throws ClassNotFoundException Class not found
      */
-    public void writeObject(Object object) throws IOException, ClassNotFoundException {
+    public void write(Object object) throws IOException {
 
-        stream.writeObject(object);
+        super.writeObject(object);
         publishTraffic(CustomUtil.length(object), isSecured);
     }
 
     @Override
     public void write(int b) throws IOException {
 
-        stream.write(b);
+        super.write(b);
         publishTraffic(CustomUtil.length(b), isSecured);
     }
 

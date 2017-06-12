@@ -9,6 +9,7 @@ import lapr4.blue.s2.ipc.n1151452.netanalyzer.util.CustomUtil;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.io.StreamCorruptedException;
 import java.net.InetAddress;
 import java.util.HashSet;
 import java.util.Observer;
@@ -22,9 +23,8 @@ import java.util.concurrent.Executors;
  * @author Daniel Gonçalves [1151452@isep.ipp.pt]
  *         on 09/06/17.
  */
-public class TrafficInputStream extends InputStream {
+public class TrafficInputStream extends ObjectInputStream {
 
-    private ObjectInputStream stream;
     private boolean isSecured;
 
     private final ExecutorService publisherPool;
@@ -41,9 +41,11 @@ public class TrafficInputStream extends InputStream {
      * @throws IOException I/O exception
      */
     public TrafficInputStream(InputStream in, InetAddress ipAddress, int tcpPort, TransmissionStrategy strategy) throws IOException {
-        super();
+        super(in);
+        this.
 
-        stream = (strategy == null) ? new OpenTransmission().stream(in) : strategy.stream(in);
+//        stream = (strategy == null) ? new OpenTransmission().stream(in) : strategy.stream(in);
+
         isSecured = strategy != null && strategy.isSecured();
 
         address = ipAddress;
@@ -62,9 +64,9 @@ public class TrafficInputStream extends InputStream {
      * @throws IOException            I/O Exception
      * @throws ClassNotFoundException Class not found
      */
-    public Object readObject() throws IOException, ClassNotFoundException {
+    public Object readObjectOvveride() throws IOException, ClassNotFoundException {
 
-        Object obj = stream.readObject();
+        Object obj = super.readObject();
 
         publishTraffic(CustomUtil.length(obj), isSecured);
 
@@ -73,7 +75,7 @@ public class TrafficInputStream extends InputStream {
 
     @Override
     public int read() throws IOException {
-        int integer = stream.read();
+        int integer = super.read();
 
         publishTraffic(CustomUtil.length(integer), isSecured);
 

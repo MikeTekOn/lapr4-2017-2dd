@@ -6,7 +6,6 @@
 package lapr4.green.s1.ipc.n1150901.search.workbook;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Observable;
 import java.util.logging.Level;
@@ -43,9 +42,9 @@ public class HandlerRequestWorkbookDTO extends Observable implements CommHandler
         ResponseWorkbookDTO reply = new ResponseWorkbookDTO(request.getWorkbookName());
 
         try {
-            outStream.writeObject(reply);
+            outStream.write(reply);
             outStream.flush();
-        } catch (IOException|ClassNotFoundException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(HandlerRequestWorkbookDTO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

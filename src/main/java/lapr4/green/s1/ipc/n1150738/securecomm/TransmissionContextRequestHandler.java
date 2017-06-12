@@ -7,7 +7,6 @@ import lapr4.green.s1.ipc.n1150738.securecomm.trash.IllegalDataTransmissionConte
 import lapr4.green.s1.ipc.n1150738.securecomm.trash.SwitchDataTransmissionContextEvent;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,10 +40,10 @@ public class TransmissionContextRequestHandler extends Observable implements Com
         }
 
         try {
-            outStream.writeObject(response);
+            outStream.write(response);
             setChanged();
             notifyObservers(event);
-        } catch (IOException | ClassNotFoundException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(TransmissionContextRequestHandler.class.getName()).log(Level.FINEST, "Cannot send response", ex);
         }
     }

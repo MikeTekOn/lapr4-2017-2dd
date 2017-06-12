@@ -1,7 +1,6 @@
 package lapr4.green.s1.ipc.n1150532.comm.connection;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.InetAddress;
 import java.util.Observable;
@@ -45,8 +44,8 @@ public class HandlerConnectionRequestDTO extends Observable implements CommHandl
 
         ConnectionResponseDTO reply = new ConnectionResponseDTO(true, request.getServerIPAddress(), request.getServerPortNumber());
         try {
-            outStream.writeObject(reply);
-        } catch (IOException |ClassNotFoundException ex) {
+            outStream.write(reply);
+        } catch (IOException ex) {
             Logger.getLogger(HandlerConnectionRequestDTO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

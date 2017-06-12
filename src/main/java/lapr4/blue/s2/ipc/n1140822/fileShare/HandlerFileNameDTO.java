@@ -8,7 +8,6 @@ package lapr4.blue.s2.ipc.n1140822.fileShare;
 import csheets.CleanSheets;
 import java.io.File;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.util.logging.Level;
@@ -35,8 +34,8 @@ public class HandlerFileNameDTO implements CommHandler , Serializable {
             byte[]fileData;
             fileData= Files.readAllBytes(fileToSend.toPath());
             FileDTO fileDTO = new FileDTO(nameDTO.fileName, fileData.length, fileData);
-            outStream.writeObject(fileDTO);
-        } catch (IOException | ClassNotFoundException ex) {
+            outStream.write(fileDTO);
+        } catch (IOException ex) {
             Logger.getLogger(HandlerFileNameDTO.class.getName()).log(Level.SEVERE, null, ex);
         }
          Logger.getLogger(HandlerFileNameListDTO.class.getName()).log(Level.INFO, nameDTO.fileName + "-----------"+CleanSheets.getString("received_object"), dto.getClass().toString());

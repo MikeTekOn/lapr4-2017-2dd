@@ -2,14 +2,10 @@ package lapr4.green.s1.ipc.n1150532.comm;
 
 import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficInputStream;
 import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
-import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.transmission.AESEncryptedTransmission;
 import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.transmission.OpenTransmission;
 import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.transmission.TransmissionStrategy;
-import lapr4.green.s1.ipc.n1150738.securecomm.BasicDataTransmissionContext;
-import lapr4.green.s1.ipc.n1150738.securecomm.DataTransmissionContext;
 
 import java.io.*;
-import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketException;
@@ -17,9 +13,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import lapr4.green.s1.ipc.n1150532.comm.connection.SocketEncapsulatorDTO;
-import lapr4.green.s1.ipc.n1150738.securecomm.SecureAESDataTransmissionContext;
-import lapr4.green.s1.ipc.n1150738.securecomm.trash.streams.NonClosingInputStreamWrapper;
-import lapr4.green.s1.ipc.n1150738.securecomm.trash.streams.NonClosingOutputStreamWrapper;
 
 /**
  * A TCP server dedicated to one specific client.
@@ -67,15 +60,18 @@ public class CommTCPServerWorker extends Thread {
             socketOut = socket.getOutputStream();
             socketIn = socket.getInputStream();
 
-            int transmission = socketIn.read();
+//            socketIn.mark(0);
+//
+//            int transmission = socketIn.read();
+//            socketIn.reset();
 
-            if (transmission > 0) {
-                transmissionContext = new AESEncryptedTransmission();
-            } else {
+//            if (transmission > 0) {
+//                transmissionContext = new AESEncryptedTransmission();
+//            } else {
                 transmissionContext = new OpenTransmission();
-            }
+//            }
 
-            outStream = new TrafficOutputStream(socketOut, theSocket.getInetAddress(), theSocket.getPort(), transmissionContext);
+//            outStream = new TrafficOutputStream(new ObjectOutputStream(socketOut), theSocket.getInetAddress(), theSocket.getPort(), transmissionContext);
 //            inStream = new TrafficInputStream(socketIn, theSocket.getInetAddress(), theSocket.getPort(), strategy);
 
         } catch (IOException e) {
@@ -91,10 +87,10 @@ public class CommTCPServerWorker extends Thread {
     @Override
     public void run() {
         try {
-            outStream = new TrafficOutputStream(socketOut, socket.getInetAddress(), socket.getPort(), transmissionContext);
-            inStream = new TrafficInputStream(socketIn, socket.getInetAddress(), socket.getPort(), transmissionContext);
+            outStream = new TrafficOutputStream(socket.getOutputStream(), socket.getInetAddress(), socket.getPort(), transmissionContext);
+            inStream = new TrafficInputStream(socket.getInputStream(), socket.getInetAddress(), socket.getPort(), transmissionContext);
             while (true) {
-                Object dto = inStream.readObject();
+                Object dto = inStream.readObjectOvveride();
                 processIncommingDTO(dto);
             }
         } catch (SocketException ex) {

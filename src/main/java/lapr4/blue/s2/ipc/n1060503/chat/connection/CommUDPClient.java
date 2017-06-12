@@ -5,16 +5,13 @@
  */
 package lapr4.blue.s2.ipc.n1060503.chat.connection;
 
-import lapr4.blue.s2.ipc.n1140822.fileShare.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.Map;
@@ -135,7 +132,7 @@ public class CommUDPClient extends Thread implements Observer {
                 sock.setBroadcast(true);
                 bos = new ByteArrayOutputStream();
                 out = new TrafficOutputStream(bos, InetAddress.getLocalHost(), portNumber, new OpenTransmission());
-                out.writeObject(dto);
+                out.write(dto);
                 byte[] data = bos.toByteArray();
                 DatagramPacket udpPacket = new DatagramPacket(data, data.length, InetAddress.getByName(BROADCAST_ADDRESS), portNumber);
                 sock.send(udpPacket);
@@ -144,7 +141,7 @@ public class CommUDPClient extends Thread implements Observer {
             }
         } catch (SocketTimeoutException ex) {
             // There are no more replies, the client should finish its execution
-        } catch (IOException | ClassNotFoundException | InterruptedException ex) {
+        } catch (IOException | InterruptedException ex) {
             Logger.getLogger(CommUDPClient.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             terminateExecution();

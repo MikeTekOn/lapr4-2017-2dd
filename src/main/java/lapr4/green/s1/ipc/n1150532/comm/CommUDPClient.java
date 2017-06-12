@@ -8,7 +8,6 @@ import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.Map;
@@ -124,7 +123,7 @@ public class CommUDPClient extends Thread {
             sock.setBroadcast(true);
             bos = new ByteArrayOutputStream();
             out = new TrafficOutputStream(bos, InetAddress.getLocalHost(), portNumber, new OpenTransmission());
-            out.writeObject(dto);
+            out.write(dto);
             byte[] data = bos.toByteArray();
             DatagramPacket udpPacket = new DatagramPacket(data, data.length, InetAddress.getByName(BROADCAST_ADDRESS), portNumber);
             sock.send(udpPacket);
@@ -135,7 +134,7 @@ public class CommUDPClient extends Thread {
                 sock.receive(udpPacket);
                 bis = new ByteArrayInputStream(data);
                 in = new TrafficInputStream(bis, udpPacket.getAddress(), portNumber, new OpenTransmission());
-                processIncommingDTO(in.readObject(), udpPacket);
+                processIncommingDTO(in.readObjectOvveride(), udpPacket);
             }
         } catch (SocketTimeoutException ex) {
             // There are no more replies, the client should finish its execution

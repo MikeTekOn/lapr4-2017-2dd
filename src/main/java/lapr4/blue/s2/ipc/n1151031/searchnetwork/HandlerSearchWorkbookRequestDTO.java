@@ -4,7 +4,6 @@ import csheets.core.Spreadsheet;
 import csheets.core.Workbook;
 import csheets.ui.ctrl.UIController;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,9 +71,9 @@ public class HandlerSearchWorkbookRequestDTO implements CommHandler, Serializabl
 
         SearchWorkbookResponseDTO reply = new SearchWorkbookResponseDTO(results);
         try {
-            outStream.writeObject(reply);
+            outStream.write(reply);
             outStream.flush();
-        } catch (IOException| ClassNotFoundException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(HandlerConnectionDetailsRequestDTO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

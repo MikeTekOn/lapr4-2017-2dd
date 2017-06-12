@@ -1,7 +1,6 @@
 package lapr4.green.s1.ipc.n1150532.comm.connection;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,9 +35,9 @@ public class HandlerConnectionDetailsRequestDTO implements CommHandler, Serializ
         lastReceivedDTO = dto;
         ConnectionDetailsResponseDTO reply = new ConnectionDetailsResponseDTO(null, CommTCPServer.getServer().provideConnectionPort());
         try {
-            outStream.writeObject(reply);
+            outStream.write(reply);
             outStream.flush();
-        } catch (IOException | ClassNotFoundException ex) {
+        } catch (IOException ex) {
             Logger.getLogger(HandlerConnectionDetailsRequestDTO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

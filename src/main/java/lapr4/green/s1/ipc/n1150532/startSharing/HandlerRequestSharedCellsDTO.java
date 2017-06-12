@@ -9,7 +9,6 @@ import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionIDImpl;
 import lapr4.green.s1.ipc.n1150532.comm.connection.SocketEncapsulatorDTO;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.Observable;
 import java.util.logging.Level;
@@ -48,8 +47,8 @@ public class HandlerRequestSharedCellsDTO extends Observable implements CommHand
         notifyObservers(new SharedCellsEvent(request.getSpreadsheetName(), request.getCells(), connection));
         ResponseSharedCellsDTO reply = new ResponseSharedCellsDTO(request.getSpreadsheetName(), request.getAddress1(), request.getAddress2(), ResponseSharedCellsDTO.SharedCellsStatusResponse.OK);
         try {
-            outStream.writeObject(reply);
-        } catch (IOException| ClassNotFoundException ex) {
+            outStream.write(reply);
+        } catch (IOException ex) {
             Logger.getLogger(HandlerRequestSharedCellsDTO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

@@ -1,7 +1,6 @@
 package lapr4.green.s1.ipc.n1150532.comm;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,8 +33,8 @@ public class EchoUDPServerHandler implements CommHandler {
         lastReceivedDTO = encapsulator.getDTO();
         EchoDTO reply = new EchoDTO(((EchoDTO) encapsulator.getDTO()).getAnswer(), null);
         try {
-            outStream.writeObject(reply);
-        } catch (IOException| ClassNotFoundException ex) {
+            outStream.write(reply);
+        } catch (IOException ex) {
             Logger.getLogger(EchoTCPServerHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

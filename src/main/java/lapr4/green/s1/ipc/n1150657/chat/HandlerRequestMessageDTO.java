@@ -6,7 +6,6 @@
 package lapr4.green.s1.ipc.n1150657.chat;
 
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,8 +43,8 @@ public class HandlerRequestMessageDTO extends Observable implements CommHandler 
         notifyObservers(new MessageEvent(request.sendMessage(), receivedDTO.getSocket()));
         ResponseMessageDTO reply = new ResponseMessageDTO(request.sendMessage());
         try {
-            outStream.writeObject(reply);
-        } catch (IOException | ClassNotFoundException ex) {
+            outStream.write(reply);
+        } catch (IOException ex) {
             Logger.getLogger(RequestMessageDTO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

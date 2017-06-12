@@ -136,7 +136,7 @@ public class CommUDPServer extends Thread {
                 in = new TrafficInputStream(bis, InetAddress.getLocalHost(), socket.getLocalPort(), new OpenTransmission());
                 bos = new ByteArrayOutputStream();
                 out = new TrafficOutputStream(bos, InetAddress.getLocalHost(), socket.getLocalPort(), new OpenTransmission());
-                Object obj = in.readObject();
+                Object obj = in.readObjectOvveride();
                 processIncommingDTO(obj, udpPacket);
                 data = bos.toByteArray();
                 udpPacket.setData(data);

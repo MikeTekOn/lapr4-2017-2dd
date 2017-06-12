@@ -10,6 +10,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 /**
  * Represents a AES encrypted transmission
