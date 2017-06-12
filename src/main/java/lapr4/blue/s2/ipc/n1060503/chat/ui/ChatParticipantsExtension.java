@@ -5,24 +5,37 @@
  */
 package lapr4.blue.s2.ipc.n1060503.chat.ui;
 
+import csheets.ext.Extension;
 import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.UIExtension;
-import lapr4.green.s1.ipc.n1150657.chat.ext.ChatExtension;
 
 /**
  * Represents an extension to support chat participants
  *
  * @author Pedro Fernandes
  */
-public class ChatParticipantsExtension extends ChatExtension {
+public class ChatParticipantsExtension extends Extension {
 
+    /**
+     * The name of the extension
+     */
+    public static final String CHAT_NAME = "Chat Participants";
+    
+     /**
+     * The description of the extension
+     */
+    public static final String DESCRIPTION = "An extension to support chat participants.";
+    
+    /**
+     * The first version of the conditional style extension.
+     */
+    public static final int VERSION = 1;
+    
     /**
      * Creates a new Chat Extension
      */
     public ChatParticipantsExtension() {
-        super();
-        //set's to the next version
-        setVersion(super.getVersion() + 1);
+        super(CHAT_NAME,VERSION,DESCRIPTION);
     }
 
     /**
@@ -46,7 +59,7 @@ public class ChatParticipantsExtension extends ChatExtension {
         return String.format("This is %s with version %d\n"
                 + "This extension has the follow description: %s\n"
                 + "This extension was made by Pedro Fernandes in Sprint 2 and it is in the package %s\n"
-                + "This Chat has participants",
+                + "This Chat has participants but needs the Extension Chat",
                 getName(), getVersion(), getDescription(), getClass().getName());
     }
 
