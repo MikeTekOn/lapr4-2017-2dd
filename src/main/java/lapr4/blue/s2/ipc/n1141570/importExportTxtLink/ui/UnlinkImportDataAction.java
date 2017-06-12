@@ -48,16 +48,18 @@ public class UnlinkImportDataAction extends BaseAction {
         if (ReaderThread.obtainsThreadId() != -1) {
 
             Set<Thread> setOfThread = Thread.getAllStackTraces().keySet();
-
+            boolean flag = true;
             //Iterate over set to find thread i want to stop
             for (Thread thread : setOfThread) {
                 int id = (int) thread.getId();
                 if (id == ReaderThread.obtainsThreadId()) {
                     ReaderThread.kill();
-                    System.out.println("Unlink stopped!\n");
                     JOptionPane.showMessageDialog(null, "Now import is Unlinked!.");
+                    flag = false;
                 }
-                System.out.printf("Id da thread a comparar: %d\n", id);
+            }
+            if (flag) {
+                JOptionPane.showMessageDialog(null, "The import unlink didnt work!", "Unlinking Error", JOptionPane.ERROR_MESSAGE);
             }
         } else if (ReaderThread.obtainsThreadId() == -1) {
             JOptionPane.showMessageDialog(null, "First you need to import data txt!", "Unlinking Error", JOptionPane.ERROR_MESSAGE);

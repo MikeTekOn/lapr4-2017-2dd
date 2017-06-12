@@ -165,7 +165,7 @@ public class CommentableCell extends CellExtension {
 	/**
 	 * Notifies all registered listeners that the cell's comment's history changed.
 	 */
-	protected void fireHistoryChanged() {
+	public void fireHistoryChanged() {
 		for (CommentsWithHistoryListener listener : historyListeners)
 			listener.historyChanged(this);
 	}
