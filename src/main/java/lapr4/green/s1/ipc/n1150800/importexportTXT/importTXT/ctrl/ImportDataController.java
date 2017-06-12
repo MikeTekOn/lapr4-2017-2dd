@@ -15,6 +15,7 @@ import lapr4.green.s1.ipc.n1150800.importexportTXT.FileData;
 
 import java.io.File;
 import java.io.IOException;
+import javax.swing.JOptionPane;
 import lapr4.blue.s2.ipc.n1141570.importExportTxtLink.ctrl.LinkTxtImportController;
 
 /**
@@ -78,6 +79,8 @@ public class ImportDataController implements Controller {
         CellDTO cellList[][] = fileToRead.getFileData(activeSpreadsheet);
 
         fileToRead.fillCells(cellList);
+        
+        JOptionPane.showMessageDialog(null, "Import and its link succeded!");
 
     }
 }

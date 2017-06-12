@@ -14,6 +14,7 @@ import lapr4.green.s1.ipc.n1150800.importexportTXT.FileData;
 
 import java.io.File;
 import java.io.IOException;
+import javax.swing.JOptionPane;
 import lapr4.blue.s2.ipc.n1141570.importExportTxtLink.ctrl.LinkTxtExportController;
 
 /**
@@ -75,5 +76,7 @@ public class ExportDataController implements Controller {
         CellDTO cellList[][] = fileToWrite.getCellsFromRange(activeSpreadsheet);
 
         fileToWrite.setToFile(cellList);
+        
+        JOptionPane.showMessageDialog(null, "Export and its link succeded!");
     }
 }
