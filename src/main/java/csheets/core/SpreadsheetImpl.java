@@ -75,7 +75,7 @@ public class SpreadsheetImpl implements Spreadsheet {
 	private transient Map<String, SpreadsheetExtension> extensions = 
 		new HashMap<String, SpreadsheetExtension>();
 
-	private UIController uiController;
+	private transient UIController uiController;
 
         /**
 	 * Creates a new spreadsheet.

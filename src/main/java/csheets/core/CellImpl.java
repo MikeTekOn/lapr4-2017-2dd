@@ -72,7 +72,7 @@ public class CellImpl implements Cell {
 	/** The cell's dependents */
 	private SortedSet<Cell> dependents = new TreeSet<Cell>();
 
-	private UIController uiController;
+	private transient UIController uiController;
 
 	/** The cell listeners that have been registered on the cell */
 	private transient List<CellListener> listeners
