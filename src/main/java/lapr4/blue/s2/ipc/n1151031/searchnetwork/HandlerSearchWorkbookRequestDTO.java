@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
 import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
 import lapr4.green.s1.ipc.n1150532.comm.connection.HandlerConnectionDetailsRequestDTO;
 import lapr4.green.s1.ipc.n1150532.comm.connection.PacketEncapsulatorDTO;
@@ -42,7 +44,7 @@ public class HandlerSearchWorkbookRequestDTO implements CommHandler, Serializabl
      * @param outStream The output stream to write the reply.
      */
     @Override
-    public void handleDTO(Object dto, ObjectOutputStream outStream) {
+    public void handleDTO(Object dto, TrafficOutputStream outStream) {
         lastReceivedDTO = dto;
 
         PacketEncapsulatorDTO encapsulator = (PacketEncapsulatorDTO) dto;
@@ -72,7 +74,7 @@ public class HandlerSearchWorkbookRequestDTO implements CommHandler, Serializabl
         try {
             outStream.writeObject(reply);
             outStream.flush();
-        } catch (IOException ex) {
+        } catch (IOException| ClassNotFoundException ex) {
             Logger.getLogger(HandlerConnectionDetailsRequestDTO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

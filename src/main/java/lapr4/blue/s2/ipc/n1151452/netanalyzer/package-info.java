@@ -1,5 +1,5 @@
  /**
- * Technical documentation regarding the user story Lang01.1: Block of Instructions.
+ * Technical documentation regarding the user story IPC06.2 Network Analyzer.
  * <p>
  * <b>JIRA ISSUE: LAPR4E17DD-91</b><p>
  * <b>Scrum Master: yes</b><p>
@@ -107,6 +107,25 @@
  *      <p>
  *      <img src="transmission_strategy.png" alt="Transmission Strategy"><p>
  * <p>
+  - <b>3.1.1. conversion to readable byte units</b><p>
+  * <ol>
+  *     <li>To convert the bytes when necessary I developed a byte to string formatter how reads a byte count (Long) and depending on
+  *     the size it will return a more readable number with the appropriated unit (ex. B, kB, MB ...)
+  *     <pre>
+  *      {@code
+  *          public static String readableByteCount(long bytes, boolean si) {
+
+                 int unit = si ? 1000 : 1024;
+                 if (bytes < unit) return bytes + " B";
+                 int exp = (int) (Math.log(bytes) / Math.log(unit));
+                 String pre = (si ? "kMGTPE" : "KMGTPE").charAt(exp - 1) + (si ? "" : "i");
+
+                return String.format("%.1f %sB", (bytes / Math.pow(unit, exp)), pre);
+             }
+  *      }
+  *      </pre>
+  * </ol>
+  * <p>
  * <p>
  * <h3>3.2.3. Domain Model (<i>Excerpt</i>)</h3>
  * <p>
@@ -177,7 +196,25 @@
   * </ul>
  * </li>
  * </ol><p>
- * <h3>4.2. Acceptance Tests</h3>
+  * <h3>4.2. Acceptance Tests</h3>
+  * <p><ol>
+  * <li>EnsureTrafficLoggerSendLogToListener
+  * <ol>
+  *  <li>Simulate a traffic event by reading an object through a TrafficInputStream</li>
+  *  <li>Simulate a traffic event by writing an object through a TrafficOutputStream</li>
+  *  <li>Verify if test subscriber received the event.</li>
+  * </ol>
+  * </li>
+  * <li>EnsureTrafficCounterSendCountToListener
+  * <ol>
+  *  <li>Simulate a traffic event by reading an object through a TrafficInputStream</li>
+  *  <li>Simulate a traffic event by writing an object through a TrafficOutputStream</li>
+  *  <li>Verify if test subscriber received the event.</li>
+  * </ol>
+  * </li>
+  * </ol>
+  * <p>
+ * <h3>4.3. Functional Tests</h3>
   * <p><ol>
   * <li>EnsureTrafficIsPlottedInGraph
   * <ol>
@@ -210,16 +247,18 @@
  * <h3>5.5. Design Patterns and Best Practices</h3>
  * <p><ol>
   * <li>I used the <b>decorator pattern</b> to build the traffic input/output streams.</li>
-  * <li>We used the <b>strategy pattern</b> to abstract the secure/unsecure transmission responsibility.</li>
+  * <li>I used the singleton pattern to build the watchdogs (<b>carefully thought, before deciding to use a singleton</b>).</li>
+  * <li>We used the <b>strategy pattern</b> to abstract the secure/unsecured transmission responsibility.</li>
  * </ol>
  * <p>
  * <h2>6. Integration/Demonstration</h2>
  * <p>
- * <p>
- *
+ * This FI was transverse to all IPC FI, because we had to change every output/input stream to use our custom stream, which sends
+  * traffic messages.
  * <p>
  * <h2>7. Final Remarks</h2>
  * <p>
+  *
  * <br>
  * <h2>8. Work Log</h2>
  * <p>

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
 import lapr4.green.s1.ipc.n1150532.comm.connection.PacketEncapsulatorDTO;
 
 /**
@@ -27,13 +29,13 @@ public class EchoUDPServerHandler implements CommHandler {
      * @param outStream The output in which to write the reply.
      */
     @Override
-    public void handleDTO(Object dto, ObjectOutputStream outStream) {
+    public void handleDTO(Object dto, TrafficOutputStream outStream) {
         PacketEncapsulatorDTO encapsulator = (PacketEncapsulatorDTO) dto;
         lastReceivedDTO = encapsulator.getDTO();
         EchoDTO reply = new EchoDTO(((EchoDTO) encapsulator.getDTO()).getAnswer(), null);
         try {
             outStream.writeObject(reply);
-        } catch (IOException ex) {
+        } catch (IOException| ClassNotFoundException ex) {
             Logger.getLogger(EchoTCPServerHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

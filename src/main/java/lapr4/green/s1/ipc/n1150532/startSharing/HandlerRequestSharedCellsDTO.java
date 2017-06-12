@@ -2,6 +2,7 @@ package lapr4.green.s1.ipc.n1150532.startSharing;
 
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.RequestSharedCellsDTO;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.ResponseSharedCellsDTO;
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
 import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionIDImpl;
@@ -35,7 +36,7 @@ public class HandlerRequestSharedCellsDTO extends Observable implements CommHand
      * @param outStream The output stream in which to write the reply.
      */
     @Override
-    public void handleDTO(Object dto, ObjectOutputStream outStream) {
+    public void handleDTO(Object dto, TrafficOutputStream outStream) {
         SocketEncapsulatorDTO receivedDTO = (SocketEncapsulatorDTO) dto;
         RequestSharedCellsDTO request = (RequestSharedCellsDTO) receivedDTO.getDTO();
         lastReceivedDTO = request;
@@ -48,7 +49,7 @@ public class HandlerRequestSharedCellsDTO extends Observable implements CommHand
         ResponseSharedCellsDTO reply = new ResponseSharedCellsDTO(request.getSpreadsheetName(), request.getAddress1(), request.getAddress2(), ResponseSharedCellsDTO.SharedCellsStatusResponse.OK);
         try {
             outStream.writeObject(reply);
-        } catch (IOException ex) {
+        } catch (IOException| ClassNotFoundException ex) {
             Logger.getLogger(HandlerRequestSharedCellsDTO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

@@ -8,7 +8,7 @@ import java.io.*;
  * @author Daniel Gonçalves [1151452@isep.ipp.pt]
  *         on 09/06/17.
  */
-public class OpenTransmission implements TransmissionStrategy {
+public class OpenTransmission implements TransmissionStrategy, Serializable {
 
     @Override
     public ObjectInputStream stream(InputStream in) throws IOException {

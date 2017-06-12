@@ -14,6 +14,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficInputStream;
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.transmission.OpenTransmission;
 import lapr4.green.s1.ipc.n1150532.comm.connection.PacketEncapsulatorDTO;
 
 /**
@@ -41,7 +45,7 @@ public class CommUDPClient extends Thread {
     /**
      * An output stream to write objects to a byte array output stream.
      */
-    private ObjectOutputStream out = null;
+    private TrafficOutputStream out = null;
 
     /**
      * An input stream to read bytes from a byte array.
@@ -51,7 +55,7 @@ public class CommUDPClient extends Thread {
     /**
      * An input stream to read objects from a byte array input stream.
      */
-    private ObjectInputStream in = null;
+    private TrafficInputStream in = null;
 
     /**
      * The port number in which to send the broadcast.
@@ -119,7 +123,7 @@ public class CommUDPClient extends Thread {
             sock = new DatagramSocket();
             sock.setBroadcast(true);
             bos = new ByteArrayOutputStream();
-            out = new ObjectOutputStream(bos);
+            out = new TrafficOutputStream(bos, InetAddress.getLocalHost(), portNumber, new OpenTransmission());
             out.writeObject(dto);
             byte[] data = bos.toByteArray();
             DatagramPacket udpPacket = new DatagramPacket(data, data.length, InetAddress.getByName(BROADCAST_ADDRESS), portNumber);
@@ -130,13 +134,11 @@ public class CommUDPClient extends Thread {
                 udpPacket = new DatagramPacket(data, data.length);
                 sock.receive(udpPacket);
                 bis = new ByteArrayInputStream(data);
-                in = new ObjectInputStream(bis);
+                in = new TrafficInputStream(bis, udpPacket.getAddress(), portNumber, new OpenTransmission());
                 processIncommingDTO(in.readObject(), udpPacket);
             }
         } catch (SocketTimeoutException ex) {
             // There are no more replies, the client should finish its execution
-        } catch (SocketException ex) {
-            Logger.getLogger(CommUDPClient.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(CommUDPClient.class.getName()).log(Level.SEVERE, null, ex);
         } finally {

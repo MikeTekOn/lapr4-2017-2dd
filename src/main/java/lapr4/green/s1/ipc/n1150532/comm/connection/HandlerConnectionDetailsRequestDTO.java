@@ -5,6 +5,8 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
 import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
 import lapr4.green.s1.ipc.n1150532.comm.CommTCPServer;
 
@@ -30,13 +32,13 @@ public class HandlerConnectionDetailsRequestDTO implements CommHandler, Serializ
      * @param outStream The output stream to write the reply.
      */
     @Override
-    public void handleDTO(Object dto, ObjectOutputStream outStream) {
+    public void handleDTO(Object dto, TrafficOutputStream outStream) {
         lastReceivedDTO = dto;
         ConnectionDetailsResponseDTO reply = new ConnectionDetailsResponseDTO(null, CommTCPServer.getServer().provideConnectionPort());
         try {
             outStream.writeObject(reply);
             outStream.flush();
-        } catch (IOException ex) {
+        } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(HandlerConnectionDetailsRequestDTO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

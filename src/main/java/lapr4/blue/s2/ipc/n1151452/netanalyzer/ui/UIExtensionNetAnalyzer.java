@@ -75,6 +75,7 @@ public class UIExtensionNetAnalyzer extends UIExtension {
             // Panels
             final JFXPanel fxPanel = new JFXPanel();
             final TrafficLogJTable logTable = new TrafficLogJTable();
+            TrafficLogger.getInstance().addTrafficLogListener(logTable);
 
             // Adds borders
             TitledBorder border = BorderFactory.createTitledBorder("Traffic Log");

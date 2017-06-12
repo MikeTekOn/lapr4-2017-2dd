@@ -1,5 +1,7 @@
 package lapr4.green.s1.ipc.n1150532.comm;
 
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
+
 import java.io.ObjectOutputStream;
 
 /**
@@ -16,7 +18,7 @@ public interface CommHandler {
      * @param dto The received DTO to handle.
      * @param outStream The output stream in which to send the replies.
      */
-    public void handleDTO(Object dto, ObjectOutputStream outStream);
+    public void handleDTO(Object dto, TrafficOutputStream outStream);
 
     /**
      * It gets the last DTO received.

@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
 import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionDetailsResponseDTO;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
@@ -32,7 +34,7 @@ public class HandlerUserChatDTO extends Observable implements CommHandler, Seria
     private Object lastReceivedDTO;
 
     @Override
-    public void handleDTO(Object dto, ObjectOutputStream outStream) {
+    public void handleDTO(Object dto, TrafficOutputStream outStream) {
 
         ConnectionIDImpl connectionID = new ConnectionIDImpl(((PacketEncapsulatorDTO) dto).getPacket().getAddress(), ((UserChatDTO) ((PacketEncapsulatorDTO) dto).getDTO()).tcpPort);
         ((UserChatDTO) ((PacketEncapsulatorDTO) dto).getDTO()).buildConnectionID(connectionID);

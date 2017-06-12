@@ -13,6 +13,8 @@ import java.io.Serializable;
 import java.nio.file.Files;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
 import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
 import lapr4.green.s1.ipc.n1150532.comm.connection.SocketEncapsulatorDTO;
 
@@ -25,7 +27,7 @@ public class HandlerFileNameDTO implements CommHandler , Serializable {
     private Object lastReceivedDTO;
 
     @Override
-    public void handleDTO(Object dto, ObjectOutputStream outStream) {
+    public void handleDTO(Object dto, TrafficOutputStream outStream) {
         FileNameDTO nameDTO = (FileNameDTO) ((SocketEncapsulatorDTO) dto).getDTO();
         lastReceivedDTO = nameDTO;
         File fileToSend = findFile(nameDTO.fileName);
@@ -34,7 +36,7 @@ public class HandlerFileNameDTO implements CommHandler , Serializable {
             fileData= Files.readAllBytes(fileToSend.toPath());
             FileDTO fileDTO = new FileDTO(nameDTO.fileName, fileData.length, fileData);
             outStream.writeObject(fileDTO);
-        } catch (IOException ex) {
+        } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(HandlerFileNameDTO.class.getName()).log(Level.SEVERE, null, ex);
         }
          Logger.getLogger(HandlerFileNameListDTO.class.getName()).log(Level.INFO, nameDTO.fileName + "-----------"+CleanSheets.getString("received_object"), dto.getClass().toString());

@@ -7,11 +7,16 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficInputStream;
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.transmission.OpenTransmission;
 import lapr4.green.s1.ipc.n1150532.comm.connection.PacketEncapsulatorDTO;
 
 /**
@@ -39,7 +44,7 @@ public class CommUDPServer extends Thread {
     /**
      * An output stream to write objects to a byte array output stream.
      */
-    private ObjectOutputStream out = null;
+    private TrafficOutputStream out = null;
 
     /**
      * An input stream to read bytes from a byte array.
@@ -49,7 +54,7 @@ public class CommUDPServer extends Thread {
     /**
      * An input stream to read objects from a byte array input stream.
      */
-    private ObjectInputStream in = null;
+    private TrafficInputStream in = null;
 
     /**
      * The port number used in the server socket.
@@ -128,9 +133,9 @@ public class CommUDPServer extends Thread {
                 bis = new ByteArrayInputStream(data);
                 udpPacket = new DatagramPacket(data, data.length);
                 socket.receive(udpPacket);
-                in = new ObjectInputStream(bis);
+                in = new TrafficInputStream(bis, InetAddress.getLocalHost(), socket.getLocalPort(), new OpenTransmission());
                 bos = new ByteArrayOutputStream();
-                out = new ObjectOutputStream(bos);
+                out = new TrafficOutputStream(bos, InetAddress.getLocalHost(), socket.getLocalPort(), new OpenTransmission());
                 Object obj = in.readObject();
                 processIncommingDTO(obj, udpPacket);
                 data = bos.toByteArray();

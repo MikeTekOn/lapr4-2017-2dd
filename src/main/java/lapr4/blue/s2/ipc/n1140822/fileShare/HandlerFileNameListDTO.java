@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
 import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionIDImpl;
 import lapr4.green.s1.ipc.n1150532.comm.connection.HandlerConnectionDetailsResponseDTO;
@@ -31,7 +33,7 @@ public class HandlerFileNameListDTO extends Observable implements CommHandler, S
     private Object lastReceivedDTO;
 
     @Override
-    public void handleDTO(Object dto, ObjectOutputStream outStream) {
+    public void handleDTO(Object dto, TrafficOutputStream outStream) {
 
         FileNameListDTO fileNamesListDTO = (FileNameListDTO) ((PacketEncapsulatorDTO) dto).getDTO();
         Logger.getLogger(HandlerFileNameListDTO.class.getName()).log(Level.INFO, CleanSheets.getString("received_object"), dto.getClass().toString());

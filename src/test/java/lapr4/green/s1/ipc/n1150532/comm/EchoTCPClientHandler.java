@@ -1,5 +1,7 @@
 package lapr4.green.s1.ipc.n1150532.comm;
 
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
+
 import java.io.ObjectOutputStream;
 
 /**
@@ -21,7 +23,7 @@ public class EchoTCPClientHandler implements CommHandler {
      * @param outStream Not used.
      */
     @Override
-    public void handleDTO(Object dto, ObjectOutputStream outStream) {
+    public void handleDTO(Object dto, TrafficOutputStream outStream) {
         lastReceivedDTO = (EchoDTO) dto;
     }
 

@@ -10,6 +10,8 @@ import java.io.ObjectOutputStream;
 import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
 import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
 import lapr4.green.s1.ipc.n1150532.comm.connection.SocketEncapsulatorDTO;
 
@@ -34,7 +36,7 @@ public class HandlerRequestMessageDTO extends Observable implements CommHandler 
      * @param outStream The output stream in which to write the reply.
      */
     @Override
-    public void handleDTO(Object dto, ObjectOutputStream outStream) {
+    public void handleDTO(Object dto, TrafficOutputStream outStream) {
         SocketEncapsulatorDTO receivedDTO = (SocketEncapsulatorDTO) dto;
         RequestMessageDTO request = (RequestMessageDTO) receivedDTO.getDTO();
         lastReceivedDTO = request;
@@ -43,7 +45,7 @@ public class HandlerRequestMessageDTO extends Observable implements CommHandler 
         ResponseMessageDTO reply = new ResponseMessageDTO(request.sendMessage());
         try {
             outStream.writeObject(reply);
-        } catch (IOException ex) {
+        } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(RequestMessageDTO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

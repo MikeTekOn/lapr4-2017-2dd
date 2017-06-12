@@ -2,6 +2,8 @@ package lapr4.blue.s2.ipc.n1151452.netanalyzer.domain;
 
 import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.transmission.OpenTransmission;
 import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.transmission.TransmissionStrategy;
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.watchdogs.TrafficCounter;
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.watchdogs.TrafficLogger;
 import lapr4.blue.s2.ipc.n1151452.netanalyzer.util.CustomUtil;
 
 import java.io.IOException;
@@ -48,6 +50,9 @@ public class TrafficInputStream extends InputStream {
         port = tcpPort;
         publisherPool = Executors.newCachedThreadPool(new TrafficPublisherFactory());
         subscribers = new HashSet<>();
+
+        subscribers.add(TrafficLogger.getInstance());
+        subscribers.add(TrafficCounter.getInstance());
     }
 
     /**

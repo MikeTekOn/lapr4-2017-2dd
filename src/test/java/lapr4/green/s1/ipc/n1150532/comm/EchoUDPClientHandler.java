@@ -1,6 +1,8 @@
 package lapr4.green.s1.ipc.n1150532.comm;
 
 import java.io.ObjectOutputStream;
+
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
 import lapr4.green.s1.ipc.n1150532.comm.connection.PacketEncapsulatorDTO;
 
 /**
@@ -22,7 +24,7 @@ public class EchoUDPClientHandler implements CommHandler {
      * @param outStream Not used.
      */
     @Override
-    public void handleDTO(Object dto, ObjectOutputStream outStream) {
+    public void handleDTO(Object dto, TrafficOutputStream outStream) {
         lastReceivedDTO=((PacketEncapsulatorDTO)dto).getDTO();
     }
 

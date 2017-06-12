@@ -1,5 +1,10 @@
 package lapr4.green.s1.ipc.n1150532.comm;
 
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficInputStream;
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.transmission.AESEncryptedTransmission;
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.transmission.OpenTransmission;
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.transmission.TransmissionStrategy;
 import lapr4.green.s1.ipc.n1150738.securecomm.BasicDataTransmissionContext;
 import lapr4.green.s1.ipc.n1150738.securecomm.DataTransmissionContext;
 
@@ -10,6 +15,7 @@ import java.net.SocketAddress;
 import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import lapr4.green.s1.ipc.n1150532.comm.connection.SocketEncapsulatorDTO;
 import lapr4.green.s1.ipc.n1150738.securecomm.SecureAESDataTransmissionContext;
 import lapr4.green.s1.ipc.n1150738.securecomm.trash.streams.NonClosingInputStreamWrapper;
@@ -35,13 +41,13 @@ public class CommTCPServerWorker extends Thread {
     /**
      * The worker input stream. It is attached to the socket input stream.
      */
-    private ObjectInputStream inStream;
+    private TrafficInputStream inStream;
 
     /**
      * The worker output stream. It is attached to the socket output stream.
      */
-    private ObjectOutputStream outStream;
-    private DataTransmissionContext transmissionContext;
+    private TrafficOutputStream outStream;
+    private TransmissionStrategy transmissionContext;
     private OutputStream socketOut;
     private InputStream socketIn;
 
@@ -56,24 +62,24 @@ public class CommTCPServerWorker extends Thread {
         server = theServer;
         inStream = null;
         outStream = null;
+
         try {
             socketOut = socket.getOutputStream();
             socketIn = socket.getInputStream();
-            byte[] sec = new byte[4];
-            sec[0] = (byte)socketIn.read();
-            sec[1] = (byte)socketIn.read();
-            sec[2] = (byte)socketIn.read();
-            sec[3] = (byte)socketIn.read();
-            if(sec[0] == (byte)0 && sec[1] == (byte)0 && sec[2] == (byte)0 && sec[3] == (byte)0){
-                System.out.println("SecureMode");
-                transmissionContext = new SecureAESDataTransmissionContext();
+
+            int transmission = socketIn.read();
+
+            if (transmission > 0) {
+                transmissionContext = new AESEncryptedTransmission();
             } else {
-                System.out.println("Unsecure");
-                transmissionContext = new BasicDataTransmissionContext();
+                transmissionContext = new OpenTransmission();
             }
+
+            outStream = new TrafficOutputStream(socketOut, theSocket.getInetAddress(), theSocket.getPort(), transmissionContext);
+//            inStream = new TrafficInputStream(socketIn, theSocket.getInetAddress(), theSocket.getPort(), strategy);
+
         } catch (IOException e) {
             Logger.getLogger(CommTCPClientWorker.class.getName()).log(Level.SEVERE, null, e);
-            ;
         }
     }
 
@@ -85,8 +91,8 @@ public class CommTCPServerWorker extends Thread {
     @Override
     public void run() {
         try {
-            outStream = transmissionContext.outputStream(socketOut);
-            inStream = transmissionContext.inputStream(socketIn);
+            outStream = new TrafficOutputStream(socketOut, socket.getInetAddress(), socket.getPort(), transmissionContext);
+            inStream = new TrafficInputStream(socketIn, socket.getInetAddress(), socket.getPort(), transmissionContext);
             while (true) {
                 Object dto = inStream.readObject();
                 processIncommingDTO(dto);
@@ -159,16 +165,17 @@ public class CommTCPServerWorker extends Thread {
         }
     }
 
-    /**
-     * Henrique Oliveira [1150738@isep.ipp.pt]
-     * @param s
-     * @return
-     */
-    public boolean hasSocket(Socket s){
-        return socket == s;
-    }
-
 //    /**
+//     * Henrique Oliveira [1150738@isep.ipp.pt]
+//     *
+//     * @param s
+//     * @return
+//     */
+//    public boolean hasSocket(Socket s) {
+//        return socket == s;
+//    }
+
+    //    /**
 //     * @author Henrique Oliveira [1150738@isep.ipp.pt]
 //     *
 //     * @param ctx
@@ -187,11 +194,11 @@ public class CommTCPServerWorker extends Thread {
 //            e.printStackTrace();
 //        }
 //    }
-    public SocketAddress getRemoteAdress(){
+    public SocketAddress getRemoteAdress() {
         return socket.getRemoteSocketAddress();
     }
 
-    public DataTransmissionContext getTransmissionContext() {
+    public TransmissionStrategy getTransmissionContext() {
         return transmissionContext;
     }
 }

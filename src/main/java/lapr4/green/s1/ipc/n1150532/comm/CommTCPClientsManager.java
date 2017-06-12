@@ -106,7 +106,7 @@ public class CommTCPClientsManager extends Observable implements Serializable {
             worker.start();
             try {
                 worker.getObjectOutputStream().writeObject(request);
-            } catch (IOException ex) {
+            } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, ex);
             }
             addClient(theConnection, worker);
@@ -129,7 +129,7 @@ public class CommTCPClientsManager extends Observable implements Serializable {
             RequestSharedCellsDTO request = new RequestSharedCellsDTO(spreadsheet.getTitle(), spreadsheet, firstAddress, lastAddress);
             try {
                 worker.getObjectOutputStream().writeObject(request);
-            } catch (IOException ex) {
+            } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -166,7 +166,7 @@ public class CommTCPClientsManager extends Observable implements Serializable {
             CellStyleDTO cellStyleDTO = CellStyleDTO.createFromCell(cell);
             try {
                 worker.getObjectOutputStream().writeObject(cellStyleDTO);
-            } catch (IOException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, e);
             }
         }
@@ -184,7 +184,7 @@ public class CommTCPClientsManager extends Observable implements Serializable {
             CellContentDTO cellContentDTO = CellContentDTO.createFromCell(cell);
             try {
                 worker.getObjectOutputStream().writeObject(cellContentDTO);
-            } catch (IOException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, e);
             }
         }
@@ -207,7 +207,7 @@ public class CommTCPClientsManager extends Observable implements Serializable {
                 worker.getObjectOutputStream().writeObject(request);
                 //TODO return workbook object found and replace "return null"
                 return null;
-            } catch (IOException ex) {
+            } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, ex);
                 return null;
             }
@@ -261,7 +261,7 @@ public class CommTCPClientsManager extends Observable implements Serializable {
             RequestMessageDTO dto = new RequestMessageDTO(message);
             try {
                 worker.getObjectOutputStream().writeObject(dto);
-            } catch (IOException ex) {
+            } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -274,7 +274,7 @@ public class CommTCPClientsManager extends Observable implements Serializable {
             try {
                 FileNameDTO nameDTO = new FileNameDTO(fileName);
                 worker.getObjectOutputStream().writeObject(nameDTO);
-            } catch (IOException ex) {
+            } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, ex);
             }
         }

@@ -1,5 +1,6 @@
 package lapr4.green.s1.ipc.n1150738.securecomm;
 
+import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
 import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
 import lapr4.green.s1.ipc.n1150532.comm.connection.SocketEncapsulatorDTO;
 import lapr4.green.s1.ipc.n1150738.securecomm.trash.IllegalDataTransmissionContextEvent;
@@ -23,7 +24,7 @@ public class TransmissionContextRequestHandler extends Observable implements Com
      * @param outStream the output stream to be used to send a reply/response to the socket
      */
     @Override
-    public void handleDTO(Object dto, ObjectOutputStream outStream) {
+    public void handleDTO(Object dto, TrafficOutputStream outStream) {
         SocketEncapsulatorDTO receivedDTO = (SocketEncapsulatorDTO) dto;
         TransmissionContextRequestDTO request = (TransmissionContextRequestDTO) receivedDTO.getDTO();
         TransmissionContextResponseDTO response;
@@ -43,7 +44,7 @@ public class TransmissionContextRequestHandler extends Observable implements Com
             outStream.writeObject(response);
             setChanged();
             notifyObservers(event);
-        } catch (IOException ex) {
+        } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(TransmissionContextRequestHandler.class.getName()).log(Level.FINEST, "Cannot send response", ex);
         }
     }
