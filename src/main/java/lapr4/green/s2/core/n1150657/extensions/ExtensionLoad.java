@@ -60,24 +60,22 @@ public class ExtensionLoad {
     private void addExtensionNameToMap() {
         for (Map.Entry<Object, Object> entry : properties.entrySet()) {
             String name = (String) entry.getKey();
-            if (!name.equals("lapr4.blue.s1.lang.n1151031.formulastools.ConditionalStyleExtension")) {//FIXME JoaoCardoso problem resolved
-                Class c;
-                Extension extension = null;
-                try {
-                    c = Class.forName(name);
-                    extension = (Extension) c.newInstance();
-                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-                    //do nothing
-                    break;
-                }
-                String extensionName = extension.getName();
-                if (extensions.containsKey(extensionName)) {
-                    extensions.get(extension.getName()).add(extension);
-                } else {
-                    Set<Extension> aux = new HashSet<>();
-                    aux.add(extension);
-                    extensions.put(extensionName, aux);
-                }
+            Class c;
+            Extension extension = null;
+            try {
+                c = Class.forName(name);
+                extension = (Extension) c.newInstance();
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+                //do nothing
+                break;
+            }
+            String extensionName = extension.getName();
+            if (extensions.containsKey(extensionName)) {
+                extensions.get(extension.getName()).add(extension);
+            } else {
+                Set<Extension> aux = new HashSet<>();
+                aux.add(extension);
+                extensions.put(extensionName, aux);
             }
         }
     }
