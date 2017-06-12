@@ -123,6 +123,14 @@ public class CompanyContact implements AggregateRoot<CompanyName> {
         return phoneNumber;
     }
 
+    /**
+     * Updates the company contact with the given parameters
+     * @param name the company name
+     * @param email the campany's email address
+     * @param number the campany's number
+     * @param image the campany's image / logo
+     * @return success of the operation
+     */
     public boolean update(CompanyName name, EmailAddress email, PhoneNumber number, Image image){
         if(name == null || email == null || number == null || image == null){
             throw new IllegalArgumentException("CampanyContact cannot have null attributes");
