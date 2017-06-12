@@ -101,12 +101,12 @@ public class Language {
 		} else
 			System.err.println("Could not find language properties file ("
 				+ PROPERTIES_FILENAME + ").");
-
+        
 		// Loads static methods from java.lang.Math that use double precision
 		for (Method method : Math.class.getMethods())
 			if (Modifier.isStatic(method.getModifiers()) &&
 						method.getReturnType() == Double.TYPE)
-				functions.add(new NumericFunction(method));
+				functions.add(new NumericFunction(method));            
 	}
 
 	/**
@@ -176,4 +176,21 @@ public class Language {
 	public Function[] getFunctions() {
 		return functions.toArray(new Function[functions.size()]);
 	}
+        
+        /**
+	 * Returns the functions that are supported by the syntax.
+	 * @return the functions that are supported by the syntax
+	 */
+	public BinaryOperator[] getBinaryOperators() {
+		return binaryOperators.toArray(new BinaryOperator[binaryOperators.size()]);
+	}
+        
+         /**
+	 * Returns the functions that are supported by the syntax.
+	 * @return the functions that are supported by the syntax
+	 */
+	public UnaryOperator[] getUnaryOperators() {
+		return unaryOperators.toArray(new UnaryOperator[unaryOperators.size()]);
+	}
+        
 }

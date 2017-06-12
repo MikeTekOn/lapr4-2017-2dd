@@ -11,6 +11,7 @@ import java.util.List;
 
 import csheets.core.Cell;
 import csheets.ext.CellExtension;
+import lapr4.green.s2.core.n1150901.richCommentsAndHistory.domain.CommentsWithHistoryListener;
 
 /**
  * An extension of a cell in a spreadsheet, with support for comments.
@@ -24,10 +25,17 @@ public class CommentableCell extends CellExtension {
 
 	/** The cell's user-specified comment */
         private String userComment;
+        
+        /** The history of a comment in a cell */
+        private String commentHistory;
 
 	/** The listeners registered to receive events from the comentable cell */
 	private transient List<CommentableCellListener> listeners
 		= new ArrayList<CommentableCellListener>();
+        
+        /** The listeners registered to receive events from the comentable cell */
+	private transient List<CommentsWithHistoryListener> historyListeners
+		= new ArrayList<CommentsWithHistoryListener>();
 
 	/**
 	 * Creates a comentable cell extension for the given cell.
@@ -67,6 +75,23 @@ public class CommentableCell extends CellExtension {
 	public boolean hasComment() {
 		return userComment != null;
 	}
+        
+        	/**
+	 * Get the comment's history.
+	 * @return The user supplied comment for the cell or <code>null</code> if no user
+	 supplied comment exists.
+	*/
+	public String getCommentHistory() {
+		return commentHistory;
+	}
+
+	/**
+	 * Returns whether the comment has a history.
+	 * @return true if the comment has a history.
+	 */
+	public boolean hasHistory() {
+		return commentHistory != null;
+	}
 
 /*
  * COMMENT MODIFIERS
@@ -80,6 +105,16 @@ public class CommentableCell extends CellExtension {
 		this.userComment = comment;
 		// Notifies listeners
 		fireCommentsChanged();
+	}
+        
+        /**
+	 * Sets the user-specified comment's history for the cell.
+	 * @param previousComment The user-specified history.
+	 */
+	public void setCommentHistory(String previousComment) {
+		this.commentHistory = previousComment;
+		// Notifies listeners
+		fireHistoryChanged();
 	}
 
 
@@ -110,6 +145,30 @@ public class CommentableCell extends CellExtension {
 		for (CommentableCellListener listener : listeners)
 			listener.commentChanged(this);
 	}
+        
+        /**
+	 * Registers the given listener on the cell.
+	 * @param listener the listener to be added
+	 */
+	public void addCommentsWithHistoryListener(CommentsWithHistoryListener listener) {
+		historyListeners.add(listener);
+	}
+
+	/**
+	 * Removes the given listener from the cell.
+	 * @param listener the listener to be removed
+	 */
+	public void removeCommentsWithHistoryListener(CommentsWithHistoryListener listener) {
+		historyListeners.remove(listener);
+	}
+
+	/**
+	 * Notifies all registered listeners that the cell's comment's history changed.
+	 */
+	public void fireHistoryChanged() {
+		for (CommentsWithHistoryListener listener : historyListeners)
+			listener.historyChanged(this);
+	}
 
 	/**
 	 * Customizes serialization, by recreating the listener list.
@@ -121,6 +180,7 @@ public class CommentableCell extends CellExtension {
 			throws java.io.IOException, ClassNotFoundException {
 	    stream.defaultReadObject();
 		listeners = new ArrayList<CommentableCellListener>();
+		historyListeners = new ArrayList<CommentsWithHistoryListener>();
 	}
 }
 

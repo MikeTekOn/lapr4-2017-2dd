@@ -5,12 +5,9 @@
  */
 package lapr4.green.s2.core.n1150838.GlobalSearch.presentation;
 
-import csheets.core.Workbook;
 import csheets.ui.ctrl.UIController;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -20,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.Semaphore;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -41,13 +39,13 @@ import lapr4.green.s2.core.n1150838.GlobalSearch.util.GlobalSearchPublisher;
  */
 public class GlobalSearchSideBar extends JPanel implements Observer {
 
+    private final Semaphore mutex = new Semaphore(1, true);//mutex
     private JTextField searchField;
     private UIController extension;
-    private List<String> info;
     private GlobalSearchController ctrl;
     private JList searchList;
     private CellList model;
-    private ConfigPane paneFilters ;
+    private ConfigPane paneFilters;
 
     public GlobalSearchSideBar(UIController extension) {
         GlobalSearchPublisher.getInstance().addObserver(this);
@@ -57,20 +55,18 @@ public class GlobalSearchSideBar extends JPanel implements Observer {
         paneFilters = new ConfigPane(ctrl);
         // Creates search components
         initComponents();
-
         setVisible(true);
-
     }
 
     /**
-     *
+     * the metho that will build all the window elements
      */
     private void initComponents() {
         setLayout(new BorderLayout());
         JPanel upperPanel = new JPanel();
-        upperPanel.setLayout(new GridLayout(2,1));
+        upperPanel.setLayout(new GridLayout(2, 1));
         JPanel textPanel = new JPanel();
-        BoxLayout box = new BoxLayout(textPanel,BoxLayout.X_AXIS);
+        BoxLayout box = new BoxLayout(textPanel, BoxLayout.X_AXIS);
         textPanel.setLayout(box);
         textPanel.add(new JLabel("Enter Regex here: "));
         textPanel.add(searchField());
@@ -78,7 +74,7 @@ public class GlobalSearchSideBar extends JPanel implements Observer {
 
         upperPanel.add(createButtons());
         add(upperPanel, BorderLayout.NORTH);
-        
+
         //creates the panel with the search results list
         add(searchList(), BorderLayout.CENTER);
 
@@ -90,10 +86,9 @@ public class GlobalSearchSideBar extends JPanel implements Observer {
      * @return JScrollPanel
      */
     private JScrollPane searchList() {
-         
+
         model = new CellList(new ArrayList());
-        searchList = new JList();
-        searchList.setModel(model);
+        searchList = new JList(model);
         searchList.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         searchList.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Results: "));
         searchList.addMouseListener(new MouseAdapter() {
@@ -101,14 +96,15 @@ public class GlobalSearchSideBar extends JPanel implements Observer {
             public void mouseClicked(MouseEvent evt) {
                 JList list = (JList) evt.getSource();
                 int index = list.locationToIndex(evt.getPoint());
-                 if (evt.getClickCount() == 1 && index >= 0) {
-                     
-                 }
+                if (evt.getClickCount() == 1 && index >= 0) {
+                    model.setSelectedItem((String) model.getElementAt(index));
+                    extension.setActiveCell(model.getSelectedItem().getCell());
+                }
 
             }
         });
         JScrollPane scroll = new JScrollPane(searchList);
-        scroll.setPreferredSize(new Dimension(100,200));
+        scroll.setPreferredSize(new Dimension(100, 200));
         return scroll;
     }
 
@@ -120,13 +116,16 @@ public class GlobalSearchSideBar extends JPanel implements Observer {
      */
     private JTextField searchField() {
         searchField = new JTextField();
+        searchField.setPreferredSize(new Dimension(200,5));
         return searchField;
     }
+
     /**
      * Creates a panel with all the necessary buttons
+     *
      * @return a JPanel
      */
-    public JPanel createButtons(){
+    public JPanel createButtons() {
         JPanel panelButtons = new JPanel();
         panelButtons.add(buttonSearch());
         panelButtons.add(buttonFilter());
@@ -143,13 +142,15 @@ public class GlobalSearchSideBar extends JPanel implements Observer {
         //b.setPreferredSize(new Dimension(10,10));
         b.addActionListener((new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+
+                ctrl.stop();
                 model.removeAll();
-                if(ctrl.checkIfValid(searchField.getText() )&& searchField.getText().length()>0){
-                 List<String> typesToInclude = paneFilters.typesToInclude();
-                List<String> formulasToInclude = paneFilters.formulasToInclude();
-                boolean includeComments =paneFilters.includeComments(); 
-                ctrl.start(new Filter(typesToInclude,formulasToInclude,includeComments),searchField.getText() );
-                }else{
+                if (ctrl.checkIfValid(searchField.getText()) && searchField.getText().length()>0) {
+                    List<String> typesToInclude = paneFilters.typesToInclude();
+                    List<String> formulasToInclude = paneFilters.formulasToInclude();
+                    boolean includeComments = paneFilters.includeComments();
+                    ctrl.start(new Filter(typesToInclude, formulasToInclude, includeComments), searchField.getText());
+                } else {
                     JOptionPane.showMessageDialog(null,
                             "The inserted regular expression is not valid.",
                             "Invalid regex",
@@ -160,22 +161,51 @@ public class GlobalSearchSideBar extends JPanel implements Observer {
 
         return b;
     }
-    
-    private JButton buttonFilter(){
-         JButton b = new JButton("Filters");
+
+    /**
+     *
+     * @return the button to add filters
+     */
+    private JButton buttonFilter() {
+        JButton b = new JButton("Filters");
         //b.setPreferredSize(new Dimension(10,10));
         b.addActionListener((new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 paneFilters.setVisible(true);
-                
+
             }
         }));
         return b;
     }
 
+    /**
+     * The method that will be called when a cell was found in the search and
+     * after that the main list will be updated
+     *
+     * @param o
+     * @param arg
+     */
     @Override
     public void update(Observable o, Object arg) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (arg!=null && arg instanceof CellInfoDTO) {
+            if (!((CellInfoDTO) arg).getCell().toString().equals("0")) {// ignore the null CELL
+                java.awt.EventQueue.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        model.addElement((CellInfoDTO) arg);
+                        searchList.updateUI();
+                    }
+                });
+            }
+
+        }else{
+            JOptionPane.showMessageDialog(null,
+                            "No results!",
+                            "No results",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+        }
+
     }
 
-}
+

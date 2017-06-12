@@ -21,6 +21,7 @@ public class FormulaVariableTest {
     public void setUp() throws Exception {
 
         // Try to create the CS application object
+        CleanSheets.setFlag(true);
         app = new CleanSheets();
         // This will create a workbook with 3 sheets
         app.create();
@@ -29,7 +30,7 @@ public class FormulaVariableTest {
     /**
      * Ensure operation with block containing temporary variable
      * @throws FormulaCompilationException
-     * @throws IllegalValueTypeException 
+     * @throws IllegalValueTypeException
      */
     @Test
     public void testBlockWithTemporary() throws FormulaCompilationException, IllegalValueTypeException {
@@ -37,79 +38,79 @@ public class FormulaVariableTest {
         Cell cellTest = app.getWorkbooks()[0].getSpreadsheet(0).getCell(new Address(0, 0));
         String content= "={(_Var1:=1+2); _Var1 + 1}";
         cellTest.setContent(content);
-        
+
         //Test temporary variable
          Double result = cellTest.getValue().toDouble();
         Double expResult = 4d;
     }
-    
+
     /**
      * Ensure assignment with temporary variable
      * @throws FormulaCompilationException
-     * @throws IllegalValueTypeException 
+     * @throws IllegalValueTypeException
      */
     @Test
     public void testAssignmentOperatorWithTemporary() throws FormulaCompilationException, IllegalValueTypeException {
         // Introducing expression
         Cell cellA1 = app.getWorkbooks()[0].getSpreadsheet(0).getCell(new Address(0, 0));
         Cell cellA2 = app.getWorkbooks()[0].getSpreadsheet(0).getCell(new Address(0, 1));
-      
-        String content= "={(A2:=2) ; (_Var1 := A2) ; _Var1 }";   
+
+        String content= "={(A2:=2) ; (_Var1 := A2) ; _Var1 }";
         cellA1.setContent(content);
 
         //Test value
         assert cellA1.getValue().toDouble() == 2d;
     }
- 
+
     /**
-     * Ensure function call by temporary variable 
+     * Ensure function call by temporary variable
      * @throws FormulaCompilationException
-     * @throws IllegalValueTypeException 
+     * @throws IllegalValueTypeException
      */
      @Test
     public void testFunctionWithTemporary() throws FormulaCompilationException, IllegalValueTypeException {
         // Introducing expression
         Cell cellA1 = app.getWorkbooks()[0].getSpreadsheet(0).getCell(new Address(0, 0));
         Cell cellA2 = app.getWorkbooks()[0].getSpreadsheet(0).getCell(new Address(0, 1));
-  
-        String content= "={(A2:=2); (A3:=3); (_Var1:= SUM(A2:A3)); _Var1+1}";  
+
+        String content= "={(A2:=2); (A3:=3); (_Var1:= SUM(A2:A3)); _Var1+1}";
         cellA1.setContent(content);
-      
+
         //Test value
         assert cellA1.getValue().toDouble() == 6d;
     }
-    
+
     /**
      * Ensure a block with more than one temporary variable
      * @throws FormulaCompilationException
-     * @throws IllegalValueTypeException 
+     * @throws IllegalValueTypeException
      */
      @Test
     public void testFormulaManyTemporaryVariables() throws FormulaCompilationException, IllegalValueTypeException {
         Cell cellTest= app.getWorkbooks()[0].getSpreadsheet(0).getCell(new Address(1, 0));
-       
-        String content= "={(_Var1:=2);( _Var2:=3);( _Var3:=_Var1+_Var2); _Var3 }"; 
+
+        String content= "={(_Var1:=2);( _Var2:=3);( _Var3:=_Var1+_Var2); _Var3 }";
         cellTest.setContent(content);
-        
+
         //Test temporary variable value
         assert cellTest.getValue().toDouble() == 5;
     }
-    
+
     /**
      * Ensure function call with temporary variable
      * @throws FormulaCompilationException
-     * @throws IllegalValueTypeException 
+     * @throws IllegalValueTypeException
      */
     public void testFormulaWithTemporaryVariable() throws FormulaCompilationException, IllegalValueTypeException {
         Cell cellTest= app.getWorkbooks()[0].getSpreadsheet(0).getCell(new Address(1, 0));
-   
-        String content= "={(_Var1:=2);( _Var2:=1); MAX(_Var1, _Var2}"; 
+
+        String content= "={(_Var1:=2);( _Var2:=1); MAX(_Var1, _Var2}";
         cellTest.setContent(content);
-      
+
         //Test temporary variable value
         assert cellTest.getValue().toDouble() == 2;
     }
-       
+
     /**
      * Ensure that it is possible to a temporary variable call itself by assignment
      *
@@ -127,7 +128,7 @@ public class FormulaVariableTest {
 
         //Test temporary variable result
         assert cellA2.getValue().toDouble()==2d;
-        
+
     }
 
      /**
@@ -144,5 +145,5 @@ public class FormulaVariableTest {
 
         String content = "={_2:=2";
         cellA1.setContent(content);
-    }    
+    }
 }

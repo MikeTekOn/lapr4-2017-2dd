@@ -30,44 +30,65 @@ import csheets.ui.ext.UIExtension;
 
 /**
  * The extension for style.
+ *
  * @author Einar Pehrson
  */
 public class StyleExtension extends Extension {
 
-	/** The name of the extension */
-	public static final String NAME = "Style";
+    /**
+     * The name of the extension
+     */
+    public static final String NAME = "Style";
+    
+    /**
+     * The description of the extension
+     */
+    public static final String DESCRIPTION = "The extension for style.";
+    
+    /**
+     * The first version of the style extension.
+     */
+    public static final int VERSION = 1;
 
-	/**
-	 * Creates a new style extension.
-	 */
-	public StyleExtension() {
-		super(NAME);
-	}
+    /**
+     * Creates a new style extension.
+     */
+    public StyleExtension() {
+        super(NAME, VERSION, DESCRIPTION);
+    }
 
-	/**
-	 * Makes the given spreadsheet stylable.
-	 * @param spreadsheet the spreadsheet to extend
-	 * @return a stylable spreadsheet
-	 */
-	public StylableSpreadsheet extend(Spreadsheet spreadsheet) {
-		return new StylableSpreadsheet(spreadsheet);
-	}
+    /**
+     * Makes the given spreadsheet stylable.
+     * @param spreadsheet the spreadsheet to extend
+     * @return a stylable spreadsheet
+     */
+    public StylableSpreadsheet extend(Spreadsheet spreadsheet) {
+        return new StylableSpreadsheet(spreadsheet);
+    }
 
-	/**
-	 * Makes the given cell stylable.
-	 * @param cell the cell to extend
-	 * @return a stylable cell
-	 */
-	public StylableCell extend(Cell cell) {
-		return new StylableCell(cell);
-	}
+    /**
+     * Makes the given cell stylable.
+     * @param cell the cell to extend
+     * @return a stylable cell
+     */
+    public StylableCell extend(Cell cell) {
+        return new StylableCell(cell);
+    }
 
-	/**
-	 * Returns a user interface extension for style.
-	 * @param uiController the user interface controller
-	 * @return a user interface extension for style
-	 */
-	public UIExtension getUIExtension(UIController uiController) {
-		return new StyleUIExtension(this, uiController);
-	}
+    /**
+     * Returns a user interface extension for style.
+     * @param uiController the user interface controller
+     * @return a user interface extension for style
+     */
+    public UIExtension getUIExtension(UIController uiController) {
+        return new StyleUIExtension(this, uiController);
+    }
+
+    @Override
+    public String metadata() {
+        return String.format("This is %s with version %d\n"
+                + "This extension has the follow description: %s\n"
+                + "This extension was made by Einar Pehrson and it is in the package %s",
+                getName(), getVersion(), getDescription(),getClass().getName());
+    }
 }

@@ -27,7 +27,6 @@ import csheets.ui.ext.UIExtension;
 import csheets.ui.sheet.AddressBox;
 import csheets.ui.sheet.CellEditor;
 import csheets.ui.sheet.WorkbookPane;
-import lapr4.blue.s1.lang.n1060503.functionWizard.ui.FunctionWizard;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionEvent;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionStateListener;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ManageExtensionsAction;
@@ -40,6 +39,8 @@ import lapr4.blue.s1.lang.n1141570.XML.ui.ExportSelectedColumnActionUI;
 import lapr4.blue.s1.lang.n1141570.XML.ui.ExportSelectedRowActionUI;
 import lapr4.blue.s1.lang.n1141570.XML.ui.ExportSelectedSpreadsheetActionUI;
 import lapr4.blue.s1.lang.n1141570.XML.ui.ExportWorkBookActionUI;
+import lapr4.red.s2.lang.n1150613.FunctionWizard.ui.IntermediateFunctionWizard;
+import lapr4.red.s2.lang.n1150690.formula.configurations.ConfigureExchangeRatesAction;
 
 /**
  * The main frame of the GUI.
@@ -65,7 +66,7 @@ public class Frame extends JFrame implements SelectionListener, ExtensionStateLi
     WorkbookPane workbookPane;
     CellEditor cellEditor;
     AddressBox addressBox;
-    FunctionWizard functionWizard;
+    IntermediateFunctionWizard functionWizard;
 
     /**
      * Creates a new frame.
@@ -76,6 +77,7 @@ public class Frame extends JFrame implements SelectionListener, ExtensionStateLi
         // Stores members and creates controllers
         this.app = app;
         uiController = new UIController(app);
+        app.setUIController(uiController);
 
         // Creates action manager
         FileChooser chooser = null;
@@ -131,11 +133,14 @@ public class Frame extends JFrame implements SelectionListener, ExtensionStateLi
         // Register extension managing actions
         actionManager.registerAction("manageExtensions", new ManageExtensionsAction(this));
 
+        //Register configurations of exchange rates
+        actionManager.registerAction("configurateExchangeRates", new ConfigureExchangeRatesAction(app, uiController));
+
         // Creates spreadsheet components
         workbookPane = new WorkbookPane(uiController, actionManager);
         cellEditor = new CellEditor(uiController);
         addressBox = new AddressBox(uiController);
-        functionWizard = new FunctionWizard(uiController);
+        functionWizard = new IntermediateFunctionWizard(uiController);
 
         registerListeners();
         recreatePanels();

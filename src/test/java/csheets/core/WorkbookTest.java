@@ -9,7 +9,7 @@ public class WorkbookTest {
 	@Test public void testGetSpreadsheetCount() {
 		
 		// create a workbook with 2 sheets
-		Workbook wb=new Workbook(2);
+		Workbook wb=new Workbook(2, null);
 		
 		assertEquals("Result", 2, wb.getSpreadsheetCount());		
 	}

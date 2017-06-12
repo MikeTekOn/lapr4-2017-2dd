@@ -21,12 +21,23 @@ public class SearchWorkbookExtension extends Extension {
 
 	/** The name of the extension */
 	public static final String NAME = "Search Workbook";
+        
+        /**
+        * The description of the extension
+        */
+        public static final String DESCRIPTION = "An extension must expand the Extension abstract class.\n" +
+                "The class that implements the Extension is the \"bootstrap\" of the extension.";
+        
+        /**
+        * The first version of the dependency trees extension.
+        */
+        public static final int VERSION = 1;
 
 	/**
 	 * Creates a new Example extension.
 	 */
 	public SearchWorkbookExtension() {
-		super(NAME);
+		super(NAME,VERSION,DESCRIPTION);
 	}
 	
 	/**
@@ -38,5 +49,13 @@ public class SearchWorkbookExtension extends Extension {
 	public UIExtension getUIExtension(UIController uiController) {
 		return new UIExtensionSearchWorkbook(this, uiController);
 	}
+        
+        @Override
+        public String metadata() {
+            return String.format("This is %s with version %d\n"
+                    + "This extension has the follow description: %s\n"
+                    + "This extension was made by Miguel Silva a in Sprint 1 and it is in the package %s",
+                    getName(), getVersion(), getDescription(),getClass().getName());
+        }
 }
 

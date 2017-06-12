@@ -23,6 +23,7 @@ import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.filechooser.*;
+import lapr4.green.s2.core.n1150800.PDFStyle.application.ExportStylePDFController;
 
 /**
  * @author Diogo Santos 1150451
@@ -31,7 +32,8 @@ public class ExportToPDFUI extends JDialog {
 
     private static final int WIDTH = 620;
     private static final int HEIGHT = 420;
-    private JList sheetList;
+    
+    protected JList sheetList;
 
     /**
      * The user interface controller
@@ -42,10 +44,16 @@ public class ExportToPDFUI extends JDialog {
      * The file chooser to use when prompting the user for the destination path
      */
     protected FileChooser chooser;
+    
+    /**
+     * The main panel of the user interface
+     */
+    protected JPanel mainPanel;
+    
     private DefaultListModel<Object> model;
-    private JTextField rangeField;
-    private JCheckBox boxSections;
-    private JTextField pathField;
+    protected JTextField rangeField;
+    protected JCheckBox boxSections;
+    protected JTextField pathField;
 
     public ExportToPDFUI(UIController uiController, FileChooser chooser) {
         this.uiController = uiController;
@@ -54,37 +62,39 @@ public class ExportToPDFUI extends JDialog {
         createComponents();
         setFocusable(true);
         setTitle("Export to PDF");
+        pack();
+        setLocationRelativeTo(null);
         super.setVisible(true);
     }
 
-    private void createComponents() {
-        JPanel panel = new JPanel(new GridBagLayout());
+    protected void createComponents() {
+        //mainPanel = new JPanel(new GridBagLayout());
 
         GridBagConstraints grid = new GridBagConstraints();
         grid.fill = GridBagConstraints.VERTICAL;
 
         grid.gridx = 0;
         grid.gridy = 0;
-        panel.add(createListPanel(), grid);
+        mainPanel.add(createListPanel(), grid);
 
         grid.insets = new Insets(10, 0, 10, 0);
         grid.gridx = 0;
         grid.gridy = 1;
         boxSections = new JCheckBox("Sections");
-        panel.add(boxSections, grid);
+        mainPanel.add(boxSections, grid);
 
         grid.insets = new Insets(10, 0, 10, 0);
         grid.gridx = 0;
-        grid.gridy = 2;
-        panel.add(createPathPanel(), grid);
+        grid.gridy = 3;
+        mainPanel.add(createPathPanel(), grid);
 
         grid.gridx = 0;
-        grid.gridy = 3;
-        panel.add(createExportButton(), grid);
+        grid.gridy = 4;
+        mainPanel.add(createExportButton(), grid);
 
         grid.fill = GridBagConstraints.EAST;
         grid.anchor = GridBagConstraints.CENTER;
-        super.add(panel);
+        super.add(mainPanel);
     }
 
     private Component createListPanel() {
@@ -167,14 +177,14 @@ public class ExportToPDFUI extends JDialog {
         return panel;
     }
 
-    private JButton createExportButton() {
-
+    protected JButton createExportButton() {
         JButton exportButton = new JButton("Export");
         exportButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ExportPDFController c = new ExportPDFController();
-                c.initiateExport(uiController);
+                //ExportPDFController c = new ExportPDFController();
+                //c.initiateExport(uiController);
+                ExportStylePDFController c = new ExportStylePDFController(uiController);
                 if (sheetList.getSelectedValue() == null) {
                     JOptionPane.showMessageDialog(rootPane, "You didn't select any item from the list.");
                     return;

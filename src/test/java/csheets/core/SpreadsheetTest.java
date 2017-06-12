@@ -10,7 +10,7 @@ public class SpreadsheetTest {
 	@Test public void testSetTitle() {
 		
 		// create a workbook with 2 sheets
-		Workbook wb=new Workbook(2);
+		Workbook wb=new Workbook(2, null);
 		Spreadsheet s=wb.getSpreadsheet(0);
 		
 		s.setTitle("title");

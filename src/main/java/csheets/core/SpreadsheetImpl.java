@@ -35,6 +35,7 @@ import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.ext.Extension;
 import csheets.ext.ExtensionManager;
 import csheets.ext.SpreadsheetExtension;
+import csheets.ui.ctrl.UIController;
 
 /**
  * The implementation of the <code>Spreadsheet</code> interface.
@@ -74,7 +75,9 @@ public class SpreadsheetImpl implements Spreadsheet {
 	private transient Map<String, SpreadsheetExtension> extensions = 
 		new HashMap<String, SpreadsheetExtension>();
 
-	/**
+	private UIController uiController;
+
+        /**
 	 * Creates a new spreadsheet.
 	 * @param workbook the workbook to which the spreadsheet belongs
 	 * @param title the title of the spreadsheet
@@ -83,8 +86,8 @@ public class SpreadsheetImpl implements Spreadsheet {
 		this.workbook = workbook;
 		this.title = title;
 	}
-
-	/**
+        
+        /**
 	 * Creates a new spreadsheet, in which cells are initialized with data from
 	 * the given content matrix.
 	 * @param workbook the workbook to which the spreadsheet belongs
@@ -102,6 +105,42 @@ public class SpreadsheetImpl implements Spreadsheet {
 				try {
 					Address address = new Address(column, row);
 					Cell cell = new CellImpl(this, address, content[row][column]);
+					cell.addCellListener(eventForwarder);
+					cells.put(address, cell);
+				} catch (FormulaCompilationException e) {}
+			}
+		}
+	}
+        
+	/**
+	 * Creates a new spreadsheet.
+	 * @param workbook the workbook to which the spreadsheet belongs
+	 * @param title the title of the spreadsheet
+	 */
+	SpreadsheetImpl(Workbook workbook, String title, UIController uiController) {
+		this.workbook = workbook;
+		this.title = title;
+		this.uiController = uiController;
+	}
+        
+	/**
+	 * Creates a new spreadsheet, in which cells are initialized with data from
+	 * the given content matrix.
+	 * @param workbook the workbook to which the spreadsheet belongs
+	 * @param title the title of the spreadsheet
+	 * @param content the contents of the cells in the spreadsheet
+	 */
+	SpreadsheetImpl(Workbook workbook, String title, String[][] content, UIController uiController) {
+		this(workbook, title, uiController);
+		rows = content.length;
+		for (int row = 0; row < content.length; row++) {
+			int columns = content[row].length;
+			if (this.columns < columns)
+				this.columns = columns;
+			for (int column = 0; column < columns; column++) {
+				try {
+					Address address = new Address(column, row);
+					Cell cell = new CellImpl(this, address, content[row][column], uiController);
 					cell.addCellListener(eventForwarder);
 					cells.put(address, cell);
 				} catch (FormulaCompilationException e) {}
@@ -154,7 +193,7 @@ public class SpreadsheetImpl implements Spreadsheet {
 
 		// If the cell has never been requested, create a new one
 		if (cell == null) {
-			cell = new CellImpl(this, address);
+			cell = new CellImpl(this, address, uiController);
 			cell.addCellListener(eventForwarder);
 			cells.put(address, cell);
 		}

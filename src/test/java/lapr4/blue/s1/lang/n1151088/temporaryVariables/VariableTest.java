@@ -19,14 +19,14 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author Diana Silva [1151088@isep.ipp.pt]
+ * @author Guilherme Ferreira 1150623
  */
 public class VariableTest {
     
     private CleanSheets app;
-    Cell cellA1;
+
     Cell cellTest;
-    Expression exp1, exp2;
+    Expression expression1, expression2;
     Value value1, value2;
     
     public VariableTest() {
@@ -35,6 +35,7 @@ public class VariableTest {
     @Before
     public void setUp() throws FormulaCompilationException {
          // Try to create the CS application object
+         CleanSheets.setFlag(true);
         app = new CleanSheets();
         // This will create a workbook with 3 sheets
         app.create();
@@ -44,10 +45,10 @@ public class VariableTest {
         cellTest.setContent(content);
         value1= cellTest.getValue();
         //Test temporary variable
-        exp1 = cellTest.getFormula().getExpression();
+        expression1 = cellTest.getFormula().getExpression();
         
         cellTest.setContent(content2);
-        exp2=cellTest.getFormula().getExpression();
+        expression2 =cellTest.getFormula().getExpression();
         value2=cellTest.getValue();
     }
     
@@ -62,7 +63,7 @@ public class VariableTest {
     @Test
     public void testEvaluate() throws Exception {
         System.out.println("evaluate");
-        Variable instance = new Variable("_test", exp1);
+        Variable instance = new Variable("@test", expression1);
         Value expResult = value1;
         Value result = instance.evaluate();
         assertEquals(expResult, result);
@@ -74,45 +75,37 @@ public class VariableTest {
     @Test
     public void testGetName() {
         System.out.println("getName");
-        String test="test";
-        Variable instance = new Variable(test, exp1);
+        String test="@test";
+        Variable instance = new Variable(test, expression1);
         String result = instance.getName();
         String expResult=test;
         assertEquals(expResult, result);
     }
 
-    /**
-     * Test of getExpression method, of class Variable.
-     * @throws csheets.core.IllegalValueTypeException
-     */
+
     @Test
     public void testGetExpression() throws IllegalValueTypeException {
         System.out.println("getExpression");
-        String test="test";
-        Variable instance = new Variable("_test", exp1);
+        Variable instance = new Variable("@test", expression1);
         
         Expression result = instance.getExpression();
-        Expression expResult=exp1;
+        Expression expResult= expression1;
         assertEquals(expResult, result);
     }
 
     /**
      * Test of equals method, of class Variable.
-     * @throws csheets.core.IllegalValueTypeException
+     * @throws IllegalValueTypeException
      */
     @Test
     public void testEqualsValid() throws IllegalValueTypeException {
         System.out.println("equals");
-    
-        String test="test";
-       
-        Variable instance = new Variable(test, exp1);
-       
-        Variable instance2= new Variable(test,  exp2);
-        
-        boolean expResult = true;
-        boolean result = instance.equals(instance2);
-        assertEquals(expResult, result);
+        String test="@test";
+
+        Variable instance = new Variable(test, expression1);
+        Variable instance2= new Variable(test, expression2);
+
+        assertTrue(instance.equals(instance2));
     }
     
      /**
@@ -123,14 +116,21 @@ public class VariableTest {
     public void testEqualsInvalid() throws IllegalValueTypeException {
         System.out.println("equalsInvalid");
     
-        String test="test";
-        Variable instance = new Variable(test, exp1);
+        String test="@test";
+        Variable instance = new Variable(test, expression1);
         
-        String test2="test2";
-        Variable instance2= new Variable(test2, exp2);
-        
-        boolean expResult = false;
-        boolean result = instance.equals(instance2);
-        assertEquals(expResult, result);
-    } 
+        String test2="@test2";
+        Variable instance2= new Variable(test2, expression2);
+        assertFalse(instance.equals(instance2));
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void ensureNameCantBeEmptyOrNull(){
+        Variable v = new Variable("", expression1);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void ensureExpressionCantBeNull(){
+        Variable v = new Variable("@Name", null);
+    }
 }

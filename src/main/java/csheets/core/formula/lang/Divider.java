@@ -24,6 +24,7 @@ import csheets.core.IllegalValueTypeException;
 import csheets.core.Value;
 import csheets.core.formula.BinaryOperator;
 import csheets.core.formula.Expression;
+import java.math.BigDecimal;
 
 /**
  * A divider.
@@ -40,9 +41,10 @@ public class Divider implements BinaryOperator {
 	public Divider() {}
 
 	public Value applyTo(Expression leftOperand, Expression rightOperand) throws IllegalValueTypeException {
-		double divisor = rightOperand.evaluate().toDouble();
-		if (divisor != 0)
-			return new Value(leftOperand.evaluate().toDouble() / divisor);
+		//updated to realize divisions with values in BigDecimal
+                BigDecimal divisor = new BigDecimal(rightOperand.evaluate().toDouble());
+		if (divisor.doubleValue() != 0)
+			return new Value(new BigDecimal(leftOperand.evaluate().toDouble()).divide(divisor));
 		else
 			return new Value(new DivisionByZeroException(rightOperand));
 	}

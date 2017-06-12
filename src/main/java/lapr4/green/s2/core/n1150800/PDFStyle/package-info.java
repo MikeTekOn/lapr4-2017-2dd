@@ -121,24 +121,18 @@
  * 
  * 
  * 
- * <h1><u>5. Code (NEEDS TO BE UPDATED)</u></h1><p>
+ * <h1><u>5. Code</u></h1><p>
  * The following classes and interfaces implement this use case.<p>
- * Package lapr4.green.s1.ipc.n1150800.importexportTXT:<p>
- * {@link lapr4.green.s1.ipc.n1150800.importexportTXT.CellRange}
+ * Package lapr4.green.s2.core.n1150800.PDFStyle.application:<p>
+ * {@link lapr4.green.s2.core.n1150800.PDFStyle.application.ExportStylePDFController}
  * <p>
- * Package lapr4.green.s1.ipc.n1150800.importexportTXT.importTXT.ctrl:<p>
- * {@link lapr4.green.s1.ipc.n1150800.importexportTXT.importTXT.ctrl.ImportDataController}
+ * Package lapr4.green.s2.core.n1150800.PDFStyle.domain:<p>
+ * {@link lapr4.green.s2.core.n1150800.PDFStyle.domain.ExportStylePDF}
+ * {@link lapr4.green.s2.core.n1150800.PDFStyle.domain.ExportStylePDFThread}
+ * {@link lapr4.green.s2.core.n1150800.PDFStyle.domain.WorkbookWithStylesHandler}
  * <p>
- * Package lapr4.green.s1.ipc.n1150800.importexportTXT.importTXT.ui:<p>
- * {@link lapr4.green.s1.ipc.n1150800.importexportTXT.importTXT.ui.ImportDataAction}
- * {@link lapr4.green.s1.ipc.n1150800.importexportTXT.importTXT.ui.ImportDataUI}
- * <p>
- * Package lapr4.green.s1.ipc.n1150800.importexportTXT.exportTXT.ui:<p>
- * {@link lapr4.green.s1.ipc.n1150800.importexportTXT.exportTXT.ui.ExportDataAction}
- * {@link lapr4.green.s1.ipc.n1150800.importexportTXT.exportTXT.ui.ExportDataUI}
- * <p>
- * Package lapr4.green.s1.ipc.n1150800.importexportTXT.exportTXT.ctrl:<p>
- * {@link lapr4.green.s1.ipc.n1150800.importexportTXT.exportTXT.ctrl.ExportDataController}
+ * Package lapr4.green.s2.core.n1150800.PDFStyle.presentation:<p>
+ * {@link lapr4.green.s2.core.n1150800.PDFStyle.presentation.ExportStylePDFUI}
  * <p>
  * 
  * @author Pedro Chilro (1150800@isep.ipp.pt)

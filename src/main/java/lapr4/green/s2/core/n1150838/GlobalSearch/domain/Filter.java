@@ -12,12 +12,30 @@ import java.util.List;
  * @author Nuno Pinto 1150838
  */
 public class Filter {
-
+    /**
+     * The types to include in the search
+     */
     private List<String> typesToInclude;
+    /**
+     * The formulas to include in the search
+     */
     private List<String> formulasToInclude;
+    /**
+     * True if are to include comments in the search
+     */
     private boolean includeComments;
     
+    /**
+     * The filter constructor
+     * @param typesToInclude
+     * @param formulasToInclude
+     * @param includeComments
+     */
     public Filter(List<String> typesToInclude,List<String> formulasToInclude,boolean includeComments){
+        
+        if(typesToInclude == null || formulasToInclude==null ){
+            throw new IllegalStateException();
+        }
         this.typesToInclude=typesToInclude;
         this.formulasToInclude=formulasToInclude;
         this.includeComments=includeComments;

@@ -1,24 +1,26 @@
 package lapr4.green.s1.ipc.n1150532.comm;
 
-import csheets.core.Address;
-import csheets.core.Spreadsheet;
-import csheets.core.Workbook;
+import csheets.core.*;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.RequestSharedCellsDTO;
+import lapr4.blue.s2.ipc.n1140822.fileShare.FileNameDTO;
+import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.ShareContentCellListener;
+import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.StyleListener;
+import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.comm.CellContentDTO;
+import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.comm.CellStyleDTO;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionRequestDTO;
+import lapr4.green.s1.ipc.n1150657.chat.RequestMessageDTO;
 import lapr4.green.s1.ipc.n1150738.securecomm.NewConnectionOnManagerEvent;
+import lapr4.green.s1.ipc.n1150901.search.workbook.RequestWorkbookDTO;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
+import java.util.SortedSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lapr4.blue.s2.ipc.n1140822.fileShare.FileNameDTO;
-import lapr4.blue.s2.ipc.n1140822.fileShare.FileNameListDTO;
-import lapr4.green.s1.ipc.n1150657.chat.RequestMessageDTO;
-import lapr4.green.s1.ipc.n1150901.search.workbook.RequestWorkbookDTO;
 
 /**
  * A singleton to manage all the TCP clients created.
@@ -74,7 +76,7 @@ public class CommTCPClientsManager extends Observable implements Serializable {
     /**
      * It adds a handler to be used by its clients.
      *
-     * @param dto The class which the handler will handle.
+     * @param dto     The class which the handler will handle.
      * @param handler The handler itself.
      */
     public void addHandler(Class dto, CommHandler handler) {
@@ -115,14 +117,15 @@ public class CommTCPClientsManager extends Observable implements Serializable {
      * It sends a range of cells to the server. if a client does not exist, it
      * does nothing.
      *
-     * @param connection The connection id.
-     * @param spreadsheet The spreadsheet from which to extract the cells.
+     * @param connection   The connection id.
+     * @param spreadsheet  The spreadsheet from which to extract the cells.
      * @param firstAddress The first address of the range.
-     * @param lastAddress The last address of the range.
+     * @param lastAddress  The last address of the range.
      */
     public void shareCellsWith(ConnectionID connection, Spreadsheet spreadsheet, Address firstAddress, Address lastAddress) {
         CommTCPClientWorker worker = clients.get(connection);
         if (worker != null) {
+            addSharingListeners(connection, spreadsheet, firstAddress, lastAddress);
             RequestSharedCellsDTO request = new RequestSharedCellsDTO(spreadsheet.getTitle(), spreadsheet, firstAddress, lastAddress);
             try {
                 worker.getObjectOutputStream().writeObject(request);
@@ -133,9 +136,65 @@ public class CommTCPClientsManager extends Observable implements Serializable {
     }
 
     /**
+     * Adds the content change listeners to a range of cells.
+     *
+     * @param connection   the connection ID
+     * @param spreadsheet  the spreadsheet
+     * @param firstAddress the first address of the range
+     * @param lastAddress  the last address of the range
+     */
+    private void addSharingListeners(ConnectionID connection, Spreadsheet spreadsheet,
+                                     Address firstAddress, Address lastAddress) {
+        SortedSet<Cell> cells = spreadsheet.getCells(firstAddress, lastAddress);
+        for (Cell aCell : cells) {
+            aCell.addCellListener(new ShareContentCellListener(connection));
+            if (aCell instanceof CellImpl) {
+                ((CellImpl) aCell).addStyleListener(new StyleListener(connection));
+            }
+        }
+    }
+
+    /**
+     * Shares the style of a given cell.
+     *
+     * @param connection the connection ID
+     * @param cell       the cell who has the style to be shared
+     */
+    public void shareCellStyle(ConnectionID connection, Cell cell) {
+        CommTCPClientWorker worker = clients.get(connection);
+        if (worker != null) {
+            CellStyleDTO cellStyleDTO = CellStyleDTO.createFromCell(cell);
+            try {
+                worker.getObjectOutputStream().writeObject(cellStyleDTO);
+            } catch (IOException e) {
+                Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+    }
+
+    /**
+     * Shares the content of the given cell.
+     *
+     * @param connection the connection ID
+     * @param cell       the cell who has the style to be shared
+     */
+    public void shareCellContent(ConnectionID connection, Cell cell) {
+        CommTCPClientWorker worker = clients.get(connection);
+        if (worker != null) {
+            CellContentDTO cellContentDTO = CellContentDTO.createFromCell(cell);
+            try {
+                worker.getObjectOutputStream().writeObject(cellContentDTO);
+            } catch (IOException e) {
+                Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, e);
+            }
+        }
+
+    }
+
+    /**
      * Tries to search the workbook in the connection received by parameter.
      *
-     * @param connection Id to search the workbook in.
+     * @param connection   Id to search the workbook in.
      * @param workbookName The workbook name to search.
      * @return Returns true if it finds the workbook.
      */
@@ -173,7 +232,7 @@ public class CommTCPClientsManager extends Observable implements Serializable {
      * It adds a client to the manager's clients.
      *
      * @param connection The client identifier.
-     * @param worker The client itself.
+     * @param worker     The client itself.
      */
     private void addClient(ConnectionID connection, CommTCPClientWorker worker) {
         clients.put(connection, worker);
@@ -189,11 +248,12 @@ public class CommTCPClientsManager extends Observable implements Serializable {
 //        }
 //        return null;
 //    }
+
     /**
      * IT sends the message to the server
      *
      * @param connection The connection id.
-     * @param message The message.
+     * @param message    The message.
      */
     public void sendMessageWith(ConnectionID connection, String message) {
         CommTCPClientWorker worker = clients.get(connection);
@@ -208,6 +268,7 @@ public class CommTCPClientsManager extends Observable implements Serializable {
     }
 
     public void requestFile(ConnectionID connection, String fileName) {
+        requestConnectionTo(connection, false);
         CommTCPClientWorker worker = clients.get(connection);
         if (worker != null) {
             try {
@@ -218,5 +279,4 @@ public class CommTCPClientsManager extends Observable implements Serializable {
             }
         }
     }
-
 }

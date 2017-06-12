@@ -1,0 +1,23 @@
+@startuml ipc04_02_design_import.png
+
+participant "UnlinkExportDataAction" as Action
+participant "Thread" as Thread
+participant "WriterThread" as WThread
+participant "SetOfThreads" as Threads
+
+activate Action
+Action -> Thread: getAllStackTraces().keySet()
+activate Thread
+Action <- Thread: list
+deactivate Thread
+Action -> WThread: WriterThread.obtainsThreadId()
+activate WThread
+deactivate WThread
+loop for (Thread thread : setOfThread) 
+Action -> Threads: thread.getId()
+activate Threads
+Action -> WThread: WriterThread.kill()
+activate WThread
+end
+
+@enduml ipc04_02_design_import.png

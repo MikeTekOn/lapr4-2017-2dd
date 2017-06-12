@@ -8,7 +8,6 @@ package lapr4.green.s2.core.n1150838.GlobalSearch.presentation;
 import csheets.core.Cell;
 import java.util.ArrayList;
 import javax.swing.AbstractListModel;
-import lapr4.green.s2.core.n1150838.GlobalSearch.domain.CellInfoDTO;
 
 /**
  *
@@ -17,7 +16,7 @@ import lapr4.green.s2.core.n1150838.GlobalSearch.domain.CellInfoDTO;
 public class CellList extends AbstractListModel {
 
     /**
-     * the current workbook list
+     * the current cell dto list
      */
     private ArrayList<CellInfoDTO> cellList;
     /**
@@ -76,15 +75,18 @@ public class CellList extends AbstractListModel {
     }
         /**
      *
-     * @param index
-     * @return the object contained on the given index
+     * @param cell
+     * @return the description of the cell
      */
     public String buildCellDescription(CellInfoDTO cell){
         StringBuilder sb = new StringBuilder();
-        sb.append("Spreadsheet: ");
+        sb.append("Workbook: ");
+        sb.append(cell.getWorkbookName());
+        sb.append(" Spreadsheet: ");
         sb.append(cell.getSpreadsheetNumber());
         sb.append(" Cell location: ");
-        sb.append(cell.toString());
+        sb.append(cell.getCell().toString());
+        
 
         return sb.toString();
     }

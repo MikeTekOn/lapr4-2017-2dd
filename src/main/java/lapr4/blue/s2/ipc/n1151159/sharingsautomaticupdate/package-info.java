@@ -12,7 +12,7 @@
  * <p>This functional increment is the continuation of the <b>IPC01.1</b> functional increment.</p>
  * <p>The communication framework is part of this feature and it was implemented in the first iteration.</p>
  * <p>
- *     Since this FI is an increment to the IPC01.1 FI, so all the documentation presented there is applied here. Any
+ *     Since this FI is an increment to the IPC01.1 FI, all the documentation presented there takes effect here. Any
  *     kind of modification will be referred in this page.
  * </p>
  *
@@ -40,6 +40,12 @@
  *     is about sending the styles of the cells with the cells itself.
  * </p>
  *
+ * <h4>Start Sharing</h4>
+ * <p>
+ *     To start sharing the cells, we must modify the CellDTO in order to include the style of the cell.
+ *     As well, in the CommExtension, when we are dealing with the received DTO, we must set the received style.
+ * </p>
+ *
  * <h4>Sharing cells in real time</h4>
  * <p>
  *     After a connection being established between two instances of CleanSheets, the communication must be made in
@@ -47,32 +53,15 @@
  *     other side and vice versa.
  * </p>
  * <p>
- *     The same logic from IPC01.1 will be used. The TCP singleton will create a worker thread to share the contents.
- *     The instance that starts sharing will send the contents to be initial merged on the other instance. After that,
- *     both instances must send and receive updates of the shared cells in real time. Given that, a <b>synchronization
- *     problem arises</b> and must be dealt.
- * </p>
- * <p>
- *     As both instances are going to send and receive data simultaneously, a server worker thread will be always active
- *     listening for changes. When a cell is edited, the client worker will send the updates to the other instance. The
- *     other instance will updated the cell that was changed. <b>The biggest synchronization problem comes when both
- *     instances are editing the same cell at the same time.</b>
- * </p>
- * <p>
- *     To solve this issue, only one cell can be edited at a given time. Once a cell starts being edited, a lock must be
- *     obtained for that instance. For that, a message must be sent to the other instance informing that the cell is
- *     being edited. Here we can identify the state pattern for the cells.
- * </p>
- * <p>
- *     If two instances start editing the same cell at the same time, both will send the edit state to the other
- *     instance. When one instance is editing a cell and receive a request that the same cell is being editing too, the
- *     cell will back to the initial state before start being edited. In the worst case, both instances will have to
- *     try to acquire a "lock" again.
+ *     The same logic from IPC01.1 will be used. The worker thread will be responsible to share the contents.
+ *     When the update of a shared cell happens, a listener must tell the TCP client manager to tell the correspondent
+ *     worker thread to send a DTO with the new content of the changed cell.
  * </p>
  *
  * <h4>Send the style of the cells.</h4>
  * <p>
- *     To send the style of the cells, the CellDTO must be refactored to contain a the style of the cell.
+ *     To send the style of the cells, the same logic described above about sharing content applies. In turn, instead
+ *     of sending a DTO with the content, the style will take place.
  * </p>
  *
  *
@@ -81,8 +70,17 @@
  * <h2>4. Tests</h2>
  *
  * <h3>4.1. Unit Tests</h3>
+ * <p>For all the DTOs, it's necessary to create unit tests for the access methods. Some examples are:</p>
  * <ol>
- *     <li>ensureCellSetsTheStyleOfDTO</li>
+ *     <li>getBackgroundColor for StyleDTO</li>
+ *     <li>getAddress for CellStyleDTO</li>
+ *     <li>getContent for CellContentDTO</li>
+ *     <li>...</li>
+ * </ol>
+ * <p>Also, an util class will be created to create styles from StyleDTOs and vice versa. Some tests are:</p>
+ * <ol>
+ *     <li>setStyleFromDTO</li>
+ *     <li>createStyleDtoFromCell</li>
  * </ol>
  *
  * <h3>4.2. Functional Tests Plan</h3>
@@ -117,7 +115,78 @@
  *
  *
  *
- * <h2>8. Work Log</h2>
+ * <h2>5. Design</h2>
+ *
+ *
+ * <h3>5.1. Changes on CellDTO to send style</h3>
+ * <img src="start_sharing.png" alt="start sharing placeholder">
+ *
+ *
+ * <h3>5.2. Share cell content</h3>
+ * <img src="share_cell_content_sd.png" alt="send cell content placeholder">
+ * <p>
+ *     The logic of sending the style of the cell is exactly the same, changing the content by style and using the
+ *     equivalent classes for style.
+ * </p>
+ *
+ *
+ * <h3>5.3. Receive cell content</h3>
+ * <img src="receive_cell_content_sd.png" alt="receive cell content placeholder">
+ * <p>
+ *     The logic of receiving the style of the cell is exactly the same, using the equivalent classes for style.
+ * </p>
+ *
+ *
+ * <h3>5.4. Design Patterns</h3>
+ * <p>To make the communication possible, the observer pattern was used to make notifications about the updates.</p>
+ * <p>Also, all good practices dictated by SOLID and GRASP was followed, to make the software maintainable.</p>
+ *
+ *
+ *
+ *
+ * <h3>6. Implementation</h3>
+ *
+ * <h4>6.1. Changed classes</h4>
+ * <p>
+ *     It was necessary to change some already existing classes instead of creating new ones / making the extend
+ *     mechanism.
+ * </p>
+ * <p>
+ *     The class {@link lapr4.black.s1.ipc.n2345678.comm.sharecells.CellDTO} was modified to add the StyledDTO of the
+ *     shared cells. Although the extend mechanism could be used in this case, the cost would be high in terms of
+ *     coupling, since there is a lot of usages of this class. A big refactor would be necessary.
+ * </p>
+ * <p>
+ *     The class {@link lapr4.green.s1.ipc.n1150532.comm.CommExtension} was also modified in the update method. If we
+ *     would extend this class, the method update would have to be overwritten. Since update method has a lot of logic
+ *     depending on the instance of the received object (not a good approach, but for the time being a refactor would bes
+ *     expensive), most of the logic would have to be duplicated. Also the usages of this class would have to be
+ *     refactored as well.
+ * </p>
+ *
+ *
+ *
+ *
+ * <h2>7. Integration/Demonstration</h2>
+ *
+ * <p>
+ *     It was necessary to integrate this FI using the communication framework developed in the first iteration.
+ * </p>
+ * <p>I was very active and I successfully collaborate with the team members.</p>
+ *
+ *
+ *
+ *
+ * <h2>8. Final Remarks</h2>
+ * <p>
+ *     As a possible future extra for this feature, when two hosts are sharing cells, it should be possible to
+ *     highlight the cell that the other host is editing.
+ * </p>
+ *
+ *
+ *
+ *
+ * <h2>9. Work Log</h2>
  *
  * <h3>Tuesday 06/06/2017</h3>
  *
@@ -135,7 +204,7 @@
  *
  * <p><b>Blocking:</b></p>
  * <ol>
- *     <li>Nothing</li>
+ *     <li>Nothing.</li>
  * </ol>
  *
  *
@@ -144,19 +213,101 @@
  *
  * <p>Yesterday I've worked on:</p>
  * <ol>
- *     <li>Presentation of the lang demo</li>
- *     <li>Starts the analysis</li>
+ *     <li>Functional increment analysis.</li>
  * </ol>
  *
  * <p><b>Today</b></p>
  * <ol>
- *     <li>Functional increment analysis.</li>
+ *     <li>Functional increment tests.</li>
+ *     <li>Functional increment design.</li>
  * </ol>
  *
  * <p><b>Blocking:</b></p>
  * <ol>
- *     <li>Nothing</li>
+ *     <li>Nothing.</li>
  * </ol>
+ *
+ *
+ *
+ * <h3>Thursday 08/06/2017</h3>
+ *
+ * <p>Yesterday I've worked on:</p>
+ * <ol>
+ *     <li>Functional increment tests.</li>
+ *     <li>Functional increment design.</li>
+ * </ol>
+ *
+ * <p><b>Today</b></p>
+ * <ol>
+ *     <li>Finish design.</li>
+ *     <li>Implementation.</li>
+ * </ol>
+ *
+ * <p><b>Blocking:</b></p>
+ * <ol>
+ *     <li>Nothing.</li>
+ * </ol>
+ *
+ *
+ *
+ * <h3>Friday 09/06/2017</h3>
+ *
+ * <p>Yesterday I've worked on:</p>
+ * <ol>
+ *     <li>Functional increment design.</li>
+ * </ol>
+ *
+ * <p><b>Today</b></p>
+ * <ol>
+ *     <li>Implementation.</li>
+ * </ol>
+ *
+ * <p><b>Blocking:</b></p>
+ * <ol>
+ *     <li>Nothing.</li>
+ * </ol>
+ *
+ *
+ *
+ * <h3>Saturday 10/06/2017</h3>
+ *
+ * <p>Yesterday I've worked on:</p>
+ * <ol>
+ *     <li>Implementation</li>
+ * </ol>
+ *
+ * <p><b>Today</b></p>
+ * <ol>
+ *     <li>Implementation</li>
+ * </ol>
+ *
+ * <p><b>Blocking:</b></p>
+ * <ol>
+ *     <li>Nothing.</li>
+ * </ol>
+ *
+ *
+ *
+ * <h3>Sunday 11/06/2017</h3>
+ *
+ * <p>Yesterday I've worked on:</p>
+ * <ol>
+ *     <li>Implementation</li>
+ * </ol>
+ *
+ * <p><b>Today</b></p>
+ * <ol>
+ *     <li>Testing</li>
+ *     <li>Fix bugs</li>
+ *     <li>Update documentation</li>
+ * </ol>
+ *
+ * <p><b>Blocking:</b></p>
+ * <ol>
+ *     <li>Nothing.</li>
+ * </ol>
+ *
+ *
  *
  * @author Ivo Ferro [1151159]
  */

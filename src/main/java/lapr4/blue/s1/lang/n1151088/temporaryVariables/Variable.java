@@ -9,6 +9,7 @@ import csheets.core.IllegalValueTypeException;
 import csheets.core.Value;
 import csheets.core.formula.Expression;
 import csheets.core.formula.util.ExpressionVisitor;
+import eapli.util.Strings;
 
 import java.util.Objects;
 
@@ -27,13 +28,11 @@ public class Variable implements Expression {
     /**Name of variable*/
     String name;
 
-
-    //FIXME
-    /** The unique version identifier used for serialization */
-    //private static final long serialVersionUID = 7854180857828149859L;
-
-
     public Variable(String name, Expression expression){
+
+        if(Strings.isNullOrEmpty(name) | expression == null){
+            throw new IllegalArgumentException("Name cant be empty or null and expression can't be null");
+        }
         this.name = name;
         this.expression = expression;
     }

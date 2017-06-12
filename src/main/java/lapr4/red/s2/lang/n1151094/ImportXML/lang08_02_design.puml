@@ -1,0 +1,39 @@
+@startuml
+
+title Use Case: Import XML
+actor "User" as Actor
+participant ImportXmlUI as UI
+participant ImportXmlController as Controller
+participant "xml:ImportXml" as import
+participant ImportContext as Context
+participant "uiController:UIController" as uiController
+participant "work:WorkBook" as work 
+
+Actor ->UI: Starts importing Xml
+activate UI
+UI->Controller:create(uiController)
+activate Controller
+Controller->Context:create(xml)
+activate Context
+deactivate Context
+Controller->import:create (uiController) 
+deactivate Controller
+activate import
+deactivate import
+Actor<-UI:open a window
+Actor->UI: Select file
+UI->Controller: selectPath(path)
+activate Controller
+Controller->import:selectPath(path)
+UI->Controller:importXml()
+Controller->Context:executeStrategy()
+activate Context
+import->Context: importData()
+deactivate Context
+import->uiController:setActiveWorkbook(work)
+activate uiController
+deactivate uiController
+UI->Controller:validateExtension(file)
+Controller->import:validateExtension(file)
+
+@enduml

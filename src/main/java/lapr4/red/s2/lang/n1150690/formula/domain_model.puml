@@ -33,12 +33,14 @@ interface ExpressionVisitor {
 	+Object visitReference(Reference reference)
 	+Object visitFunctionCall(FunctionCall call)
 	+Object visitNaryOperation(NaryOperation operation)
+        <b>+Object visitMonetaryValue(MonetaryValue operation)</b>
 }
 note right : <b>Vistior pattern to transverse\n<b>expressions and compile them
 Expression <|-- Formula
 Expression <|-- Reference
 Expression <|-- Operation
 Expression <|-- FunctionCall
+Expression <|-- MonetaryValue
 Expression <|-- Literal
 Operation <|-- UnaryOperation
 Operation <|-- BinaryOperation

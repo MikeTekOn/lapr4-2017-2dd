@@ -38,6 +38,9 @@ import csheets.core.formula.util.ReferenceTransposer;
 import csheets.ext.CellExtension;
 import csheets.ext.Extension;
 import csheets.ext.ExtensionManager;
+import csheets.ui.ctrl.UIController;
+import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.ShareContentCellListener;
+import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.StyleListener;
 
 /**
  * The implementation of the <code>Cell</code> interface.
@@ -69,15 +72,20 @@ public class CellImpl implements Cell {
 	/** The cell's dependents */
 	private SortedSet<Cell> dependents = new TreeSet<Cell>();
 
+	private UIController uiController;
+
 	/** The cell listeners that have been registered on the cell */
 	private transient List<CellListener> listeners
 		= new ArrayList<CellListener>();
 
+	/** The style listeners that have beens registered on the cell */
+	private transient List<StyleListener> styleListeners = new ArrayList<>();
+
 	/** The cell extensions that have been instantiated */
-	private transient Map<String, CellExtension> extensions = 
+	private transient Map<String, CellExtension> extensions =
 		new HashMap<String, CellExtension>();
 
-	/**
+        /**
 	 * Creates a new cell at the given address in the given spreadsheet.
 	 * (not intended to be used directly).
 	 * @see Spreadsheet#getCell(Address)
@@ -89,7 +97,7 @@ public class CellImpl implements Cell {
 		this.address = address;
 	}
 
-	/**
+        /**
 	 * Creates a new cell at the given address in the given spreadsheet,
 	 * initialized with the given content (not intended to be used directly).
 	 * @see Spreadsheet#getCell(Address)
@@ -100,6 +108,35 @@ public class CellImpl implements Cell {
 	 */
 	CellImpl(Spreadsheet spreadsheet, Address address, String content) throws FormulaCompilationException {
 		this(spreadsheet, address);
+		storeContent(content);
+		reevaluate();
+	}
+
+        
+	/**
+	 * Creates a new cell at the given address in the given spreadsheet.
+	 * (not intended to be used directly).
+	 * @see Spreadsheet#getCell(Address)
+	 * @param spreadsheet the spreadsheet
+	 * @param address the address of the cell
+	 */
+	CellImpl(Spreadsheet spreadsheet, Address address, UIController uiController) {
+		this.spreadsheet = spreadsheet;
+		this.address = address;
+		this.uiController = uiController;
+	}
+
+	/**
+	 * Creates a new cell at the given address in the given spreadsheet,
+	 * initialized with the given content (not intended to be used directly).
+	 * @see Spreadsheet#getCell(Address)
+	 * @param spreadsheet the spreadsheet
+	 * @param address the address of the cell
+	 * @param content the content of the cell
+	 * @throws FormulaCompilationException if an incorrectly formatted formula was entered
+	 */
+	CellImpl(Spreadsheet spreadsheet, Address address, String content,UIController uiController) throws FormulaCompilationException {
+		this(spreadsheet, address, uiController);
 		storeContent(content);
 		reevaluate();
 	}
@@ -147,6 +184,33 @@ public class CellImpl implements Cell {
 		// Checks for change
 		if (!newValue.equals(oldValue))
 			fireValueChanged();
+	}
+
+    /**
+     * Sets the style changed.
+     */
+	public void setStyleChanged() {
+		fireStyleChanged();
+	}
+
+    /**
+     * Notifies all registered listeners that the style of the cell changed.
+     */
+	private void fireStyleChanged() {
+		for (StyleListener listener: styleListeners) {
+			listener.styleModified(this);
+		}
+	}
+
+	/**
+	 * Updates the style of the cell. If the cell is being shared with an host, the content won't be send.
+	 */
+	public void updateCellStyle() {
+		for (CellListener listener: listeners) {
+			if (!(listener instanceof ShareContentCellListener)) {
+				listener.valueChanged(this);
+			}
+		}
 	}
 
 	/**
@@ -201,7 +265,7 @@ public class CellImpl implements Cell {
 		// Parses formula
 		Formula formula = null;
 		if (content.length() > 1)
-			formula = FormulaCompiler.getInstance().compile(this, content);
+			formula = FormulaCompiler.getInstance().compile(this, content, uiController);
 
 		// Stores content and formula
 		this.content = content;
@@ -320,7 +384,7 @@ public class CellImpl implements Cell {
 		// Change the address of the source cell
 		// Remove the target cell from the spreadsheet
 		// Flag the target cell as overwritten!
-		
+
 		// fireCellCopied(source);
 	}
 
@@ -346,6 +410,24 @@ public class CellImpl implements Cell {
 	public void removeCellListener(CellListener listener) {
 		listeners.remove(listener);
 	}
+
+    /**
+     * Adds a given style listener.
+     *
+     * @param styleListener style listener to be added
+     */
+	public void addStyleListener(StyleListener styleListener) {
+	    styleListeners.add(styleListener);
+    }
+
+    /**
+     * Removes a given style listener.
+     *
+     * @param styleListener style listener to be removed
+     */
+    public void removeStyleListener(StyleListener styleListener) {
+        styleListeners.remove(styleListener);
+    }
 
 	public CellListener[] getCellListeners() {
 		return listeners.toArray(new CellListener[listeners.size()]);
@@ -430,4 +512,9 @@ public class CellImpl implements Cell {
 		for (CellExtension extension : extensions.values())
 			stream.writeObject(extension);
 	}
+      
+        public String getPreviewText(){
+            return value.toString();
+        }
+        
 }

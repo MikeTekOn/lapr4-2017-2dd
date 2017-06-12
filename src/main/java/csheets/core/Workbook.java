@@ -20,6 +20,8 @@
  */
 package csheets.core;
 
+import csheets.ui.ctrl.UIController;
+import lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable;
 import lapr4.red.s2.lang.n1150623.globalVariables.VarContentor;
 
 import java.io.IOException;
@@ -28,50 +30,58 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import lapr4.red.s2.lang.n1150451.multipleMacros.domain.MacroList;
 
 /**
  * A workbook which can contain several spreadsheets.
+ *
  * @author Einar Pehrson
  *
  */
 public class Workbook implements Iterable<Spreadsheet>, Serializable {
 
-	/** The unique version identifier used for serialization */
-	private static final long serialVersionUID = -6324252462576447242L;
+    /**
+     * The unique version identifier used for serialization
+     */
+    private static final long serialVersionUID = -6324252462576447242L;
 
-	/** The spreadsheets of which the workbook consists */
-	private List<Spreadsheet> spreadsheets = new ArrayList<Spreadsheet>();
+    /**
+     * The spreadsheets of which the workbook consists
+     */
+    private List<Spreadsheet> spreadsheets = new ArrayList<Spreadsheet>();
 
-	/**
-	 * The global variables associated to this workbook
-	 *  @author Guilherme Ferreira 1150623
-	 * */
-	private VarContentor globalVariables = new VarContentor();
+    /**
+     * The global variables associated to this workbook
+     *
+     * @author Guilherme Ferreira 1150623
+     *
+     */
+    private VarContentor globalVariables = new VarContentor();
 
-	/** The cell listeners that have been registered on the cell */
-	private transient List<WorkbookListener> listeners
-		= new ArrayList<WorkbookListener>();
+    /**
+     * The cell listeners that have been registered on the cell
+     */
+    private transient List<WorkbookListener> listeners
+            = new ArrayList<WorkbookListener>();
 
-	/** The number of spreadsheets that have been created in the workbook */
-	private int createdSpreadsheets;
+    /**
+     * Macro list of the workbook.
+     */
+    private MacroList macroList = new MacroList();
+    /**
+     * The number of spreadsheets that have been created in the workbook
+     */
+    private int createdSpreadsheets;
 
-	/**
-	 * Creates a new empty workbook.
-	 */
-	public Workbook() {}
+    private UIController uiController;
 
-	/**
-	 * Creates a new workbook, which initially contains the given number
-	 * of blank spreadsheets.
-	 * @param sheets the number of sheets to create initially
-	 */
-	public Workbook(int sheets) {
-		for (int i = 0; i < sheets; i++)
-			spreadsheets.add(new SpreadsheetImpl(this,
-				getNextSpreadsheetTitle()));
-	}
+    /**
+     * Creates a new empty workbook.
+     */
+    public Workbook() {
+    }
 
-	/**
+    /**
 	 * Creates a new workbook, using the given content matrix to create
 	 * spreadsheets initially.
 	 * @param contents the content matrices to use when creating spreadsheets
@@ -79,144 +89,213 @@ public class Workbook implements Iterable<Spreadsheet>, Serializable {
 	public Workbook(String[][]... contents) {
 		for (String[][] content : contents)
 			spreadsheets.add(new SpreadsheetImpl(this,
-				getNextSpreadsheetTitle(), content));
+				getNextSpreadsheetTitle()));
 	}
 
-	/**
-	 * Adds a blank spreadsheet to the end of the workbook.
-	 */
-	public void addSpreadsheet() {
-		Spreadsheet spreadsheet = new SpreadsheetImpl(this,
-			getNextSpreadsheetTitle());
-		spreadsheets.add(spreadsheet);
-		fireSpreadsheetInserted(spreadsheet, spreadsheets.size() - 1);
-	}
+    /**
+     * Creates a new workbook, which initially contains the given number of
+     * blank spreadsheets.
+     *
+     * @param sheets the number of sheets to create initially
+     */
+    public Workbook(int sheets, UIController uiController) {
+        for (int i = 0; i < sheets; i++) {
+            spreadsheets.add(new SpreadsheetImpl(this,
+                    getNextSpreadsheetTitle(), uiController));
+        }
+    }
 
-	/**
-	 * Adds a new spreadsheet to the workbook, in which cells are initialized
-	 * with data from the given content matrix.
-	 * @param content the contents of the cells in the spreadsheet
-	 */
-	public void addSpreadsheet(String[][] content) {
-		Spreadsheet spreadsheet = new SpreadsheetImpl(this,
-			getNextSpreadsheetTitle(), content);
-		spreadsheets.add(spreadsheet);
-		fireSpreadsheetInserted(spreadsheet, spreadsheets.size() - 1);
-	}
+    /**
+     * Creates a new workbook, using the given content matrix to create
+     * spreadsheets initially.
+     *
+     * @param contents the content matrices to use when creating spreadsheets
+     */
+    public Workbook(UIController uiController, String[][]... contents) {
+        this.uiController = uiController;
+        for (String[][] content : contents) {
+            spreadsheets.add(new SpreadsheetImpl(this,
+                    getNextSpreadsheetTitle(), content, uiController));
+        }
+    }
 
-	/**
-	 * Returns the title to be used for the next spreadsheet added.
-	 * @return the title to be used for the next spreadsheet added
-	 */
-	private String getNextSpreadsheetTitle() {
-		return SpreadsheetImpl.BASE_TITLE + " " + (createdSpreadsheets++ + 1);
-	}
+    /**
+     * Adds a blank spreadsheet to the end of the workbook.
+     */
+    public void addSpreadsheet() {
+        Spreadsheet spreadsheet = new SpreadsheetImpl(this,
+                getNextSpreadsheetTitle(), uiController);
+        spreadsheets.add(spreadsheet);
+        fireSpreadsheetInserted(spreadsheet, spreadsheets.size() - 1);
+    }
 
-	/**
-	 * Adds a new blank spreadsheet to the workbook.
-         * @param spreadsheet spreadsheet
-	 */
-	public void removeSpreadsheet(Spreadsheet spreadsheet) {
-		spreadsheets.remove(spreadsheet);
-		// Remove references to the spreadsheet in remaining spreadsheets!
-		fireSpreadsheetRemoved(spreadsheet);
-	}
+    /**
+     * Adds a new spreadsheet to the workbook, in which cells are initialized
+     * with data from the given content matrix.
+     *
+     * @param content the contents of the cells in the spreadsheet
+     */
+    public void addSpreadsheet(String[][] content) {
+        Spreadsheet spreadsheet = new SpreadsheetImpl(this,
+                getNextSpreadsheetTitle(), content, uiController);
+        spreadsheets.add(spreadsheet);
+        fireSpreadsheetInserted(spreadsheet, spreadsheets.size() - 1);
+    }
 
-	/**
-	 * Returns the spreadsheet at the given index.
-	 * @param index the index of the spreadsheet in the workbook
-	 * @return the spreadsheet at the given index
-	 * @throws IndexOutOfBoundsException if the index is out of range (index less than 0 or index greater or equal |spreadsheets|)
-	 */
-	public Spreadsheet getSpreadsheet(int index) throws IndexOutOfBoundsException {
-		return spreadsheets.get(index);
-	}
+    /**
+     * Returns the title to be used for the next spreadsheet added.
+     *
+     * @return the title to be used for the next spreadsheet added
+     */
+    private String getNextSpreadsheetTitle() {
+        return SpreadsheetImpl.BASE_TITLE + " " + (createdSpreadsheets++ + 1);
+    }
 
-	/**
-	 * Returns the number of spreadsheets in the the workbook.
-	 * @return the number of spreadsheets in the the workbook
-	 */
-	public int getSpreadsheetCount() {
-		return spreadsheets.size();
-	}
+    /**
+     * Adds a new blank spreadsheet to the workbook.
+     *
+     * @param spreadsheet spreadsheet
+     */
+    public void removeSpreadsheet(Spreadsheet spreadsheet) {
+        spreadsheets.remove(spreadsheet);
+        // Remove references to the spreadsheet in remaining spreadsheets!
+        fireSpreadsheetRemoved(spreadsheet);
+    }
 
-	/**
-	 * Returns an iterator over the spreadsheets in the workbook.
-	 * @return an iterator over the spreadsheets in the workbook
-	 */
-	public Iterator<Spreadsheet> iterator() {
-		return spreadsheets.iterator();
-	}
+    /**
+     * Returns the spreadsheet at the given index.
+     *
+     * @param index the index of the spreadsheet in the workbook
+     * @return the spreadsheet at the given index
+     * @throws IndexOutOfBoundsException if the index is out of range (index
+     * less than 0 or index greater or equal |spreadsheets|)
+     */
+    public Spreadsheet getSpreadsheet(int index) throws IndexOutOfBoundsException {
+        return spreadsheets.get(index);
+    }
 
-/*
+    /**
+     * Returns the number of spreadsheets in the the workbook.
+     *
+     * @return the number of spreadsheets in the the workbook
+     */
+    public int getSpreadsheetCount() {
+        return spreadsheets.size();
+    }
+
+    /**
+     * Returns an iterator over the spreadsheets in the workbook.
+     *
+     * @return an iterator over the spreadsheets in the workbook
+     */
+    public Iterator<Spreadsheet> iterator() {
+        return spreadsheets.iterator();
+    }
+
+    /*
  * EVENT HANDLING
- */
+     */
+    /**
+     * Registers the given listener on the workbook.
+     *
+     * @param listener the listener to be added
+     */
+    public void addWorkbookListener(WorkbookListener listener) {
+        listeners.add(listener);
+    }
 
-	/**
-	 * Registers the given listener on the workbook.
-	 * @param listener the listener to be added
-	 */
-	public void addWorkbookListener(WorkbookListener listener) {
-		listeners.add(listener);
-	}
+    /**
+     * Removes the given listener from the workbook.
+     *
+     * @param listener the listener to be removed
+     */
+    public void removeWorkbookListener(WorkbookListener listener) {
+        listeners.remove(listener);
+    }
 
-	/**
-	 * Removes the given listener from the workbook.
-	 * @param listener the listener to be removed
-	 */
-	public void removeWorkbookListener(WorkbookListener listener) {
-		listeners.remove(listener);
-	}
+    /**
+     * Returns the listeners that have been registered on the workbook.
+     *
+     * @return the listeners that have been registered on the workbook
+     */
+    public WorkbookListener[] getWorkbookListeners() {
+        return listeners.toArray(new WorkbookListener[listeners.size()]);
+    }
 
-	/**
-	 * Returns the listeners that have been registered on the workbook.
-	 * @return the listeners that have been registered on the workbook
-	 */
-	public WorkbookListener[] getWorkbookListeners() {
-		return listeners.toArray(new WorkbookListener[listeners.size()]);
-	}
+    /**
+     * Notifies all registered listeners that a spreadsheet has been inserted.
+     *
+     * @param spreadsheet the spreadsheet that was inserted
+     * @param index the index at which the spreadsheet was inserted
+     */
+    private void fireSpreadsheetInserted(Spreadsheet spreadsheet, int index) {
+        for (WorkbookListener listener : listeners) {
+            listener.spreadsheetInserted(spreadsheet, index);
+        }
+    }
 
-	/**
-	 * Notifies all registered listeners that a spreadsheet has been inserted.
-	 * @param spreadsheet the spreadsheet that was inserted
-	 * @param index the index at which the spreadsheet was inserted
-	 */
-	private void fireSpreadsheetInserted(Spreadsheet spreadsheet, int index) {
-		for (WorkbookListener listener : listeners)
-			listener.spreadsheetInserted(spreadsheet, index);
-	}
+    /**
+     * Notifies all registered listeners that a spreadsheet has been removed.
+     *
+     * @param spreadsheet the spreadsheet that was removed
+     */
+    private void fireSpreadsheetRemoved(Spreadsheet spreadsheet) {
+        for (WorkbookListener listener : listeners) {
+            listener.spreadsheetRemoved(spreadsheet);
+        }
+    }
 
-	/**
-	 * Notifies all registered listeners that a spreadsheet has been removed.
-	 * @param spreadsheet the spreadsheet that was removed
-	 */
-	private void fireSpreadsheetRemoved(Spreadsheet spreadsheet) {
-		for (WorkbookListener listener : listeners)
-			listener.spreadsheetRemoved(spreadsheet);
-	}
+    /**
+     * Notifies all registered listeners that a spreadsheet has been renamed.
+     *
+     * @param spreadsheet the spreadsheet that was renamed
+     */
+    @SuppressWarnings("unused")
+    private void fireSpreadsheetRenamed(Spreadsheet spreadsheet) {
+        for (WorkbookListener listener : listeners) {
+            listener.spreadsheetRenamed(spreadsheet);
+        }
+    }
 
-	/**
-	 * Notifies all registered listeners that a spreadsheet has been renamed.
-	 * @param spreadsheet the spreadsheet that was renamed
-	 */
-	@SuppressWarnings("unused")
-	private void fireSpreadsheetRenamed(Spreadsheet spreadsheet) {
-		for (WorkbookListener listener : listeners)
-			listener.spreadsheetRenamed(spreadsheet);
-	}
-
-/*
+    /*
  * GENERAL
- */
+     */
+    /**
+     * Customizes deserialization by recreating the listener list.
+     *
+     * @param stream the object input stream from which the object is to be read
+     * @throws IOException If any of the usual Input/Output related exceptions
+     * occur
+     * @throws ClassNotFoundException If the class of a serialized object cannot
+     * be found.
+     */
+    private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
+        stream.defaultReadObject();
+        listeners = new ArrayList<WorkbookListener>();
+    }
 
-	/**
-	 * Customizes deserialization by recreating the listener list.
-	 * @param stream the object input stream from which the object is to be read
-	 * @throws IOException If any of the usual Input/Output related exceptions occur
-	 * @throws ClassNotFoundException If the class of a serialized object cannot be found.
-	 */
-	private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
-		stream.defaultReadObject();
-		listeners = new ArrayList<WorkbookListener>();
-	}
+    /**
+     * Returns the list of macros associated with the workbook
+     *
+     * @return
+     */
+    public MacroList getMacroList() {
+        return macroList;
+    }
+
+    /**
+     *
+     * @return the global variable container
+     */
+    public VarContentor globalVariables() {
+        return this.globalVariables;
+    }
+
+    /**
+     *
+     * @param var - Global Variable to save or update
+     */
+    public void updateGlobalVariable(Variable var) {
+        this.globalVariables.update(var);
+    }
 }

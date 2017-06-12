@@ -4,6 +4,7 @@ import csheets.core.Cell;
 import csheets.core.formula.Expression;
 import csheets.core.formula.compiler.ExpressionCompiler;
 import csheets.core.formula.compiler.FormulaCompilationException;
+import csheets.ui.ctrl.UIController;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.ParseTree;
 
@@ -36,7 +37,7 @@ public class ExcelMonetaryExpressionCompiler implements ExpressionCompiler {
     }
 
     @Override
-    public Expression compile(Cell cell, String source) throws FormulaCompilationException {
+    public Expression compile(Cell cell, String source, UIController uiController) throws FormulaCompilationException {
         // Creates the lexer and parser
         //noinspection deprecation
         ANTLRInputStream input = new ANTLRInputStream(source);
@@ -52,7 +53,7 @@ public class ExcelMonetaryExpressionCompiler implements ExpressionCompiler {
         parser.addErrorListener(errorListener); // add ours
 
         // Attempts to match an expression
-        ParseTree tree = parser.expression();
+        ParseTree tree = parser.formula();
         if (parser.getNumberOfSyntaxErrors() > 0) {
             throw new FormulaCompilationException(errorListener.getErrorMessage());
         }

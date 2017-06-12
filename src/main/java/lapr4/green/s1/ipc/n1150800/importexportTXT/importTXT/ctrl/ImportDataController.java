@@ -15,6 +15,7 @@ import lapr4.green.s1.ipc.n1150800.importexportTXT.FileData;
 
 import java.io.File;
 import java.io.IOException;
+import lapr4.blue.s2.ipc.n1141570.importExportTxtLink.ctrl.LinkTxtImportController;
 
 /**
  *
@@ -26,6 +27,11 @@ public class ImportDataController implements Controller {
      * The UI Controller
      */
     private UIController uiController;
+
+    /**
+     * The Link Txt Controller
+     */
+    private LinkTxtImportController linkTxtImportController;
 
     /**
      * The file that contains the data to be imported
@@ -49,11 +55,14 @@ public class ImportDataController implements Controller {
      * the first line of the file is a line of headers
      *
      */
-    public ImportDataController(UIController uiController, File fileToRead, char separatorCharacter, CellRange cellRange, boolean firstLineRepresentsHeaders) {
+    public ImportDataController(UIController uiController, File fileToRead, char separatorCharacter, CellRange cellRange, boolean firstLineRepresentsHeaders, Spreadsheet spreadsheet) {
         FileData fileData = new FileData(fileToRead, separatorCharacter, cellRange, firstLineRepresentsHeaders);
-  
+
         this.uiController = uiController;
         this.fileToRead = fileData;
+
+        this.linkTxtImportController = new LinkTxtImportController(fileToRead, separatorCharacter, cellRange, firstLineRepresentsHeaders, this.uiController, spreadsheet);
+        this.linkTxtImportController.fireLinkReaderThread();
     }
 
     /**

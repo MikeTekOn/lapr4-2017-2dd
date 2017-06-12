@@ -39,41 +39,93 @@
  *
  * Then, we can analyze the steps needed to develop this feature increment.
  *
- * <h3>Sending the search request to the Network</h3>
+ * <h3>3.1 Sending the search request to the Network</h3>
  * The first thing to do is sending a broadcast search request to all the
  * CleanSheets in the same local network. In that request, we should send a DTO
  * object with the name pattern of the Workbook that we want to find. The class
- * RequestWorkbookDTO must be created. It will store the name pattern and will
- * be used in the broadcast.
+ * RequestWorkbookRequestDTO must be created. It will store the name pattern and
+ * will be used in the broadcast.
  *
- * <h3>Receiving the broadcast message with the Workbook search request</h3>
+ * <h3>3.2 Receiving the broadcast message with the Workbook search request</h3>
  * The instances of CleanSheets in the network will receive the search request
  * and after processing the received DTO, we need to get the local open
  * Workbooks. The class CleanSheets has a getWorkbooks() method that returns all
  * the active Workbooks so we can find if there are any Workbooks that match the
- * name received in the broadcast request.
+ * name received in the broadcast request. To process the DTO, we need to have a
+ * HandlerSearchWorkbookRequestDTO.
  *
- * <h3>Sending the reply to the broadcast request</h3>
+ * <h3>3.3 Sending the reply to the broadcast request</h3>
  * In case any of the local Workbooks match the name in the search request, the
  * instance needs to reply with:
  * <p>
  * <b>Instance identification:</b> identification of the instance where the
- * workbook was found. The CleanSheets class should also have this information.
+ * workbook was found. The response packet should have this information.
  * <p>
- * <b>Name:</b> the workbook's name.
+ * <b>Name:</b> the workbook's name. We can access it by using the getFile()
+ * method of the Cleansheets class and then using the getName() of the File
+ * class.
  *
  * <p>
  * <b>Summary:</b> a summary of the workbook's contents which consists of the
- * name of the spreadsheets and the first non-empty cells of each spreadsheet.
- * The class Spreadsheet has methods to provide this information.
+ * number and name of the spreadsheets. The class Spreadsheet has methods to
+ * provide this information.
  *
- * <h3>Presenting the search results to the user</h3>
+ * To create the reply we need a SearchWorkbookNetworkResponseDTO and the
+ * associated handler.
+ *
+ * <h3>3.4 Presenting the search results to the user</h3>
  * The information of the workbook's found in the network search should be
  * presented in a sidebar, as a list. The list will be updated as replies are
- * received. We will use the previous developed search sidebar and integrate the
- * network search there, giving the user the possibility to search for a
- * workbook in the local disk or within the network.
+ * received. We will use the previous developed network sidebar to activate the
+ * connection and integrate a new sidebar with the network search option, giving
+ * the user the possibility to search for a workbook in the network.
  *
+ * <h2>4. Design</h2>
+ * So far, the design classes are:
+ * <ul>
+ * <li>SearchWorkbookNetworkExtension - the extension we are adding to
+ * CleanSheets</li>
+ * <li>SearchWorkbookRequestDTO - data transfer object for the UDP
+ * broadcast</li>
+ * <li>SearchWorkbookResponseDTO - data transfer object for the reply</li>
+ * <li>HandlerSearchWorkbookRequestDTO - processes the request DTO</li>
+ * <li>HandlerSearchWorkbookResponseDTO - processes the response DTO</li>
+ * <li>SearchWorkbookNetworkAction - creates the UDPClient thread that will
+ * handle the broadcast</li>
+ * <li>SearchWorkbookNetworkPanel - sidebar panel for the feature</li>
+ * </ul>
+ *
+ * <h3>4.1 How to send the UDP broadcast with the workbook name</h3>
+ * <p>
+ * <img src="ipc03_2_design1.png" alt="image">
+ *
+ * <h3>4.2 How to handle the requestDTO</h3>
+ * <p>
+ * Note: in order to access the instance's active workbooks we need access to
+ * the App (Cleansheets class). We only have access to it through the
+ * UIController. To solve this problem and be able to handle the search request
+ * inside the request handler we have to pass the UIController to the
+ * constructor of the handler. The class that creates the handler is the
+ * CommExtension and it has a uiController and that should solve the problem.
+ *
+ * <img src="ipc03_2_design3.png" alt="image">
+ *
+ * <h3>4.3 How to handle the responseDTO</h3>
+ * <p>
+ * <img src="ipc03_2_design2.png" alt="image">
+ *
+ * <h2>5. Tests</h2>
+ * 
+ * <h3>Functional tests</h3>
+ * <ul>
+ * <li>Open instances of cleansheets in different computers.</li>
+ * <li>open some workbooks in each instance.</li>
+ * <li>go to Network sidebar and activate the network in both computers.</li>
+ * <li>in one of the computers, search for a workbook name that is active in the other computer.</li>
+ * <li>make sure the workbook is found and the list is updated with the correct information.</li>
+ * <li>repeat for other files and using only the "cls" extension as name.</li>
+ * <li>all the active workbooks must appear.</li>
+ * </ul>
  *
  * <h2>8. Work Log</h2>
  * <p>
@@ -85,8 +137,8 @@
  * <p>
  * Today
  * <p>
- * 1. Client presentation of the Lang feature increments. 
- * 2. Started the analysis of the search in the network feature increment.
+ * 1. Client presentation of the Lang feature increments. 2. Started the
+ * analysis of the search in the network feature increment.
  * <p>
  * Blocking:
  * <p>
@@ -96,13 +148,13 @@
  * <p>
  * Yesterday I worked on:
  * <p>
- * 1. Client presentation of the Lang feature increments. 
- * 2. Started the analysis of the search in the network feature increment.
+ * 1. Client presentation of the Lang feature increments. 2. Started the
+ * analysis of the search in the network feature increment.
  * <p>
  * Today
  * <p>
- * 1. Analysis of the search in the network feature increment which was not entirely finished.
- * 2. Started the design of the FI.
+ * 1. Analysis of the search in the network feature increment which was not
+ * entirely finished. 2. Started the design of the FI.
  * <p>
  * Blocking:
  * <p>
@@ -112,43 +164,44 @@
  * <p>
  * Yesterday I worked on:
  * <p>
- * 1. ---
+ * 1. Analysis of the search in the network feature increment which was not
+ * entirely finished. 2. Started the design of the FI.
  * <p>
  * Today
  * <p>
- * 1. ---
+ * 1. Finish analysis. 2. Finish design.
  * <p>
  * Blocking:
  * <p>
- * 1. ---
+ * 1. Nothing
  * <p>
  * <b>Friday</b>
  * <p>
  * Yesterday I worked on:
  * <p>
- * 1. ---
+ * 1. Finished analysis. 2. Started design.
  * <p>
  * Today
  * <p>
- * 1. ---
+ * 1. Finish design. 2. Start tests. 3. Start implementation.
  * <p>
  * Blocking:
  * <p>
- * 1. ---
+ * 1. Nothing
  * <p>
  * <b>Saturday</b>
  * <p>
  * Yesterday I worked on:
  * <p>
- * 1. ---
+ * 1. Finished design. 2. Started tests. 3. Started implementation.
  * <p>
  * Today
  * <p>
- * 1. ---
+ * 1. Finish tests and implementation.
  * <p>
  * Blocking:
  * <p>
- * 1. ---
+ * 1. Nothing
  * <p>
  *  * <b>Sunday</b>
  * <p>

@@ -4,6 +4,7 @@ import csheets.ui.ctrl.UIController;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
+import lapr4.red.s2.lang.n1150451.multipleMacros.ui.ModifyMacroAction;
 
 /**
  * Represents the macro menu.
@@ -13,8 +14,7 @@ import java.awt.event.KeyEvent;
 public class MacroMenu extends JMenu {
 
     /**
-     * Creates an instance of the macro menu.
-     * Adds the associated macro action.
+     * Creates an instance of the macro menu. Adds the associated macro action.
      */
     public MacroMenu(UIController uiController) {
         super("Macros");
@@ -22,5 +22,6 @@ public class MacroMenu extends JMenu {
         setMnemonic(KeyEvent.VK_M);
 
         add(new MacroAction(uiController));
+        add(new ModifyMacroAction(uiController));
     }
 }

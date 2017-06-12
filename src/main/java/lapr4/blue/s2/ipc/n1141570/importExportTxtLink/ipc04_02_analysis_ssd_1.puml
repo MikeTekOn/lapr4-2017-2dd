@@ -1,0 +1,5 @@
+@startuml
+actor User
+User -> UI: Unlinks the file with the app
+UI --> User: Informs about the success of the operation
+@enduml

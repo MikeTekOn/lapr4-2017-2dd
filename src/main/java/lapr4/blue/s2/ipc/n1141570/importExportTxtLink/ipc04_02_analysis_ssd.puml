@@ -1,6 +1,6 @@
 @startuml
 actor User
-User -> UI: Starts the text link
-UI --> User: Asks firstly, to import or export data
-User <-- UI: Informs about the sucess of the operation
+User -> UI: Imports or exports the data txt
+UI --> User: Asks where he wants to look for the file to store or to get the information
+User <-- UI: Informs about the sucess of the operation and that is synchronizing
 @enduml
