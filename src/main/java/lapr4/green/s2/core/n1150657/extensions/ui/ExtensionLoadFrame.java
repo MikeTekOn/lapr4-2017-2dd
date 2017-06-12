@@ -59,7 +59,7 @@ public class ExtensionLoadFrame extends JFrame {
     /**
      * The name of the select button.
      */
-    private static final String BUTTON_SELECT_NAME = "Select";
+    private static final String BUTTON_SELECT_NAME = "Start";
 
     /**
      * The name of the load button.

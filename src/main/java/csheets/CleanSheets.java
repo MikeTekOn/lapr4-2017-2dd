@@ -241,6 +241,10 @@ public class CleanSheets implements Observer {
     public static void setFlag(boolean newflag) {
         flag = newflag;
     }
+    
+    public static boolean getFlag(){
+        return flag;
+    }
 
     /**
      * Starts CleanSheets from the command-line.
@@ -248,6 +252,7 @@ public class CleanSheets implements Observer {
      * @param args the command-line arguments (not used)
      */
     public static void main(String[] args) {
+        //CleanSheets.setFlag(true); if the beggining of the app is without the loading 
         CleanSheets app = new CleanSheets();
 
         // Configures look and feel
