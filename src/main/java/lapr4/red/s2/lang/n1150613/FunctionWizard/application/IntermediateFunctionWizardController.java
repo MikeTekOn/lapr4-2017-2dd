@@ -5,9 +5,15 @@
  */
 package lapr4.red.s2.lang.n1150613.FunctionWizard.application;
 
+import csheets.core.IllegalValueTypeException;
+import csheets.core.Value;
 import csheets.core.formula.compiler.FormulaCompilationException;
+import csheets.core.formula.lang.UnknownElementException;
 import csheets.ui.ctrl.UIController;
+import java.util.List;
 import lapr4.blue.s1.lang.n1060503.functionWizard.FunctionWizardController;
+import lapr4.blue.s1.lang.n1151452.formula.compiler.ExcelExpressionCompiler;
+import lapr4.red.s2.lang.n1150613.FunctionWizard.FunctionUtils;
 
 /**
  * Represents the function wizard controller (Sprint 2 - LANG.04)
@@ -16,6 +22,10 @@ import lapr4.blue.s1.lang.n1060503.functionWizard.FunctionWizardController;
  */
 public class IntermediateFunctionWizardController extends FunctionWizardController {
 
+    private FunctionUtils func;
+    private int type;
+    private ExcelExpressionCompiler exc = new ExcelExpressionCompiler();
+
     /**
      * intermediate function wizard controller
      *
@@ -23,6 +33,22 @@ public class IntermediateFunctionWizardController extends FunctionWizardControll
      */
     public IntermediateFunctionWizardController(UIController ctrl) {
         super(ctrl);
+        func = new FunctionUtils();
+    }
+
+    /**
+     * Returns the result of the formula with the given expression
+     *
+     * @param parameters inserted parameters
+     * @return result result of the function
+     * @throws csheets.core.formula.compiler.FormulaCompilationException
+     * @throws csheets.core.IllegalValueTypeException
+     */
+    private String compile(String expression) throws FormulaCompilationException, IllegalValueTypeException {
+
+        Value eval = exc.compile(uiController.getActiveCell(), expression, uiController).evaluate();
+        return eval.toString();
+
     }
 
     /**
@@ -32,31 +58,43 @@ public class IntermediateFunctionWizardController extends FunctionWizardControll
      * @param syntax identifier of the function
      * @return result result of the function
      * @throws csheets.core.formula.compiler.FormulaCompilationException
+     * @throws csheets.core.IllegalValueTypeException
      */
-    public String calculateResult(String parameters, String syntax) throws FormulaCompilationException {
-        String result = calculateFunction(parameters, syntax);
+    public String calculateResult(String parameters, String syntax) throws FormulaCompilationException, IllegalValueTypeException {
+        String result;
 
-        uiController.getActiveCell().setContent(result);
-        result = uiController.getActiveCell().getValue().toString();
+        result = func.calculateResult(parameters, syntax);
+        result = compile(result);
 
         return result;
     }
 
     /**
-     * Returns the expression of the function with the given parameters
+     * gets all identifiers of the functions and operators
      *
-     * @param parameters inserted parameters
-     * @param syntax identifier of the function
-     * @return result result of the function
-     * @throws csheets.core.formula.compiler.FormulaCompilationException
+     * @return all functions
      */
-    private String calculateFunction(String parameters, String syntax) {
-        String result;
-        String start = syntax.substring(0, syntax.indexOf("(") + 1);
+    @Override
+    public List getFunctions() {
 
-        start = start + parameters + ")";
-        result = start;
-        return result;
+        return func.getFunctions();
+    }
+
+    /**
+     * get syntax and build the expressation for function wizard
+     *
+     * @param identifier of function
+     * @param i
+     * @return get syntax and build the expressation for function wizard
+     * @throws UnknownElementException to be caught
+     */
+    public String getSyntax(String identifier, int i) throws UnknownElementException {
+
+        return func.getSyntax(identifier, i);
+    }
+
+    public int getType() {
+        return type;
     }
 
 }

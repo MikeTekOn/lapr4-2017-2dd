@@ -8,6 +8,9 @@ package lapr4.blue.s2.ipc.n1060503.chat.ui;
 import csheets.ext.Extension;
 import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.UIExtension;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComponent;
 
 /**
@@ -36,7 +39,11 @@ public class UIChatParticipantsExtension extends UIExtension {
     @Override
     public JComponent getSideBar() {
         if (sideBar == null) {
-            sideBar = new ChatParticipantsPanel(uiController, extension);
+            try {
+                sideBar = new ChatParticipantsPanel(uiController, extension);
+            } catch (IOException ex) {
+                Logger.getLogger(UIChatParticipantsExtension.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return sideBar;
     }

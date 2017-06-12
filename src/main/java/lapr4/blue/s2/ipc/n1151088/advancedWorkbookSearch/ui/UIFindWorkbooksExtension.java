@@ -1,10 +1,14 @@
 package lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.ui;
 
+import csheets.core.Cell;
 import csheets.ext.Extension;
 import csheets.ui.ctrl.UIController;
+import csheets.ui.ext.CellDecorator;
 import csheets.ui.ext.UIExtension;
+import java.awt.Graphics;
 import javax.swing.JComponent;
 import javax.swing.JToolBar;
+import lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.ui.FindWorkbookSideBar;
 
 /**
  *
@@ -35,5 +39,11 @@ public class UIFindWorkbooksExtension extends UIExtension {
 	public JComponent getSideBar() {
 		return new FindWorkbookSideBar(super.uiController);
 	}
+        
+    @Override
+    public CellDecorator getCellDecorator(){
+       return super.getCellDecorator();            
+    }
+    
     
 }

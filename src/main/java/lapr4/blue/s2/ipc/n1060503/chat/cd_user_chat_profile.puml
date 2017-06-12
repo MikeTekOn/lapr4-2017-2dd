@@ -22,9 +22,14 @@ class UserChatProfile{
     -status
     +boolean : changeInfo(nickname, image, etc..)
 }
+enum StatusChatProfile{
+    -ONLINE
+    -OFFLINE
+}
 ChangeUserChatProfileUI -> ChangeUserChatProfileController : create
 ChangeUserChatProfileController --> UserChatRepository
 ChangeUserChatProfileController --> UserChatProfile
 UserChatRepository -> UserChatProfile : save
+UserChatProfile o- StatusChatProfile
 
 @enduml

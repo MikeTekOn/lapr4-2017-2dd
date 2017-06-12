@@ -18,9 +18,8 @@ public class ChangeUserChatProfileController {
     
     UserChatProfile ucp;
     
-    public ChangeUserChatProfileController() throws IOException{
-        // TODO get from repository
-        ucp = new UserChatProfile();
+    public ChangeUserChatProfileController(UserChatProfile ucp) throws IOException{
+        this.ucp =ucp;
     }
     
     public String getUsername(){
@@ -42,7 +41,8 @@ public class ChangeUserChatProfileController {
     public boolean changeInfo(String nickname, 
             StatusChatProfile status) throws IOException{
         
-        ucp.changeInfo(nickname, status);
+        ucp.setNickname(nickname);
+        ucp.setStatus(status);
         
         //TODO save repository
         return ucp != null;

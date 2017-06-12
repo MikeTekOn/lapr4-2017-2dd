@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr.green.s2.core.n1150901.richCommentsAndHistory;
+package lapr4.green.s2.core.n1150901.richCommentsAndHistory;
 
 import csheets.core.Address;
 import csheets.core.Workbook;

@@ -9,7 +9,6 @@ import java.nio.file.PathMatcher;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import lapr4.green.s1.ipc.n1150838.findworkbooks.FileDTO;
-import lapr4.green.s1.ipc.n1150838.findworkbooks.FindWorkbooksPublisher;
 
 /**
  *
@@ -29,7 +28,7 @@ public class FindPattern {
             Path pathName=file.getFileName();
             if(pathName!=null && matcher.matches(pathName)){
                 FileDTO dto = new FileDTO(pathName.getFileName().toString(), pathName.toString());
-                FindWorkbooksPublisher.getInstance().notifyObservers(dto);
+               // FindWorkbooksPublisher.getInstance().notifyObservers(dto);
             }
             
         }

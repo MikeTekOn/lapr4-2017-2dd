@@ -40,6 +40,7 @@ public class SearchWorkbookTest {
         f_client = new File("client_file.cls");
         
         //Create CleanSheets
+        CleanSheets.setFlag(true);
         c_server = new CleanSheets();
         c_client = new CleanSheets();
         

@@ -1,24 +1,20 @@
 package lapr4.blue.s2.ipc.n1151031.searchnetwork;
 
-import csheets.ext.Extension;
 import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.UIExtension;
 import lapr4.blue.s2.ipc.n1151031.searchnetwork.ui.SearchWorkbookNetworkUIExtension;
+import lapr4.green.s1.ipc.n1150901.search.workbook.SearchWorkbookExtension;
 
 /**
  * The Search workbook in the network Extension.
  *
  * @author Tiago Correia - 1151031@isep.ipp.pt
  */
-public class SearchWorkbookNetworkExtension extends Extension {
-
-    /**
-     * The name of the extension
-     */
-    public static final String NAME = "Workbook Network Search";
+public class SearchWorkbookNetworkExtension extends SearchWorkbookExtension {
 
     public SearchWorkbookNetworkExtension() {
-        super(NAME);
+        super();
+        setVersion(super.getVersion() + 1);
     }
 
     /**
@@ -30,6 +26,15 @@ public class SearchWorkbookNetworkExtension extends Extension {
     @Override
     public UIExtension getUIExtension(UIController uiController) {
         return new SearchWorkbookNetworkUIExtension(this, uiController);
+    }
+
+    @Override
+    public String metadata() {
+        return String.format("This is %s with version %d\n"
+                + "This extension has the follow description: %s\n"
+                + "This extension was made by Tiago Correia in Sprint 2 and it is in the package %s\n"
+                + "This extension was updated for a network extension",
+                getName(), getVersion(), getDescription(), getClass().getName());
     }
 
 }

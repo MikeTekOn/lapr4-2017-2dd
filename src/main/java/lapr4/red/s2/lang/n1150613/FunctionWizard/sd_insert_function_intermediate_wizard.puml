@@ -9,6 +9,7 @@ actor User
 participant "FunctionWizardAction" as Action
 participant "FunctionWizardUI" as UI
 participant "FunctionWizardController" as CRTL
+participant "FunctionUtils" as func
 
 User -> Action : selects "Function Wizard" option
 activate Action
@@ -21,13 +22,16 @@ create CRTL
 UI --> CRTL : create
 UI -> CRTL : getFunctions()
 activate CRTL
-CRTL -> Language : getFunctions()
+CRTL -> func : getFunctions()
+activate func
+func -> Language : getFunctions()
+func -> Language : getOperators()
 CRTL --> UI : 
 deactivate CRTL
-UI --> User : displays a new window that contains a list of functions 
+UI --> User : displays a new window that contains a list of functions/operators 
 deactivate UI
 
-User -> UI : select a function
+User -> UI : select a function/operator
 activate UI
 UI -> CRTL : getDescription(String identifier)
 activate CRTL
@@ -43,7 +47,9 @@ CRTL --> UI :
 deactivate CRTL
 UI -> CRTL : getSyntax(String identifier)
 activate CRTL
-CRTL -> Language : getFunction(String identifier)
+CRTL -> func : getSyntax()
+activate func
+func -> Language : getFunction(String identifier)
 
 activate Language
 Language -> Function : getParameters()
@@ -54,7 +60,7 @@ Function -> FunctionParameter : getName()
 deactivate Function
 CRTL --> UI :
 deactivate CRTL
-UI --> User : display the syntax and description of selected function \n Asks for parameters
+UI --> User : display the syntax and description of selected function/operator \n Asks for parameters
 deactivate UI
 
 
