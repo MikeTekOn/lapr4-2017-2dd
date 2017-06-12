@@ -42,12 +42,12 @@ public class ExtensionFactory {
     /**
      * The second version.
      */
-    private static final int  version2 = 2;
-    
+    private static final int version2 = 2;
+
     /**
      * The IllegalArgumentException message.
      */
-    private static final String EX_MESSAGE = "(Factory) Extension doesn't exist."; 
+    private static final String EX_MESSAGE = "(Factory) Extension doesn't exist.";
 
     /**
      * The static method that will get the pretended extension. It will have two
@@ -65,8 +65,11 @@ public class ExtensionFactory {
             //Versions
             if (criteria2 == version1) {
                 return new ChatExtension();
-            } else if (criteria2 == version2) {
-                return new ChatParticipantsExtension();
+            }
+            if (criteria1.equals(ChatParticipantsExtension.CHAT_NAME)) {
+                if (criteria2 == version1) {
+                    return new ChatParticipantsExtension();
+                }
             }
         } else if (criteria1.equals(StyleExtension.NAME)) {
             if (criteria2 == version1) {
@@ -83,7 +86,7 @@ public class ExtensionFactory {
         } else if (criteria1.equals(CommentsExtension.NAME)) {
             if (criteria2 == version1) {
                 return new CommentsExtension();
-            } else if(criteria2 == version2){
+            } else if (criteria2 == version2) {
                 return new CommentsWithHistoryExtension();
             }
         } else if (criteria1.equals(ContactsExtension.NAME)) {
@@ -93,13 +96,13 @@ public class ExtensionFactory {
         } else if (criteria1.equals(ExtensionFindWorkbooks.NAME)) {
             if (criteria2 == version1) {
                 return new ExtensionFindWorkbooks();
-            }else if(criteria2 == version2){
+            } else if (criteria2 == version2) {
                 return new ExtensionFindWorkbook();
             }
         } else if (criteria1.equals(SearchWorkbookExtension.NAME)) {
             if (criteria2 == version1) {
                 return new SearchWorkbookExtension();
-            }else if(criteria2 == version2){
+            } else if (criteria2 == version2) {
                 return new SearchWorkbookNetworkExtension();
             }
         } else if (criteria1.equals(ImportExportExtension.NAME)) {
@@ -117,15 +120,15 @@ public class ExtensionFactory {
         } else if (criteria1.equals(SearchExtension.NAME)) {
             if (criteria2 == version1) {
                 return new SearchExtension();
-            }else if(criteria2 == version2){
+            } else if (criteria2 == version2) {
                 return new GlobalSearchExtension();
             }
         } else if (criteria1.equals(ConditionalStyleExtension.NAME)) {
             if (criteria2 == version1) {
                 //return new ConditionalStyleExtension(uiControlle);
             }
-        } else if(criteria1.equals(NetAnalyzerExtension.NAME)){
-            if(criteria2 == version1){
+        } else if (criteria1.equals(NetAnalyzerExtension.NAME)) {
+            if (criteria2 == version1) {
                 return new NetAnalyzerExtension();
             }
         }
