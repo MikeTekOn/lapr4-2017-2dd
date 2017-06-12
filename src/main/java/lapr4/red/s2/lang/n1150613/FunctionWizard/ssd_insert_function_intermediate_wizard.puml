@@ -8,9 +8,9 @@ skinparam shadowing false
 actor User 
 participant "System" as S
 User -> S : selects "Function Wizard" option
-S --> User : displays a new window that contains a list of functions 
+S --> User : displays a new window that contains a list of functions/operators
 User -> S : select a function
-S --> User : display the syntax and description of selected function and asks for parameters
+S --> User : display the syntax and description of selected function/operator and asks for parameters
 User -> S : Inserts parameters
 S --> User : Shows dynamic result
 User -> S : choose apply option

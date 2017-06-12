@@ -5,27 +5,23 @@
  */
 package lapr4.green.s2.core.n1150901.richCommentsAndHistory.domain;
 
-import csheets.ext.Extension;
 import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.UIExtension;
 import lapr4.green.s2.core.n1150901.richCommentsAndHistory.presentation.CommentsWithHistoryUIExtension;
+import lapr4.white.s1.core.n1234567.comments.CommentsExtension;
 
 /**
  *
  * @author Miguel Silva - 1150901
  */
-public class CommentsWithHistoryExtension extends Extension {
-
-    /**
-     * The name of the extension
-     */
-    public static final String NAME = "History";
+public class CommentsWithHistoryExtension extends CommentsExtension {
 
     /**
      * Creates a new Example extension.
      */
     public CommentsWithHistoryExtension() {
-        super(NAME);
+        super();
+        setVersion(super.getVersion()+1);
     }
 
     /**
@@ -38,4 +34,14 @@ public class CommentsWithHistoryExtension extends Extension {
     public UIExtension getUIExtension(UIController uiController) {
         return new CommentsWithHistoryUIExtension(this, uiController);
     }
+    
+
+    @Override
+    public String metadata() {
+        return String.format("This is %s with version %d\n"
+                + "This extension has the follow description: %s\n"
+                + "This extension was made by Miguel Silva in Sprint 2 and it is in the package %s\n"
+                + "This extension now has an history",
+                getName(), getVersion(), getDescription(), getClass().getName());
+    }    
 }

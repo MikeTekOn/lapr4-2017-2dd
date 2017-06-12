@@ -54,18 +54,19 @@ public class UnlinkExportDataAction extends BaseAction {
         if (WriterThread.obtainsThreadId() != -2) {
 
             Set<Thread> setOfThread = Thread.getAllStackTraces().keySet();
-
+            boolean flag = true;
             //Iterate over set to find thread i want to stop
             for (Thread thread : setOfThread) {
                 int id = (int) thread.getId();
                 if (id == WriterThread.obtainsThreadId()) {
                     WriterThread.kill();
-                    System.out.println("Unlink stopped!\n");
                     JOptionPane.showMessageDialog(null, "Now export is Unlinked!.");
+                    flag = false;
                 }
-                System.out.printf("Id da thread a comparar: %d\n", id);
             }
-
+            if (flag) {
+                JOptionPane.showMessageDialog(null, "The unlink export didnt work!", "Unlinking Error", JOptionPane.ERROR_MESSAGE);
+            }
         } else if (WriterThread.obtainsThreadId() == -2) {
             JOptionPane.showMessageDialog(null, "First you need to export data txt!", "Unlinking Error", JOptionPane.ERROR_MESSAGE);
         }

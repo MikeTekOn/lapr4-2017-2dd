@@ -19,6 +19,7 @@ class FunctionWizardController {
     +getDescription(String identifier)
     +getSyntax(String identifier)
     +insertSyntaxFormulaBar(String syntax)
+    +compile()
 }
 class Language{
     +getFunctions()
@@ -27,10 +28,17 @@ class Language{
 class FunctionParameter{
     +getDescription()
 }
+
+class FunctionUtils{
+    +calculateResult()
+    +getSyntax()
+    +getFunctions()
+}
+
 FunctionWizardAction -> FunctionWizardUI 
 FunctionWizardUI --> FunctionWizardController 
 FunctionWizardController -> Language 
-
+FunctionWizardController -> FunctionUtils
 Language --> Function 
 
 Function -> FunctionParameter

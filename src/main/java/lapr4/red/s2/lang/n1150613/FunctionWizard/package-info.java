@@ -30,7 +30,11 @@
  *
  * This use case is identical to the previous one used in sprint one of this
  * user story, with the differences in the User Interface as well in some new
- * Controller methods.
+ * Controller methods. For this i will extend the previous Controller class and
+ * overwrite some methods so they can handle with operators as well.
+ *
+ * I will create a FunctionUtils class that has some utility methods,so that
+ * controller doesn't have large and not necessary methods.
  *
  * <h3>Identified Problems:</h3>
  * 1.Display an edit box for each parameter of the selected function.<p>
@@ -46,20 +50,28 @@
  *
  * <h3>Proposed solution</h3>
  * 1. Make defaultTableModel, used in UI to show function pretended parameters,
- * cells editable so they can turn into edit boxes to insert function
+ * cells editable so they can turn into edit boxes to insert function/operators
  * parameters.
  * <p>
  * 2. Add listener to know when the text box is updated and refresh the result
  * of the formula through a controller method yet to be implemented
- * (calculateResult) that will return the formula result each time one parameter
- * is inserted.
+ * (calculateResult) that will return the formula's result from a given
+ * expression,that uses the method compile from ExcelExpressionCompiler to
+ * evaluate the formula's result.
  * <p>
- * 3. Change main method from Language class to update function list by
- * importing operators and functions from java.lang.Math.
+ * 3. Import the list of operators from the main Language class to update
+ * function list by importing operators and functions from java.lang.Math. Since
+ * the operators do not have functionParameters,i've added default ones to them.
  * <p>
  * 4 & 5. Simple changes in UI,changing the Frame class to place the desired
- * button between the CellEditor and the formula bar.
+ * button between the CellEditor and the formula bar. Remove the button from the
+ * Menu.
  * <p>
+ *
+ * Note: The operators will need a different syntax since they are from the type
+ * "=(parameter1 identifier parameter2) and not like functions
+ * =identifier(parameter1;parameter2). For this i'm going to separate the
+ * different syntaxes for each one.
  *
  * <img src="ssd_insert_function_intermediate_wizard.png" alt="image">
  *
@@ -93,6 +105,8 @@
  * Package lapr4.red.s1.core.n1150613.workbookSearch.application:
  * <p>
  * {@link lapr4.red.s2.lang.n1150613.FunctionWizard.IntermediateFunctionWizardController}
+ * 
+ * {@link lapr4.red.s2.lang.n1150613.FunctionWizard.FunctionUtils}
  * <p>
  *  * Package lapr4.red.s1.core.n1150613.workbookSearch.ui:
  * <p>

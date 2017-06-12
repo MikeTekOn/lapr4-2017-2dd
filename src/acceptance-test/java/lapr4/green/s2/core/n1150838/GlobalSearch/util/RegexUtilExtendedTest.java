@@ -45,6 +45,7 @@ public class RegexUtilExtendedTest {
         types = new ArrayList();
         formulas = new ArrayList();
         boolean isCommentsToInclude = false;
+        CleanSheets.setFlag(true);
         app = new CleanSheets();
         app.create();
 //        ctrl = new UIController(app);

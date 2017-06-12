@@ -77,6 +77,41 @@ public class SpreadsheetImpl implements Spreadsheet {
 
 	private UIController uiController;
 
+        /**
+	 * Creates a new spreadsheet.
+	 * @param workbook the workbook to which the spreadsheet belongs
+	 * @param title the title of the spreadsheet
+	 */
+	SpreadsheetImpl(Workbook workbook, String title) {
+		this.workbook = workbook;
+		this.title = title;
+	}
+        
+        /**
+	 * Creates a new spreadsheet, in which cells are initialized with data from
+	 * the given content matrix.
+	 * @param workbook the workbook to which the spreadsheet belongs
+	 * @param title the title of the spreadsheet
+	 * @param content the contents of the cells in the spreadsheet
+	 */
+	SpreadsheetImpl(Workbook workbook, String title, String[][] content) {
+		this(workbook, title);
+		rows = content.length;
+		for (int row = 0; row < content.length; row++) {
+			int columns = content[row].length;
+			if (this.columns < columns)
+				this.columns = columns;
+			for (int column = 0; column < columns; column++) {
+				try {
+					Address address = new Address(column, row);
+					Cell cell = new CellImpl(this, address, content[row][column]);
+					cell.addCellListener(eventForwarder);
+					cells.put(address, cell);
+				} catch (FormulaCompilationException e) {}
+			}
+		}
+	}
+        
 	/**
 	 * Creates a new spreadsheet.
 	 * @param workbook the workbook to which the spreadsheet belongs
@@ -87,7 +122,7 @@ public class SpreadsheetImpl implements Spreadsheet {
 		this.title = title;
 		this.uiController = uiController;
 	}
-
+        
 	/**
 	 * Creates a new spreadsheet, in which cells are initialized with data from
 	 * the given content matrix.

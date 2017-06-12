@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.util.List;
 import java.util.Map;
 import lapr4.green.s2.core.n1150901.richCommentsAndHistory.domain.CommentsWithHistoryListener;
@@ -58,6 +59,21 @@ public class CommentsWithHistoryUI extends CommentsWithUserUI implements Comment
     private DefaultListModel historyModel;
 
     /**
+     * The list that will contain the comments found by the search.
+     */
+    private JList searchList;
+
+    /**
+     * The list model to save the search.
+     */
+    private DefaultListModel searchModel;
+
+    /**
+     * Has the index from where the active comments end in the search list.
+     */
+    private int searchModelSize = 0;
+
+    /**
      * The textfield for the user to search comments.
      */
     private JTextField searchText;
@@ -70,8 +86,6 @@ public class CommentsWithHistoryUI extends CommentsWithUserUI implements Comment
     public CommentsWithHistoryUI(UIController uiController) {
 
         super(uiController);
-
-        uiController.addSelectionListener(this);
 
         userStyle = new UserStyle();
 
@@ -87,14 +101,17 @@ public class CommentsWithHistoryUI extends CommentsWithUserUI implements Comment
 
         formatAndStyle.setLayout(new FlowLayout());
         formatAndStyle.add(stylePanel());
-        formatAndStyle.add(resetPanel());
 
         TitledBorder border = BorderFactory.createTitledBorder("History");
         border.setTitleJustification(TitledBorder.CENTER);
         history.setBorder(border);
         history.add(historyPanel());
 
+        TitledBorder border2 = BorderFactory.createTitledBorder("Search Comment");
+        border2.setTitleJustification(TitledBorder.CENTER);
+        search.setBorder(border2);
         search.add(searchPanel());
+        search.add(searchList());
 
         add(formatAndStyle);
         add(history);
@@ -138,6 +155,7 @@ public class CommentsWithHistoryUI extends CommentsWithUserUI implements Comment
         JPanel formatAndStylePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         formatAndStylePanel.add(createFontButton());
         formatAndStylePanel.add(createForegroundButton());
+        formatAndStylePanel.add(createResetButton());
 
         subPanel.add(selectFormatAndStylePanel);
         subPanel.add(formatAndStylePanel);
@@ -150,7 +168,7 @@ public class CommentsWithHistoryUI extends CommentsWithUserUI implements Comment
     /**
      * Creates the Font button for the true condition style
      *
-     * @return the Font button
+     * @return The font button.
      */
     private JButton createFontButton() {
         JButton button = new JButton(new ImageIcon(StyleExtension.class.getResource("res/img/font.gif")));
@@ -172,7 +190,7 @@ public class CommentsWithHistoryUI extends CommentsWithUserUI implements Comment
     /**
      * Creates the Foreground button for the true condition style
      *
-     * @return the Foreground button
+     * @return The foreground button.
      */
     private JButton createForegroundButton() {
         JButton button = new JButton(new ImageIcon(StyleExtension.class.getResource("res/img/color_fg.gif")));
@@ -194,23 +212,26 @@ public class CommentsWithHistoryUI extends CommentsWithUserUI implements Comment
     /**
      * Creates the Reset button for the formatation and style.
      *
-     * @return The panel with the reset button.
+     * @return The reset button.
      */
-    private JPanel resetPanel() {
-        JPanel subPanel = new JPanel(new FlowLayout());
+    private JButton createResetButton() {
         JButton button = new JButton(new ImageIcon(StyleExtension.class.getResource("res/img/reset.gif")));
         button.setContentAreaFilled(false);
         button.setPreferredSize(new Dimension(25, 25));
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                userStyle = new UserStyle();
+                userStyle.setTrueStyleForegroundColor(Color.black);
+                userStyle.setTrueStyleFont(new Font("Dialog", Font.BOLD, 12));
+                color = userStyle.getTrueStyleForegroundColor();
+                flag = 2;
+                font = userStyle.getTrueStyleFont();
+                flag = 1;
+                panelComments.repaint();
             }
         });
 
-        subPanel.add(button);
-        subPanel.setMaximumSize(subPanel.getPreferredSize());
-        return subPanel;
+        return button;
     }
 
     private JPanel searchPanel() {
@@ -230,6 +251,33 @@ public class CommentsWithHistoryUI extends CommentsWithUserUI implements Comment
     }
 
     /**
+     * Creates and returns the panel containing the search list.
+     *
+     * @return The panel containing the search list.
+     */
+    private JScrollPane searchList() {
+        searchModel = new DefaultListModel();
+        searchList = new JList();
+        searchList.setModel(searchModel);
+        searchList.setBackground(this.getBackground());
+        searchList.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        searchList.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder()));
+        searchList.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                int index = searchList.locationToIndex(e.getPoint());
+                if (index < searchModelSize) {
+                    searchList.setToolTipText("Comment");
+                } else {
+                    searchList.setToolTipText("History");
+                }
+            }
+        });
+
+        return new JScrollPane(searchList);
+    }
+
+    /**
      * Updates the comment's history when the comments of the active cell are
      * changed.
      *
@@ -244,9 +292,14 @@ public class CommentsWithHistoryUI extends CommentsWithUserUI implements Comment
      * Updates the comment's history.
      */
     private void updateList() {
-        for (Map.Entry<User, List<String>> entry : controller.comments().entrySet()) {
-            for (String com : entry.getValue()) {
-                historyModel.addElement(com);
+        historyModel.removeAllElements();
+        for (Map.Entry<User, Map<String, List<String>>> mapHistory : controller.history().entrySet()) {
+            for (Map.Entry<String, List<String>> userHistory : mapHistory.getValue().entrySet()) {
+                if (userHistory.getKey().equals(selectedComment)) {
+                    for (String oldVersion : userHistory.getValue()) {
+                        historyModel.addElement(oldVersion);
+                    }
+                }
             }
         }
     }
@@ -265,8 +318,6 @@ public class CommentsWithHistoryUI extends CommentsWithUserUI implements Comment
         }
         if (c != null) {
             cell.addCommentsWithHistoryListener(this);
-            controller.changeActiveCell(cell);
-            model.removeAllElements();
         }
 
         // Stops listening to previous active cell
@@ -285,10 +336,33 @@ public class CommentsWithHistoryUI extends CommentsWithUserUI implements Comment
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            controller.searchPartOfWord(color, flag, panelHistory, panelComments, searchText.getText());
+            searchModel.removeAllElements();
+            Map<Integer, List<String>> found;
 
-            if (flag != 3) {
-                JOptionPane.showMessageDialog(null, ui, "There weren't found any comments.", JOptionPane.INFORMATION_MESSAGE);
+            try {
+                found = controller.searchPartOfWord(searchText.getText());
+            } catch (IllegalArgumentException ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage(), "Information", JOptionPane.INFORMATION_MESSAGE);
+                return;
+            }
+
+            for (int key : found.keySet()) {
+                switch (key) {
+                    case 0:
+                        JOptionPane.showMessageDialog(null, "There weren't found any comments.", "Information", JOptionPane.INFORMATION_MESSAGE);
+                        break;
+                    case 1:
+                        for (String comment : found.get(1)) {
+                            searchModel.addElement(comment);
+                        }
+                        searchModelSize = searchModel.getSize();
+                        break;
+                    default:
+                        for (String history : found.get(2)) {
+                            searchModel.addElement(history);
+                        }
+                        break;
+                }
             }
 
             searchText.setText((""));

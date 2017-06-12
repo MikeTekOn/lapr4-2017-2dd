@@ -1,6 +1,5 @@
 package lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch;
 
-import lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.PreviewWorkbook;
 import csheets.CleanSheets;
 import csheets.core.Address;
 import csheets.core.Cell;
@@ -24,6 +23,7 @@ public class PreviewWorkbookTest {
     @Before
     public void setUp() throws FormulaCompilationException {
          // Try to create the CS application object
+         CleanSheets.setFlag(true);
         app = new CleanSheets();
         // This will create a workbook with 3 sheets
         app.create();        
@@ -51,7 +51,7 @@ public class PreviewWorkbookTest {
         Workbook workbook =  app.getWorkbooks()[0];
         PreviewWorkbook instance = new PreviewWorkbook(workbook);
         
-        int expResult = 3;
+        int expResult = 2;
         int result = instance.nrSpreadSheetsFilled();
         assertEquals(expResult, result);
     }

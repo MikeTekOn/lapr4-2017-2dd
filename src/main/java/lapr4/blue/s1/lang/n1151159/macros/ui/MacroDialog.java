@@ -26,7 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import lapr4.red.s2.lang.n1150451.multipleMacros.MacroWithName;
+import lapr4.red.s2.lang.n1150451.multipleMacros.domain.MacroWithName;
 import lapr4.red.s2.lang.n1150451.multipleMacros.application.MultipleMacrosWithNameController;
 
 /**
@@ -235,10 +235,11 @@ public class MacroDialog extends JDialog {
                                macroController.emptyList();
                                 value = macroController.executeMacro(uiController.getActiveSpreadsheet(), uiController, macroText, name);
                                 if (value == null) {
+                                    JOptionPane.showMessageDialog(rootPane, "Recursivity found.");
                                     return;
                                 }
                             } catch (NullPointerException e) {
-                                JOptionPane.showMessageDialog(rootPane, "Recursivity found.");
+                                //JOptionPane.showMessageDialog(rootPane, "Recursivity found.");
                                 return;
                             }
                             macroOutputTextField.setText(value.toString());

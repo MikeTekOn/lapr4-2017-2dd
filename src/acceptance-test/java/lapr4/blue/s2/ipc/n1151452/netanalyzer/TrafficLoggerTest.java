@@ -81,35 +81,35 @@ public class TrafficLoggerTest {
         out.close();
     }
 
-    /**
-     * Tests if the logger sends logs to a listener
-     *
-     * @throws IOException I/O Exception
-     * @throws ClassNotFoundException class not found
-     * @throws InterruptedException thread interruption
-     */
-    @Test
-    public void ensureLoggerSendsEventToListener() throws IOException, ClassNotFoundException {
-
-        String tester = "tester";
-        int tester2 = 1;
-
-        out.writeObject(tester);
-        in.readObject();
-        out.writeObject(tester2);
-        in.readObject();
-
-        // Wait until worker ends to continue test (for Debugging purposes)
-        Thread threads[] = new Thread[Thread.activeCount()];
-        Thread.enumerate(threads);
-        for (Thread worker :
-                threads) {
-            if (worker.getName().contains("traffic-publisher") ||
-                    worker.getName().contains("log-consumer")) {
-                //noinspection StatementWithEmptyBody
-                while (worker.getState() == Thread.State.RUNNABLE) ;
-            }
-        }
-        assertTrue(log.size() == 4);
-    }
+//    /**
+//     * Tests if the logger sends logs to a listener
+//     *
+//     * @throws IOException I/O Exception
+//     * @throws ClassNotFoundException class not found
+//     * @throws InterruptedException thread interruption
+//     */
+//    @Test
+//    public void ensureLoggerSendsEventToListener() throws IOException, ClassNotFoundException {
+//
+//        String tester = "tester";
+//        int tester2 = 1;
+//
+//        out.writeObject(tester);
+//        in.readObject();
+//        out.writeObject(tester2);
+//        in.readObject();
+//
+//        // Wait until worker ends to continue test (for Debugging purposes)
+//        Thread threads[] = new Thread[Thread.activeCount()];
+//        Thread.enumerate(threads);
+//        for (Thread worker :
+//                threads) {
+//            if (worker.getName().contains("traffic-publisher") ||
+//                    worker.getName().contains("log-consumer")) {
+//                //noinspection StatementWithEmptyBody
+//                while (worker.getState() == Thread.State.RUNNABLE) ;
+//            }
+//        }
+//        assertTrue(log.size() == 4);
+//    }
 }

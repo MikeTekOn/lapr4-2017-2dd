@@ -1,6 +1,5 @@
 package lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.ui;
 
-import csheets.core.IllegalValueTypeException;
 import csheets.core.Workbook;
 import csheets.ui.ctrl.UIController;
 import java.awt.BorderLayout;
@@ -15,8 +14,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -27,6 +24,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.ctrl.ControllerFindWorkbooks;
+import lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.ctrl.ControllerPreviewWorkbook;
 import lapr4.green.s1.ipc.n1150838.findworkbooks.FileDTO;
 import lapr4.green.s1.ipc.n1150838.findworkbooks.FindWorkbooksPublisher;
 import lapr4.green.s1.ipc.n1150838.findworkbooks.ui.WorkbookList;
@@ -39,6 +37,7 @@ import lapr4.green.s1.ipc.n1150838.findworkbooks.ui.WorkbookList;
 public class FindWorkbookSideBar extends JPanel implements Observer {
 protected ActionListener[] buttonListeners;
     ControllerFindWorkbooks findController;
+    ControllerPreviewWorkbook previewController;
     private UIController findExtension;
     private WorkbookList modeloWorkbook;
     private JList listWorkbook;
@@ -65,9 +64,10 @@ protected ActionListener[] buttonListeners;
         modeloWorkbook = new WorkbookList(new ArrayList());
         listWorkbook = new JList(modeloWorkbook);
         previewTableModel=new PreviewSpreadSheetTableModel(
+         
                 buildPreviewWorkbookDefault().getSpreadsheet(0), findExtension);
         tablePreview=new JTable(previewTableModel);
-        
+   
     }
     
     private JPanel previewPanel(){
@@ -107,30 +107,27 @@ protected ActionListener[] buttonListeners;
                     }
 
                 }
-                /*
+              
                 if(evt.getClickCount()==1 && index>=0){
                     
                     // One-click detected
                     modeloWorkbook.setSelectedItem(((String) modeloWorkbook.getElementAt(index)));
                   
                     FileDTO dto = modeloWorkbook.getSelectedItem();
-
+                    
+                    
                     try {
                         Workbook wb =findController.load(dto.getFilePath());
-                        findController.buildWorkbookPreview(wb);
                         
-                        previewTableModel=new PreviewSpreadSheetTableModel(wb.getSpreadsheet(0), findExtension);
-                         tablePreview.setModel(previewTableModel);
+                        RangeDialog j=new RangeDialog(findExtension, wb, tablePreview);
+                        if(previewController!=null)previewController.stopPreview();
                         
-                         
-    }               catch (IOException | ClassNotFoundException | IllegalValueTypeException ex) {
+      
+                  
+                    } catch (IOException | ClassNotFoundException ex) {
                          JOptionPane.showMessageDialog(new JFrame(), "It wasn´t possible to generate the preview!");
-                    }
-                    
-                    
-                    
-                    
-                } */ 
+                    }  
+                } 
             }
         });
         JScrollPane mainScroll = new JScrollPane(listWorkbook);
@@ -143,9 +140,10 @@ protected ActionListener[] buttonListeners;
     
     private Workbook buildPreviewWorkbookDefault(){
         
-        String[][] content={{"Please cliic"}};
-        return new Workbook(findExtension,content);
-        
+        String[][] content={{""}};
+        Workbook b= new Workbook(this.findExtension);
+        b.addSpreadsheet(content);
+        return b;
     }
     
     /**
@@ -184,6 +182,7 @@ protected ActionListener[] buttonListeners;
             try {
                 if(findController!=null)findController.stopSearch();
                 modeloWorkbook.removeAll();
+                previewTableModel.removeAll();
                 findController = new ControllerFindWorkbooks(listField.getText());
                 findController.searchFiles();
             } catch (IllegalStateException ex) {
@@ -192,14 +191,20 @@ protected ActionListener[] buttonListeners;
         });
         return mainButton;
     }
-    
 
     @Override
     public void update(Observable o, Object arg) {
-        FileDTO workbook = (FileDTO) arg;
-        modeloWorkbook.addElement(workbook);
+        if(arg instanceof FileDTO){
+            FileDTO workbook = (FileDTO) arg;
+            modeloWorkbook.addElement(workbook);
+        }
+        if(arg instanceof Workbook){
+             tablePreview.removeAll();
+             Workbook workbook=(Workbook) arg;
+            previewTableModel=new PreviewSpreadSheetTableModel(workbook.getSpreadsheet(0), findExtension);
+            tablePreview.setModel(previewTableModel);
+        }
+        
     }
-
-   
 
 }

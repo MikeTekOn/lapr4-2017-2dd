@@ -47,6 +47,7 @@ public class ImportXmlControllerTest {
      */
     @Test
     public void testImportXml() {
+        CleanSheets.setFlag(true);
         CleanSheets app = new CleanSheets();
         UIController controller = new UIController(app);
         ImportXmlController instance = new ImportXmlController(controller);
@@ -63,6 +64,7 @@ public class ImportXmlControllerTest {
      */
     @Test
     public void testValidateExtension() {
+        CleanSheets.setFlag(true);
         CleanSheets app = new CleanSheets();
         UIController controller = new UIController(app);
         ImportXmlController instance = new ImportXmlController(controller);

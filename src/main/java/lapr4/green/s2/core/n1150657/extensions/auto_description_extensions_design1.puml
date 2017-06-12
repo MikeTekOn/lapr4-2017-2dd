@@ -1,11 +1,12 @@
 @startuml auto_description_extensions_design1.png
+    actor User as U
     participant CleanSheet as CS
     participant ExtensionOptionFrame as EOF 
     participant ExtensionOptionController as EOC
     participant ExtensionManager as EM
 
 create CS
-    -> CS : new
+    U -> CS : new
 create EOF
     CS -> EOF : create()
 note right : New frame  for the selection of the extensions
