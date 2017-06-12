@@ -10,6 +10,7 @@ actor User
 participant "FunctionWizardUI" as UI
 participant "FunctionWizardController" as CRTL
 participant "ActiveCell" as cell
+participant "FunctionUtils" as func
 
 
 
@@ -30,11 +31,17 @@ loop : while(actualParams < neededParams)
 User -> UI : Inserts parameter
 activate UI
 UI -> CRTL : calculateResult()
-CRTL -> CRTL : calculateFunction()
-CRTL -> cell : setActiveCellContent()
+CRTL -> func : calculateResult()
+CRTL -> CRTL : compile()
 CRTL --> UI : return result
 UI --> User : show result
 activate CRTL
+end
+
+alt : if apply
+User -> UI : applies
+UI -> CRTL : setContent()
+CRTL -> cell : setActiveCellContent()
 end
 
 
