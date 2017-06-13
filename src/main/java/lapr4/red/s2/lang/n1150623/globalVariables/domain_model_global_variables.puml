@@ -50,7 +50,7 @@ Expression <|-- Reference
 Expression <|-- Operation
 Expression <|-- FunctionCall
 Expression <|-- Literal
-Expression <|-- TemporaryVariable
+Expression <|-- Variable
 
 Operation <|-- UnaryOperation
 Operation <|-- BinaryOperation
@@ -68,7 +68,7 @@ Operator <|-- UnaryOperator
 Operator <|-- BinaryOperator
 Operator <|-- NaryOperator
 
-Variable <|-- TemporaryVariable
+VarContentor *-- Variable
 
 UnaryOperation *-- UnaryOperator
 BinaryOperation *-- BinaryOperator

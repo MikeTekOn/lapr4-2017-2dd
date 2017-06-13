@@ -1,0 +1,20 @@
+@startuml
+
+title VarContentor and Variable Relation\n
+
+class VarContentor{
+    - variables : List<Variable>
+}
+
+class Variable{
+    - name : String
+    - expression : Expression
+}
+
+note left of Variable
+Can either be global or temporary.
+end note
+
+Variable --* VarContentor
+
+@enduml
