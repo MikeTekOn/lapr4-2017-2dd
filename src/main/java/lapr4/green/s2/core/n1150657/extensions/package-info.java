@@ -47,11 +47,11 @@
  * That means that are diferent versions for extensions that have the same name.
  * </p>
  * <b>2.1 Questions</b>
- * <li>1. The loading of the extensions should be before the Cleansheet running or during?
+ * 1. The loading of the extensions should be before the Cleansheet running or during?<p>
  * <b><i>Assumptions: </i></b>Before.
  * <p>
- * <b><i>Answer:</i></b></li>
- * </p>
+ * <b><i>Answer:</i></b>
+ * <p>
  *
  * <h2>3. Tests</h2><p>
  * This should include the functional tests, applying Test-Driven
@@ -61,11 +61,11 @@
  * <h3>3.1 Unit Tests:</h3>
  * There are 2 unit tests:
  * <p>
+ * <ul>
  * <li>ExtensionFactoryTest</li>
- * </p>
- * <p>
  * <li>ExtensionLoadTest</li>
- * </p>
+ * </ul>
+ * <p>
  *
  * <h2>4. Design</h2>
  * After the cleanshet starts, instead of loading the extension properties and loading the extensions into the the app,

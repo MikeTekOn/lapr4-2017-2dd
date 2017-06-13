@@ -29,9 +29,9 @@
  *
  * It is said that each workbook should have their own list of macros.
  *
- * <p/>
- * <img src="class_diagram_analysis.png" alt="image"/>
- * <p/>
+ * <p>
+ * <img src="class_diagram_analysis.png" alt="image">
+ * <p>
  *
  * <h3>3.2. How is the macro indentified?</h3>
  *
@@ -55,31 +55,40 @@
  * has the same name of the one being analised, <b>before</b> the user runs it,
  * and if so, a warning message should be displayed and the user can't run the
  * macro unless that situation is corrected.
- * <p/>
+ * <p>
  *
  * Although it is not stated, it was decided that an option for editing should
  * exist the Macro list window.
  * <h2>4. Design</h2>
  *
- * Unit tests: <br/>
- * testAddMacroTwice: Ensures that it is not possible to add a macro that
- * already exists on the list. <br/>
- * testRemoveMacroWithoutExistence: Ensures that it is not possible to remove a
- * macro that doesn't existe on the list. <br/>
- * testRemoveMacroThatExists: Ensures that the removal on a macro that exists
- * can be made. <br/>
- * testUpdateMacro: Ensures that the macro is updated by testing the removal of
- * the old one.
+ * 
+ * Unit tests:
+ * <ul>
+ * <li>testAddMacroTwice: Ensures that it is not possible to add a macro that
+ * already exists on the list.</li>
+ * <li>testRemoveMacroWithoutExistence: Ensures that it is not possible to remove a
+ * macro that doesn't existe on the list.</li>
+ * <li>testRemoveMacroThatExists: Ensures that the removal on a macro that exists
+ * can be made.</li>
+ * <li>testUpdateMacro: Ensures that the macro is updated by testing the removal of
+ * the old one.</li>
+ * </ul>
  * <p>
  * <h3>4.1. Functional Tests</h3>
- * Test plan: Create a macro named "test1"<br/>
- * In the code write: "C1:=5".<br/>
- * In the Macro Running window, invoke the macro using [test1].<br/>
- *
- * Test plan (recursivity): Create a macro named "test1"<br/>
- * In the code write: "C1:=5" and "[mac2]".<br/>
- * Create a macro named "mac2" with the code "[test1]".<br/>
- * Run "test1" and verify that the Recursivity warning appears.<br/>
+ * Test plan 1 <p>
+ * <ul>
+ * <li>Test plan: Create a macro named "test1"</li>
+ * <li>In the code write: "C1:=5".</li>
+ * <li>In the Macro Running window, invoke the macro using [test1].</li>
+ * </ul>
+
+ * Test plan (recursivity) <p>
+ * <ul>
+ * <li>Create a macro named "test1"</li>
+ * <li>In the code write: "C1:=5" and "[mac2]".</li>
+ * <li>Create a macro named "mac2" with the code "[test1]".</li>
+ * <li>Run "test1" and verify that the Recursivity warning appears.</li>
+ * </ul>
  * <p>
  * <h3>4.2. UC Realization</h3>
  * Sequence Diagram
@@ -94,40 +103,42 @@
  * should be created. Having that in consideration, the following sequence
  * diagrams were made:
  * <p>
- * <img src="diagram_insert_sd.png" alt="image"/>
+ * <img src="diagram_insert_sd.png" alt="image">
  * <p>
- * <img src="diagram_remove_sd.png" alt="image"/>
+ * <img src="diagram_remove_sd.png" alt="image">
  * <p>
- * <img src="diagram_edit_sd.png" alt="image"/>
+ * <img src="diagram_edit_sd.png" alt="image">
  * <p>
  * <h3>Macro Invocation</h3>
  *
  * To support the Invocation of Macros, the previous grammar must be changed.
  * With that, a new rule has to be created to support their "detection". Having
  * decided that the macros needs to be inside "[ ]", the rule should be:
- * <br/><br/>
+ * <p>
  * <code>
  * macro_invoked : LPAR_SQUARE (~(LPAR_SQUARE | RPAR_SQUARE))+ RPAR_SQUARE ;
- * </code><br/><br/> This means that the macro should be between a LPAR_SQUARE
+ * </code>
+ * This means that the macro should be between a LPAR_SQUARE
  * ("[") and a RPAR_SQUARE ("]"), and, its name, can be anything except the
- * delimiter chars.<br/>
- *
+ * delimiter chars.
+ * <p>
  * Also, a new visitor for the rule should be created. The visitor should be
- * base in the next excerpt of code: <br/> <br/><code>
+ * base in the next excerpt of code:  <p><code>
  * s = new StringBuilder();
  * for (i=0 until childNumber)
  * if (i!=0 and i!=childNumber-1) s.append(child(i));
- * </code> <br/><br/>It is needed to use the cicle, and not just child(1), since
+ * </code> 
+ * It is needed to use the cicle, and not just child(1), since
  * the macro name could be a combination of letters and numbers and, in that
  * case, more than one token would be detected.
  *
- * <img src="domain_diagram.png" alt="image"/>
+ * <img src="domain_diagram.png" alt="image">
  *
  * <h3>4.3. Classes</h3>
  * <p>
  * Two new classes were made in this iteration. The following is a UML
  * representation of them:
- * <img src="class_diagram.png" alt="image"/>
+ * <img src="class_diagram.png" alt="image">
  *
  * <h3>4.4. Design Patterns and Best Practices</h3>
  * <p>

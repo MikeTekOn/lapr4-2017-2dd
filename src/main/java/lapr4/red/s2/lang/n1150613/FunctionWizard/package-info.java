@@ -63,7 +63,7 @@
  * function list by importing operators and functions from java.lang.Math. Since
  * the operators do not have functionParameters,i've added default ones to them.
  * <p>
- * 4 & 5. Simple changes in UI,changing the Frame class to place the desired
+ * 4 &amp; 5. Simple changes in UI,changing the Frame class to place the desired
  * button between the CellEditor and the formula bar. Remove the button from the
  * Menu.
  * <p>
@@ -104,7 +104,7 @@
  * <p>
  * Package lapr4.red.s1.core.n1150613.workbookSearch.application:
  * <p>
- * {@link lapr4.red.s2.lang.n1150613.FunctionWizard.IntermediateFunctionWizardController}
+ * {@link lapr4.red.s2.lang.n1150613.FunctionWizard.application.IntermediateFunctionWizardController}
  * 
  * {@link lapr4.red.s2.lang.n1150613.FunctionWizard.FunctionUtils}
  * <p>

@@ -136,20 +136,20 @@
  * <p>
  * Yesterday: I started the tests and design and finished the analysis process.
  * <p>
- * <b>Thursday 08/06/2017<b>
+ * <b>Thursday 08/06/2017</b>
  * <p>
  * Finished the tests and design.
  * Started the implementation.
  * <p>
- * <b>Friday 09/06/2017<b>
+ * <b>Friday 09/06/2017</b>
  * <p>
  * Continuing implementation.
  * <p>
- * <b>Saturday 10/06/2017<b>
+ * <b>Saturday 10/06/2017</b>
  * <p>
  * Continuing implementation.
  * <p>
- * <b>Sunday 11/06/2017<b>
+ * <b>Sunday 11/06/2017</b>
  * <p>
  * Today: some updates to implementation and some updates to analysis and design.
  *

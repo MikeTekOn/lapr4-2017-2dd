@@ -35,7 +35,7 @@
  * preview area</li>
  * </ol>
  * 
- * <img src="ipc02_2_ssd.png" alt="image"></img>
+ * <img src="ipc02_2_ssd.png" alt="image">
  * 
  * <b>Open Questions</b>
  * <p>Hom many cells should be displayed on preview area?
