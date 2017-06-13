@@ -59,7 +59,7 @@
  * Since a global variable is similar to a temporary one, it should be possible to use the same bases for both.
  * We will try to generalize concept of Variable by aggregating both global and temporary variables [by 'aggregating', we mean that the concept  will be the same for both, there will be no distinction between them except for the context in witch they are called].
  *
- * The VarContentor was ignored in the last sprint and was only focused in using Temporary Variables, so we will try to implement the contentor in the right way, generalizing it to contain a [also] generic variable - not focused in any in specific.
+ * The VarContentor was ignored in the last sprint and was only focused in using Temporary Variables, so we will try to implement the contentor in the right way, generalizing it to contain a [also] global variable - not focused in any in specific.
  *
  *
  *
@@ -68,18 +68,22 @@
  *      Executes <b><i>formula = FormulaCompiler.getInstance().compile(content)</i></b>   => this will select the instance of ExpressionCompiler based on the "starter char". In this case we have "@".
  *
  *      The global variables will be stored in a variable contentor in the WorkBook and will be persisted with it
+ *
+ *
+ *      <img src="lang02_2_VarContentor_Variable.png" alt="image">
+ *
  * <p>
  *
  * <b>3.1.2 Parser tree</b>
  *
  *  <p>
- *      ANTLR will generate a parser tree including nodes and then is converted and an Expression is generated.
+ *      ANTLR4 will generate a parser tree including nodes and then is converted and an Expression is generated.
  *      Grammar rules:
  *      <ul>
  *            <li>global variable start with @</li>
  *            <li>atributtion value with :=</li>
  *            <li>global variable name have a letter (after @) and then it can have letters/digits</li>
- *       </ul>
+ *      </ul>
  *
  *  * <img src="domain_model_global_variables.png" alt="image">
  *
@@ -99,10 +103,9 @@
  *   <li>testBasicExpressionWithGlobal() -&gt; example "@Var:=1+2"</li>
  *   <li>testAssignmentOperatorWithGlobal() -&gt; example "@Var:=A1"</li>
  *   <li>testFunctionExpressionWithGlobal() -&gt; example "@Var:= sum(A2:A4)"</li>
- *    <li>testFormulaBlocksWithGlobal() -&gt; ex: "= {A=1+2; @Var:= 1+A ;"
- *    <li>testFormulaManyGlobalVariables() -&gt; ex: "={/@Var1:=2; @Var2:=3; @Var3:=@Var1+@Var2; A= @Var+3}"
- *   < li>testItSelfCall() -&gt; ex:"={\@a:=1);(@a:=@a+1);_a }"
- *   < li>formulaWithTemporaryVariable() -&gt; ex:"={(@Var1:=2);(@Var2:=1); MAX(@Var1, @Var2)}" </li
+ *   <li>testFormulaManyGlobalVariables() -&gt; ex: "={/@Var1:=2; @Var2:=3; @Var3:=@Var1+@Var2; A= @Var+3}"</li>
+ *   <li>testItSelfCall() -&gt; ex:"={\@a:=1);(@a:=@a+1);_a }"</li>
+ *   <li>formulaWithTemporaryVariable() -&gt; ex:"={(@Var1:=2);(@Var2:=1); MAX(@Var1, @Var2)}" </li>
  * </ol>
  *
  *  <b>Functional Tests </b>
@@ -121,7 +124,7 @@
  *
  * <h3>4.4. Design Patterns and Best Practices</h3>
  *
- *  The cleansheets core implementation already uses the <b>visitor pattern</b> to interact with the ANTLR4 generated classes, as well
+ *  The Cleansheets core implementation already uses the <b>visitor pattern</b> to interact with the ANTLR4 generated classes, as well
  * as the <b>decorator pattern</b> to design the expressions functionality.
  * <p>
  * We will continue the best practices and implement this use case using the same patterns.
@@ -139,11 +142,10 @@
  * Since they would have the same behaviour, we can create a general Variable class and a general VarContentor class that will be used for both cases.
  * Of course there will be no mixture of both since the local were they will be saved and called will be different.
  *  -> The global variable will be automatically saved in the workbook in a VarContentor
- *  -> The local variables will saved in a VarContentor in FormulaEvalVisitor.
+ *  (-> The local variables will saved in a VarContentor in FormulaEvalVisitor.)
  *
  * They will be differentiated by how the name is composed: if it starts with '_' goes to the local variables contentor and if it's a '@' goes to the workbook's variable contentor.
- *
- *
+ *<p>
  * So:
  *
  * The class Variable {@link lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable} was created to handle both variable's domain rules.
@@ -166,9 +168,9 @@
  *              <i>Variable</i>
  *         </td>
  *         <td>
- *              The Variable class stores a variable's information: it's name and expression;
- *              It can be changed  by other formulas or expressions.
- *              This class also serves for both Global and Temporary Variables;
+ *              \nThe Variable class stores a variable's information: it's name and expression;
+ *              \nIt can be changed  by other formulas or expressions.
+ *              \nThis class also serves for both Global and Temporary Variables;
  *         </td>
  *     </tr>
  *     <tr>
@@ -177,8 +179,8 @@
  *              <i>VarContentor</i>
  *         </td>
  *         <td>
- *              The VarContentor class stores a variables, either global or temporary.
- *              This class implements serializable and, if acts as a contentor for global variables, is saved together with thw workbook
+ *              \nThe VarContentor class stores a variables, either global or temporary.
+ *              \nThis class implements serializable and, if acts as a contentor for global variables, is saved together with thw workbook
  *         </td>
  *
  *
@@ -188,15 +190,13 @@
  * </table>
  *
  *
- *
  * <p>
  * As referred before this use case is closely related to Formula use case (@link lapr4.blue.s1.lang.n1151452.formula). So the blue team
  * created some class for shared use: the grammar (@lapr4\blue\s1\lang\n1151452\formula\compiler\BlueFormula.g4), FormulaEvalVisitor (@link lapr4.blue.s1.lang.n1151452.formula.compiler)
  * and related classes (p.e. BlueFormulaParser).
  *
  * <p>
- * To add the temporary variable support to formula it was necessary to do some modifications in some core classes: ExpressionBuilder,
- * ExpressionVisitor, AbstractExpressionVisitor. The temporary variable it´s an object that stores the variable name and the expression assigned.
+ * To add the global variable support to formula it was not necessary to do modifications in core classes, since it had already been done in the previous sprint to include the temporary variables. The variable it´s an object that stores the variable name and the expression assigned.
  *
  *
  * @author Guilherme Ferreira 1150623
