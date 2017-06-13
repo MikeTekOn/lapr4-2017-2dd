@@ -149,7 +149,7 @@
  * So:
  *
  * The class Variable {@link lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable} was created to handle both variable's domain rules.
- * The VarContentor {@link lapr4.red.s2.lang.n1150623.globalVariables} allows to store the temporary or global variables.
+ * The VarContentor {@link lapr4.red.s2.lang.n1150623.globalVariables.VarContentor} allows to store the temporary or global variables.
  *
  * <h3>Resumed Description of Variable and VarContentor Classes</h3>
  table, th, td {  border: 1px solid black; }
@@ -168,9 +168,9 @@
  *              <i>Variable</i>
  *         </td>
  *         <td>
- *              \nThe Variable class stores a variable's information: it's name and expression;
- *              \nIt can be changed  by other formulas or expressions.
- *              \nThis class also serves for both Global and Temporary Variables;
+ *              The Variable class stores a variable's information: it's name and expression;
+ *              It can be changed  by other formulas or expressions.
+ *              This class also serves for both Global and Temporary Variables;
  *         </td>
  *     </tr>
  *     <tr>
@@ -179,8 +179,8 @@
  *              <i>VarContentor</i>
  *         </td>
  *         <td>
- *              \nThe VarContentor class stores a variables, either global or temporary.
- *              \nThis class implements serializable and, if acts as a contentor for global variables, is saved together with thw workbook
+ *              The VarContentor class stores a variables, either global or temporary.
+ *              This class implements serializable and, if acts as a contentor for global variables, is saved together with thw workbook
  *         </td>
  *
  *

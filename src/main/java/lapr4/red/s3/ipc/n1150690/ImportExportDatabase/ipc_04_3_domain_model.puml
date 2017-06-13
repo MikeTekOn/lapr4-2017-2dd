@@ -1,0 +1,10 @@
+@startuml
+
+'http://plantuml.com/skinparam.html'
+
+class CellRange{
+}
+
+
+
+@enduml
