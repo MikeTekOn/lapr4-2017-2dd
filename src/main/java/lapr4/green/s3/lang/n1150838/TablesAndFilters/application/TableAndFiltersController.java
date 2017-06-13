@@ -82,14 +82,14 @@ public class TableAndFiltersController implements Controller {
         return range;
     }
     
-//    public boolean isAvailableToDefine(){
-//        for (TableCellExtension selectedCell : selectedCells) {
-//            if(selectedCell.getRange()!=null){
-//                return false;
-//            }
-//        }
-//        return true;
-//    }
+    public boolean isAvailableToDefine(){
+        for (Cell selectedCell : selectedCells) {
+            if(selectedCell!=null){
+                return false;
+            }
+        }
+        return true;
+    }
     
     public void removeTable(CellRange range){
        Spreadsheet activeSpreadsheet = uiController.getActiveSpreadsheet();

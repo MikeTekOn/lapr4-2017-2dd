@@ -50,16 +50,6 @@ public class TableAndFiltersExtension extends Extension {
     }
     
     /**
-     * Makes the given cell condition stylable.
-     *
-     * @param cell the cell to condition style
-     * @return a condition stylable cell
-     */
-    @Override
-    public TableCellExtension extend(Cell cell) {
-        return new TableCellExtension(cell,uiController);
-    }
-    /**
      * Returns the user interface extension of this extension
      *
      * @param uiController the user interface controller

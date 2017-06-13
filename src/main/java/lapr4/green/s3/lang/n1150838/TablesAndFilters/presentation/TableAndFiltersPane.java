@@ -123,17 +123,17 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
             if (size == 0) {
                 JOptionPane.showMessageDialog(null, "Select cells to define a table", "Error", JOptionPane.WARNING_MESSAGE);
             } else if (ctrl.setSelectedCells(selectedCells)) {
-//                if (ctrl.isAvailableToDefine()) {
-//                  
-//                        ctrl.defineTable();
-//                    
-//                      
-//                    labelRange.setText(labelRangePreFix + ctrl.getRange().getFirstCell() + ":" + ctrl.getRange().getLastCell());
-//                     JOptionPane.showMessageDialog(null, "Table defined!", "Sucess", JOptionPane.INFORMATION_MESSAGE);
-//
-//                } else {
-//                    JOptionPane.showMessageDialog(null, "There is a table already defined on the given range!", "Error", JOptionPane.WARNING_MESSAGE);
-//                }
+                if (ctrl.isAvailableToDefine()) {
+                  
+                        ctrl.defineTable();
+                    
+                      
+                    labelRange.setText(labelRangePreFix + ctrl.getRange().getFirstCell() + ":" + ctrl.getRange().getLastCell());
+                     JOptionPane.showMessageDialog(null, "Table defined!", "Sucess", JOptionPane.INFORMATION_MESSAGE);
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "There is a table already defined on the given range!", "Error", JOptionPane.WARNING_MESSAGE);
+                }
 
             } else {
                 JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.WARNING_MESSAGE);
