@@ -8,12 +8,13 @@ package lapr4.green.s1.ipc.n1150800.importexportTXT;
 import csheets.core.Address;
 import csheets.core.Cell;
 import csheets.ui.ctrl.UIController;
+import java.io.Serializable;
 
 /**
  *
  * @author Pedro Chilro (1150800@isep.ipp.pt)
  */
-public class CellRange {
+public class CellRange implements Serializable {
 
     /**
      * The range's first cell
