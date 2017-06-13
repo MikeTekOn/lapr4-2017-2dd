@@ -7,7 +7,6 @@ package lapr4.blue.s2.ipc.n1060503.chat;
 
 import java.io.IOException;
 import javax.swing.ImageIcon;
-import lapr4.blue.s2.ipc.n1060503.chat.profile.StatusChatProfile;
 import lapr4.blue.s2.ipc.n1060503.chat.profile.UserChatProfile;
 
 /**
@@ -39,7 +38,7 @@ public class ChangeUserChatProfileController {
     }
     
     public boolean changeInfo(String nickname, 
-            StatusChatProfile status) throws IOException{
+            String status) throws IOException{
         
         ucp.setNickname(nickname);
         ucp.setStatus(status);
