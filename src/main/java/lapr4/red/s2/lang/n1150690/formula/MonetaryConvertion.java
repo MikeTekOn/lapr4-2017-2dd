@@ -6,6 +6,8 @@
 package lapr4.red.s2.lang.n1150690.formula;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 
 /**
  * A class to performe calculation related to monetary values.
@@ -39,7 +41,8 @@ public class MonetaryConvertion {
      */
     public BigDecimal dependentExchangeRate(BigDecimal exchangeValue){
         BigDecimal one = new BigDecimal(1);
-        return one.divide(exchangeValue);
+        BigDecimal result = one.divide(exchangeValue, 5, RoundingMode.HALF_UP);
+        return result;
     }
 
 }

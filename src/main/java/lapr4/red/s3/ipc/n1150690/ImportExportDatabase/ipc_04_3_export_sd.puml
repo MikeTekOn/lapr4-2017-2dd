@@ -1,0 +1,43 @@
+@startuml
+
+actor User
+participant "ExportDataUI" as ui
+participant "ExportDataController" as ctrl
+participant "CellRange" as range
+participant "WorkbookHandler" as work
+participant "DatabaseConnection" as db
+participant "DatabaseOperations" as op
+
+User -> ui : starts the process of exportation to database
+create ctrl
+ui -> ctrl : create()
+
+
+User -> ui : inserts the range of cells
+ui -> ctrl : insertRangeOfCells(firstCell, lastCell)
+
+create range
+ctrl -> range : create(firstCell, lastCell) 
+ui -> ctrl : numberOfColumns = getNumberOfCollumns()
+ctrl -> range : numberOfColumns = getNumberOfCollumns()
+
+ui -> ctrl : cells = cells()
+create work
+ctrl -> work : create(workbook)
+ctrl -> work : cells = getListCellsBetweenRange(spreadsheet, topLeftRow, bottomRightRow, topLeftColumn, topRightColumn)
+User -> ui : inserts the database connection and the table name
+
+ui -> ctrl : connect(databaseConnection, tableName)
+
+create db
+ctrl -> db : create(databaseConnection)
+ctrl -> db : createTable(tableName, numberOfCollumns)
+
+
+ui -> ctrl : export()
+create op
+ctrl -> op  : create()
+ctrl -> op : export()
+
+
+@enduml
