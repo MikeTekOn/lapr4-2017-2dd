@@ -416,7 +416,7 @@ public class CleanSheets implements Observer {
                 } catch (IOException e) {
                 }
             }
-            writePreviewWorkbookMetadata(file);
+            //writePreviewWorkbookMetadata(file);
             workbooks.put(workbook, file);
             fireSpreadsheetAppEvent(workbook, file, SpreadsheetAppEvent.Type.SAVED);
         }
