@@ -58,7 +58,7 @@ public class TrafficInputStream extends ObjectInputStream {
     }
 
     /**
-     * Reads an object from the stream & publishes a traffic event
+     * Reads an object from the stream &amp; publishes a traffic event
      *
      * @return an object from the stream
      * @throws IOException            I/O Exception

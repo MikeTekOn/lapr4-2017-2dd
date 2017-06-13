@@ -94,7 +94,7 @@ public class MacroEvalVisitor extends MacroBaseVisitor<Expression> {
      * shellScript node will have the information needed for what code the
      * beanShell should execute, but also how to execute it.
      *
-     * The node can start with 2 headers. (1) "<![SHELL[" or (2) "<[SHELL[". If
+     * The node can start with 2 headers. (1) "&lt;![SHELL[" or (2) "&lt;[SHELL[". If
      * (1) is chosen, the bean shell code should be run asynchronously and the
      * result of visiting this node is null. If (2) is chosen, the code should
      * be run synchronously and the result of visiting this node is the return
