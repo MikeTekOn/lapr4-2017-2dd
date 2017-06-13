@@ -37,17 +37,17 @@ public class FormulaVariableTest {
      * @throws FormulaCompilationException
      * @throws IllegalValueTypeException
      */
-    @Test
-    public void testBlockWithTemporary() throws FormulaCompilationException, IllegalValueTypeException {
-        // Introducing expression
-        Cell cellTest = app.getWorkbooks()[0].getSpreadsheet(0).getCell(new Address(0, 0));
-        String content= "={(_Var1:=1+2); _Var1 + 1}";
-        cellTest.setContent(content);
-
-        //Test temporary variable
-        Double result = cellTest.getValue().toDouble();
-        Double expResult = 4d;
-    }
+//    @Test
+//    public void testBlockWithTemporary() throws FormulaCompilationException, IllegalValueTypeException {
+//        // Introducing expression
+//        Cell cellTest = app.getWorkbooks()[0].getSpreadsheet(0).getCell(new Address(0, 0));
+//        String content= "={(_Var1:=1+2); _Var1 + 1}";
+//        cellTest.setContent(content);
+//
+//        //Test temporary variable
+//        Double result = cellTest.getValue().toDouble();
+//        Double expResult = 4d;
+//    }
 
 
     /**
