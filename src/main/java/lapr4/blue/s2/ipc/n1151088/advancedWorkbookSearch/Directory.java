@@ -8,6 +8,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.FindPattern.Finder;
 import lapr4.green.s1.ipc.n1150838.findworkbooks.FileDTO;
 import lapr4.green.s1.ipc.n1150838.findworkbooks.FindWorkbooksPublisher;
@@ -22,6 +24,8 @@ public class Directory implements Runnable{
 
     private File rootPath;
     private static final String PATTERN="*.cls";
+    private SearchPattern searchPattern;
+    private String regex;
 
     /**
      * Acceptable extensions
@@ -30,11 +34,16 @@ public class Directory implements Runnable{
         cls
     };
 
-    public Directory(File rootPath) {
+    public Directory(File rootPath, String regex) {
         if (validatePath(rootPath) == false) {
             throw new IllegalStateException();
         }
+        if (validateRegex(regex)==false){
+            throw new IllegalStateException();
+        }
         this.rootPath = rootPath.getAbsoluteFile();
+        this.searchPattern= new SearchPattern(regex);
+        this.regex=regex;
     }
 
     /**
@@ -45,6 +54,16 @@ public class Directory implements Runnable{
      */
     public boolean validatePath(File rootPath) {
         return rootPath.isDirectory();
+    }
+    
+    public boolean validateRegex(String regex){
+        boolean test = true;
+        try {
+            Pattern.compile(regex);
+        } catch (PatternSyntaxException exception) {
+            test = false;
+        }
+        return test;
     }
 
     /**
@@ -69,12 +88,11 @@ public class Directory implements Runnable{
                     search(temp);
                 } else {
                   
-                    SearchPattern sp=new SearchPattern(temp.getName());
-                    
-                    if (sp.acceptExp()) {
-                        
+                    if (searchPattern.acceptExp(temp.getName()) ) {
+                        if( searchPattern.checkIfMatches(temp.getName())){
                         FileDTO dto = new FileDTO(temp.getName(), temp.getAbsolutePath());
                         FindWorkbooksPublisher.getInstance().notifyObservers(dto);
+                        }
                     }
 
                 }
@@ -86,46 +104,24 @@ public class Directory implements Runnable{
 
         }
     }
-
-    /**
-     * checks if the file has the acceptables extensions
-     *
-     * @param fileName
-     * @return
-     */
-    public boolean isExtensionFile(String fileName) {
-        String tokens[] = fileName.split("\\.");
-        if (tokens.length == 0 || tokens.length == 1) {
-            return false;
-        }
-        String extension = tokens[tokens.length - 1];
-        searchExtensions values[] = searchExtensions.values();
-        for (int i = 0; i < values.length; i++) {
-            if (values[i].toString().equals(extension)) {
-                return true;
-            }
-        }
-        return false;
-    }
     
-    
-    /**
-     * the algorithm to search for files
-     *
-     * @param file
-     */
-    private void searchPattern(File file) throws IOException {
-
-        //do you have permission to read this directory?
-        if (file.canRead()){
-         
-                Finder finder=new Finder(PATTERN);  
-               // Path startingDir= Paths.get(file.lis)
-                Path found=Files.walkFileTree(file.listFiles()[0].toPath(), finder);
- 
-        }
-    }
-    
+//    /**
+//     * the algorithm to search for files
+//     *
+//     * @param file
+//     */
+//    private void searchPattern(File file) throws IOException {
+//
+//        //do you have permission to read this directory?
+//        if (file.canRead()){
+//         
+//                Finder finder=new Finder(PATTERN);  
+//               // Path startingDir= Paths.get(file.lis)
+//                Path found=Files.walkFileTree(file.listFiles()[0].toPath(), finder);
+// 
+//        }
+//    }
+//    
 
     /**
      * Loads a workbook from the given file.

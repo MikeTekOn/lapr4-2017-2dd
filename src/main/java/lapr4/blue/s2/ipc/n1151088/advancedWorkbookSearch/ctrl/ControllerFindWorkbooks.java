@@ -1,6 +1,5 @@
 package lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.ctrl;
 
-import csheets.core.IllegalValueTypeException;
 import csheets.core.Workbook;
 import eapli.framework.application.Controller;
 import java.io.File;
@@ -13,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.Directory;
 import lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.PreviewWorkbookBuilder;
+import lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.SearchPattern;
 
 /**
  * @author Diana Silva [1151088@isep.ipp.pt]
@@ -24,6 +24,7 @@ public class ControllerFindWorkbooks implements Controller {
      * The path to search for cls,etc..files
      */
     private Directory rootPath;
+    private SearchPattern regex;
 
     /**
      * The builder of workbook
@@ -31,8 +32,8 @@ public class ControllerFindWorkbooks implements Controller {
     private PreviewWorkbookBuilder previewBuilder;
     private Thread files;
 
-    public ControllerFindWorkbooks(String rootPath) {
-        this.rootPath = new Directory(new File(rootPath));
+    public ControllerFindWorkbooks(String rootPath, String regex) {
+        this.rootPath = new Directory(new File(rootPath),regex);
     }
 
     /**
