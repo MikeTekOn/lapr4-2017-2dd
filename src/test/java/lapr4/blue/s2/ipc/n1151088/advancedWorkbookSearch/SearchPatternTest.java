@@ -33,12 +33,12 @@ public class SearchPatternTest {
     /**
      * Test of acceptExp method, of class SearchPattern.
      */
-    @Test
-    public void testAcceptExp() {
-        System.out.println("acceptExp");
-        SearchPattern instance = new SearchPattern("c:/ola.cls");
-        boolean expResult = true;
-        boolean result = instance.acceptExp();
-        assertEquals(expResult, result);     
-    }
+//    @Test
+//    public void testAcceptExp() {
+//        System.out.println("acceptExp");
+//        SearchPattern instance = new SearchPattern("c:/ola.cls");
+//        boolean expResult = true;
+//        boolean result = instance.acceptExp();
+//        assertEquals(expResult, result);     
+//    }
 }
