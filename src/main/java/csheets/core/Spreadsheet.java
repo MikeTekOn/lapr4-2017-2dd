@@ -110,7 +110,7 @@ public interface Spreadsheet extends Iterable<Cell>, Extensible<Spreadsheet>,
 	 * @return an array of the cells in the row
 	 */
 	public Cell[] getRow(int index);
-
+        
 /*
  * EVENT HANDLING
  */

@@ -101,8 +101,29 @@
  * </p>
  *
  * <p>
- * <h2>8. Functional Tests</h2>
- * These are functional tests, performed manually in the UI.
+ * <h2>9. Design</h2>
+ * From the 2 sub-tasks we get 2 diagrams that are the following:
+ * </p>
+ *
+ * <p>
+ * <b>Eval Function</b>
+ * </p>
+ * <p>
+ * <img src="us53_design_1.png" alt="design_1"/>
+ * </p>
+ * 
+ * <p>
+ * <b>DoWhile Loop</b>
+ * </p>
+ * <p>
+ * <img src="us53_design_2.png" alt="design_2"/>
+ * </p>
+ * 
+ * <p>
+ * <b>WhileDo Loop</b>
+ * </p>
+ * <p>
+ * <img src="us53_design_3.png" alt="design_3"/>
  * </p>
  *
  * @author Miguel Silva (1150901)

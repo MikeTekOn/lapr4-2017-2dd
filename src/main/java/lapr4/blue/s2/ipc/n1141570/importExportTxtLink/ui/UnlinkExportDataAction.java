@@ -35,7 +35,7 @@ public class UnlinkExportDataAction extends BaseAction {
 
     @Override
     protected String getName() {
-        return "Unlink export";
+        return "Unlink export from TXT";
     }
 
     @Override
