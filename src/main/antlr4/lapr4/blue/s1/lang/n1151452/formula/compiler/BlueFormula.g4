@@ -61,7 +61,7 @@ function_call
 	;
 
 reference
-	:	CELL_REF ( ( COLON ) CELL_REF )? | CELL
+	:	CELL_REF ( ( COLON ) CELL_REF )? | CELL 
 	;
 
 literal
