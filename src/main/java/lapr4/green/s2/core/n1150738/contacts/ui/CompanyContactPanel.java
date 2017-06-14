@@ -239,7 +239,6 @@ public class CompanyContactPanel extends JPanel implements ActionListener {
             eventsList.setModel(eventsModel);
             contactRelatedList.setModel(contactRelatedModel);
         } else {
-
             eventsModel.clear();
             contactRelatedModel.clear();
             eventsList.setModel(eventsModel);

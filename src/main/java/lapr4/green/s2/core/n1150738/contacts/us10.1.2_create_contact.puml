@@ -1,0 +1,56 @@
+@startuml us10.1.2_create_contact.png
+
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam shadowing false
+hide footbox
+
+title Create Contact
+
+actor "CRM User" as Actor
+participant AddContactUI as UI <<presentation>>
+participant AddContactController as Controller <<application>>
+participant "contact:Contact" as Domain <<domain>>
+database ContactRepository as Repository <<repository>>
+participant ProfessionImporterService <<service>>
+database CompanyContactRepository as CompanyRepo <<repository>>
+
+Actor --> UI: Add Contact
+activate UI
+    UI -> Controller: create
+    Actor --> UI: Name,\nFirst Name,\nLast Name,\nPhotograph
+    Actor --> UI: Profession
+    UI -> Controller: professions()
+    activate Controller
+        Controller -> ProfessionImporterService: professions()
+        activate ProfessionImporterService
+        ProfessionImporterService -> ProfessionImporterService: parse XML file in resources
+        ProfessionImporterService --> Controller: List<Profession>
+        deactivate ProfessionImporterService
+         Controller --> UI: List<Profession>
+    deactivate Controller
+    Actor --> UI: CompanyContact
+    UI -> Controller: companyContacts()
+    activate Controller
+        Controller -> CompanyRepo: findAll()
+        activate CompanyRepo
+        CompanyRepo --> Controller: List<CompanyContact>
+        deactivate CompanyRepo
+         Controller --> UI: List<CompanyContact>
+    deactivate Controller
+    ||70||
+    UI -> Controller: addContact(Name, First Name, Last Name, Photograph, Profession, CompanyContact)
+    activate Controller
+        Controller -> Domain: create(Name, First Name, Last Name, Photograph, Profession, CompanyContact)
+        activate Domain
+            Domain -> Domain: validate
+            Domain -> Controller: contact
+        deactivate Domain
+        Controller -> Repository: save(contact)
+        Controller -> UI: contact
+    deactivate Controller
+    UI --> Actor: Display Contact Info
+deactivate UI
+
+
+@enduml
