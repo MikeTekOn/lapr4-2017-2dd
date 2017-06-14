@@ -45,17 +45,7 @@ public class ThreadExport implements Runnable {
     /**
      * The writer thread.
      */
-    private final Thread exportThread;
-
-    /**
-     * The current thread id.
-     */
-    private static long threadId = -2;
-
-    /**
-     * The is running boolean.
-     */
-    private static volatile boolean isRunning;
+    private Thread exportThread;
 
     /**
      * Creates
@@ -70,17 +60,15 @@ public class ThreadExport implements Runnable {
         this.workbook = workbook;
         this.tableName = tableName;
         this.spreadsheet = spreadsheet;
-        isRunning = true;
         this.exportThread = new Thread(this);
         this.exportThread.start();
     }
 
     /**
-     * {@inheritDoc
+     * {@inheritDoc}
      */
     @Override
     public void run() {
-        threadId = Thread.currentThread().getId();
         try {
             DatabaseConnection dbConnection = new DatabaseConnection();
             dbConnection.openConnection();
@@ -99,15 +87,13 @@ public class ThreadExport implements Runnable {
         } catch (SQLException ex) {
             Logger.getLogger(ThreadExport.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        threadId = -2;
     }
 
     /**
      * Kills the current thread.
      */
-    public static void kill() {
-        isRunning = false;
+    public void kill() throws InterruptedException {
+        this.exportThread.join();
     }
 
 }

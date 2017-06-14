@@ -55,9 +55,9 @@ public class ExportToDatabaseController {
      *
      * @throws SQLException
      */
-    public void export(boolean tableExistsAndWillBeDeleted) throws SQLException {
+    public void export(boolean tableExistsAndWillBeDeleted) throws SQLException, InterruptedException {
         ThreadExport thread = new ThreadExport(range, new WorkbookHandler(uiController.getActiveWorkbook()), tableName, uiController.getActiveSpreadsheet());
-        ThreadExport.kill();
+        thread.kill();
     }
 
 }
