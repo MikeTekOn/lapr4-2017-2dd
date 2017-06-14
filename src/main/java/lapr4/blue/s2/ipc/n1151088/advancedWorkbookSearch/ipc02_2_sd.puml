@@ -3,32 +3,47 @@
 actor User
 participant ControllerFindWorkbooks
 participant UIFindWorkbooksExtension
-participant UIPreviewWorkbookExtension
 participant Directory
-participant PreviewWorkbookBuilder
+participant FindWorkbooksPublisher
 participant SearchFiles
+participant PreviewWorkbookBuilder
+participant UserDefinedFileAttributeView
+participant Files
 participant PreviewWorkbook
 
-User->UIFindWorkbooksExtension:Insert the path and launches the search 
-UIFindWorkbooksExtension->ControllerFindWorkbooks:inserPath(String path)
+User->UIFindWorkbooksExtension:Insert the root path to find
+UIFindWorkbooksExtension-->User: Asks to insert a regular expression
+User->UIFindWorkbooksExtension: Enters the regular expression and launches the search
+UIFindWorkbooksExtension-->ControllerFindWorkbooks:findPath(String path)
 create Directory
 ControllerFindWorkbooks->Directory:new()
-Directory->SearchFiles:searchFilesByPattern()
+create SearchFiles
+Directory->SearchFiles:create()
+Directory -> SearchFiles: isRegexValid(regex))
 loop
-Directory->Directory:Workbook w=loadFile(String pattern)
+Directory->SearchFiles: checkIfMatches(expression)
+Directory->Directory:Workbook w=searchFile(String pattern)
 Directory->FindWorkbooksPublisher:notifyObservers(Object w)
 end
 User<--UIFindWorkbooksExtension: Displays the search results
-User->UIPreviewWorkbookExtension: Choose workbook to preview
-UIPreviewWorkbookExtension->ControllerFindWorkbooks:buildWorkbookPreview(Workbook workbook)
+User->UIFindWorkbooksExtension: Choose workbook to preview
+UIFindWorkbooksExtension->ControllerFindWorkbooks:buildWorkbookPreview(Workbook workbook)
 create PreviewWorkbookBuilder
-ControllerFindWorkbooks->PreviewWorkbookBuilder:new()
-PreviewWorkbookBuilder->PreviewWorkbook: buildPreview(Workbook workbook)
+ControllerFindWorkbooks->PreviewWorkbookBuilder:loadPrev()
+create File
+PreviewWorkbookBuilder->File: new()
+create PreviewWorkbook
+PreviewWorkbookBuilder->PreviewWorkbook: new()
 loop
-PreviewWorkbookBuilder->PreviewWorkbookBuilder:Workbook wpreview=findFirstFilledCells()
-PreviewWorkbookBuilder->PreviewWorkbookBuilder:buildPreviewArea()
-PreviewWorkbookBuilder->PreviewWorkbookPublisher: notifyObservers(Object w)
+PreviewWorkbookBuilder->Files: getFilesAttributeView(file.toPath, UserDefinedFileAttribtueView.class)
+create UserDefinedFileAttributeView
+create ByteBuffer
+PreviewWorkbookBuilder->ByteBuffer: allocate(view.size("cell"+i));
+PreviewWorkbookBuilder->UserDefinedFileAttributeView: read("cell" + i,bytebuffer);
+PreviewWorkbookBuilder->PreviewWorkbook: buildPreviewArea(cell[])
+PreviewWorkbookBuilder->PreviewWorkbookPublisher: notifyObservers(previewWorkbook)
 end
+
 UIFindWorkbooksExtension-->User: Display preview area filled with first non-empty cells
 
 

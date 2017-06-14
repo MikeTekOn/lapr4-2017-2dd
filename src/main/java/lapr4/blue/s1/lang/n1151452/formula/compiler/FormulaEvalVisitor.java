@@ -275,7 +275,7 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
 
                 String value = ctx.getText().substring(1, ctx.getText().length() - 1); // Remove Quotes
                 return new Literal(Value.parseValue(value, Value.Type.BOOLEAN, Value.Type.DATE));
-            }
+            } 
         }
 
         return null;

@@ -1,0 +1,9 @@
+@startuml design_02.png
+
+participant GlobalSearchPublisher <<Singleton>>
+participant GlobalSearchSideBar <<Observer>>
+
+GlobalSearchPublisher->GlobalSearchSideBar:update(Observable o , Object cell)
+GlobalSearchSideBar->GlobalSearchSideBar: updateCurrentList(cell)
+
+@enduml

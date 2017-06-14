@@ -1,0 +1,59 @@
+@startuml us10.1.2_create_company_contact.png
+
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam shadowing false
+hide footbox
+
+title Create CompanyContact
+
+actor "CRM User" as Actor
+participant AddCompanyContactUI as UI <<presentation>>
+participant AddCompanyContactController as Controller <<application>>
+participant "companycontact:CompanyContact" as Domain <<domain:Aggregate Root>>
+participant "cname: CompanyName" as CompanyName <<domain:Value Object>>
+participant "emailaddress: EmailAddress" as EmailAddress <<domain:Value Object>>
+participant "phoneNum: PhoneNumber" as PhoneNumber <<domain:Value Object>>
+participant "img: Image" as Image <<domain:Value Object>>
+database CompanyContactRepository as Repository <<repository>>
+
+Actor --> UI: Add Company Contact
+activate UI
+    UI -> Controller: create
+    Actor --> UI: Name,\nEmail,\nPhone,\nPhotograph
+
+    UI -> Controller: addContact(Name, Email, Phone, Photograph)
+    activate Controller
+        Controller -> CompanyName: create(Name)
+        activate CompanyName
+             CompanyName -> CompanyName: validate
+             CompanyName -->Controller
+        deactivate CompanyName
+        Controller -> EmailAddress: create(Email)
+        activate EmailAddress
+             EmailAddress -> EmailAddress: validate
+             EmailAddress -->Controller
+        deactivate EmailAddress
+        Controller -> PhoneNumber: create(Phone)
+        activate PhoneNumber
+            PhoneNumber -> PhoneNumber: validate
+            PhoneNumber -->Controller
+        deactivate PhoneNumber
+        Controller -> Image: create(Photograph)
+        activate Image
+                    Image -> Image: validate
+                    Image -->Controller
+        deactivate Image
+        Controller -> Domain: create(cname, emailaddress, phoneNum, img)
+        activate Domain
+            Domain -> Domain: validate
+            Domain -> Controller: companycontact
+        deactivate Domain
+        Controller -> Repository: save(companycontact)
+        Controller -> UI: companycontact
+    deactivate Controller
+    UI --> Actor: Display Contact Info
+deactivate UI
+
+
+@enduml

@@ -36,6 +36,7 @@ import csheets.ext.Extension;
 import csheets.ext.ExtensionManager;
 import csheets.ext.SpreadsheetExtension;
 import csheets.ui.ctrl.UIController;
+import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.Table;
 
 /**
  * The implementation of the <code>Spreadsheet</code> interface.
@@ -74,6 +75,9 @@ public class SpreadsheetImpl implements Spreadsheet {
 	/** The spreadsheet extensions that have been instantiated */
 	private transient Map<String, SpreadsheetExtension> extensions = 
 		new HashMap<String, SpreadsheetExtension>();
+        
+        /** The tables that where been created */
+        private List<Table> tables = new ArrayList();
 
 	private transient UIController uiController;
 
@@ -238,7 +242,7 @@ public class SpreadsheetImpl implements Spreadsheet {
 	public Iterator<Cell> iterator() {
 		return cells.values().iterator();
 	}
-
+        
 /*
  * EVENT HANDLING
  */
