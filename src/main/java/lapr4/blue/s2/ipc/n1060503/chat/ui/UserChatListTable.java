@@ -88,6 +88,7 @@ public class UserChatListTable extends JPanel implements Observer {
                 boolean hasFocus, int row, int column) {
 
             lbl.setIcon((Icon) value);
+            lbl.setHorizontalAlignment((int) CENTER_ALIGNMENT);
             return lbl;
         }
     }

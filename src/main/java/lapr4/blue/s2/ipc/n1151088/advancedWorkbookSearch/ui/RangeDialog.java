@@ -117,6 +117,7 @@ public class RangeDialog extends JFrame{
               
                 
                          tablePreview.removeAll();
+                        
                         PreviewSpreadSheetTableModel model=new PreviewSpreadSheetTableModel(this.workbook.getSpreadsheet(0), uiController);
                         tablePreview.setModel(model);
                 

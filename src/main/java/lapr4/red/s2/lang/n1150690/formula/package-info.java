@@ -1,14 +1,14 @@
 /**
  * Technical documentation regarding the user story Lang01.2: Monetary Language.
  *
- * <p/>
+ * <p>
  * <b>Scrum Master: no</b>
- * <p/>
+ * <p>
  * <b>Area Leader: no</b>
  *
  * <h2>1. Notes</h2>
- * <p/>
- * <p/>
+ * <p>
+ * <p>
  *
  * <h2>2. Requirement</h2>
  * <ul>
@@ -32,14 +32,14 @@
  * representation (e.g., float, double) in order to avoid precision
  * problems.</li>
  * </ul>
- * <p/>
+ * <p>
  *
  * <h2>3. Analysis</h2>
- * <p/>
+ * <p>
  * <b>What types of currency can the user enter?</b> After the discussion with
  * the client, this one said that he can only enter amounts in Euro, Dollar or
  * Pounds.
- * <p/>
+ * <p>
  * <b>Exchange Rates</b> - The <u>exchange rates</u> are previous defined in the
  * system, although the user can configure them to a new value. This exchange
  * rates will be persisted in properties file. Whenever a new instance of the
@@ -47,24 +47,18 @@
  * conversions. Thus the properties file will have six lines corresponding to
  * the exchange rates:  
  * <code>
- * <p/>
  * EuroToDollar=1.12749
- * <p/>
  * EuroToPound=0.87423
- * <p/>
  * DollarToEuro=0.88693
- * <p/>
  * DollarToPound=0.77538
- * <p/>
  * PoundToEuro=1.14380
- * <p/>
  * PoundToDollar=1.28977
  * </code>
- * <p/>
+ * <p>
  * The values were taken from a website of exchange rates:
  * <a href="http://www.xe.com/">XE - The World's Trusted Currency Authority</a>
- * <p/>
- * <p/>
+ * <p>
+ * <p>
  * Regarding the problem of using numbers in <b>floating point</b>, in the
  * implementation i will use numbers defined as BigDecimal. A BigDecimal
  * consists of an arbitrary precision integer unscaled value and a 32-bit
@@ -74,8 +68,8 @@
  * informations, i do recommend reading the
  * <a href="https://docs.oracle.com/javase/7/docs/api/java/math/BigDecimal.html">javadoc</a>
  * of BigDecimal.
- * <p/>
- * <p/>
+ * <p>
+ * <p>
  * The <b>previous use case</b> has several information about how the parser and
  * executer work together, how to convert a parser tree to Expressions, how to
  * load the language properties and several referencies about important methods
@@ -83,7 +77,7 @@
  * <code>lapr4.blue.s1.lang.n1151452.formula</code>
  *
  * <h3>3.2. The Language</h3>
- * <p/>
+ * <p>
  * The formula should start with the character "#" and be followed by the
  * currency that the user wants the result. The expression must be within
  * brackets and must contain at least one number with the currency. The
@@ -91,21 +85,21 @@
  * wherein the multiplication and division of the operands must be a number, not
  * a monetary amount. The expression may still contain operations in parentheses
  * to indicate precedence.
- * <p/>
+ * <p>
  *
  * <h3>3.3. Domain Model</h3>
- * <p/>
+ * <p>
  * <img src="domain_model.png" alt="image">
- * <p/>
- * <h2>4. Tests</h3>
+ * <p>
+ * <h2>4. Tests</h2>
  * <h3>4.1. Unit Tests</h3>
  * <ul>
  * <li>test convertions between coins</li>
  * <li>ensureExpressionIsNotMalformed</li>
  * </ul>
- * <p/>
+ * <p>
  * <h3>4.2. Functional Tests</h3>
- * <p/>
+ * <p>
  * <ul>
  * <li>Test for the calculation with the same currency
  * <ol>
@@ -114,7 +108,6 @@
  * <li>The cell A1 should have the value: 3.30</li>
  * </ol>
  * </li>
- * <p/>
  * <li>Test for the calculation with the diferent currencies
  * <ol>
  * <li>Insert in the cell A1 the following expression: "#euro{12.36$ -
@@ -130,77 +123,77 @@
  *
  * <h2>5. Design</h2>
  * <h3>5.1. UC Realization</h3>
- * <p/>
+ * <p>
  * <b>How Operations are made</b>
  * <img src="assignment_sd" alt="image">
- * <p/>
+ * <p>
  * <b>Load Property (Exchange Rate) and Convert Monetary value</b>
  * <img src="lang01_2_convert.png" alt="image">
- * <p/>
+ * <p>
  * <b>Configuration of Exchange Rates</b>
  * <img src="lang01_2_configurateExchangeRates.png" alt="image">
  *
  * <h3>5.2. Classes</h3>
- * <p/>
+ * <p>
  * <b>Configurations diagram</b>
  * <img src="lang01_2_configurations_cd.png" alt="image">
- * <p/>
+ * <p>
  * <img src="lang01_2_cd.png" alt="image">
  * 
  * <h2>5. Implementation</h2>
- * </p/> I needed to modify the applyTo methods of the Adder, Divider, Multiplier
+ * <p> I needed to modify the applyTo methods of the Adder, Divider, Multiplier
  * and Subtracter classes to do the operations with values in BigDecimal.
  *
  *
  * <h2>6. Integration/Demonstration</h2>
- * <p/>
+ * <p>
  *
  * <h2>7. Final Remarks</h2>
- * <p/>
+ * <p>
  *
  * <h2>8. Work Log</h2>
- * <p/>
+ * <p>
  * <b>Tuesday: 06/06/2017</b>
- * <p/>
+ * <p>
  * Yesterday: our team distributed the funcionalities to be worked on this
  * sprint.
- * <p/>
+ * <p>
  * Today: I will start the analysis process.
- * <p/>
+ * <p>
  * Blocking:---
- * <p/>
+ * <p>
  * <b>Wednesday 07/06/2017</b>
- * <p/>
+ * <p>
  * Yesterday:I finished the analysis process.
- * <p/>
+ * <p>
  * Today:I will make a plan to the funcional tests and start the design.
- * <p/>
+ * <p>
  * Blocking:---
- * <p/>
+ * <p>
  * <b>Thursday 08/06/2017 </b>
- * <p/>
+ * <p>
  * Yesterday:
- * <p/>
+ * <p>
  * Today:
- * <p/>
+ * <p>
  * Blocking:
- * <p/>
+ * <p>
  * <b>Friday 09/06/2017</b>
- * <p/>
+ * <p>
  * Yesterday:
- * <p/>
+ * <p>
  * Today:
- * <p/>
+ * <p>
  * Blocking:--
- * <p/>
+ * <p>
  * <b>Monday 12/06/2017</b>
- * <p/>
+ * <p>
  * Yesterday:
- * <p/>
+ * <p>
  * Today:
- * <p/>
+ * <p>
  * Blocking:
- * <p/>
+ * <p>
  *
  * <h2>9. Self Assessment</h2>
  *

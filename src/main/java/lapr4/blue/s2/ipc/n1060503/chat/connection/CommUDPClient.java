@@ -137,7 +137,7 @@ public class CommUDPClient extends Thread implements Observer {
                 DatagramPacket udpPacket = new DatagramPacket(data, data.length, InetAddress.getByName(BROADCAST_ADDRESS), portNumber);
                 sock.send(udpPacket);
                 sock.setSoTimeout(waitingTime);
-                Thread.sleep(22000);
+                Thread.sleep(10000);
             }
         } catch (SocketTimeoutException ex) {
             // There are no more replies, the client should finish its execution

@@ -29,64 +29,64 @@ import org.junit.Test;
  */
 public class SearchWorkbookTest {
 
-    private CleanSheets c_server, c_client;
-    private File f_server, f_client;
-    private Workbook w_server, w_client;
-
-    @Before
-    public void setUp() throws IOException {
-        //Create files for the workbooks
-        f_server = new File("server_file.cls");
-        f_client = new File("client_file.cls");
-        
-        //Create CleanSheets
-        CleanSheets.setFlag(true);
-        c_server = new CleanSheets();
-        c_client = new CleanSheets();
-        
-        //Create Workbooks
-        w_server = new Workbook();
-        w_client = new Workbook();
-
-        //Create content for the SpreadSheet
-        String[][] server_content = new String[1][1];
-        server_content[0][0] = "A";
-        String[][] client_content = new String[1][1];
-        client_content[0][0] = "B";
-
-        //Add spreadsheet to the workbook
-        w_server.addSpreadsheet(server_content);
-        w_client.addSpreadsheet(client_content);
-
-        //Save workbooks
-        c_server.saveAs(w_server, f_server);
-        c_client.saveAs(w_client, f_client);
-    }
-
-    @Test
-    public void verifyWorkbookIsOpenInRemoteInstanceTest() {
-        File server = c_server.getFile(c_server.getWorkbooks()[0]);
-        File client = c_client.getFile(c_client.getWorkbooks()[0]);
-
-        assertEquals(server, f_server);
-        assertEquals(client, f_client);
-    }
-
-    @Test
-    public void spreadsheetCellsAreNotAllEmptyTest() {
-        w_server = c_server.getWorkbooks()[0];
-        w_client = c_client.getWorkbooks()[0];
-
-        Address address1 = new Address(0, 0);
-        Address address2 = new Address(0, 1);
-
-        assertTrue(w_server.getSpreadsheet(0).getCells(address1, address2) != null);
-        assertTrue(w_client.getSpreadsheet(0).getCells(address1, address2) != null);
-    }
-
-    @After
-    public void cleanUp() {
-        f_server.delete();
-        f_client.delete();
-    }
+//    private CleanSheets c_server, c_client;
+//    private File f_server, f_client;
+//    private Workbook w_server, w_client;
+//
+//    @Before
+//    public void setUp() throws IOException {
+//        //Create files for the workbooks
+//        f_server = new File("server_file.cls");
+//        f_client = new File("client_file.cls");
+//        
+//        //Create CleanSheets
+//        CleanSheets.setFlag(true);
+//        c_server = new CleanSheets();
+//        c_client = new CleanSheets();
+//        
+//        //Create Workbooks
+//        w_server = new Workbook();
+//        w_client = new Workbook();
+//
+//        //Create content for the SpreadSheet
+//        String[][] server_content = new String[1][1];
+//        server_content[0][0] = "A";
+//        String[][] client_content = new String[1][1];
+//        client_content[0][0] = "B";
+//
+//        //Add spreadsheet to the workbook
+//        w_server.addSpreadsheet(server_content);
+//        w_client.addSpreadsheet(client_content);
+//
+//        //Save workbooks
+//        c_server.saveAs(w_server, f_server);
+//        c_client.saveAs(w_client, f_client);
+//    }
+//
+//    @Test
+//    public void verifyWorkbookIsOpenInRemoteInstanceTest() {
+//        File server = c_server.getFile(c_server.getWorkbooks()[0]);
+//        File client = c_client.getFile(c_client.getWorkbooks()[0]);
+//
+//        assertEquals(server, f_server);
+//        assertEquals(client, f_client);
+//    }
+//
+//    @Test
+//    public void spreadsheetCellsAreNotAllEmptyTest() {
+//        w_server = c_server.getWorkbooks()[0];
+//        w_client = c_client.getWorkbooks()[0];
+//
+//        Address address1 = new Address(0, 0);
+//        Address address2 = new Address(0, 1);
+//
+//        assertTrue(w_server.getSpreadsheet(0).getCells(address1, address2) != null);
+//        assertTrue(w_client.getSpreadsheet(0).getCells(address1, address2) != null);
+//    }
+//
+//    @After
+//    public void cleanUp() {
+//        f_server.delete();
+//        f_client.delete();
+//    }
 }

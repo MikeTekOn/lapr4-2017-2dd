@@ -7,8 +7,9 @@ package lapr4.blue.s2.ipc.n1060503.chat.profile;
 
 import eapli.framework.domain.AggregateRoot;
 import eapli.util.Strings;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -54,8 +55,12 @@ public class UserChatProfile implements AggregateRoot<Long>, Serializable {
     /**
      * byte of the icon
      */
-    @Lob @Basic(fetch= FetchType.EAGER)
+    @Lob
+    @Basic(fetch = FetchType.EAGER)
     private byte[] iconBytes;
+
+    private static final int ICON_WIDTH = 20;
+    private static final int ICON_HEIGHT = 20;
 
     /**
      * the status (online or offline) of user chat
@@ -65,6 +70,7 @@ public class UserChatProfile implements AggregateRoot<Long>, Serializable {
     /**
      * constructor by default
      *
+     * @throws java.net.MalformedURLException
      * @throws java.io.IOException
      */
     public UserChatProfile() throws MalformedURLException, IOException {
@@ -77,13 +83,12 @@ public class UserChatProfile implements AggregateRoot<Long>, Serializable {
      * change all info of user chat profile
      *
      * @param nickname
-     * @param image_path
      * @param status
      * @return changed user chat profile
      * @throws java.net.MalformedURLException
      */
     public UserChatProfile changeInfo(String nickname,
-            StatusChatProfile status) throws MalformedURLException, IOException {
+            String status) throws MalformedURLException, IOException {
         if (status == null) {
             throw new IllegalStateException("Invalid status");
         }
@@ -106,57 +111,69 @@ public class UserChatProfile implements AggregateRoot<Long>, Serializable {
      * @throws java.net.MalformedURLException
      */
     public void changeIcon(String image_path) throws MalformedURLException, IOException {
-
-        URL url = UserChatProfile.class.getResource("res/img/default_icon.png");
+        // Image must have less then 400Bytes, to be sent by UDP
+        URL url = UserChatProfile.class.getResource("res/img/chat1.png");
         if (!image_path.isEmpty()) {
             url = new URL(image_path);
-        } 
+        }
         ImageIcon i = new ImageIcon(url);
         setIcon(i);
 
     }
-    
+
     /**
-     * set the icon 
+     * set the icon
+     *
      * @param icon
      * @throws IOException
      */
-    public void setIcon(ImageIcon icon) throws IOException{  
-        iconBytes = extractBytes(resizeIcon(icon)); 
+    public void setIcon(ImageIcon icon) throws IOException {
+        iconBytes = extractBytes(resizeIcon(icon));
     }
-    
+
     /**
      * resize the icon
+     *
      * @param icon
      * @return icon resized
      */
-    private ImageIcon resizeIcon(ImageIcon icon){
+    private ImageIcon resizeIcon(ImageIcon icon) {
         Image img = icon.getImage();
-        Image newimg = img.getScaledInstance(50, 50,  java.awt.Image.SCALE_SMOOTH);  
- 
+        Image newimg = img.getScaledInstance(ICON_WIDTH, ICON_HEIGHT, java.awt.Image.SCALE_SMOOTH);
+
         return new ImageIcon(newimg);
     }
-    
+
     /**
      * convert icon to byte[]
+     *
      * @param icon
      * @return byte[] of an icon
      * @throws IOException
      */
     private static byte[] extractBytes(ImageIcon icon) throws IOException {
-        BufferedImage bufferedImage = new BufferedImage(icon.getIconWidth(),
-            icon.getIconHeight(),BufferedImage.TYPE_INT_RGB);
+        byte[] imageInByte;
+        ImageIcon i = icon;
         
-        Graphics g = bufferedImage.createGraphics();
-        // paint the Icon to the BufferedImage.
-        icon.paintIcon(null, g, 0,0);
-        ByteArrayOutputStream b =new ByteArrayOutputStream();
-        ImageIO.write(bufferedImage, "png", b );
-        byte[] imageInByte = b.toByteArray();
+        BufferedImage bi = new BufferedImage(ICON_WIDTH,
+                ICON_HEIGHT, BufferedImage.TYPE_INT_RGB);
+
+        Graphics2D g2d = (Graphics2D) bi.createGraphics();
+        g2d.addRenderingHints(new RenderingHints(RenderingHints.KEY_RENDERING,
+                RenderingHints.VALUE_RENDER_QUALITY));
+        boolean b = g2d.drawImage(i.getImage(), 0, 0, ICON_WIDTH, ICON_HEIGHT, null);
+        System.out.println(b);
+
+        try ( ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            ImageIO.write(bi, "png", baos );
+            baos.flush();
+            imageInByte = baos.toByteArray();
+        }
+        
         
         return imageInByte;
     }
-    
+
     @Override
     public boolean sameAs(Object other) {
         if (!(other instanceof UserChatProfile)) {
@@ -206,13 +223,18 @@ public class UserChatProfile implements AggregateRoot<Long>, Serializable {
      * @param status the status to set
      * @return true if status is valid, false if not
      */
-    public boolean setStatus(StatusChatProfile status) {
+    public boolean setStatus(String status) {
 
-        if (!(status instanceof StatusChatProfile)) {
-            return false;
+        if (status.equals(StatusChatProfile.ONLINE.toString())) {
+            this.status = StatusChatProfile.ONLINE;
+            return true;
         }
-        this.status = status;
-        return true;
+
+        if (status.equals(StatusChatProfile.OFFLINE.toString())) {
+            this.status = StatusChatProfile.OFFLINE;
+            return true;
+        }
+        return false;
     }
 
     @Override

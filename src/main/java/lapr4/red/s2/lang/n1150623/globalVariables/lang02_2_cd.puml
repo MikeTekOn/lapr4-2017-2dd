@@ -3,14 +3,21 @@
 
 title \nLang02.2 - Global Variables - Class Diagram\n\n
 
+class Variable{
+ - name :String
+ - expression : Expression
+}
+
+interface Serializable{
+}
 
 class ExcelExpressionCompiler{
     +char getStarter()
     +Expression compile(Cell cell, String source)
 }
 
-class TemporaryVariableContentor{
-    +void addTemporaryVariable()
+class VarContentor{
+    +void update()
 }
 
 class Formula {
@@ -24,9 +31,6 @@ interface Expression {
 interface Operator {
 }
 
-interface Variable{
-}
-
 class Operator {
     + applyTo()
 }
@@ -37,11 +41,11 @@ abstract class Operation <O extends Operator> {
 
 interface FormulaEvalVisitor {
         +Expression visitExpression(Expression expression)
-	+Object visitTemporaryVariable (TemporaryVariable tempVar)
+	+Object visitGlobalVariable (Variable globalVar)
 }
 
 Expression <|-- Formula
-Expression <|-- TemporaryVariable
+Expression <|-- Variable
 
 Operation <|-- UnaryOperation
 Operation <|-- BinaryOperation
@@ -56,11 +60,10 @@ Operator <|-- UnaryOperator
 Operator <|-- BinaryOperator
 Operator <|-- NaryOperator
 
-Variable <|-- TemporaryVariable
-
 Operation <-- Operator
 
-FormulaEvalVisitor ..> TemporaryVariableContentor
-TemporaryVariableContentor ..> TemporaryVariable
-
+FormulaEvalVisitor ..> VarContentor
+VarContentor *-- Variable
+Variable --|> Serializable
+VarContentor --|> Serializable
   @enduml

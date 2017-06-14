@@ -10,6 +10,7 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.table.AbstractTableModel;
 import lapr4.blue.s2.ipc.n1060503.chat.connection.UserChatDTO;
+import lapr4.blue.s2.ipc.n1060503.chat.profile.UserChatProfile;
 
 /**
  * It represents the Panel for the chat.
@@ -95,9 +96,10 @@ public class ChatParticipantsModel extends AbstractTableModel {
         UserChatDTO ucp = list.get(rowIndex);
         Object data;
         switch (columnIndex) {
-            case 0:                
-//                data = ucp.getImage();
-                data = new ImageIcon();// FIXME  image received with errors
+            case 0:          
+                
+                data = ucp.getImage();
+//                data = new ImageIcon();// FIXME  image received with errors
                 break;
             case 1:
                 data = ucp.getUserChatProfileNickname();
