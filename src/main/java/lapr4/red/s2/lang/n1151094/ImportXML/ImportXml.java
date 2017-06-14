@@ -136,7 +136,8 @@ public class ImportXml implements ImportStrategy {
                     NamedNodeMap attributes = an2.getAttributes();
                     String column = attributes.getNamedItem(DEFAULT_COLUMN).getTextContent();
                     String row = attributes.getNamedItem(DEFAULT_ROW).getTextContent();
-                    Address addr = new Address(Integer.parseInt(column), Integer.parseInt(row));
+                   
+                    Address addr = new Address(Integer.parseInt(column)-1, Integer.parseInt(row)-1);
                     String content = an2.getTextContent();
                     CellDTO cellDto = new CellDTO(addr, content);
                     String title = attr.getNamedItem(DEFAULT_TITLE).getTextContent();

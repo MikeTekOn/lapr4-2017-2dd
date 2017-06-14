@@ -43,6 +43,8 @@ public class HandlerFileDTO extends Observable implements CommHandler {
             fileOut.flush();
             UserDefinedFileAttributeView view = Files.getFileAttributeView(file.toPath(), UserDefinedFileAttributeView.class);
             view.write("host", Charset.defaultCharset().encode(((SocketEncapsulatorDTO) dto).getSocket().getInetAddress().toString()));
+            //TODO add meta info with the the type of download (Permanent , OneFileDownload)
+            //TODO add meta info with the file version
             setChanged();
             notifyObservers();
         } catch (FileNotFoundException ex) {

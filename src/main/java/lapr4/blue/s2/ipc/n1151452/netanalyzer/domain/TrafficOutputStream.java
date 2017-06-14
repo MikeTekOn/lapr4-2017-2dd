@@ -56,10 +56,9 @@ public class TrafficOutputStream extends ObjectOutputStream {
     }
 
     /**
-     * Writes an object to the stream & publishes a traffic event
+     * Writes an object to the stream &amp; publishes a traffic event
      *
      * @throws IOException            I/O Exception
-     * @throws ClassNotFoundException Class not found
      */
     public void write(Object object) throws IOException {
 

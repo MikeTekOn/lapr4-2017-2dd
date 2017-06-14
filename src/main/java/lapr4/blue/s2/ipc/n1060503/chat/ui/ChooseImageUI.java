@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import lapr4.blue.s2.ipc.n1060503.chat.ChangeUserChatProfileController;
 
 /**
@@ -37,6 +38,11 @@ public class ChooseImageUI extends JFileChooser{
             Image img = imagem.getImage();
             Image newimg = img.getScaledInstance(50, 50,  java.awt.Image.SCALE_SMOOTH);            
             controller.changeIcon( new ImageIcon(newimg));
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Icon / Photo changed with success!",
+                    "Change User Chat Profile",
+                    JOptionPane.INFORMATION_MESSAGE);
         }        
     }
     

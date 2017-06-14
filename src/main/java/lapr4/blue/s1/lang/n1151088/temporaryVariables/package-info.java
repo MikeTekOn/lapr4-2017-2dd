@@ -113,7 +113,7 @@
  * 
  * <h2>5. Implementation</h2>
  * <p>
- * The class Variable {@link lapr4.blue.s1.lang.1151088.temporaryVariables.Variable} was created to handle the temporary variables
+ * The class Variable &#123;@link lapr4.blue.s1.lang.1151088.temporaryVariables.Variable&#125; was created to handle the temporary variables
  * domain rules. The TemporaryVariableContentor allows to manage the temporary variables in formula (by updating temporary
  * variable if it was already used or adding if not).
  * </p>

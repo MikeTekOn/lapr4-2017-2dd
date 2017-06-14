@@ -1,0 +1,11 @@
+@startuml ssd1.png
+User1 -> System1: Selects one file to download
+System1 -> User1 : Asks if the download is permanent or a one time download
+User1 -> System1: Selects the type of download
+alt Type is Permanent
+    System1 -> User1 : Asks if the downloaded updates will be in replace mode or in version mode
+    User1 -> System1: Selects the updating method
+end
+    System2 -> System1: Sends the file
+
+@enduml

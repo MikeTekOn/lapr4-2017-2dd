@@ -85,7 +85,7 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
      * Handles the behaviour of visiting the ShellScript grammar node. The shellScript node will have the information
      * needed for what code the beanShell should execute, but also how to execute it.
      *
-     * The node can start with 2 headers. (1) "<![SHELL[" or (2) "<[SHELL[".
+     * The node can start with 2 headers. (1) "&lt;![SHELL[" or (2) "&lt;[SHELL[".
      * If (1) is chosen, the bean shell code should be run asynchronously and the result of visiting this node is
      * null. If (2) is chosen, the code should be run synchronously and the result of visiting this node is the return
      * value of visiting the bean shell code (normally, the value of the last instruction executed).
@@ -275,7 +275,7 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
 
                 String value = ctx.getText().substring(1, ctx.getText().length() - 1); // Remove Quotes
                 return new Literal(Value.parseValue(value, Value.Type.BOOLEAN, Value.Type.DATE));
-            }
+            } 
         }
 
         return null;

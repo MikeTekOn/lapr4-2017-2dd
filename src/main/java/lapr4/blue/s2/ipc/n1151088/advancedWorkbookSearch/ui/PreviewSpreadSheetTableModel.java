@@ -21,12 +21,12 @@ public class PreviewSpreadSheetTableModel extends SpreadsheetTableModel{
     
     @Override
     public int getRowCount() {
-        return Math.max(2, spreadsheet.getRowCount() + 1);
+        return 3;
     }
 
     @Override
     public int getColumnCount() {
-            return Math.max(2, spreadsheet.getRowCount() + 1);
+            return 3;
     }    
     
     @Override

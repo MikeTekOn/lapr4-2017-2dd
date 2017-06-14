@@ -30,6 +30,7 @@ public class PreviewWorkbookBuilderTest {
     @Before
     public void setUp() throws FormulaCompilationException {
         //Try to create the CS application object
+        CleanSheets.setFlag(true);
         app = new CleanSheets();
         controller = new UIController(app);
         

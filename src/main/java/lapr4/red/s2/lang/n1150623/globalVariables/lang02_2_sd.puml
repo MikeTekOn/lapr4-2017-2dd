@@ -4,11 +4,12 @@ actor User
 participant "UI"
 participant "FormulaEvalVisitor" as FEV
 participant "ExcelExpressionCompiler" as Compiler
-participant "VarContentor" as Contentor
-participant "Variable" as Var
+participant "globalVar :Variable" as Var
 participant "ExpressionVisitor"
-participant "Operation" 
-participant "VariableFactory" as varfac
+participant "Operation"
+participant "UIController" as ctrl
+participant "Workbook" as work
+participant "VarContentor" as Contentor
 
 title \nLang02.2 - Global Variables - Sequence Diagram\n\n
 
@@ -21,29 +22,20 @@ activate Compiler
 FEV -> Compiler : getStarter()
 FEV -> Compiler : compile(cell,source)
 deactivate Compiler
-activate Contentor
-FEV -> Contentor : add(globalVar)
-
-activate varfac
-   Contentor -> varfac : createVariable(
-deactivate varfac
 
 create Var
-Contentor --> Var : create
-Contentor -> Contentor : add(createdGlobalVar)
+FEV --> Var : create(name, expression)
 
-
-
-
-note right of Var
-Here put the persistence of Global variable (in the add method)
-end note
-
-
-
-
-
+activate ctrl
+FEV -> ctrl : activeWorkbook()
+deactivate ctrl
+activate work
+FEV -> work: updateGlobalVariable(globalVar)
+activate Contentor
+work -> Contentor : update(globalVar)
 deactivate Contentor
+deactivate work
+
 activate Compiler
 FEV -> Compiler : visitGlobalVariable(globalVar)
 create ExpressionVisitor
