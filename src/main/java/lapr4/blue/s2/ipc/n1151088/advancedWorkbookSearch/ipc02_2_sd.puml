@@ -14,9 +14,8 @@ participant PreviewWorkbook
 User->UIFindWorkbooksExtension:Insert the root path to find
 UIFindWorkbooksExtension-->User: Asks to insert a regular expression
 User->UIFindWorkbooksExtension: Enters the regular expression and launches the search
-UIFindWorkbooksExtension-->ControllerFindWorkbooks:findPath(String path)
 create Directory
-ControllerFindWorkbooks->Directory:new()
+ControllerFindWorkbooks->Directory:new(String path, String regex))
 create SearchFiles
 Directory->SearchFiles:create()
 Directory -> SearchFiles: isRegexValid(regex))
