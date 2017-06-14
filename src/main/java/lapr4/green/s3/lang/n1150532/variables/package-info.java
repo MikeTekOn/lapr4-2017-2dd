@@ -219,6 +219,147 @@
  * <b>Unit Testing</b>: The main methods created must be unit tested.
  * </p>
  *
+ * <h1>Design</h1>
+ *
+ * <h2>Grammar</h2>
+ *
+ * <p>
+ * The existing grammar already handles the temporary and global values. In
+ * order to handle the index reference, their rules must be edited. The existing
+ * rules:
+ * </p>
+ * <blockquote>
+ * <pre>
+ * {@code
+ *  VARIABLE_NAME
+ *      : UNDERSCORE LETTER (DIGIT|LETTER)*
+ *      ;
+ *
+ *  G_VARIABLE_NAME
+ *      : AT LETTER (DIGIT|LETTER)*
+ *      ;
+ * }
+ * </pre>
+ * </blockquote>
+ * <p>
+ * Notice how the variable name ("LETTER (DIGIT|LETTER)*") is equal in both
+ * types of variables and could be exchanged for a unique rule or token.
+ * Regardless, in order to use the index reference, the rules should become:
+ * </p>
+ * <blockquote>
+ * <pre>
+ * {@code
+ *  VARIABLE_NAME
+ *      : UNDERSCORE LETTER (DIGIT|LETTER)* (INDEX)?
+ *      ;
+ *
+ *  G_VARIABLE_NAME
+ *      : AT LETTER (DIGIT|LETTER)* (INDEX)?
+ *      ;
+ *
+ *  INDEX
+ *      :  L_RIGHT_PAR POSITIVE_DIGIT (DIGIT)* R_RIGHT_PAR
+ *      ;
+ * }
+ * </pre>
+ * </blockquote>
+ * <p>
+ * Now both variables have the ability to contain or not a reference to the
+ * index. The index should always start with an opening square bracket followed
+ * by a positive integer and then a closing square bracket. The positive integer
+ * is a number that only contains digits and at least one, as well as the
+ * leftmost digit is not equal to zero.
+ * </p>
+ *
+ * <h2>Visits</h2>
+ *
+ * <p>
+ * The existing visit methodology handles both temporary and global variables.
+ * However, now that must be changed so it checks and handles the index
+ * reference. Since we added a new rule to handle the index reference, it could
+ * be treated at that visit method. However, the existing implementation
+ * provides an easier and more suitable solution: handle the index at the
+ * variable visit. Since the index belongs to the variable and the variable's
+ * name and index are provided at this time, it makes sense that this rule
+ * examines the tokens, splits the name from the index and saves &#47; gets the
+ * matching expression.
+ * </p>
+ *
+ * <h2>Variable</h2>
+ *
+ * <p>
+ * The variable concept is more than just a name and an expression now. This
+ * requires the {@link lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable}
+ * to be altered. Although a completely new and different implementation is
+ * needed (as discussed above), the current proposal is to maintain the original
+ * concept as far as possible.
+ * </p>
+ * <p>
+ * The variable have indexes now, which means an array. The implementation could
+ * then be performed by using an array. However, the size of the array is
+ * unknown and dynamical, i.e. it may change during runtime. So a
+ * {@link java.util.List} could be used. The client also states that the indexes
+ * may not be straight sequential (there might be gaps). Moreover, the first
+ * element is at index number one and not zero. For this approach, a
+ * {@link java.util.Map} whose key is the index and the value the expression
+ * seems more suitable.
+ * </p>
+ * <p>
+ * The variables hold expressions which are capable of handling all different
+ * value types. This solves the multi-type array issue since each position holds
+ * its own expression.
+ * </p>
+ *
+ * <h2>VarContentor</h2>
+ *
+ * <p>
+ * The above said also requires the
+ * {@link lapr4.red.s2.lang.n1150623.globalVariables.VarContentor} to change
+ * some of its methods, like the
+ * {@link lapr4.red.s2.lang.n1150623.globalVariables.VarContentor#getExpressionOfVariable}
+ * and {@link lapr4.red.s2.lang.n1150623.globalVariables.VarContentor#update}.
+ * These will now require the index in which to operate. By default the first
+ * element should be used as previously discussed.
+ * </p>
+ *
+ * <h2>Compiler</h2>
+ *
+ * The side bar will receive user input to change the content of a global
+ * variable. That user input shall then be compiled. For that purpose, the
+ * {@link lapr4.blue.s1.lang.n1151452.formula.compiler.ExcelExpressionCompiler}
+ * can be used.
+ *
+ * <h2>Update</h2>
+ *
+ * <p>
+ * In order to update the side bar with the changes to global variables and
+ * following the existing implementation, the
+ * {@link lapr4.red.s2.lang.n1150623.globalVariables.VarContentor} can be an
+ * {@link java.util.Observable} container which will be monitored by the side
+ * bar. Although the VarContentor already extends another class, that extension
+ * is not being used anywhere and it has no apparent reason to exist. So it can
+ * be replaced.
+ * </p>
+ * <p>
+ * On the other hand, the side bar can notify the workbook to update its cells.
+ * It is a rather radical strategy but it seems like the only possible one,
+ * since the global variables have no track of their precedents and dependents.
+ * It is never enough to mention that this is only a bandage to attempt to
+ * partially solve the issue. The best solution would be to refactor the whole
+ * implementation and concepts.
+ * </p>
+ *
+ * <h2>Alternatives</h2>
+ *
+ * <p>
+ * Besides all the stated possibilities and advised changes, another alternative
+ * (to the current implementation), would be to simply change the grammar as
+ * stated. This would then create a global variable to each of the indexes
+ * inserted and it would work normally. However, in business terms, this is not
+ * what it was required and it would represent a short sight for future
+ * maintenance.
+ * </p>
+ *
  * @author Manuel Meireles (1150532)
  */
 package lapr4.green.s3.lang.n1150532.variables;
