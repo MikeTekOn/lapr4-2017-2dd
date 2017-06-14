@@ -116,6 +116,8 @@ public class ExportToDatabaseUI extends JDialog {
                         System.out.println("ola");
                         tableAlreadyExists();
                     //}
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(ExportToDatabaseUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -165,6 +167,8 @@ public class ExportToDatabaseUI extends JDialog {
                 try {
                     controller.export(true);
                 } catch (SQLException ex) {
+                    Logger.getLogger(ExportToDatabaseUI.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InterruptedException ex) {
                     Logger.getLogger(ExportToDatabaseUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
