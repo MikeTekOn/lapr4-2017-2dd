@@ -41,7 +41,7 @@ public class ShareAction extends BaseAction {
     /**
      * The constructor for the ShareAction
      *
-     * @param connection
+     * @param portNr
      * @param uiController The controller.
      */
     public ShareAction(int portNr, UIController uiController) {

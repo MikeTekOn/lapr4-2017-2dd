@@ -1,8 +1,13 @@
 package lapr4.blue.s2.ipc.n1140822.fileShare;
 
 import csheets.ui.ctrl.UIController;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
+import lapr4.red.s3.ipc.n1150943.automaticDownload.ui.DownloadingPanel;
+import ui.Notification;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -19,23 +24,9 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
 
 /**
- *
+ * Edited by João Cardoso - 1150943
  * @author Renato Oliveira 1140822@isep.ipp.pt
  */
 public class ShareFrame extends JFrame implements Observer {
@@ -116,7 +107,7 @@ public class ShareFrame extends JFrame implements Observer {
                 try {
 
                     ShareConfiguration.changeDownloadFolder(fileChooser.getSelectedFile().getAbsolutePath());
-                    JOptionPane.showMessageDialog(ShareFrame.this, "Folder changed with success.");
+                    JOptionPane.showMessageDialog(ShareFrame.this, "Download folder changed with success.");
 
                 } catch (IOException | NullPointerException ex) {
                     JOptionPane.showMessageDialog(ShareFrame.this, "Error selecting download folder.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -132,10 +123,10 @@ public class ShareFrame extends JFrame implements Observer {
                 try {
 
                     ShareConfiguration.changeSharedFolder(fileChooser.getSelectedFile().getAbsolutePath());
-                    JOptionPane.showMessageDialog(ShareFrame.this, "Folder changed with success.");
+                    JOptionPane.showMessageDialog(ShareFrame.this, "Shared folder changed with success.");
 
                 } catch (IOException | NullPointerException ex) {
-                    JOptionPane.showMessageDialog(ShareFrame.this, "Error selecting download folder.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(ShareFrame.this, "Error selecting shared folder.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -199,14 +190,14 @@ public class ShareFrame extends JFrame implements Observer {
      */
     @Override
     public void update(Observable o, Object arg) {
-
+        FileNameListDTO dto = (FileNameListDTO) arg;
         boolean update = true;
         if (o instanceof HandlerFileNameListDTO) {
+            for (String fileName : dto.filesMap().keySet()) {
 
-            for (String fileName : ((FileNameListDTO) arg).filesMap().keySet()) {
                 for (int i = 0; i < tableModel.getDataVector().size(); i++) {
-                    if (tableModel.getValueAt(i, 0).equals(fileName) && tableModel.getValueAt(i, 1).equals(((FileNameListDTO) arg).connID())) {
-                        if (tableModel.getValueAt(i, 2).equals(((FileNameListDTO) arg).filesMap().get(fileName) + " bytes")) {
+                    if (tableModel.getValueAt(i, 0).equals(fileName) && tableModel.getValueAt(i, 1).equals(dto.connID())) {
+                        if (tableModel.getValueAt(i, 2).equals(dto.filesMap().get(fileName) + " bytes")) {
                             update = false;
                         } else {
                             tableModel.removeRow(i);
@@ -217,25 +208,33 @@ public class ShareFrame extends JFrame implements Observer {
                 if (update) {
                     Object[] rowData = new Object[3];
                     rowData[0] = fileName;
-                    rowData[1] = ((FileNameListDTO) arg).connID();
-                    rowData[2] = (((FileNameListDTO) arg).filesMap().get(fileName)) + " bytes";
+                    rowData[1] = dto.connID();
+                    rowData[2] = (dto.filesMap().get(fileName)) + " bytes";
                     tableModel.addRow(rowData);
 
                     for (int row = 0; row < dlTable.getRowCount(); row++) {
-                        if (dlTableModel.getValueAt(row, 0).equals(fileName) && dlTableModel.getValueAt(row, 1).equals("/" + ((FileNameListDTO) arg).connID().toString())) {
+                        //TODO verify if the file to be updated is permanent and if it is download it
+                        if (dlTableModel.getValueAt(row, 0).equals(fileName) && dlTableModel.getValueAt(row, 1).equals("/" + dto.connID().toString())) {
                             if (!dlTableModel.getValueAt(row, 2).equals(rowData[2].toString())) {
                                 dlTableModel.setValueAt("OUTDATED", row, 3);
+                                //TODO if the file has permanent type download it automatically with the same name or with the new version
                             }
                         }
                     }
+                    update = true;
                 }
-                update = true;
             }
             table.setModel(tableModel);
 
         }
         if (o instanceof HandlerFileDTO) {
-            JOptionPane.showMessageDialog(ShareFrame.this, "File " + (String) tableModel.getValueAt(table.getSelectedRow(), 0) + " downloaded with success.");
+            Notification.notifyHost(new DownloadingPanel((String) tableModel.getValueAt(table.getSelectedRow(), 0)));
+            //JOptionPane.showMessageDialog(ShareFrame.this, "File " + (String) tableModel.getValueAt(table.getSelectedRow(), 0) + " downloaded with success.");
+            try {
+                fillDownloadTable();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
     }
@@ -255,9 +254,8 @@ public class ShareFrame extends JFrame implements Observer {
                     try {
                         shareController = new FileSharingController((ConnectionID) tableModel.getValueAt(table.getSelectedRow(), 1));
                         shareController.requestFile((String) tableModel.getValueAt(table.getSelectedRow(), 0));
-                        fillDownloadTable();
 
-                    } catch (Exception ex) {
+} catch (Exception ex) {
                         JOptionPane.showMessageDialog(ShareFrame.this, "Error occured when downloading the file", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
