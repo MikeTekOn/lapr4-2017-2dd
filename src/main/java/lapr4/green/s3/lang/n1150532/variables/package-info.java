@@ -169,6 +169,56 @@
  * implemented.
  * </p>
  *
+ * <h1>Tests</h1>
+ *
+ * <h2>Acceptance Tests</h2>
+ *
+ * <p>
+ * <b>Sum Arrays</b>: A global variable must be declared and different values
+ * must be inserted at random indexes. Then, on a specific cell, a temporary
+ * variable must be declared and it must be defined the same number of values at
+ * random indexes. Afterwards, all values must be added and the result shown be
+ * equal to the expected value.
+ * </p>
+ * <p>
+ * <b>Build Sentence</b>: A global variable must be declared and a word of a
+ * sentence must be inserted in the array in order to form a sentence. Then,
+ * select the cells to show the whole sentence (a word for a cell). Afterwards,
+ * in the side bar, change a word and see the sentence in the spreadsheet
+ * change. At last, change the word in the spreadsheet and see the side bar
+ * being updated.
+ * </p>
+ *
+ * <h2>Other</h2>
+ *
+ * <p>
+ * <b>Ensure lower indexes than the default are not allowed</b>: The client
+ * states that the default index (the first element of the array) is 1. It makes
+ * sense not to allow any lower index than the default one. In case it tries to
+ * insert at a lower index, an exception should be launched.
+ * </p>
+ * <p>
+ * <b>Ensure non sequential indexes are allowed</b>: The client states that the
+ * array is dynamic and the indexes used may not be sequential, i.e. the user
+ * may use index number 2 and then number 5. This should be performed without
+ * any issue.
+ * </p>
+ * <p>
+ * <b>Ensure variables hold different types of values</b>: The same variable may
+ * have different types of values within its array, i.e. the index number 1
+ * contains a number and index number 2 contains a string. This should be
+ * performed without any issue.
+ * </p>
+ * <p>
+ * <b>Ensure default value is returned for non assigned indexes</b>: The client
+ * requested that the default value should be provided when the index the user
+ * is trying to get has not been set. This should be performed without any
+ * issue.
+ * </p>
+ * <p>
+ * <b>Unit Testing</b>: The main methods created must be unit tested.
+ * </p>
+ *
  * @author Manuel Meireles (1150532)
  */
 package lapr4.green.s3.lang.n1150532.variables;
