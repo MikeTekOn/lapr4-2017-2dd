@@ -3,10 +3,10 @@
  * <p>
  * JIRA issue: LAPR4E17DD-79
  * </p>
-
+* <p>
  * <b>Scrum Master: no</b>
  * <b>Area Leader: no</b>
- *
+ *</p>
  * <h2>1. Notes</h2>
  *
  * <p>This functional increment is the continuation of the <b>IPC02.1: Workbook Search</b>
@@ -28,7 +28,9 @@
  *      <li>The user selects "Advanced Workbook Search" option</li>
  *      <li>The system provides a new sidebar window for searching with a textbox for
  * the user enter a regular expression and a preview area of contents.</li>
- *      <li>The user enters the path rooth and launches the search</li>
+ *      <li>The user enters the path rooth</li>
+ *      <li>The system asks to insert the regular expression</li>
+ *      <li>The user enters the regular expression</li>
  *      <li>The system displays the search results</li>
  *      <li>The user clicks on workbook to preview</li>
  *      <li>The systyem displays the first non-empty cells of the workbook on 
@@ -48,22 +50,18 @@
  * 
  * <h3>3. Analysis</h3>
  * 
- * <h3>Identified Problems</h3>
+ * <h3>Proposed Solution</h3>
  *
  * <b>Class UIPreviewWorkbookExtension:</b>
  * <p>
  * It´s necessary to create a display area at sidebar window. This display area 
  * will be a preview image of cells (JPanel containning Spreadsheet impemented 
- * class). It will be there an  * extension (SearchPreviewExtension). In order 
- * to don´t block the application the fill preview area actions will be buit-in 
- * thread.
+ * class). In order to avoid blocking the application the fill preview area actions
+ * will be buit-in thread.
  * </p>
- * <b>Class ControllerFindWorkbooks</b>
- * <p> The controller will be updated with the new preview functionality and
- * search by pattern. It must be included the buildPreview thread and the stop building
- * method (p.e. if user clicks on search again, the current preview and search thread
- * must be stopped.</p>
+ * <p>
  * <b>Class PreviewWorkbookPublisher</b>
+ * </p>
  * <p>
  * This class will notify observers about preview action starting. 
  * </p>
@@ -71,6 +69,16 @@
  * <p>
  * * This class will be responsible to build and display the first non-empty cells. 
  * </p>
+ * <b>FindWorkbooksSideBar</b>
+ * <p>In the UI must be included a preview area content with "mini" workbook and the
+ * mouse clicked event will be updated to this new functionality.</p>
+ * 
+ * <h3>Used classes that are already implemented</h3>
+ * <b>Class ControllerFindWorkbooks</b>
+ * <p> The controller will be updated with the new preview functionality and
+ * search by pattern. It must be included the buildPreview thread and the stop building
+ * method (p.e. if user clicks on search again, the current preview and search thread
+ * must be stopped.</p>
  * <b>Classes Directory and SearchFile</b>
  * <p>
  * The search is now based in a patter instead of file name extension. This class will
@@ -80,10 +88,6 @@
  * implementation provides a PathMatcher (getPathMatcher(String) in FileSystem class.
  * We also can use regular expressions (regex) syntax.
  * </p>
- * 
- * <b>FindWorkbooksSideBar</b>
- * <p>In the UI must be included a preview area content with "mini" workbook and the
- * mouse clicked event will be updated to this new functionality.
  * 
  * <h2>4. Design</h2>
  * 

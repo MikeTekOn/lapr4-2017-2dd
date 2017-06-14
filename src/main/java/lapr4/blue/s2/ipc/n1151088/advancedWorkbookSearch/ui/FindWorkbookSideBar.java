@@ -121,7 +121,7 @@ public class FindWorkbookSideBar extends JPanel implements Observer {
                     try {
 
                         Workbook wb = findController.loadPrev(dto.getFilePath());
-                        RangeDialog j = new RangeDialog(findExtension, wb, tablePreview);
+//                        RangeDialog j = new RangeDialog(findExtension, wb, tablePreview);
                         //if(previewController!=null)previewController.stopPreview();
 
                     } catch (IOException | ClassNotFoundException ex) {

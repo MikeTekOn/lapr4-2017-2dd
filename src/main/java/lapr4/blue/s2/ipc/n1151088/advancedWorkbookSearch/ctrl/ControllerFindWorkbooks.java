@@ -25,6 +25,7 @@ public class ControllerFindWorkbooks implements Controller {
      */
     private Directory rootPath;
     private SearchPattern regex;
+    private PreviewWorkbookBuilder builder;
 
     /**
      * The builder of workbook
@@ -71,39 +72,8 @@ public class ControllerFindWorkbooks implements Controller {
      * @throws ClassNotFoundException
      */
     public Workbook loadPrev(String filePath) throws IOException, ClassNotFoundException {
-
-        File file = new File(filePath);
-        String[][] cellObj = new String[3][3];
-        Workbook wb = new Workbook();
-
-        for (int i = 0; i < 9; i++) {
-            //Vai buscar o atributo de cada celula
-            UserDefinedFileAttributeView view = Files.getFileAttributeView(file.toPath(), UserDefinedFileAttributeView.class);
-            ByteBuffer buf = ByteBuffer.allocate(view.size("cell" + i));
-            view.read("cell" + i, buf);
-            buf.flip();
-            String cellValue = Charset.defaultCharset().decode(buf).toString();
-            String[] cellInfo = cellValue.split(",");
-            int row = Integer.parseInt(cellInfo[0]);
-            int col = Integer.parseInt(cellInfo[1]);
-            //calcula a coluna e a linha
-            //se lenght menor que 3 é porque celula tava vazia entao metemos "" para evitar null
-            if (cellInfo.length < 3) {
-                cellObj[row][col] = " ";
-            } else {
-                cellObj[row][col] = cellInfo[2];
-            }
-
-        }
-        try {
-            //so adicionar a spreadsheet preenchida com a matriz
-            wb.addSpreadsheet(cellObj);
-
-        } catch (Exception ex) {
-            Logger.getLogger(ControllerFindWorkbooks.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return wb;
-
+        
+        this.builder=new PreviewWorkbookBuilder(filePath);
+        return builder.loadPrev();
     }
 }
