@@ -416,7 +416,7 @@ public class CleanSheets implements Observer {
                 } catch (IOException e) {
                 }
             }
-            //writePreviewWorkbookMetadata(file);
+            writePreviewWorkbookMetadata(file);
             workbooks.put(workbook, file);
             fireSpreadsheetAppEvent(workbook, file, SpreadsheetAppEvent.Type.SAVED);
         }
@@ -602,7 +602,7 @@ public class CleanSheets implements Observer {
       private void writePreviewWorkbookMetadata(File file) throws IOException {
         UserDefinedFileAttributeView view = Files.getFileAttributeView(file.toPath(), UserDefinedFileAttributeView.class);
         List<Cell> listCells = new LinkedList<>();
-        //adiciona 3*3 celulas a partir da primeira nao vazia
+        //add 3x3 cells from the first filled cell
         for (int i = 0; i < uiController.getActiveSpreadsheet().getColumnCount() + 1; i++) {
             for (int j = 0; j < uiController.getActiveSpreadsheet().getRowCount() + 1; j++) {
                 if (!uiController.getActiveSpreadsheet().getCell(i, j).getContent().equals("")) {
@@ -621,7 +621,7 @@ public class CleanSheets implements Observer {
         int row = 0, col = 0;
         for (int i = 0; i < listCells.size(); i++) {
             if (i < 10) {
-                //escreve as celulas como metadata numa matriz de 3*3
+                //write the first cells as metadata into 3x3 matrix
                 view.write("cell" + i, Charset.defaultCharset().encode(row + "," + col + "," + listCells.get(i).getContent()));
                 row++;
                 if (row == 3) {

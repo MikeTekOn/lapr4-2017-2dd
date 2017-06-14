@@ -5,6 +5,8 @@
  * </p>
 * <p>
  * <b>Scrum Master: no</b>
+ * </p>
+ * <p>
  * <b>Area Leader: no</b>
  *</p>
  * <h2>1. Notes</h2>
@@ -33,7 +35,7 @@
  *      <li>The user enters the regular expression</li>
  *      <li>The system displays the search results</li>
  *      <li>The user clicks on workbook to preview</li>
- *      <li>The systyem displays the first non-empty cells of the workbook on 
+ *      <li>The system displays the first non-empty cells of the workbook on 
  * preview area</li>
  * </ol>
  * 
@@ -69,9 +71,11 @@
  * <p>
  * * This class will be responsible to build and display the first non-empty cells. 
  * </p>
- * <b>FindWorkbooksSideBar</b>
- * <p>In the UI must be included a preview area content with "mini" workbook and the
- * mouse clicked event will be updated to this new functionality.</p>
+ * <b>Save Workbook</b>
+ * <p>
+ * It will be necessary to associate a metadata file to the original workbook.
+ * This file includes the content of first filled cells.
+ * </p>
  * 
  * <h3>Used classes that are already implemented</h3>
  * <b>Class ControllerFindWorkbooks</b>
@@ -79,6 +83,9 @@
  * search by pattern. It must be included the buildPreview thread and the stop building
  * method (p.e. if user clicks on search again, the current preview and search thread
  * must be stopped.</p>
+ *  * <b>FindWorkbooksSideBar</b>
+ * <p>In the UI must be included a preview area content with "mini" workbook and the
+ * mouse clicked event will be updated to this new functionality.</p>
  * <b>Classes Directory and SearchFile</b>
  * <p>
  * The search is now based in a patter instead of file name extension. This class will
@@ -113,6 +120,8 @@
  * <h3>4.2. UC Realization</h3>
  * 
  * <img src="ipc02_2_sd.png" alt="image">
+ * 
+ * <img src="saveWorkbook.png" alt="image">
  *
  * <h3>4.3. Classes</h3>
  *
@@ -145,6 +154,14 @@
  *     <li>Design</li>
  *      <li>Start tests implementation</li>
  * </ol>
+ * 
+ *  * 
+ *  <b>Friday</b>
+ * <ol>
+ *     <li>Tests implementation update</li>
+ *      <li>Start implementation</li>
+ * </ol>
+ * 
  * 
  * @author Diana Silva - 1151088@isep.ipp.pt - 2DD - 2016/17
  */
