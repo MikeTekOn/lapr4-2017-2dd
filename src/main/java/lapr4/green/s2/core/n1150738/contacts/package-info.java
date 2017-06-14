@@ -15,8 +15,8 @@
  * <p>
 
  * <p>
- * 
- *  
+ *
+ *
  * <b>Analysis</b><p>
  * <img src="us10.1.2_concept_classes.png" alt="image">
  * <p>
@@ -32,13 +32,10 @@
  * </ul>
  *
  *
- * <i>Concept Classes:</i> CompanyContact, PersonContact, Agenda, Event, Profession<p>
+ * <i>Concept Classes:</i> CompanyContact, Agenda, Event, Profession<p>
  *     <i>Refactoring:</i>
  * <ul>
- *     <li>Contact interface</li>
- *     <li>Contact to PersonalContact</li>
  *     <li>Add Profession and Company to PersonalContact (optional atributes?)</li>
- *
  * </ul>
  *
  *
@@ -65,7 +62,19 @@
  * </ul>
  *
  * <b>Design</b><p>
+ * Adding Profession and Company Contact to Create Contact Use Case
+ * <p>
+ * <img src="us10.1.2_create_contact.png" alt="image">
+ * <p>
+ * Creating Company Contact
+ * <p>
+ * <img src="us10.1.2_create_company_contact.png" alt="image">
+ * <p>
+ * Showing Company Contact Info - Company Contact Window
+ * <p>
  * <img src="us10.1.2_comp_contacts_window.png" alt="image">
+ *
+ *
  *
  * <p>
  * @author Henrique Oliveira [1150738@isep.ipp.pt]
