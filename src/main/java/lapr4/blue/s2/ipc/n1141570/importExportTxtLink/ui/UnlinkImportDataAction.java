@@ -29,7 +29,7 @@ public class UnlinkImportDataAction extends BaseAction {
 
     @Override
     protected String getName() {
-        return "Unlink import";
+        return "Unlink import from TXT";
     }
 
     @Override
