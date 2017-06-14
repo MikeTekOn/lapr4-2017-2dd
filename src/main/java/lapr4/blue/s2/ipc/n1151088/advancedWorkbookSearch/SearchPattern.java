@@ -13,6 +13,7 @@ import lapr4.red.s1.core.n1150613.workbookSearch.RegexUtil;
  *
  * @author Diana Silva [1151088@isep.ipp.pt]
  */
+
 public class SearchPattern{
 
     private static final String PATTERN_EXTENSION="cls";
