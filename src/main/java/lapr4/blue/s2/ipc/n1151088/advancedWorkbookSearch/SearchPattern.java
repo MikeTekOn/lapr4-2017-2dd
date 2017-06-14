@@ -61,17 +61,11 @@ public class SearchPattern{
     
     public boolean checkIfMatches(String filename){
          String tokens[] = filename.split("\\.");
-       
-         p = Pattern.compile(regex.toLowerCase());
+ 
+        String content=".*" + regex.toLowerCase() + ".*";
+        p = Pattern.compile(content);
         m = p.matcher(tokens[0].toLowerCase());
-        if(m.matches() )
-            return true;
-        
-        //have content
-        String content=".*\\b" + tokens[0].toLowerCase() + "\\b.*";
-        m = p.matcher(content);
-        return (m.matches());
+        boolean contain=(m.matches());
+        return contain;
     }
-            
-    
 }
