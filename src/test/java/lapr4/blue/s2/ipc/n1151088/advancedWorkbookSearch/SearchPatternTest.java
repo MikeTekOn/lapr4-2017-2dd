@@ -53,4 +53,5 @@ public class SearchPatternTest {
         boolean result = instance.checkIfMatches("OiOlaOi");
         assertEquals(expResult, result);     
     }
+
 }
