@@ -25,7 +25,20 @@
  * The profession should be selected from a list. The list of professions should be loaded (and/or updated) from a
  * external XML file or an existing configuration file of Cleansheets.
  * <p>
- * <i>Company Contact Window:</i>
+ * <i>What Already Exists:</i> This project already has a use case to add Contacts with first and last name, email
+ * and photo. Contact also has an agenda (collection of events). Contacts are persisted with the app.
+ * <p>
+ * <i>What has to be added:</i> Profession and Company to the existing {@link lapr4.white.s1.core.n4567890.contacts.domain.Contact} concept and functionalities to create
+ * a Company Contact and display its info.
+ * <p>
+ * <i><u>Existing Classes:</u></i> {@link lapr4.white.s1.core.n4567890.contacts.domain.Contact}, {@link lapr4.white.s1.core.n4567890.contacts.domain.Agenda}, {@link lapr4.white.s1.core.n4567890.contacts.domain.Event}<p>
+ * <i><u>New Concept Classes:</u></i> CompanyContact, Profession, CompanyName, EmailAddress, PhoneNumber<p>
+ * <i><u>Refactoring:</u></i>
+ * <ul>
+ * <li>Add Profession and Company to {@link lapr4.white.s1.core.n4567890.contacts.domain.Contact} (optional atributes)</li>
+ * </ul>
+ * <p>
+ * <i><u>What needs to be displayed in Company Contact Window:</u></i>
  * <ul>
  * <li>Contact Info</li>
  * <li>Person contacts related to</li>
@@ -33,21 +46,14 @@
  * </ul>
  * <p>
  * <p>
- * <i>Concept Classes:</i> CompanyContact, Agenda, Event, Profession<p>
- * <i>Refactoring:</i>
- * <ul>
- * <li>Add Profession and Company to PersonalContact (optional atributes?)</li>
- * </ul>
  * <p>
  * <p>
+ * <b>Tests</b>
  * <p>
- * <p>
- * <b>Tests</b><p>
  * <ul>
  * <li>CompanyContactService::ensureAllRelatedContactsAreFound</li>
  * <li>CompanyContactService::ensureAllRelatedContactsEventsAreInCompanyAgenda</li>
  * <li>CompanyContactService::ensureCompanyAgendaIsReadOnly</li>
- * <p>
  * <li>CompanyName::ensureNameIsNonNull</li>
  * <li>CompanyName::ensureNameIsNotEmpty</li>
  * <li>Profession::ensureProfessionIsNonNull</li>
@@ -74,11 +80,11 @@
  * In order to do that it has to be added a selector for externally loaded professions (XML file in resources) and also
  * a selector for existing Company Contacts.
  * <p>
- * <img src="us10.1.2_create_contact.png" alt="image">
+ * <img src="us10.1.2_create_contact.png" alt="image" width="100%">
  * <p>
  * <b>Creating Company Contact</b>
  * <p>
- * <img src="us10.1.2_create_company_contact.png" alt="image">
+ * <img src="us10.1.2_create_company_contact.png" alt="image" width="100%">
  * <p>
  * <b>Showing Company Contact Info - Company Contact Window</b>
  * <p>
@@ -92,7 +98,6 @@
  * The XML format chosen is the following:
  * <pre>
  * {@code
- *
  *   <professions>
  *       <profession>
  *           <name>Accountant</name>
