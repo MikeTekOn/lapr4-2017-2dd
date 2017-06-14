@@ -35,7 +35,7 @@
  *      <li>The user enters the regular expression</li>
  *      <li>The system displays the search results</li>
  *      <li>The user clicks on workbook to preview</li>
- *      <li>The systyem displays the first non-empty cells of the workbook on 
+ *      <li>The system displays the first non-empty cells of the workbook on 
  * preview area</li>
  * </ol>
  * 
@@ -120,11 +120,12 @@
  * <h3>4.2. UC Realization</h3>
  * 
  * <img src="ipc02_2_sd.png" alt="image">
+ * 
+ * <img src="saveWorkbook.png" alt="image">
  *
  * <h3>4.3. Classes</h3>
  *
  * <img src="ipc02_2_cd.png" alt="image">
- * <img src="saveWorkbook.png" alt="image">
  * 
  * 
  * <h2>8. Work Log</h2> 

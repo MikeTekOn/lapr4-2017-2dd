@@ -47,7 +47,6 @@
  * <li>CompanyContactService::ensureAllRelatedContactsAreFound</li>
  * <li>CompanyContactService::ensureAllRelatedContactsEventsAreInCompanyAgenda</li>
  * <li>CompanyContactService::ensureCompanyAgendaIsReadOnly</li>
- * <p>
  * <li>CompanyName::ensureNameIsNonNull</li>
  * <li>CompanyName::ensureNameIsNotEmpty</li>
  * <li>Profession::ensureProfessionIsNonNull</li>
