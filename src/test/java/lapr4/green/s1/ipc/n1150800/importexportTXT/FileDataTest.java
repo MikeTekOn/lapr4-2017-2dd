@@ -83,104 +83,104 @@ public class FileDataTest {
         invalidFile = new File("file.docx");
     }
 
-//    /**
-//     * Test of validateFileExtension method, of class FileData.
-//     */
-//    @Test
-//    public void testValidateFileExtension() {
-//        System.out.println("validateFileExtension");
-//        
-//        /* invalidFile IS NOT OF .txt EXTENSION, THIS SHOULD FAIL */
-//        boolean expResult = false;
-//        boolean result = FileData.validateFileExtension(invalidFile);
-//        assertEquals(expResult, result);
-//        
-//        /* validFILE IS OF .txt EXTENSION, THIS SHOULD PASS */
-//        expResult = true;
-//        result = FileData.validateFileExtension(validFile);
-//        assertEquals(expResult, result);
-//    }
-//
-//    /**
-//     * Test of getFileData method, of class FileData.
-//     * @throws java.lang.Exception
-//     */
-//    @Test
-//    public void testGetFileData() throws Exception {
-//        System.out.println("getFileData");
-//        
-//        FileData instance = new FileData(validFile, separatorCharacter, cellRange, false);
-//        CellDTO[][] expResult = {{new CellDTO(firstCell.getAddress(), "hi"), new CellDTO(lastCell.getAddress(), "world")}};
-//        CellDTO[][] result = instance.getFileData(activeSpreadsheet);
-//        System.out.println(result[0][0].getContent());
-//        System.out.println(result[0][1].getContent());
-//        
-//        assertEquals(expResult[0][0].getAddress(), result[0][0].getAddress());
-//        assertEquals(expResult[0][0].getContent(), result[0][0].getContent());
-//        
-//        assertEquals(expResult[0][1].getAddress(), result[0][1].getAddress());
-//        assertEquals(expResult[0][1].getContent(), result[0][1].getContent());
-//    }
-//
-//    /**
-//     * Test of fillCells method, of class FileData.
-//     * @throws java.lang.Exception
-//     */
-//    @Test
-//    public void testFillCells() throws Exception {
-//        System.out.println("fillCells");
-//        
-//        FileData instance = new FileData(validFile, separatorCharacter, cellRange, false);
-//        CellDTO[][] cellList = instance.getFileData(activeSpreadsheet);
-//        
-//        instance.fillCells(cellList);
-//        
-//        assertEquals(activeSpreadsheet.getCell(firstCell.getAddress()).getContent(), "hi");
-//        assertEquals(activeSpreadsheet.getCell(lastCell.getAddress()).getContent(), "world");
-//    }
-//
-//    /**
-//     * Test of getCellsFromRange method, of class FileData.
-//     * @throws csheets.core.formula.compiler.FormulaCompilationException
-//     */
-//    @Test
-//    public void testGetCellsFromRange() throws FormulaCompilationException {
-//        System.out.println("getCellsFromRange");
-//        FileData instance = new FileData(validFile, separatorCharacter, cellRange, false);
-//        activeSpreadsheet.getCell(firstCell.getAddress()).setContent("hi");
-//        activeSpreadsheet.getCell(lastCell.getAddress()).setContent("world");
-//        
-//        CellDTO[][] expResult = {{new CellDTO(firstCell.getAddress(), "hi"), new CellDTO(lastCell.getAddress(), "world")}};
-//        CellDTO[][] result = instance.getCellsFromRange(activeSpreadsheet);
-//        
-//        assertEquals(expResult[0][0].getAddress(), result[0][0].getAddress());
-//        assertEquals(expResult[0][0].getContent(), result[0][0].getContent());
-//        
-//        assertEquals(expResult[0][1].getAddress(), result[0][1].getAddress());
-//        assertEquals(expResult[0][1].getContent(), result[0][1].getContent());
-//    }
-//
-//    /**
-//     * Test of setToFile method, of class FileData.
-//     * @throws java.lang.Exception
-//     */
-//    @Test
-//    public void testSetToFile() throws Exception {
-//        System.out.println("setToFile");
-//        CellDTO[][] cellList = {{new CellDTO(firstCell.getAddress(), "hi"), new CellDTO(lastCell.getAddress(), "world")}};
-//        FileData instance = new FileData(fileToWrite, separatorCharacter, cellRange, false);
-//        instance.setToFile(cellList);
-//        
-//        inputStream = new FileInputStream(fileToWrite);
-//        br = new BufferedReader(new InputStreamReader(inputStream));
-//        String line = br.readLine();
-//        br.close();
-//        String[] rowData = line.split(String.valueOf(separatorCharacter));
-//        
-//        assertEquals(rowData[0], cellList[0][0].getContent());
-//        assertEquals(rowData[1], cellList[0][1].getContent());
-//    }
-//    
+    /**
+     * Test of validateFileExtension method, of class FileData.
+     */
+    @Test
+    public void testValidateFileExtension() {
+        System.out.println("validateFileExtension");
+        
+        /* invalidFile IS NOT OF .txt EXTENSION, THIS SHOULD FAIL */
+        boolean expResult = false;
+        boolean result = FileData.validateFileExtension(invalidFile);
+        assertEquals(expResult, result);
+        
+        /* validFILE IS OF .txt EXTENSION, THIS SHOULD PASS */
+        expResult = true;
+        result = FileData.validateFileExtension(validFile);
+        assertEquals(expResult, result);
+    }
+
+    /**
+     * Test of getFileData method, of class FileData.
+     * @throws java.lang.Exception
+     */
+    @Test
+    public void testGetFileData() throws Exception {
+        System.out.println("getFileData");
+        
+        FileData instance = new FileData(validFile, separatorCharacter, cellRange, false);
+        CellDTO[][] expResult = {{new CellDTO(firstCell.getAddress(), "hi"), new CellDTO(lastCell.getAddress(), "world")}};
+        CellDTO[][] result = instance.getFileData(activeSpreadsheet);
+        System.out.println(result[0][0].getContent());
+        System.out.println(result[0][1].getContent());
+        
+        assertEquals(expResult[0][0].getAddress(), result[0][0].getAddress());
+        assertEquals(expResult[0][0].getContent(), result[0][0].getContent());
+        
+        assertEquals(expResult[0][1].getAddress(), result[0][1].getAddress());
+        assertEquals(expResult[0][1].getContent(), result[0][1].getContent());
+    }
+
+    /**
+     * Test of fillCells method, of class FileData.
+     * @throws java.lang.Exception
+     */
+    @Test
+    public void testFillCells() throws Exception {
+        System.out.println("fillCells");
+        
+        FileData instance = new FileData(validFile, separatorCharacter, cellRange, false);
+        CellDTO[][] cellList = instance.getFileData(activeSpreadsheet);
+        
+        instance.fillCells(cellList);
+        
+        assertEquals(activeSpreadsheet.getCell(firstCell.getAddress()).getContent(), "hi");
+        assertEquals(activeSpreadsheet.getCell(lastCell.getAddress()).getContent(), "world");
+    }
+
+    /**
+     * Test of getCellsFromRange method, of class FileData.
+     * @throws csheets.core.formula.compiler.FormulaCompilationException
+     */
+    @Test
+    public void testGetCellsFromRange() throws FormulaCompilationException {
+        System.out.println("getCellsFromRange");
+        FileData instance = new FileData(validFile, separatorCharacter, cellRange, false);
+        activeSpreadsheet.getCell(firstCell.getAddress()).setContent("hi");
+        activeSpreadsheet.getCell(lastCell.getAddress()).setContent("world");
+        
+        CellDTO[][] expResult = {{new CellDTO(firstCell.getAddress(), "hi"), new CellDTO(lastCell.getAddress(), "world")}};
+        CellDTO[][] result = instance.getCellsFromRange(activeSpreadsheet);
+        
+        assertEquals(expResult[0][0].getAddress(), result[0][0].getAddress());
+        assertEquals(expResult[0][0].getContent(), result[0][0].getContent());
+        
+        assertEquals(expResult[0][1].getAddress(), result[0][1].getAddress());
+        assertEquals(expResult[0][1].getContent(), result[0][1].getContent());
+    }
+
+    /**
+     * Test of setToFile method, of class FileData.
+     * @throws java.lang.Exception
+     */
+    @Test
+    public void testSetToFile() throws Exception {
+        System.out.println("setToFile");
+        CellDTO[][] cellList = {{new CellDTO(firstCell.getAddress(), "hi"), new CellDTO(lastCell.getAddress(), "world")}};
+        FileData instance = new FileData(fileToWrite, separatorCharacter, cellRange, false);
+        instance.setToFile(cellList);
+        
+        inputStream = new FileInputStream(fileToWrite);
+        br = new BufferedReader(new InputStreamReader(inputStream));
+        String line = br.readLine();
+        br.close();
+        String[] rowData = line.split(String.valueOf(separatorCharacter));
+        
+        assertEquals(rowData[0], cellList[0][0].getContent());
+        assertEquals(rowData[1], cellList[0][1].getContent());
+    }
+    
     @After
     public void cleanUp() {
         workbookFile.delete();
