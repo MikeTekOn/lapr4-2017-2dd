@@ -36,6 +36,7 @@ import csheets.ext.Extension;
 import csheets.ext.ExtensionManager;
 import csheets.ext.SpreadsheetExtension;
 import csheets.ui.ctrl.UIController;
+import lapr4.green.s1.ipc.n1150800.importexportTXT.CellRange;
 import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.Table;
 
 /**
@@ -243,6 +244,59 @@ public class SpreadsheetImpl implements Spreadsheet {
 		return cells.values().iterator();
 	}
         
+        
+/** 
+ * TABLES
+ */
+        /**
+         * Returns true if the table has been added 
+         * @param e the table to add
+         * @return true if added otherwise false
+         */
+        public boolean addTable(Table e){
+            return tables.add(e);
+        }
+        /**
+         * Checks if the given cells arent linked to a table
+         * @param selecteCells the cells to be verified
+         * @return true if the cells arent linked to a table , false otherwise 
+         */
+        public boolean isAvailableToDefine(List<Cell> selecteCells){
+            for (Table table : tables) {
+                if(table.containsCells(selecteCells)){
+                    return false;
+                }
+            }
+            return true;
+        }
+        /**
+         * Checks if the given cell is already defined
+         * @param cell to be verified
+         * @return the range  or null if the cell isnt defined
+         */
+        public CellRange isDefined(Cell cell){
+            for (Table table : tables) {
+                if(table.containsCell(cell)){
+                    return table.getRange();
+                }
+            }
+            return null;
+        }
+        /**
+         * 
+         * @return the active tables
+         */
+        public List<Table> getTables(){
+            return tables;
+        }
+        /**
+         * Removes the given table from te table list
+         * @param d
+         * @return true if the table was removed
+         */
+        public boolean removeTable(Table d){
+            return tables.remove(d);
+        }
 /*
  * EVENT HANDLING
  */

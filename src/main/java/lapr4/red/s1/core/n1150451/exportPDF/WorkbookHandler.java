@@ -68,7 +68,7 @@ public class WorkbookHandler {
      * @param topRightColumn Maximum column value.
      * @return Cell's List
      */
-    private List<Cell> getListCellsBetweenRange(Spreadsheet s, int topLeftRow, int bottomRightRow, int topLeftColumn, int topRightColumn) {
+    public List<Cell> getListCellsBetweenRange(Spreadsheet s, int topLeftRow, int bottomRightRow, int topLeftColumn, int topRightColumn) {
         List<Cell> list = new ArrayList<>();
         for (int i = topLeftRow; i <= bottomRightRow; i++) {
             for (int j = topLeftColumn; j <= topRightColumn; j++) {

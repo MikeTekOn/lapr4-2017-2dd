@@ -44,6 +44,7 @@ public class FindWorkbookSideBar extends JPanel implements Observer {
     private WorkbookList modeloWorkbook;
     private JList listWorkbook;
     private JTextField listField;
+    private JTextField regexField;
 
     private PreviewSpreadSheetTableModel previewTableModel;
     private JTable tablePreview;
@@ -73,7 +74,7 @@ public class FindWorkbookSideBar extends JPanel implements Observer {
 
     private JPanel previewPanel() {
         JPanel previewPanel = new JPanel();
-
+        previewPanel.setLayout(new BorderLayout());
         JPanel p = new JPanel();
         JLabel labelInicial = new JLabel("<html>Preview workbook</html>");
         previewPanel.add(labelInicial);
@@ -120,9 +121,24 @@ public class FindWorkbookSideBar extends JPanel implements Observer {
                     try {
 
                         Workbook wb = findController.loadPrev(dto.getFilePath());
-                        RangeDialog j = new RangeDialog(findExtension, wb, tablePreview);
+//                        RangeDialog j = new RangeDialog(findExtension, wb, tablePreview);
                         //if(previewController!=null)previewController.stopPreview();
 
+                        try {
+               
+                
+                         tablePreview.removeAll();
+                        
+                        PreviewSpreadSheetTableModel model=new PreviewSpreadSheetTableModel(wb.getSpreadsheet(0), findExtension);
+                        tablePreview.setModel(model);
+                
+        
+                
+            } catch (IllegalArgumentException ex) {
+                ex.getMessage();
+            }
+                        
+                        
                     } catch (IOException | ClassNotFoundException ex) {
                         JOptionPane.showMessageDialog(new JFrame(), "It wasn´t possible to generate the preview!");
                     }
@@ -152,11 +168,22 @@ public class FindWorkbookSideBar extends JPanel implements Observer {
      */
     private JPanel buttonsPanel() {
         JPanel buttonsPanel = new JPanel();
-        buttonsPanel.add(labelField());
-        buttonsPanel.add(fieldTextField());
+     
+        buttonsPanel.add(fieldsPanel());
         buttonsPanel.add(mainButton());
         buttonsPanel.setPreferredSize(new Dimension(100, 85));
         return buttonsPanel;
+    }
+    
+    private JPanel fieldsPanel(){
+        JPanel panel =new JPanel();
+        panel.setLayout(new GridLayout(3,1));
+        panel.add(labelField("<html>Insert path</html>"));  
+        panel.add(fieldTextField());
+        panel.add(labelField("<html>Expression</html>"));
+        panel.add(fieldTextExp());
+        
+        return panel;
     }
 
     /**
@@ -164,8 +191,8 @@ public class FindWorkbookSideBar extends JPanel implements Observer {
      *
      * @return
      */
-    private JLabel labelField() {
-        JLabel label = new JLabel("<html>Insert path</html>");
+    private JLabel labelField(String content) {
+        JLabel label = new JLabel(content);
         label.setAlignmentX(Component.LEFT_ALIGNMENT);
         return label;
     }
@@ -173,6 +200,11 @@ public class FindWorkbookSideBar extends JPanel implements Observer {
     private JTextField fieldTextField() {
         listField = new JTextField(10);
         return listField;
+    }
+    
+    private JTextField fieldTextExp() {
+        regexField = new JTextField(10);
+        return regexField;
     }
 
     /**
@@ -183,17 +215,23 @@ public class FindWorkbookSideBar extends JPanel implements Observer {
      */
     private JButton mainButton() {
         JButton mainButton = new JButton("Search");
+        
         mainButton.addActionListener((ActionEvent e) -> {
-            try {
-                if (findController != null) {
-                    findController.stopSearch();
+            if(listField.getText().trim().isEmpty() ||  regexField.getText().trim().isEmpty()){
+               JOptionPane.showMessageDialog(new JFrame(), "Please complete all fields!");
+            }else{
+               
+                try {
+                    if (findController != null) {
+                        findController.stopSearch();
+                    }
+                    modeloWorkbook.removeAll();
+                    previewTableModel.removeAll();
+                    findController = new ControllerFindWorkbooks(listField.getText(), regexField.getText());
+                    findController.searchFiles();
+                } catch (IllegalStateException ex) {
+                    JOptionPane.showMessageDialog(new JFrame(), "Insert a valid path!");
                 }
-                modeloWorkbook.removeAll();
-                previewTableModel.removeAll();
-                findController = new ControllerFindWorkbooks(listField.getText());
-                findController.searchFiles();
-            } catch (IllegalStateException ex) {
-                JOptionPane.showMessageDialog(new JFrame(), "Insert a valid path!");
             }
         });
         return mainButton;

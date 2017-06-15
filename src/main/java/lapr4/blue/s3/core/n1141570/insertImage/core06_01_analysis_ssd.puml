@@ -1,0 +1,7 @@
+@startuml
+actor User
+User -> UI: Selects the cell that wants to add an image.
+UI --> User: The system displays a sidebar window with images associated to that cell.
+User -> UI: Adds an image.
+UI --> User: Informs about the success of the operation.
+@enduml

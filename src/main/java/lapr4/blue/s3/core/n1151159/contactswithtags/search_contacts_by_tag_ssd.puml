@@ -1,0 +1,27 @@
+@startuml search_contacts_by_tag_ssd.png
+
+'http://plantuml.com/skinparam.html'
+skinparam handwritten true
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+skinparam SequenceMessageAlign center
+
+actor User as U
+participant "System" as S
+
+activate U
+
+U -> S : initiates the contact search by tag
+activate S
+S --> U : asks for the tag regular expression
+deactivate S
+
+U -> S : inserts a regular expression for the tag
+activate S
+S --> U : display the contacts that have a \ntag that match the regular expression
+deactivate S
+
+deactivate U
+
+@enduml
