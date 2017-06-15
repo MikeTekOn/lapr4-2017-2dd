@@ -3,7 +3,10 @@ package lapr4.green.s2.core.n1150532.sort;
 import csheets.core.Cell;
 import eapli.framework.application.Controller;
 import java.util.List;
+import lapr4.blue.s3.core.n1140822.autoSorting.AutoSortingThread;
 import lapr4.green.s2.core.n1150532.sort.algorithms.AlgorithmFactory;
+import lapr4.green.s2.core.n1150532.sort.algorithms.BubbleSort;
+import lapr4.green.s2.core.n1150532.sort.algorithms.QuickSort;
 import lapr4.green.s2.core.n1150532.sort.algorithms.SortingAlgorithm;
 import lapr4.green.s2.core.n1150532.sort.comparators.ComparatorFactory;
 import lapr4.green.s2.core.n1150532.sort.comparators.RangeRowDTOComparator;
@@ -71,8 +74,19 @@ class SortCellRangeController implements Controller {
      * in a descendant order).
      */
     public void sort(Cell[][] selectedCells, int sortingColumnIndex, SortingAlgorithm algorithm, RangeRowDTOComparator comparator, boolean isDescendant) {
+
         comparator.setDescendant(isDescendant);
-        algorithm.sort(createDTOs(selectedCells, sortingColumnIndex), comparator);
+        RangeRowDTO[] dto = createDTOs(selectedCells, sortingColumnIndex);
+       
+        AutoSortingThread sortingThread = new AutoSortingThread(dto, comparator, algorithm, sortingColumnIndex);
+        for (int i = 0; i < selectedCells.length; i++) {
+            for (int j = 0; j < selectedCells[i].length; j++) {
+                selectedCells[i][j].addCellListener(sortingThread);
+            }
+        }
+     
+        sortingThread.start();
+
     }
 
     /**

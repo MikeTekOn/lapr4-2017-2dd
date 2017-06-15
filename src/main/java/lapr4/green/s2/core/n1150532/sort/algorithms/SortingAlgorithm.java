@@ -1,6 +1,8 @@
 package lapr4.green.s2.core.n1150532.sort.algorithms;
 
 import java.util.Comparator;
+import java.util.Observable;
+ 
 import lapr4.green.s2.core.n1150532.sort.sortingDTOs.SortableDTO;
 
 /**
@@ -10,7 +12,7 @@ import lapr4.green.s2.core.n1150532.sort.sortingDTOs.SortableDTO;
  * @param <T> Any class that extends the SortableDTO and can, therefore, be
  * sorted by the algorithm.
  */
-public interface SortingAlgorithm<T extends SortableDTO> {
+public interface SortingAlgorithm<T extends SortableDTO>   {
 
     /**
      * It sorts the array using the comparator.
