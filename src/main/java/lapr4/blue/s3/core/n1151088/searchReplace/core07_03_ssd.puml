@@ -1,0 +1,16 @@
+@startuml core07_03_ssd.png
+actor User
+User -> System: Press filters button
+User <-- System: Show the available cell types
+User -> System: Selects the cell types to include in the search
+User <-- System: Ask for the formulas to include in the search
+User -> System: Insert the formulas
+User <-- System: Asks for the regular expression to search
+User -> System: Inserts the regular expression
+User <-- System: Displays search results (what and where) 
+User->System: Insert the replace text
+System-> User: Displays how cell became with the replace
+User-->System: Select one/all search result(s) and confirm
+System->User : Replace and inform the success of the operation
+
+@enduml

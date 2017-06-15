@@ -1,0 +1,12 @@
+@startuml core04_2_ssd.png
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor User 
+participant "System" as S
+User -> S : chooses a navigator's element
+S --> User : expands the navigator to show the content of the previous element
+User -> S : double clicks on element
+S --> User : focus on the selected element.
+@enduml
