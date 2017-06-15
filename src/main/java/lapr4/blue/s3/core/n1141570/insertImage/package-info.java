@@ -88,6 +88,32 @@
  * <li>testEnsureCellHasTheImageThatWasAdded()
  * <li>testImageableCellListener()
  * </ol>
+ * <h3>4.2. UC Realization</h3>
+ * To realize this user story we will need to create a subclass of Extension. We will also need to create a subclass of UIExtension. For the sidebar we need to implement a JPanel. In the code of the extension <code>csheets.ext.style</code> we can find examples that illustrate how to implement these technical requirements.
+ * The following diagrams illustrate core aspects of the design of the solution for this use case.
+ * <p>
+ * 
+ * <h3>Extension Setup</h3>
+ * The following diagram shows the setup of the "images" extension when cleansheets is run.
+ * <p>
+ * <img src="core06_01_design.png" alt="image">
+ *
+ * <h3>User Selects a Cell</h3>
+ * The following diagram illustrates what happens when the user selects a cell. The idea is that when this happens the extension must display in the sidebar the image(s) of that cell (if it exists).
+ * <p>
+ * <img src="core06_01_design2.png" alt="image">
+ * 
+ * <h3>User Updates the Image(s) of a Cell</h3>
+ * The following diagram illustrates what happens when the user updates the image(s) of the current cell. To be noticed, this diagram does not depict the actual selection of a cell (that is illustrated in the previous diagram).
+ * <p>
+ * <img src="core06_01_design3.png" alt="image">
+ * 
+ * <h2>5. Implementation</h2>
+ * 
+ * <h2>6. Integration/Demonstration</h2>
+ * 
+ * <h2>7. Final Remarks</h2>
+ * 
  * <h2>8. Work Log</h2>
  * <p>
  * <b>Tuesday 13/06/2017</b>
