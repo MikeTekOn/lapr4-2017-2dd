@@ -131,7 +131,11 @@
  * bar, all the cells using that same global variable's value must be updated.
  * The contrary is also true, every time a global variable's value is updated at
  * the spreadsheet, the side bar value must be updated. This raises concurrency
- * issues examined in the next topic.
+ * issues examined in the next topic. Although this makes sense, the client
+ * actually only mention the need to update the side bar when the variable's
+ * value changes from the spreadsheet and not the other way around ("The values
+ * that appear in this window should be automatically updated when the variables
+ * are updated").
  * </p>
  * <p>
  * <b>Global Variables Concurrency</b>: The global variables can be edited in
@@ -158,7 +162,7 @@
  * expression. At first thought, the global variable should follow a similar
  * implementation of the Cell. Regardless, the sprint time is too short to
  * perform both feature increments and Prof. JRT asked to perform the third
- * feature increment and explain this issue which jeopardises part of this
+ * feature increment and explain this issue which jeopardizes part of this
  * feature increment.
  * </p>
  * <p>
@@ -346,7 +350,9 @@
  * since the global variables have no track of their precedents and dependents.
  * It is never enough to mention that this is only a bandage to attempt to
  * partially solve the issue. The best solution would be to refactor the whole
- * implementation and concepts.
+ * implementation and concepts. Regardless, since the client does not explicitly
+ * require the cells to be updated on this Feature Increment, this solution will
+ * not be implemented neither.
  * </p>
  *
  * <h2>Alternatives</h2>

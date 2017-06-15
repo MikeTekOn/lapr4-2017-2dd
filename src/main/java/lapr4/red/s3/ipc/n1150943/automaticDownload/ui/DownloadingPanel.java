@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Created by k4rd050 on 13-06-2017.
+ * Created by João Cardoso - 1150943 on 13-06-2017.
  */
 public class DownloadingPanel extends JFrame {
 

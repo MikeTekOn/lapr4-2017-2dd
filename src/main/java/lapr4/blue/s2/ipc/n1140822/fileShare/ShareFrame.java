@@ -2,6 +2,8 @@ package lapr4.blue.s2.ipc.n1140822.fileShare;
 
 import csheets.ui.ctrl.UIController;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
+import lapr4.red.s3.ipc.n1150943.automaticDownload.DownloadInfo;
+import lapr4.red.s3.ipc.n1150943.automaticDownload.persistence.DownloadsListPersistence;
 import lapr4.red.s3.ipc.n1150943.automaticDownload.ui.DownloadingPanel;
 import ui.Notification;
 
@@ -196,7 +198,8 @@ public class ShareFrame extends JFrame implements Observer {
             for (String fileName : dto.filesMap().keySet()) {
 
                 for (int i = 0; i < tableModel.getDataVector().size(); i++) {
-                    if (tableModel.getValueAt(i, 0).equals(fileName) && tableModel.getValueAt(i, 1).equals(dto.connID())) {
+                    String originalFileName = DownloadsListPersistence.getOriginalFileName(tableModel.getValueAt(i, 0).toString());
+                    if (originalFileName.equals(fileName) && tableModel.getValueAt(i, 1).equals(dto.connID())) {
                         if (tableModel.getValueAt(i, 2).equals(dto.filesMap().get(fileName) + " bytes")) {
                             update = false;
                         } else {
@@ -212,14 +215,31 @@ public class ShareFrame extends JFrame implements Observer {
                     rowData[2] = (dto.filesMap().get(fileName)) + " bytes";
                     tableModel.addRow(rowData);
 
-                    for (int row = 0; row < dlTable.getRowCount(); row++) {
                         //TODO verify if the file to be updated is permanent and if it is download it
-                        if (dlTableModel.getValueAt(row, 0).equals(fileName) && dlTableModel.getValueAt(row, 1).equals("/" + dto.connID().toString())) {
-                            if (!dlTableModel.getValueAt(row, 2).equals(rowData[2].toString())) {
-                                dlTableModel.setValueAt("OUTDATED", row, 3);
-                                //TODO if the file has permanent type download it automatically with the same name or with the new version
+                    DownloadInfo latestFileInfo = DownloadsListPersistence.getLatestVersionInfo(fileName);
+                    String latestVersionName = DownloadsListPersistence.getLatestVersion(fileName);
+                    if(latestFileInfo.downloadType()==DownloadInfo.DownloadType.ONE_TIME_DOWNLOAD){
+                        for (int row = 0; row < dlTable.getRowCount(); row++) {
+                            if (dlTableModel.getValueAt(row, 0).equals(latestVersionName) && dlTableModel.getValueAt(row, 1).equals("/" + dto.connID().toString())) {
+                                if (!dlTableModel.getValueAt(row, 2).equals(rowData[2].toString())) {
+                                    dlTableModel.setValueAt("OUTDATED", row, 3);
+                                }
                             }
                         }
+                    }else{
+                        DownloadInfo newInfo = new DownloadInfo(fileName,latestFileInfo.downloadType(),latestFileInfo.updateType());
+                        newInfo.setVersion(latestFileInfo.version()+1);
+                        if(latestFileInfo.updateType() == DownloadInfo.UpdateType.RENAME){
+                            String[]aux = fileName.split("-");
+                            String newName = aux[0]+"-"+"V"+newInfo.version();
+                            shareController.addToDownloadsList(newName,newInfo);
+                            //TODO add file downloads
+
+                        }else{
+                            shareController.addToDownloadsList(fileName,newInfo);
+
+                        }
+                            Notification.notifyHost(new DownloadingPanel((String) tableModel.getValueAt(table.getSelectedRow(), 0)),"Updating file "+(String) tableModel.getValueAt(table.getSelectedRow(), 0));
                     }
                     update = true;
                 }
@@ -227,8 +247,9 @@ public class ShareFrame extends JFrame implements Observer {
             table.setModel(tableModel);
 
         }
+
         if (o instanceof HandlerFileDTO) {
-            Notification.notifyHost(new DownloadingPanel((String) tableModel.getValueAt(table.getSelectedRow(), 0)));
+            Notification.notifyHost(null,"Downloaded Update Successfully");
             //JOptionPane.showMessageDialog(ShareFrame.this, "File " + (String) tableModel.getValueAt(table.getSelectedRow(), 0) + " downloaded with success.");
             try {
                 fillDownloadTable();
@@ -255,7 +276,7 @@ public class ShareFrame extends JFrame implements Observer {
                         shareController = new FileSharingController((ConnectionID) tableModel.getValueAt(table.getSelectedRow(), 1));
                         shareController.requestFile((String) tableModel.getValueAt(table.getSelectedRow(), 0));
 
-} catch (Exception ex) {
+                    } catch (Exception ex) {
                         JOptionPane.showMessageDialog(ShareFrame.this, "Error occured when downloading the file", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
@@ -275,7 +296,6 @@ public class ShareFrame extends JFrame implements Observer {
      */
     public void fillDownloadTable() throws IOException {
         dlTableModel.setRowCount(0);
-        Map<String, Integer> tempMap = new LinkedHashMap<>();
         File folder = new File(ShareConfiguration.getDownloadFolder());
         folder.mkdirs();
         File[] files = folder.listFiles();
