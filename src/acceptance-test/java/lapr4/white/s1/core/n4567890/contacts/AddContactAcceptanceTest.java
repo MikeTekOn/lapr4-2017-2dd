@@ -10,7 +10,7 @@ import eapli.framework.persistence.DataIntegrityViolationException;
 import lapr4.red.s1.core.n1150943.contacts.application.EventController;
 import lapr4.white.s1.core.n4567890.contacts.application.ContactController;
 import lapr4.white.s1.core.n4567890.contacts.domain.Contact;
-import org.junit.AfterClass;
+import junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 

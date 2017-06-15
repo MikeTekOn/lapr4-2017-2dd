@@ -1,6 +1,7 @@
 package lapr4.green.s2.core.n1150532.sort;
 
 import csheets.core.Cell;
+import csheets.ui.ctrl.UIController;
 import eapli.framework.application.Controller;
 import java.util.List;
 import lapr4.blue.s3.core.n1140822.autoSorting.AutoSortingThread;
@@ -31,13 +32,16 @@ class SortCellRangeController implements Controller {
      */
     private final AlgorithmFactory algorithms;
 
+    private UIController uiController;
+
     /**
      * The controller full constructor. It creates the algorithms and
      * comparators factories.
      */
-    public SortCellRangeController() {
+    public SortCellRangeController(UIController controller) {
         comparators = new ComparatorFactory();
         algorithms = new AlgorithmFactory();
+        uiController = controller;
     }
 
     /**
@@ -82,9 +86,10 @@ class SortCellRangeController implements Controller {
         for (int i = 0; i < selectedCells.length; i++) {
             for (int j = 0; j < selectedCells[i].length; j++) {
                 selectedCells[i][j].addCellListener(sortingThread);
+
             }
         }
-     
+        uiController.addHeaderCellListener(sortingThread);
         sortingThread.start();
 
     }

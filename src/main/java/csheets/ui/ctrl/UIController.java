@@ -36,6 +36,7 @@ import csheets.CleanSheets;
 import csheets.SpreadsheetAppEvent;
 import csheets.SpreadsheetAppListener;
 import csheets.core.Cell;
+import csheets.core.HeaderCellListener;
 import csheets.core.Spreadsheet;
 import csheets.core.Workbook;
 import csheets.ext.Extension;
@@ -44,7 +45,6 @@ import csheets.ui.ext.UIExtension;
 import csheets.ui.sheet.CellTransferHandler;
 import java.io.File;
 
-import lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable;
 import lapr4.green.s3.lang.n1150532.variables.globalVariablesExtension.GlobalVariablesExtensionSideBarUI;
 import lapr4.green.s3.lang.n1150532.variables.globalVariablesExtension.GlobalVariablesExtensionUI;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionEvent;
@@ -66,6 +66,8 @@ public class UIController implements SpreadsheetAppListener, ExtensionStateListe
 
 	/** The active cell */
 	private Cell activeCell;
+
+	private int lastClickedColumn;
 
 	/** The workbooks that have been selected, in order */
 	private Stack<Workbook> workbooks = new Stack<Workbook>();
@@ -90,6 +92,8 @@ public class UIController implements SpreadsheetAppListener, ExtensionStateListe
 
 	/** The edit listeners registered to receive events */
 	private List<EditListener> editListeners = new ArrayList<EditListener>();
+	/** The header cell listener registered to receive events */
+	private List<HeaderCellListener>headerListeners =  new ArrayList<HeaderCellListener>();
 
 	// private Map<Workbook, Spreadsheet> activeSpreadsheets;
 	// private Map<Spreadsheet, Cell> activeCells;
@@ -233,7 +237,17 @@ public class UIController implements SpreadsheetAppListener, ExtensionStateListe
 		}
 	}
 
-/*
+	public int getClickedColumn() {
+		return lastClickedColumn;
+	}
+
+	public void setLastClickedColumn(int lastClickedColumn) {
+		if(lastClickedColumn>=0)
+		this.lastClickedColumn = lastClickedColumn;
+		fireHeaderSelectionChanged(lastClickedColumn);
+	}
+
+	/*
  * EDITING
  */
 
@@ -339,6 +353,10 @@ public class UIController implements SpreadsheetAppListener, ExtensionStateListe
 		selListeners.add(listener);
 	}
 
+	public void addHeaderCellListener(HeaderCellListener listener)
+	{
+		headerListeners.add(listener);
+	}
 	/**
 	 * Removes the given listener from the user interface controller.
 	 * @param listener the listener to be removed
@@ -397,6 +415,13 @@ public class UIController implements SpreadsheetAppListener, ExtensionStateListe
 		for (EditListener listener : editListeners.toArray(
 				new EditListener[editListeners.size()]))
 			listener.workbookModified(event);
+	}
+
+	private void fireHeaderSelectionChanged(int colIndex)
+	{
+		for (HeaderCellListener headerListeners:headerListeners) {
+			headerListeners.headerValueChanged(colIndex);
+		}
 	}
 
 	/**
