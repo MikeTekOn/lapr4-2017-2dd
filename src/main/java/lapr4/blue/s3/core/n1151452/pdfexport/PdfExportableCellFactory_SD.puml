@@ -1,0 +1,15 @@
+@startuml PdfExportableCellFactory_SD.png
+
+participant PdfExportableCellFactory as factory <<Factory>>
+participant PdfExportableCell as pdfCell <<<ValueObject>>
+
+create factory
+-> factory : create(widths[], heights[], cells[])
+-> factory : build() : PdfExportableCell[]
+loop forEach Cell
+create pdfCell
+factory -> pdfCell : create(args)
+end loop
+<-- factory : returns a list of PdfExportableCell
+
+@enduml
