@@ -416,13 +416,18 @@ public class CleanSheets implements Observer {
                 } catch (IOException e) {
                 }
             }
-            //writePreviewWorkbookMetadata(file);
+           try{
+                writePreviewWorkbookMetadata(file);
+           }
+           catch (Exception ex)
+           {
+               
+           }
+             
             workbooks.put(workbook, file);
             fireSpreadsheetAppEvent(workbook, file, SpreadsheetAppEvent.Type.SAVED);
         }
     }
-
-  
 
     /**
      * Returns the workbooks that are open.
@@ -593,42 +598,45 @@ public class CleanSheets implements Observer {
             }
         }
     }
-    
+
     /**
      * Writes metadata on the workbook so it can be previewed
+     *
      * @param file the workbook file
      * @throws IOException if not found
      */
-      private void writePreviewWorkbookMetadata(File file) throws IOException {
-        UserDefinedFileAttributeView view = Files.getFileAttributeView(file.toPath(), UserDefinedFileAttributeView.class);
-        List<Cell> listCells = new LinkedList<>();
-        //adiciona 3*3 celulas a partir da primeira nao vazia
-        for (int i = 0; i < uiController.getActiveSpreadsheet().getColumnCount() + 1; i++) {
-            for (int j = 0; j < uiController.getActiveSpreadsheet().getRowCount() + 1; j++) {
-                if (!uiController.getActiveSpreadsheet().getCell(i, j).getContent().equals("")) {
-                    int rowIndex = i;
-                    int colIndex = j;
-                    for (int k = rowIndex; k < rowIndex + 3; k++) {
-                        for (int l = colIndex; l < colIndex + 3; l++) {
-                            listCells.add(uiController.getActiveSpreadsheet().getCell(k, l));
+    private void writePreviewWorkbookMetadata(File file) throws IOException {
+        if (file != null) {
+            UserDefinedFileAttributeView view = Files.getFileAttributeView(file.toPath(), UserDefinedFileAttributeView.class);
+            List<Cell> listCells = new LinkedList<>();
+            //add 3x3 cells from the first filled cell
+            for (int i = 0; i < uiController.getActiveSpreadsheet().getColumnCount() + 1; i++) {
+                for (int j = 0; j < uiController.getActiveSpreadsheet().getRowCount() + 1; j++) {
+                    if (!uiController.getActiveSpreadsheet().getCell(i, j).getContent().equals("")) {
+                        int rowIndex = i;
+                        int colIndex = j;
+                        for (int k = rowIndex; k < rowIndex + 3; k++) {
+                            for (int l = colIndex; l < colIndex + 3; l++) {
+                                listCells.add(uiController.getActiveSpreadsheet().getCell(k, l));
+                            }
                         }
-                    }
-                    break;
-                }
-            }
-            
-        }
-        int row = 0, col = 0;
-        for (int i = 0; i < listCells.size(); i++) {
-            if (i < 10) {
-                //escreve as celulas como metadata numa matriz de 3*3
-                view.write("cell" + i, Charset.defaultCharset().encode(row + "," + col + "," + listCells.get(i).getContent()));
-                row++;
-                if (row == 3) {
-                    row = 0;
-                    col++;
-                    if (col == 3) {
                         break;
+                    }
+                }
+
+            }
+            int row = 0, col = 0;
+            for (int i = 0; i < listCells.size(); i++) {
+                if (i < 10) {
+                    //write the first cells as metadata into 3x3 matrix
+                    view.write("cell" + i, Charset.defaultCharset().encode(row + "," + col + "," + listCells.get(i).getContent()));
+                    row++;
+                    if (row == 3) {
+                        row = 0;
+                        col++;
+                        if (col == 3) {
+                            break;
+                        }
                     }
                 }
             }

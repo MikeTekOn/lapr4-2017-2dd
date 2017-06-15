@@ -5,31 +5,40 @@
  */
 package lapr4.green.s3.lang.n1150838.TablesAndFilters;
 
+import csheets.core.Cell;
 import java.io.Serializable;
-import lapr4.green.s1.ipc.n1150800.importexportTXT.CellRange;
 
 /**
  *
  * @author Nuno Pinto 1150838
  */
 public class Header implements Serializable {
-    
+
     private int headerIndex;
-    
-    private String headerContent;
-    
-    
-    public Header(int headerIndex , String headerContent){
-        this.headerIndex=headerIndex;
-        this.headerContent=headerContent;
+
+    private Cell headerCell;
+
+    public Header(int headerIndex, Cell headerCell) {
+        this.headerIndex = headerIndex;
+        this.headerCell = headerCell;
+    }
+
+    public boolean isHeader(int headerIndex) {
+        return this.headerIndex == headerIndex;
+    }
+
+    public String getHeaderContent() {
+        String content;
+        if (headerCell.getFormula() != null) {
+            content = headerCell.getValue().toString();
+        } else {
+            content = headerCell.getContent();
+        }
+        return content;
     }
     
-    public boolean isHeader(int headerIndex){
-        return this.headerIndex==headerIndex;
+    public Cell getCell(){
+        return headerCell;
     }
-    
-    public boolean isHeader(String headerContent){
-        return this.headerContent.equals(headerContent);
-    }
-    
+
 }

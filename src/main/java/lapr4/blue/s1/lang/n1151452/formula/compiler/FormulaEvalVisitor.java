@@ -18,7 +18,6 @@ import csheets.core.formula.lang.UnknownElementException;
 import csheets.ui.ctrl.UIController;
 import lapr4.blue.s1.lang.n1140822.beanshellwindow.BeanShellInstance;
 import lapr4.blue.s1.lang.n1140822.beanshellwindow.BeanShellLoader;
-import lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable;
 import lapr4.blue.s1.lang.n1151452.formula.lang.Language;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperation;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperator;
@@ -28,6 +27,7 @@ import org.antlr.v4.runtime.Token;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import lapr4.green.s3.lang.n1150532.variables.Variable;
 
 /**
  * Represents the Formula Visitor (ANTLR4).
@@ -38,6 +38,17 @@ import java.util.List;
  * @author Guilherme Ferreira 1150623 corrected to work with 'Variable' class and VarContentor
  * @author Ricardo Catalão (1150385) on 08/06/2017
  * @author jrt
+ * 
+ * 
+ * @author Manuel Meireles (1150532):
+ * <ul>
+ * <li>I've changed the Variable class (from
+ * {@link lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable} to
+ * {@link lapr4.green.s3.lang.n1150532.variables.Variable}) in order to allow
+ * indexes.</li>
+ * <li>I've updated the methods "visitAtom" and "visitAssignment" in order to
+ * handle the new variable class.</li>
+ * </ul>
 */
 @SuppressWarnings("Duplicates")
 public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
@@ -183,7 +194,7 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
             String tempVarName=ctx.VARIABLE_NAME().getText();
 
             try {
-                return temp_contentor.getExpressionOfVariable(tempVarName);
+                return getExpressionOfVariable(tempVarName, temp_contentor);
             } catch (IllegalArgumentException ex) {
                 addVisitError(ex.getLocalizedMessage());
             }
@@ -193,21 +204,9 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
             String tempVarName=ctx.G_VARIABLE_NAME().getText();
 
             try {
-                return uiController.getActiveWorkbook().globalVariables().getExpressionOfVariable(tempVarName);
+                return getExpressionOfVariable(tempVarName, uiController.getActiveWorkbook().globalVariables());
             } catch (IllegalArgumentException ex) {
                 addVisitError(ex.getLocalizedMessage());
-            }
-        }
-        else if(ctx.assignment() != null) {
-
-            if (ctx.assignment().VARIABLE_NAME() != null) {
-                //it´s a temporary variable
-                Variable temp_var = (Variable)visit(ctx.assignment());
-                temp_contentor.update(temp_var);
-            }else if(ctx.assignment().G_VARIABLE_NAME() != null){
-                //it's a global variable
-                Variable temp_var = (Variable)visit(ctx.assignment());
-                uiController.getActiveWorkbook().updateGlobalVariable(temp_var);
             }
         }
 
@@ -308,11 +307,11 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
             } else if (ctx.VARIABLE_NAME() != null) {
                 //it´s a temporary variable
                 String name = ctx.VARIABLE_NAME().getText();
-                return new Variable(name, visit(ctx.comparison()));
+                return setExpressionOfVariable(name, visit(ctx.comparison()),temp_contentor);
             }else if(ctx.G_VARIABLE_NAME() != null){
                 //it's a global variable
                 String name = ctx.G_VARIABLE_NAME().getText();
-                return new Variable(name, visit(ctx.comparison()));
+                return setExpressionOfVariable(name, visit(ctx.comparison()), uiController.getActiveWorkbook().globalVariables());
             }
         }
 
@@ -384,5 +383,60 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
         errorBuffer.append(msg).append("\n");
         numberOfErrors++;
     }
+    
+
+    /**
+     * It provides the expression stored in a variable from the container.
+     * 
+     * @param visitText The text resulting from the visit. It must contain the
+     * variable's name and, optionally, the index number within square brackets.
+     * @param container The container of the variables. It might be the workbook
+     * container for global variables or the local container for temporary
+     * variables.
+     * @return It returns the expression retrieved from the variable's index.
+     */
+    private Expression getExpressionOfVariable(String visitText, VarContentor container){
+        Expression theExpression;
+        String[] variableInfo = visitText.split("\\[");
+        if(variableInfo.length==2){
+            try{
+                int index = Integer.parseInt(variableInfo[1].substring(0, (variableInfo[1].length()-1)));
+                theExpression = container.getExpressionOfVariable(variableInfo[0], index);
+            } catch(NumberFormatException | IndexOutOfBoundsException ex){
+                throw new IllegalArgumentException("Unknown Index.");
+            }
+        } else {
+            theExpression = container.getExpressionOfVariable(variableInfo[0], Variable.DEFAULT_INDEX);
+        }
+        return theExpression;
+    }
+
+    /**
+     * It stores the expression in a variable from the container.
+     * 
+     * @param visitText The text resulting from the visit. It must contain the
+     * variable's name and, optionally, the index number within square brackets.
+     * @param theExpression The expression to be stored.
+     * @param container The container of the variables. It might be the workbook
+     * container for global variables or the local container for temporary
+     * variables.
+     * @return It returns the same expression that is received.
+     */
+    private Expression setExpressionOfVariable(String visitText, Expression theExpression, VarContentor container){
+        int index;
+        String[] variableInfo = visitText.split("\\[");
+        if(variableInfo.length==2){
+            try{
+                index = Integer.parseInt(variableInfo[1].substring(0, (variableInfo[1].length()-1)));
+            } catch(NumberFormatException | IndexOutOfBoundsException ex){
+                throw new IllegalArgumentException("Unknown Index.");
+            }
+        } else {
+            index = Variable.DEFAULT_INDEX;
+        }
+        container.update(variableInfo[0], index, theExpression);
+        return theExpression;
+    }
+
 }
 

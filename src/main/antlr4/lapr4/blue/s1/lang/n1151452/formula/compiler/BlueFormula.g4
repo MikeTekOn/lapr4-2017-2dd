@@ -61,7 +61,7 @@ function_call
 	;
 
 reference
-	:	CELL_REF ( ( COLON ) CELL_REF )? | CELL
+	:	CELL_REF ( ( COLON ) CELL_REF )? | CELL 
 	;
 
 literal
@@ -87,11 +87,15 @@ CELL_REF
 CELL : '!' 'CELL';
 
 VARIABLE_NAME 
-        : UNDERSCORE LETTER (DIGIT|LETTER)*
+        : UNDERSCORE LETTER (DIGIT|LETTER)* (INDEX)?
         ;
 
 G_VARIABLE_NAME
-        : AT LETTER (DIGIT|LETTER)*
+        : AT LETTER (DIGIT|LETTER)* (INDEX)?
+        ;
+
+INDEX
+        :  L_RIGHT_PAR POSITIVE_DIGIT (DIGIT)* R_RIGHT_PAR
         ;
 
 /* String literals, i.e. anything inside the delimiters */
@@ -107,6 +111,7 @@ NUMBER: ( DIGIT )+ ( COMMA ( DIGIT )+ )? ;
 
 fragment
 DIGIT : '0'..'9' ;
+POSITIVE_DIGIT : '1'..'9' ;
 
 /* Comparison operators */
 EQ		: '=' ;

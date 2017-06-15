@@ -45,6 +45,8 @@ import csheets.ui.sheet.CellTransferHandler;
 import java.io.File;
 
 import lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable;
+import lapr4.green.s3.lang.n1150532.variables.globalVariablesExtension.GlobalVariablesExtensionSideBarUI;
+import lapr4.green.s3.lang.n1150532.variables.globalVariablesExtension.GlobalVariablesExtensionUI;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionEvent;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionStateListener;
 
@@ -111,6 +113,16 @@ public class UIController implements SpreadsheetAppListener, ExtensionStateListe
 		this.extensions =
 			uiExtensions.toArray(new UIExtension[uiExtensions.size()]);
 		ExtensionManager.getInstance().addExtensionListener(this);
+                
+                /**
+                 * It adds the Global Variable Table as a listener in the app.
+                 * @author Manuel Meireles (1150532)
+                 */
+                for(UIExtension ext : extensions){
+                    if(ext instanceof GlobalVariablesExtensionUI){
+                        app.addSpreadsheetAppListener((GlobalVariablesExtensionSideBarUI)ext.getSideBar());
+                    }
+                }
 	}
 
 /*

@@ -16,6 +16,7 @@ import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
 import lapr4.green.s1.ipc.n1150532.startSharing.ShareCellsAction;
 import lapr4.green.s1.ipc.n1150657.chat.ControllerConnection;
 import lapr4.green.s1.ipc.n1150657.chat.ui.ChatAction;
+import lapr4.red.s3.ipc.n1150943.automaticDownload.persistence.DownloadsListPersistence;
 
 /**
  * The UI for the CommExtension's side bar.

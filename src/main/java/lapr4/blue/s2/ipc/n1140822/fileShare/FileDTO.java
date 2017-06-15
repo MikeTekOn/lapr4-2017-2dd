@@ -44,5 +44,4 @@ public class FileDTO implements Serializable {
     public byte[] getFileData() {
         return fileData;
     }
-
 }

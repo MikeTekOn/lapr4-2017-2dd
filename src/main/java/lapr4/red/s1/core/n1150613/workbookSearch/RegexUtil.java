@@ -50,10 +50,10 @@ public class RegexUtil {
       @param cellContent content of the cell
       @return true if it matches or false if it doesn't
      */
-    public boolean checkIfMatches(String cellContent) {
-
+    public boolean checkIfMatches(String filename) {
+        
         p = Pattern.compile(regex);
-        m = p.matcher(cellContent);
+        m = p.matcher(filename);
         return (m.matches());
     }
 

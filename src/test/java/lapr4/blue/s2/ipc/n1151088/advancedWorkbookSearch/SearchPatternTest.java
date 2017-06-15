@@ -36,9 +36,22 @@ public class SearchPatternTest {
     @Test
     public void testAcceptExp() {
         System.out.println("acceptExp");
-        SearchPattern instance = new SearchPattern("c:/ola.cls");
+        SearchPattern instance = new SearchPattern("ola");
         boolean expResult = true;
-        boolean result = instance.acceptExp();
+        boolean result = instance.acceptExp("c:/ola.cls");
         assertEquals(expResult, result);     
     }
+    
+     /**
+     * Test of acceptExp method, of class SearchPattern.
+     */
+    @Test
+    public void findPartialExpression() {
+        System.out.println("findPartialExpression");
+        SearchPattern instance = new SearchPattern("ola");
+        boolean expResult = true;
+        boolean result = instance.checkIfMatches("OiOlaOi");
+        assertEquals(expResult, result);     
+    }
+
 }

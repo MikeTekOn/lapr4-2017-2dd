@@ -1,0 +1,14 @@
+@startuml associate_tags_with_contacts_ssd.png
+
+'http://plantuml.com/skinparam.html'
+skinparam handwritten true
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+participant "System" as S
+
+-> S : a tag is added/removed
+activate S
+S -> S : calculates tags occurrences\nand renders user interface
+
+@enduml

@@ -1,0 +1,37 @@
+@startuml lang01_3_design1.png
+
+    participant "User" as user
+    participant "CellImpl" as cell
+    participant "Formula" as f
+    participant "FunctionCall" as fc
+    participant "Eval" as eval
+    
+    user -> cell : Enters 'eval' function in a cell
+    activate cell
+        cell -> cell : setContent(string)
+        cell -> cell : storeContent(string)
+        cell -> cell : formula = FormulaCompiler.getInstance().compile(this, content, uiController)
+        cell -> f : formula.evaluate()
+
+        activate f
+            f -> fc : expression.evaluate()
+
+            activate fc
+                fc -> eval : applyTo(args)
+
+                activate eval
+                    fc <-- eval : return newValue
+                deactivate eval
+
+                f <-- fc : return newValue
+            deactivate fc
+
+            cell <-- f : return newValue
+        deactivate f
+
+        cell -> cell : value = newValue
+        cell -> cell : fireValuesChanged()
+
+        user <-- cell : Presents the result in the cell
+    deactivate cell
+@enduml

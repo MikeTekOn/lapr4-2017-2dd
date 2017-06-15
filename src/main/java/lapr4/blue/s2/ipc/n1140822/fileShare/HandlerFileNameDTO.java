@@ -4,7 +4,10 @@ import csheets.CleanSheets;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.attribute.UserDefinedFileAttributeView;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,6 +31,7 @@ public class HandlerFileNameDTO implements CommHandler, Serializable {
         FileNameDTO nameDTO = (FileNameDTO) ((SocketEncapsulatorDTO) dto).getDTO();
         lastReceivedDTO = nameDTO;
         File fileToSend = findFile(nameDTO.fileName);
+
         try {
             byte[] fileData;
             fileData = Files.readAllBytes(fileToSend.toPath());
