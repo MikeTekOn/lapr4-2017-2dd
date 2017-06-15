@@ -13,6 +13,8 @@ import javax.swing.*;
 import java.awt.event.KeyEvent;
 import lapr4.blue.s2.ipc.n1141570.importExportTxtLink.ui.UnlinkExportDataAction;
 import lapr4.blue.s2.ipc.n1141570.importExportTxtLink.ui.UnlinkImportDataAction;
+import lapr4.red.s3.ipc.n1150690.ImportExportDatabase.ExportDatabase.presentation.ExportToDatabaseAction;
+import lapr4.red.s3.ipc.n1150690.ImportExportDatabase.ImportDatabase.presentation.ImportFromDatabaseAction;
 
 /**
  *
@@ -21,7 +23,7 @@ import lapr4.blue.s2.ipc.n1141570.importExportTxtLink.ui.UnlinkImportDataAction;
 public class ImportExportMenu extends JMenu {
 
     public ImportExportMenu(UIController uiController) {
-        super("Import/Export TXT");
+        super("Import/Export");
         setMnemonic(KeyEvent.VK_I);
 
         // Adds font actions
@@ -29,5 +31,7 @@ public class ImportExportMenu extends JMenu {
         add(new ExportDataAction(uiController));
         add(new UnlinkImportDataAction(uiController));
         add(new UnlinkExportDataAction(uiController));
+        add(new ImportFromDatabaseAction(uiController));
+        add(new ExportToDatabaseAction(uiController));
     }
 }

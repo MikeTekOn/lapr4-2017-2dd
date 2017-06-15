@@ -1,0 +1,25 @@
+@startuml
+
+actor User
+participant "ImportDataUI" as ui
+participant "ImportDataController" as ctrl
+participant "DatabaseConnection" as db
+participant "DatabaseOperations" as op
+
+User -> ui : starts the process of importation from database
+create ctrl
+ui -> ctrl : create()
+
+User -> ui : inserts the database connection and the table name
+
+ui -> ctrl : connect(databaseConnection, tableName)
+
+create db
+ctrl -> db : create(databaseConnection)
+
+ui -> ctrl : import(tableName)
+create op
+ctrl -> op  : create()
+ctrl -> op : import(tableName)
+
+@enduml

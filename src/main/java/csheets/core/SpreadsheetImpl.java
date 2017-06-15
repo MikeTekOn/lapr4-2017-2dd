@@ -36,6 +36,8 @@ import csheets.ext.Extension;
 import csheets.ext.ExtensionManager;
 import csheets.ext.SpreadsheetExtension;
 import csheets.ui.ctrl.UIController;
+import lapr4.green.s1.ipc.n1150800.importexportTXT.CellRange;
+import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.Table;
 
 /**
  * The implementation of the <code>Spreadsheet</code> interface.
@@ -74,6 +76,9 @@ public class SpreadsheetImpl implements Spreadsheet {
 	/** The spreadsheet extensions that have been instantiated */
 	private transient Map<String, SpreadsheetExtension> extensions = 
 		new HashMap<String, SpreadsheetExtension>();
+        
+        /** The tables that where been created */
+        private List<Table> tables = new ArrayList();
 
 	private transient UIController uiController;
 
@@ -238,7 +243,74 @@ public class SpreadsheetImpl implements Spreadsheet {
 	public Iterator<Cell> iterator() {
 		return cells.values().iterator();
 	}
-
+        
+        
+/** 
+ * TABLES
+ */
+        /**
+         * Returns true if the table has been added 
+         * @param e the table to add
+         * @return true if added otherwise false
+         */
+        public boolean addTable(Table e){
+            return tables.add(e);
+        }
+        /**
+         * Checks if the given cells arent linked to a table
+         * @param selecteCells the cells to be verified
+         * @return true if the cells arent linked to a table , false otherwise 
+         */
+        public boolean isAvailableToDefine(List<Cell> selecteCells){
+            for (Table table : tables) {
+                if(table.containsCells(selecteCells)){
+                    return false;
+                }
+            }
+            return true;
+        }
+        /**
+         * Checks if the given cell is already defined
+         * @param cell to be verified
+         * @return the range  or null if the cell isnt defined
+         */
+        public CellRange isDefined(Cell cell){
+            for (Table table : tables) {
+                if(table.containsCell(cell)){
+                    return table.getRange();
+                }
+            }
+            return null;
+        }
+        /**
+         * 
+         * @return the active tables
+         */
+        public List<Table> getTables(){
+            return tables;
+        }
+        /**
+         * Removes the given table from te table list
+         * @param d
+         * @return true if the table was removed
+         */
+        public boolean removeTable(Table d){
+            return tables.remove(d);
+        }
+        
+        /**
+          *
+        * @param cell
+        * @return
+        */
+        public Table getTable(Cell cell){
+            for (Table table : tables) {
+                if(table.containsCell(cell)){
+                    return table;
+                }
+            }
+            return null; // should not happen
+        }
 /*
  * EVENT HANDLING
  */

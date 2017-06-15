@@ -4,9 +4,14 @@ import csheets.core.Cell;
 import csheets.core.IllegalValueTypeException;
 import csheets.core.Spreadsheet;
 import csheets.core.Workbook;
+import java.io.File;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.attribute.UserDefinedFileAttributeView;
 import java.util.Iterator;
 import lapr4.green.s1.ipc.n1150800.importexportTXT.CellRange;
-import lapr4.white.s1.core.n4567890.contacts.ui.ContactDialog;
 
 /**
  * Represents the builder of workbook preview area 
@@ -24,12 +29,18 @@ public class PreviewWorkbookBuilder{
     /**The default title for each spreadsheet*/
     private static final String DEFAULT_TITLE="Preview version: ";
     
+    private String filepath;
+    
     public PreviewWorkbookBuilder(Workbook workbook){
         if(!validateOriginalWorkbook(workbook)){
             throw new IllegalStateException();
         }
         
         this.originalWorkbook=workbook;
+    }
+    
+    public PreviewWorkbookBuilder(String file){
+        this.filepath=file;
     }
     
     /**
@@ -41,6 +52,42 @@ public class PreviewWorkbookBuilder{
      */
     public PreviewWorkbook previewWorkbook(CellRange cellRange, boolean column) throws IllegalValueTypeException{
         return buildPreviewArea(cellRange, column);
+    }
+    
+    public Workbook loadPrev() throws IOException, ClassNotFoundException{
+        File file = new File(this.filepath);
+        String[][] cellObj = new String[3][3];
+        Workbook wb = new Workbook();
+
+        for (int i = 0; i < 9; i++) {
+            //Vai buscar o atributo de cada celula
+            UserDefinedFileAttributeView view = Files.getFileAttributeView(file.toPath(), UserDefinedFileAttributeView.class);
+            ByteBuffer buf = ByteBuffer.allocate(view.size("cell" + i));
+            view.read("cell" + i, buf);
+            buf.flip();
+            String cellValue = Charset.defaultCharset().decode(buf).toString();
+            String[] cellInfo = cellValue.split(",");
+            int row = Integer.parseInt(cellInfo[0]);
+            int col = Integer.parseInt(cellInfo[1]);
+            //calcula a coluna e a linha
+            //se lenght menor que 3 é porque celula tava vazia entao metemos "" para evitar null
+            if (cellInfo.length < 3) {
+                cellObj[row][col] = " ";
+            } else {
+                cellObj[row][col] = cellInfo[2];
+            }
+
+        }
+        try {
+            //so adicionar a spreadsheet preenchida com a matriz
+            wb.addSpreadsheet(cellObj);
+
+        } catch (Exception ex) {
+            ex.getMessage();
+        }
+
+        return wb;
+
     }
     
   

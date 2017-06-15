@@ -1,0 +1,9 @@
+@startuml
+User -> System : Selects range and sorting data
+System-> User : Asks for range, sorting algorithm, pivot column, and order
+User -> System : Inserts information
+System -> System : Sorts the selected columns, waits for events
+User -> System : Changes cell within range, pivot column or order
+System ->System : notifyObservers(cell)
+System ->System : Captures event and sorts again with new information
+@enduml

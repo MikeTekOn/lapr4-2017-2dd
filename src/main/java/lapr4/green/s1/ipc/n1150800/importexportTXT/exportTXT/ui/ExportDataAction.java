@@ -34,7 +34,7 @@ public class ExportDataAction extends BaseAction {
 
     @Override
     protected String getName() {
-        return "Export Data";
+        return "Export Data To TXT";
     }
 
     @Override

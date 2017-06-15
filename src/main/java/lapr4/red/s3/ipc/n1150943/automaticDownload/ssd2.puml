@@ -1,0 +1,20 @@
+@startuml ssd2.png
+User2 -> System2: Updates a file that has been downloaded by User1
+System2 -> System2: updates file version
+
+System2 -> System1: Sends updated file notification
+
+System1 -> System1 : verifies the file download options/types
+
+alt Download Type is Permanent
+    alt Update method is "Replace"
+        System1 -> System2 : Downloads the file and replaces the existing
+    else Update method is "Versions"
+        System1 -> System2 : Downloads the file and saves it with the original name + the version as suffix
+    end
+else DownloadType is One Time Download
+    System1 -> System1 : Changes the file status to Out of Date
+end
+
+
+@enduml

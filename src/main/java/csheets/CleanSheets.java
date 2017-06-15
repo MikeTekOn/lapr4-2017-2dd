@@ -20,6 +20,7 @@
  */
 package csheets;
 
+import com.itextpdf.text.pdf.parser.Line;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -37,10 +38,9 @@ import java.util.Properties;
 
 import javax.swing.SwingUtilities;
 
-import csheets.core.Workbook;
+import csheets.core.*;
 import csheets.core.formula.compiler.FormulaCompiler;
 import csheets.core.formula.lang.Language;
-import csheets.ext.Extension;
 import csheets.ext.ExtensionManager;
 import csheets.io.Codec;
 import csheets.io.CodecFactory;
@@ -48,13 +48,16 @@ import csheets.io.NamedProperties;
 import csheets.ui.ctrl.UIController;
 import eapli.framework.persistence.DataConcurrencyException;
 import eapli.framework.persistence.DataIntegrityViolationException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.attribute.UserDefinedFileAttributeView;
+import java.util.LinkedList;
 import lapr4.red.s1.core.n1150943.contacts.application.BootEventVerifier;
 
 import java.util.Locale;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
-import java.util.Set;
 import lapr4.blue.s2.ipc.n1140822.fileShare.ShareConfiguration;
 import lapr4.green.s2.core.n1150657.extensions.ui.ExtensionLoadFrame;
 
@@ -110,8 +113,7 @@ public class CleanSheets implements Observer {
     private List<SpreadsheetAppListener> listeners
             = new ArrayList<SpreadsheetAppListener>();
 
-
- /**
+    /**
      * Gives access to the localization strings
      *
      * @param stringID string id
@@ -126,7 +128,7 @@ public class CleanSheets implements Observer {
 
     private ExtensionLoadFrame extensionLoadFrame;
 
-    public static boolean flag = false;
+    public static boolean flag = true;
 
     /**
      * Creates the CleanSheets application.
@@ -243,7 +245,7 @@ public class CleanSheets implements Observer {
         flag = newflag;
     }
 
-    public static boolean getFlag(){
+    public static boolean getFlag() {
         return flag;
     }
 
@@ -346,6 +348,7 @@ public class CleanSheets implements Observer {
             try {
                 // Reads workbook data
                 stream = new FileInputStream(file);
+
                 workbook = codec.read(stream);
             } finally {
                 try {
@@ -356,7 +359,6 @@ public class CleanSheets implements Observer {
                 }
             }
 
-            // Loads the workbook
             workbooks.put(workbook, file);
             fireSpreadsheetAppEvent(workbook, file, SpreadsheetAppEvent.Type.LOADED);
         } else {
@@ -404,6 +406,7 @@ public class CleanSheets implements Observer {
             try {
                 // Reads workbook data
                 stream = new FileOutputStream(file);
+
                 codec.write(workbook, stream);
             } finally {
                 try {
@@ -413,7 +416,14 @@ public class CleanSheets implements Observer {
                 } catch (IOException e) {
                 }
             }
-
+           try{
+                writePreviewWorkbookMetadata(file);
+           }
+           catch (Exception ex)
+           {
+               
+           }
+             
             workbooks.put(workbook, file);
             fireSpreadsheetAppEvent(workbook, file, SpreadsheetAppEvent.Type.SAVED);
         }
@@ -584,6 +594,50 @@ public class CleanSheets implements Observer {
                     case SAVED:
                         listener.workbookSaved(event);
                         break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Writes metadata on the workbook so it can be previewed
+     *
+     * @param file the workbook file
+     * @throws IOException if not found
+     */
+    private void writePreviewWorkbookMetadata(File file) throws IOException {
+        if (file != null) {
+            UserDefinedFileAttributeView view = Files.getFileAttributeView(file.toPath(), UserDefinedFileAttributeView.class);
+            List<Cell> listCells = new LinkedList<>();
+            //add 3x3 cells from the first filled cell
+            for (int i = 0; i < uiController.getActiveSpreadsheet().getColumnCount() + 1; i++) {
+                for (int j = 0; j < uiController.getActiveSpreadsheet().getRowCount() + 1; j++) {
+                    if (!uiController.getActiveSpreadsheet().getCell(i, j).getContent().equals("")) {
+                        int rowIndex = i;
+                        int colIndex = j;
+                        for (int k = rowIndex; k < rowIndex + 3; k++) {
+                            for (int l = colIndex; l < colIndex + 3; l++) {
+                                listCells.add(uiController.getActiveSpreadsheet().getCell(k, l));
+                            }
+                        }
+                        break;
+                    }
+                }
+
+            }
+            int row = 0, col = 0;
+            for (int i = 0; i < listCells.size(); i++) {
+                if (i < 10) {
+                    //write the first cells as metadata into 3x3 matrix
+                    view.write("cell" + i, Charset.defaultCharset().encode(row + "," + col + "," + listCells.get(i).getContent()));
+                    row++;
+                    if (row == 3) {
+                        row = 0;
+                        col++;
+                        if (col == 3) {
+                            break;
+                        }
+                    }
                 }
             }
         }
