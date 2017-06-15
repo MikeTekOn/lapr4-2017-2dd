@@ -151,6 +151,12 @@
  *     <li>Remove the tag ISEP from the first contact</li>
  *     <li>Check that the tag frequency for ISEP updated for 1 occurrence</li>
  * </ol>
+ * <br>
+ *
+ *
+ *
+ *
+ * <h2>5. Design</h2>
  *
  *
  * <h2>9. Work Log</h2>

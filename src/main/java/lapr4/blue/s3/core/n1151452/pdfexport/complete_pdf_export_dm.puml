@@ -1,0 +1,109 @@
+@startuml complete_pdf_export_dm.png
+
+/' *** BIZ RULES *** '/
+
+class PdfExportableCell <<ValueObject>> {
+    - cell : CellImpl
+    - height : int
+    - width : int
+    __ export cell __
+    ~ exportPdfCell() : PdfCell
+    .. export sections ..
+    ~ exportFormula() : PdfPhrase
+    ~ exportComments() : List<PdfExportableComment>
+    ~ ~~exportImages() : List<Image>~~
+}
+
+class PdfExportableComment <<ValueObject>> {
+    - commentableCell : CommentableCell
+    /' **** Behaviour **** '/
+    ~ exportComment() : PdfParagraph
+    ~ exportHistory() : PdfParagraph
+}
+
+class PdfExportableMacro <<ValueObject>> {
+    - macro : Macro
+    ~ exportMacro() : PdfParagraph
+}
+
+class PdfExportableSpreadsheet <<ValueObject>> {
+    - spreadsheet : SpreadsheetImpl
+    __ export spreadsheet __
+    ~ exportCells() : PdfExportableCell
+    ~ exportRange(from, to) : Iterable<PdfExportableCell>
+    ~ exportSelection() : Iterable<PdfExportableCell>
+    .. style ..
+    ~ getColumnWidths() : int[]
+    ~ getRowHeights() : int[]
+}
+
+class PdfExportableWorkbook <<ValueObject>> {
+    - workbook : Workbook
+    __ export workbook __
+    ~ exportSpreadsheet(int i) : PdfExportableSpreadsheet
+    ~ exportSpreadsheets() : Iterable<PdfExportableSpreadsheet>
+    .. export sections ..
+    ~ exportMacros() : Iterable<PdfExportableMacro>
+}
+
+interface ExportStrategy <<Strategy>> {
+    + export() : boolean
+}
+
+class PdfExport <<Entity>> {
+    - exportableWorkbook : PdfExportableWorkbook
+}
+
+/' *** PURE FABRICATION *** '/
+
+class PdfExportableCellFactory <<Factory>> {
+    - widths : int[]
+    - heights : int[]
+    build() : PdfExportableCell
+}
+
+class PDFOptionsDTO <<DTO>> {
+    pdf options
+    ...
+}
+note left
+DTO to transfer export
+options from UI to controller
+end note
+
+class PdfExportBuilder <<Factory>> {
+    + withExportType(exportType)
+    + withGrid(gridType)
+    + withMacroSection()
+    + withFormulaSection()
+    + withComments()
+    .. more ..
+
+    .. ..
+    + build() : PdfExport
+}
+
+/' *** RELATIONS *** '/
+
+PdfExportableCell "1" o- "1" CellImpl
+PdfExportableCell "1" --> "*" PdfExportableComment
+PdfExportableComment "1" o- "1" CommentableCell
+PdfExportableCellFactory ..> PdfExportableCell
+
+PdfExportableSpreadsheet "1" --> "*" PdfExportableCell
+PdfExportableSpreadsheet "1" o- "1" SpreadsheetImpl
+PdfExportableSpreadsheet ..> PdfExportableCellFactory
+
+PdfExportableWorkbook "1" o- "1" Workbook
+PdfExportableWorkbook "1" --> "*" PdfExportableSpreadsheet
+PdfExportableWorkbook "1" --> "*" PdfExportableMacro
+
+PdfExportableMacro "1" o- "1" Macro
+
+ExportStrategy <|- PdfExport
+
+PdfExport "1" o-- "1" PdfExportableWorkbook
+
+PdfExportBuilder --> PdfExport
+
+@enduml
