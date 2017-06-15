@@ -16,8 +16,6 @@ import java.util.Objects;
  * same from previous feature increments.
  *
  * @author Manuel Meireles (1150532)
- * @see lapr4.green.s3.lang.n1150532.variables.package-info
- * @see lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable
  */
 public class Variable implements Serializable {
 
@@ -57,6 +55,15 @@ public class Variable implements Serializable {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * A getter of the variable's indexes and their expressions.
+     *
+     * @return It returns the map of the variable's indexes.
+     */
+    public Map<Integer, Expression> getIndexes() {
+        return indexes;
     }
 
     /**
