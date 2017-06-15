@@ -46,7 +46,7 @@
  * <p>
  * The <a href="http://en.wikipedia.org/wiki/Delegation_pattern">delegation design pattern</a> is used in the cell extension mechanism of cleansheets. The following class diagram depicts the relations between classes in the "Cell" hierarchy.
  * <p>
- * <img src="core02_01_analysis_cell_delegate.png" alt="image"> 
+ * <img src="core06_01_analysis_cell_delegate.png" alt="image"> 
  * 
  * <p>
  * One important aspect is how extensions are dynamically created and returned. The <code>Extensible</code> interface has only one method, <code>getExtension</code>. Any class, to be extensible, must return a specific extension by its name. The default (and base) implementation for the <code>Cell</code> interface, the class <code>CellImpl</code>, implements the method in the following manner:
@@ -73,13 +73,37 @@
  * The constructor receives the instance of the cell to extend (the <b>delegate</b> in the pattern). For instance, <code>StylableCell</code> (the delegator) will delegate to <code>CellImpl</code> all the method invocations regarding methods of the <code>Cell</code> interface.
  * Obviously, methods specific to <code>StylableCell</code> must be implemented by it.
  * Therefore, to implement a cell that can have images associates we need to implement a class similar to <code>StylableCell</code>, the <code>ImageableCell</code> for instance.
+ *
+ * <h2>4. Design</h2>
+ * <P>
  * 
+ * <h3>4.1. Functional Tests</h3>
+ * Basically, from requirements and also analysis, we see that the core functionality of this use case is to be able to add an attribute to cells to be used to store an image(s). 
+ * We need to be able to set and get it. 
+ * <p>
+ * see: <code>lapr4.blue.s3.core.n1141570.insertImage.ImageableCellTest</code><p>
+ * <ol>
+ * <li>testEnsureCellHasImagesWhenAdded()
+ * <li>testEnsureCellDoesNotHaveImageWhichWasRemoved()
+ * <li>testEnsureCellHasTheImageThatWasAdded()
+ * <li>testImageableCellListener()
+ * </ol>
  * <h2>8. Work Log</h2>
  * <p>
  * <b>Tuesday 13/06/2017</b>
  * <p>
  * Our team distributed the functionalities to be worked on this
  * sprint and I started and finished the analysis.
+ * <p>
+ * <b>Wednesday 14/06/2017</b>
+ * <p>
+ * Started the tests and design.
+ * <p>
+ * <b>Thursday 15/06/2017</b>
+ * <p>
+ * <b>Today</b>
+ * <p>
+ * Finished the tests and design.
  * <p>
  *
  * @author Eric Amaral 1141570@isep.ipp.pt
