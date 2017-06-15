@@ -9,7 +9,6 @@ import csheets.core.Cell;
 import java.util.ArrayList;
 import java.util.List;
 import lapr4.green.s1.ipc.n1150800.importexportTXT.CellRange;
-import lapr4.green.s3.lang.n1150838.TablesAndFilters.Header;
 
 /**
  *
@@ -27,22 +26,36 @@ public class TableBuilder {
         List<Cell> bodyCells = new ArrayList();
         List<Header> headerCells = new ArrayList();
         Cell start = cells.get(0);
-       Cell end = cells.get(cells.size()-1);
-        CellRange range = new CellRange(start,end);
+        Cell end = cells.get(cells.size() - 1);
+        CellRange range = new CellRange(start, end);
         int headerRow = start.getAddress().getRow();
         int index = 0;
+        int row = -1;
+        List<Row> rows = new ArrayList();
+        HeaderRow header = new HeaderRow(new ArrayList());
+        DataRow dataRow = new DataRow(new ArrayList());
         for (Cell cell : cells) {
             if (cell.getAddress().getRow() == headerRow) {
-
-                Header header = new Header(index,cell);
-                headerCells.add(header);
+                header.add(new Header(index, cell));
                 index++;
-            }else{
-                bodyCells.add(cell);
             }
+            if (cell.getAddress().getRow() != headerRow) {
+                if (row == -1) {
+                    rows.add(header);
+                    row = cell.getAddress().getRow();
+                }
+                if (row == cell.getAddress().getRow()) {
+                    dataRow.add(cell);
 
+                } else {
+                    row = cell.getAddress().getRow();
+                    rows.add(dataRow);
+                    dataRow = new DataRow(new ArrayList());
+                    dataRow.add(cell);
+                }
+            }
         }
-        return new Table(range,bodyCells,headerCells,new Filter(new ArrayList()));
+        return new Table(range, rows, new Filter(new ArrayList()));
     }
 
 }
