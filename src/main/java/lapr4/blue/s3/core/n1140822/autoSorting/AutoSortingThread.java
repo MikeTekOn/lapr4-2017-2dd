@@ -2,10 +2,15 @@ package lapr4.blue.s3.core.n1140822.autoSorting;
 
 import csheets.core.Cell;
 import csheets.core.CellListener;
+
+import java.awt.event.ActionEvent;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import csheets.core.HeaderCellListener;
+import csheets.ui.ctrl.FocusOwnerAction;
 import lapr4.green.s2.core.n1150532.sort.algorithms.BubbleSort;
 import lapr4.green.s2.core.n1150532.sort.algorithms.QuickSort;
 import lapr4.green.s2.core.n1150532.sort.algorithms.SortingAlgorithm;
@@ -16,7 +21,7 @@ import lapr4.green.s2.core.n1150532.sort.sortingDTOs.RangeRowDTO;
  *
  * @author Renato Oliveira 1140822@isep.ipp.pt
  */
-public class AutoSortingThread extends Thread implements CellListener, Observer {
+public class AutoSortingThread extends Thread implements CellListener, Observer, HeaderCellListener {
 
     private RangeRowDTO[] rowArray;
     private RangeRowDTOComparator comparator;
@@ -80,5 +85,24 @@ public class AutoSortingThread extends Thread implements CellListener, Observer 
     public void update(Observable o, Object o1) {
          
     }
+
+    @Override
+    public void headerValueChanged(int colIndex) {
+        if(this.sortingColumnIndex!=colIndex && colIndex < rowArray[0].getRow().length)
+        {
+            //Cell[][] selectedCells = focusOwner.getSelectedCells();
+
+            sortingColumnIndex = colIndex;
+            for (int i=0;i<rowArray.length;i++) {
+
+                rowArray[i].updateSortingColumn(sortingColumnIndex);
+            }
+            algorithm.sort(rowArray, comparator);
+
+        }
+    }
+
+
+
 
 }

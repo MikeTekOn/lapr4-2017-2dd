@@ -184,6 +184,7 @@ public class WorkbookPane extends JTabbedPane implements SelectionListener {
 				Component c = ((JScrollPane)selected).getViewport().getView();
 				if (c instanceof SpreadsheetTable) {
 					SpreadsheetTable table = (SpreadsheetTable)c;
+
 					int activeColumn = table.getColumnModel().getSelectionModel().getAnchorSelectionIndex();
 					int activeRow = table.getSelectionModel().getAnchorSelectionIndex();
 					uiController.setActiveCell(table.getSpreadsheet()

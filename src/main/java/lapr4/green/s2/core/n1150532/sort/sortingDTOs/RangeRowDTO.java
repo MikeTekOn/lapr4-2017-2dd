@@ -22,7 +22,7 @@ public class RangeRowDTO implements SortableDTO<RangeRowDTO> {
     /**
      * The index on the row of the cell to be compared.
      */
-    private final int sortingCellIndex;
+    private int sortingCellIndex;
 
     /**
      * The full constructor of the DTO.
@@ -50,7 +50,10 @@ public class RangeRowDTO implements SortableDTO<RangeRowDTO> {
         return cells[sortingCellIndex].equals(cell);
     }
             
-    
+    public void updateSortingColumn(int sortingCellIndex)
+    {
+        this.sortingCellIndex=sortingCellIndex;
+    }
     /**
      * It provides the encapsulated cells.
      *
