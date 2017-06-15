@@ -24,7 +24,7 @@ public class Header implements Serializable {
     }
 
     public boolean isHeader(int headerIndex) {
-        return this.headerIndex == headerIndex;
+        return this.getHeaderIndex() == headerIndex;
     }
 
     public String getHeaderContent() {
@@ -39,6 +39,20 @@ public class Header implements Serializable {
     
     public Cell getCell(){
         return headerCell;
+    }
+
+    /**
+     * @return the headerIndex
+     */
+    public int getHeaderIndex() {
+        return headerIndex;
+    }
+
+    /**
+     * @param headerIndex the headerIndex to set
+     */
+    public void setHeaderIndex(int headerIndex) {
+        this.headerIndex = headerIndex;
     }
 
 }

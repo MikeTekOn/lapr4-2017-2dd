@@ -35,4 +35,5 @@ public class Filter implements Serializable {
     public void setFormulas(List<String> formulas) {
         this.formulas = formulas;
     }
+    
 }

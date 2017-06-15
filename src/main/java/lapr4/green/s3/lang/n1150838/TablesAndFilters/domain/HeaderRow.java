@@ -6,6 +6,7 @@
 package lapr4.green.s3.lang.n1150838.TablesAndFilters.domain;
 
 import csheets.core.Cell;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
  *
  * @author NunoPinto 1150838
  */
-public class HeaderRow extends Row{
+public class HeaderRow extends Row implements Serializable {
 
     private List<Header> row;
 
@@ -43,6 +44,15 @@ public class HeaderRow extends Row{
             cells.add(header.getCell());
         }
         return cells.iterator();
+    }
+    
+    public int getIndexByContent(String content){
+        for (Header header : row) {
+            if(header.getHeaderContent().equals(content)){
+                return header.getHeaderIndex();
+            }
+        }
+        return -1;
     }
 
 }

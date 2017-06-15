@@ -6,6 +6,7 @@
 package lapr4.green.s3.lang.n1150838.TablesAndFilters.domain;
 
 import csheets.core.Cell;
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
  *
  * @author NunoPinto 1150838
  */
-public class DataRow extends Row {
+public class DataRow extends Row implements Serializable  {
 
     private List<Cell> row;
 
@@ -43,4 +44,6 @@ public class DataRow extends Row {
     public Cell getCellAt(int i) {
         return row.get(i);
     }
+    
+    
 }

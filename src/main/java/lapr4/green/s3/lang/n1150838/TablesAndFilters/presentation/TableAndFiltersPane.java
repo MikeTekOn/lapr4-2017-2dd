@@ -156,10 +156,11 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
                 if (table != null) {
                     modelTable.setSelectedItem(table);
                     try {
-                        ctrl.verifyRows(modelTable.getSelectedItem(), field.getText());
-                    } catch (FormulaCompilationException ex) {
-                        ex.printStackTrace();
-                    } catch (IllegalValueTypeException ex) {
+                        ctrl.validateFormula(modelTable.getSelectedItem(), field.getText());
+                        
+                        modelTable.getSelectedItem().insertFilter(field.getText());
+                        ctrl.verifyAllFormulas(modelTable.getSelectedItem());
+                    } catch (FormulaCompilationException | IllegalValueTypeException ex) {
                         ex.printStackTrace();
                     }
                 } else {

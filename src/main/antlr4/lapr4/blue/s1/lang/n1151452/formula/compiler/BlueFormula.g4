@@ -69,15 +69,12 @@ literal
 	|	STRING
 	;
 
-array: ARRAY_NAME (ARRAY_INDEX|ARRAY_STRING) ;
+array:  
+    (ARRAY_NAME)(index|string_index) ;
 
-ARRAY_INDEX
-         :  L_RIGHT_PAR (DIGIT)+ R_RIGHT_PAR
-        ;
+index: INDEX;
 
-ARRAY_STRING
-         :  L_RIGHT_PAR STRING R_RIGHT_PAR
-         ;
+string_index: '[' STRING ']';
 
 fragment LETTER: ('a'..'z'|'A'..'Z') ;
 
@@ -96,7 +93,7 @@ CELL_REF
 CELL : '!' 'CELL';
 
 
-ARRAY_NAME: '&' 'COL' ;
+ARRAY_NAME: '&''COL';
                
 VARIABLE_NAME 
         : UNDERSCORE LETTER (DIGIT|LETTER)* (INDEX)?
@@ -123,7 +120,7 @@ NUMBER: ( DIGIT )+ ( COMMA ( DIGIT )+ )? ;
 
 fragment
 DIGIT : '0'..'9' ;
-POSITIVE_DIGIT : '1'..'9' ;
+POSITIVE_DIGIT : '0'..'9' ;
 
 /* Comparison operators */
 EQ		: '=' ;

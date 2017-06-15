@@ -6,6 +6,7 @@
 package lapr4.blue.s1.lang.n1151452.formula.compiler;
 
 import csheets.core.Cell;
+import csheets.core.SpreadsheetImpl;
 import csheets.core.Value;
 import csheets.core.Workbook;
 import csheets.core.formula.*;
@@ -27,7 +28,15 @@ import org.antlr.v4.runtime.Token;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lapr4.green.s3.lang.n1150532.variables.Variable;
+import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.DataRow;
+import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.HeaderRow;
+import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.Row;
+import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.Table;
+import lapr4.green.s3.lang.n1150838.TablesAndFilters.exception.InvalidIndexException;
+import lapr4.green.s3.lang.n1150838.Util.StringUtil;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 /**
@@ -251,10 +260,23 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
     @Override
     public Expression visitReference(BlueFormulaParser.ReferenceContext ctx) {
         try {
-            System.out.println(ctx.getChild(0).getChildCount());
-            for (int i = 0; i < ctx.getChild(0).getChildCount(); i++) {
-                if (ctx.getChild(0).getChild(i) instanceof TerminalNode) {
-                    System.out.println(ctx.getChild(0).getChild(i));
+
+            if (ctx.getChildCount() == 1 && ctx.getChild(0).getChildCount() == 2) {
+                Table tableCtx = ((SpreadsheetImpl) uiController.getActiveSpreadsheet()).getTable(cell);
+                if (ctx.getChild(0).getChild(1).getChildCount() > 1) {
+                    String str = StringUtil.removeStartEndSpecialChars(ctx.getChild(0).getChild(1).getChild(1).getText());
+                    int index = tableCtx.getHeaderIndex(str);
+                    if (index == -1) {
+                        throw new InvalidIndexException("Invalid index!");
+                    }
+                    Cell referenceCell = ((DataRow) tableCtx.getRowByCell(cell)).getCellAt(index);
+
+                    return new CellReference(referenceCell.getSpreadsheet(), referenceCell.getAddress().toString());
+                } else {
+                    String number = StringUtil.removeStartEndSpecialChars(ctx.getChild(0).getChild(1).getText());
+                    Cell referenceCell = ((DataRow) tableCtx.getRowByCell(cell)).getCellAt(Integer.parseInt(number));
+
+                    return new CellReference(referenceCell.getSpreadsheet(), referenceCell.getAddress().toString());
                 }
             }
             if (ctx.getChildCount() == 3) {
@@ -271,7 +293,7 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
                     return new CellReference(cell.getSpreadsheet(), ctx.getText());
                 }
             }
-        } catch (ParseException | UnknownElementException ex) {
+        } catch (ParseException | UnknownElementException | InvalidIndexException ex) {
             addVisitError(ex.getMessage());
         }
         return null;

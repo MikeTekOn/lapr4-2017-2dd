@@ -93,4 +93,17 @@ public class Table implements Serializable {
         return cells.get(i);
     }
 
+    public Row getRowByCell(Cell cell) {
+        for (Row cell1 : cells) {
+            if (cell1.containsCell(cell)) {
+                return cell1;
+            }
+        }
+        return null;
+    }
+
+    public int getHeaderIndex(String ctx) {
+        return ((HeaderRow) cells.get(0)).getIndexByContent(ctx);
+    }
+
 }
