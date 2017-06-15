@@ -16,17 +16,20 @@ import lapr4.green.s3.lang.n1150838.TablesAndFilters.Header;
  * @author Nuno Pinto 1150838
  */
 public class Table implements Serializable {
-    
+
     private List<Cell> bodyCells;
-    
-    private List<Cell> headerCells;
+
+    private List<Header> headerCells;
 
     private CellRange range;
+    
+    private Filter filters;
 
-    private Header header;
-
-    public Table(CellRange range) {
-        this.range=range;
+    public Table(CellRange range, List<Cell> bodyCells, List<Header> headerCells,Filter filters) {
+        this.range = range;
+        this.bodyCells = bodyCells;
+        this.headerCells = headerCells;
+        this.filters=filters;
     }
 
     /**
@@ -37,24 +40,61 @@ public class Table implements Serializable {
     }
 
     /**
-     * @return the header
-     */
-    public Header getHeader() {
-        return header;
-    }
-
-    /**
      * @param range the range to set
      */
     public void setRange(CellRange range) {
         this.range = range;
     }
 
+    public boolean containsCells(List<Cell> cells) {
+
+        for (Cell bodyCell : bodyCells) {
+            for (Cell cell : cells) {
+                if (bodyCell.getAddress().equals(cell.getAddress())) {
+                    return true;
+                }
+            }
+        }
+
+        for (Header header : headerCells) {
+            for (Cell cell : cells) {
+                if (header.getCell().getAddress().equals(cell.getAddress())) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public boolean containsCell(Cell cell) {
+        for (Cell bodyCell : bodyCells) {
+            if (bodyCell.getAddress().equals(cell.getAddress())) {
+                return true;
+            }
+        }
+        for (Header header : headerCells) {
+            if (header.getCell().getAddress().equals(cell.getAddress())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean insertFilter(String filter){
+        
+        if(filter.startsWith("=")){
+            filters.getFormulas().add(filter);
+            return true;
+        }
+        return false;
+    }
+
     /**
-     * @param header the header to set
+     * @return the filters
      */
-    public void setHeader(Header header) {
-        this.header = header;
+    public Filter getFilters() {
+        return filters;
     }
 
 }

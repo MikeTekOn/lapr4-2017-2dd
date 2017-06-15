@@ -1,0 +1,27 @@
+@startuml associate_tags_with_contacts_ssd.png
+
+'http://plantuml.com/skinparam.html'
+skinparam handwritten true
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+skinparam SequenceMessageAlign center
+
+actor User as U
+participant "System" as S
+
+activate U
+
+U -> S : initiates the edition/creation of a contact
+activate S
+S --> U : asks for the contact data and the contact tags
+deactivate S
+
+U -> S : inserts the data
+activate S
+S --> U : informs success
+deactivate S
+
+deactivate U
+
+@enduml
