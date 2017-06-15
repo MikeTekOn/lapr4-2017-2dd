@@ -46,7 +46,7 @@
  * <p>
  * The <a href="http://en.wikipedia.org/wiki/Delegation_pattern">delegation design pattern</a> is used in the cell extension mechanism of cleansheets. The following class diagram depicts the relations between classes in the "Cell" hierarchy.
  * <p>
- * <img src="core02_01_analysis_cell_delegate.png" alt="image"> 
+ * <img src="core06_01_analysis_cell_delegate.png" alt="image"> 
  * 
  * <p>
  * One important aspect is how extensions are dynamically created and returned. The <code>Extensible</code> interface has only one method, <code>getExtension</code>. Any class, to be extensible, must return a specific extension by its name. The default (and base) implementation for the <code>Cell</code> interface, the class <code>CellImpl</code>, implements the method in the following manner:
@@ -73,6 +73,46 @@
  * The constructor receives the instance of the cell to extend (the <b>delegate</b> in the pattern). For instance, <code>StylableCell</code> (the delegator) will delegate to <code>CellImpl</code> all the method invocations regarding methods of the <code>Cell</code> interface.
  * Obviously, methods specific to <code>StylableCell</code> must be implemented by it.
  * Therefore, to implement a cell that can have images associates we need to implement a class similar to <code>StylableCell</code>, the <code>ImageableCell</code> for instance.
+ *
+ * <h2>4. Design</h2>
+ * <P>
+ * 
+ * <h3>4.1. Functional Tests</h3>
+ * Basically, from requirements and also analysis, we see that the core functionality of this use case is to be able to add an attribute to cells to be used to store an image(s). 
+ * We need to be able to set and get it. 
+ * <p>
+ * see: <code>lapr4.blue.s3.core.n1141570.insertImage.ImageableCellTest</code><p>
+ * <ol>
+ * <li>testEnsureCellHasImagesWhenAdded()
+ * <li>testEnsureCellDoesNotHaveImageWhichWasRemoved()
+ * <li>testEnsureCellHasTheImageThatWasAdded()
+ * <li>testImageableCellListener()
+ * </ol>
+ * <h3>4.2. UC Realization</h3>
+ * To realize this user story we will need to create a subclass of Extension. We will also need to create a subclass of UIExtension. For the sidebar we need to implement a JPanel. In the code of the extension <code>csheets.ext.style</code> we can find examples that illustrate how to implement these technical requirements.
+ * The following diagrams illustrate core aspects of the design of the solution for this use case.
+ * <p>
+ * 
+ * <h3>Extension Setup</h3>
+ * The following diagram shows the setup of the "images" extension when cleansheets is run.
+ * <p>
+ * <img src="core06_01_design.png" alt="image">
+ *
+ * <h3>User Selects a Cell</h3>
+ * The following diagram illustrates what happens when the user selects a cell. The idea is that when this happens the extension must display in the sidebar the image(s) of that cell (if it exists).
+ * <p>
+ * <img src="core06_01_design2.png" alt="image">
+ * 
+ * <h3>User Updates the Image(s) of a Cell</h3>
+ * The following diagram illustrates what happens when the user updates the image(s) of the current cell. To be noticed, this diagram does not depict the actual selection of a cell (that is illustrated in the previous diagram).
+ * <p>
+ * <img src="core06_01_design3.png" alt="image">
+ * 
+ * <h2>5. Implementation</h2>
+ * 
+ * <h2>6. Integration/Demonstration</h2>
+ * 
+ * <h2>7. Final Remarks</h2>
  * 
  * <h2>8. Work Log</h2>
  * <p>
@@ -80,6 +120,16 @@
  * <p>
  * Our team distributed the functionalities to be worked on this
  * sprint and I started and finished the analysis.
+ * <p>
+ * <b>Wednesday 14/06/2017</b>
+ * <p>
+ * Started the tests and design.
+ * <p>
+ * <b>Thursday 15/06/2017</b>
+ * <p>
+ * <b>Today</b>
+ * <p>
+ * Finished the tests and design.
  * <p>
  *
  * @author Eric Amaral 1141570@isep.ipp.pt
