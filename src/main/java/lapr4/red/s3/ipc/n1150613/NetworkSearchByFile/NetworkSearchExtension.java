@@ -1,8 +1,8 @@
 package lapr4.red.s3.ipc.n1150613.NetworkSearchByFile;
 
+import csheets.ext.Extension;
 import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.UIExtension;
-import lapr4.blue.s2.ipc.n1151031.searchnetwork.SearchWorkbookNetworkExtension;
 import lapr4.red.s3.ipc.n1150613.NetworkSearchByFile.ui.NetworkSearchUIExtension;
 
 /**
@@ -10,18 +10,35 @@ import lapr4.red.s3.ipc.n1150613.NetworkSearchByFile.ui.NetworkSearchUIExtension
  *
  * @author Diogo Guedes - 1150613@isep.ipp.pt
  */
-public class NetworkSearchExtension extends SearchWorkbookNetworkExtension {
+public class NetworkSearchExtension extends Extension {
 
+    /**
+     * The name of the extension.
+     */
+    public static final String NAME = "Network Searches";
+
+    /**
+     * The extension description.
+     */
+    public static final String DESCRIPTION = "The global variables extension. It lists all existing global variables and allows their edition.";
+
+    /**
+     * The extension current version.
+     */
+    public static final int VERSION = 1;
+
+    /**
+     * The full constructor of the extension.
+     */
     public NetworkSearchExtension() {
-        super();
-        setVersion(super.getVersion() + 1);
+        super(NAME, VERSION, DESCRIPTION);
     }
 
     /**
-     * Returns the user interface extension of this extension.
+     * It provides the UI Extension to render.
      *
-     * @param uiController The user interface controller.
-     * @return the user interface extension
+     * @param uiController The UI Controller.
+     * @return The UI Extension.
      */
     @Override
     public UIExtension getUIExtension(UIController uiController) {

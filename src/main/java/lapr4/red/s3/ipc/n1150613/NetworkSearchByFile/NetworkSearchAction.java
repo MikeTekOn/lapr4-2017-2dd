@@ -16,7 +16,7 @@ public class NetworkSearchAction extends BaseAction {
     /**
      * The action's name.
      */
-    private static final String NAME = "Search Workbooks in the Network";
+    private static final String NAME = "Search Network Workbooks";
 
     /**
      * The reply time out.
@@ -63,11 +63,11 @@ public class NetworkSearchAction extends BaseAction {
     @Override
     public void actionPerformed(ActionEvent ae) {
         SearchWorkbookRequestDTO searchRequest = new SearchWorkbookRequestDTO(namePattern);
-        CommUDPClient worker = new CommUDPClient(searchRequest, portNumber, TIMEOUT);
+        CommUDPClient workers = new CommUDPClient(searchRequest, portNumber, TIMEOUT);
         HandlerSearchWorkbookResponseDTO handler = new HandlerSearchWorkbookResponseDTO();
         handler.addObserver(table);
-        worker.addHandler(SearchWorkbookResponseDTO.class, handler);
-        worker.start();
+        workers.addHandler(SearchWorkbookResponseDTO.class, handler);
+        workers.start();
     }
 
 }

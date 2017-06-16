@@ -3,7 +3,8 @@ package lapr4.red.s3.ipc.n1150613.NetworkSearchByFile.ui;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
-import lapr4.blue.s2.ipc.n1151031.searchnetwork.SearchResults;
+import lapr4.red.s3.ipc.n1150613.NetworkSearchByFile.SearchResults;
+
 
 /**
  * A class to control the search workbook in the network results table.
@@ -20,7 +21,7 @@ public class NetworkSearchTableController extends AbstractTableModel {
     /**
      * The search results list.
      */
-    private final List<SearchResults> list;
+    private final List<SearchResults> list;//
 
     /**
      * The constructor of the controller.
