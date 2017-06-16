@@ -12,7 +12,6 @@ import csheets.core.Value;
 import csheets.core.formula.Expression;
 import csheets.core.formula.util.ExpressionVisitor;
 import csheets.ui.ctrl.UIController;
-import lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable;
 import lapr4.blue.s1.lang.n1151159.macros.MacroController;
 import lapr4.blue.s1.lang.n1151159.macros.compiler.MacroCompilationException;
 import lapr4.red.s2.lang.n1150385.beanshell.BeanShellAsyncRunner;
@@ -23,6 +22,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Objects;
+import lapr4.green.s3.lang.n1150532.variables.Variable;
 
 /**
  * @author Ricardo Catalão (1150385)
@@ -80,7 +80,17 @@ public class BeanShellInstance implements Expression {
             bshInterpreter.set("uiController", controller);
             if(tempVarContainer != null){
                 for(Variable var : tempVarContainer.variables()){
-                    bshInterpreter.set(var.getName(), var.getExpression().evaluate().toAny());
+                    /**
+                     * @author Manuel Meireles (1150532)
+                     * The VarContentor no longer supports the old Variable
+                     * class. Since I'm not sure what this method is suppose to
+                     * do and no one is currently working on it, I'm setting the
+                     * default value of the variable, i.e. it operates without
+                     * the array functionality. If all expressions of the
+                     * variable are needed, a new method on the Variable class
+                     * can be made to provide it.
+                     */
+                    bshInterpreter.set(var.getName(), var.getExpressionAt(Variable.DEFAULT_INDEX).evaluate().toAny());
                 }
             }
 

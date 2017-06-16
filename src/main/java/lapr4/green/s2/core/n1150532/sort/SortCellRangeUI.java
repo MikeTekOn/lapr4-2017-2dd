@@ -3,6 +3,7 @@ package lapr4.green.s2.core.n1150532.sort;
 import static csheets.core.Address.HIGHEST_CHAR;
 import static csheets.core.Address.LOWEST_CHAR;
 import csheets.core.Cell;
+import csheets.ui.ctrl.UIController;
 import eapli.util.Strings;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -90,10 +91,10 @@ public class SortCellRangeUI extends JDialog {
      *
      * @param theSelectedCells The cell range to sort.
      */
-    public SortCellRangeUI(Cell[][] theSelectedCells) {
+    public SortCellRangeUI(Cell[][] theSelectedCells, UIController controller) {
         super();
         selectedCells = theSelectedCells;
-        controller = new SortCellRangeController();
+        this.controller = new SortCellRangeController(controller);
         createUserInterface();
         createInteractions();
         setInitialState();

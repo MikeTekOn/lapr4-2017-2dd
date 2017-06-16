@@ -9,24 +9,31 @@ import csheets.core.Cell;
 import java.io.Serializable;
 import java.util.List;
 import lapr4.green.s1.ipc.n1150800.importexportTXT.CellRange;
-import lapr4.green.s3.lang.n1150838.TablesAndFilters.Header;
 
 /**
  *
  * @author Nuno Pinto 1150838
  */
 public class Table implements Serializable {
-    
-    private List<Cell> bodyCells;
-    
-    private List<Cell> headerCells;
+
+    /**
+     * @return the cells
+     */
+    public List<Row> getCells() {
+        return cells;
+    }
+
+    private List<Row> cells;
 
     private CellRange range;
 
-    private Header header;
+    private Filter filters;
 
-    public Table(CellRange range) {
-        this.range=range;
+    public Table(CellRange range, List<Row> cells, Filter filters) {
+        this.range = range;
+        this.cells = cells;
+        this.filters = filters;
+
     }
 
     /**
@@ -37,24 +44,66 @@ public class Table implements Serializable {
     }
 
     /**
-     * @return the header
-     */
-    public Header getHeader() {
-        return header;
-    }
-
-    /**
      * @param range the range to set
      */
     public void setRange(CellRange range) {
         this.range = range;
     }
 
+    public boolean containsCells(List<Cell> cells) {
+
+        for (Row row : this.getCells()) {
+            for (Cell cell : cells) {
+                if (row.containsCell(cell)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public boolean containsCell(Cell cell) {
+        for (Row row : getCells()) {
+            if (row.containsCell(cell)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean insertFilter(String filter) {
+
+        if (filter.startsWith("=")) {
+            filters.getFormulas().add(filter);
+            return true;
+        }
+        return false;
+    }
+
     /**
-     * @param header the header to set
+     * @return the filters
      */
-    public void setHeader(Header header) {
-        this.header = header;
+    public Filter getFilters() {
+        return filters;
+    }
+
+    public Row getRow(int i) {
+        return cells.get(i);
+    }
+
+    public Row getRowByCell(Cell cell) {
+        for (Row cell1 : cells) {
+            if (cell1.containsCell(cell)) {
+                return cell1;
+            }
+        }
+        return null;
+    }
+
+    public int getHeaderIndex(String ctx) {
+        return ((HeaderRow) cells.get(0)).getIndexByContent(ctx);
     }
 
 }

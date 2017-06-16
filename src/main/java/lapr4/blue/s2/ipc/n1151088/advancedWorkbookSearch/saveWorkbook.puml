@@ -1,0 +1,17 @@
+@startuml saveWorkbook.png
+
+participant Cleansheet
+participant UserDefinedFileAttributeView
+participant Files
+participant CellsList
+participant UIController
+
+Cleansheet -> Files : getFileAttributeView()
+Cleansheet-> UIController: getActiveSpreadsheet()
+create CellsList
+Cleansheet->CellsList: new()
+Cleansheet->CellsList: fillCells()
+
+Cleansheet->UserDefinedFileAttributeView : write(cellListEncoded)
+
+@enduml

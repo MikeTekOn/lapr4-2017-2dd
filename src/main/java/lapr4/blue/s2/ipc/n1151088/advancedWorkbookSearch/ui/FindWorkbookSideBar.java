@@ -124,6 +124,21 @@ public class FindWorkbookSideBar extends JPanel implements Observer {
 //                        RangeDialog j = new RangeDialog(findExtension, wb, tablePreview);
                         //if(previewController!=null)previewController.stopPreview();
 
+                        try {
+               
+                
+                         tablePreview.removeAll();
+                        
+                        PreviewSpreadSheetTableModel model=new PreviewSpreadSheetTableModel(wb.getSpreadsheet(0), findExtension);
+                        tablePreview.setModel(model);
+                
+        
+                
+            } catch (IllegalArgumentException ex) {
+                ex.getMessage();
+            }
+                        
+                        
                     } catch (IOException | ClassNotFoundException ex) {
                         JOptionPane.showMessageDialog(new JFrame(), "It wasn´t possible to generate the preview!");
                     }

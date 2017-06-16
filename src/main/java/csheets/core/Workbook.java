@@ -291,11 +291,16 @@ public class Workbook implements Iterable<Spreadsheet>, Serializable {
         return this.globalVariables;
     }
 
-    /**
-     *
-     * @param var - Global Variable to save or update
-     */
-    public void updateGlobalVariable(Variable var) {
-        this.globalVariables.update(var);
-    }
+//    /**
+//     *
+//     * @param var - Global Variable to save or update
+//     * 
+//     * 
+//     * @author Manuel Meireles (1150532)
+//     * I've removed this method since the VarContentor no longer supports this
+//     * Variable class. The method is now useless.
+//     */
+//    public void updateGlobalVariable(Variable var) {
+//        this.globalVariables.update(var);
+//    }
 }

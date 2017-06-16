@@ -6,6 +6,7 @@
 package lapr4.blue.s1.lang.n1151452.formula.compiler;
 
 import csheets.core.Cell;
+import csheets.core.SpreadsheetImpl;
 import csheets.core.Value;
 import csheets.core.Workbook;
 import csheets.core.formula.*;
@@ -18,7 +19,6 @@ import csheets.core.formula.lang.UnknownElementException;
 import csheets.ui.ctrl.UIController;
 import lapr4.blue.s1.lang.n1140822.beanshellwindow.BeanShellInstance;
 import lapr4.blue.s1.lang.n1140822.beanshellwindow.BeanShellLoader;
-import lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable;
 import lapr4.blue.s1.lang.n1151452.formula.lang.Language;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperation;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperator;
@@ -28,6 +28,16 @@ import org.antlr.v4.runtime.Token;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import lapr4.green.s3.lang.n1150532.variables.Variable;
+import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.DataRow;
+import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.HeaderRow;
+import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.Row;
+import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.Table;
+import lapr4.green.s3.lang.n1150838.TablesAndFilters.exception.InvalidIndexException;
+import lapr4.green.s3.lang.n1150838.Util.StringUtil;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 /**
  * Represents the Formula Visitor (ANTLR4).
@@ -35,21 +45,38 @@ import java.util.List;
  * @author Diana Silva {1151088@isep.ipp.pt]} on 03/06/17
  * @author Daniel Gonçalves [1151452@isep.ipp.pt] on 01/06/17.
  *
- * @author Guilherme Ferreira 1150623 corrected to work with 'Variable' class and VarContentor
+ * @author Guilherme Ferreira 1150623 corrected to work with 'Variable' class
+ * and VarContentor
  * @author Ricardo Catalão (1150385) on 08/06/2017
  * @author jrt
-*/
+ *
+ *
+ * @author Manuel Meireles (1150532):
+ * <ul>
+ * <li>I've changed the Variable class (from
+ * {@link lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable} to
+ * {@link lapr4.green.s3.lang.n1150532.variables.Variable}) in order to allow
+ * indexes.</li>
+ * <li>I've updated the methods "visitAtom" and "visitAssignment" in order to
+ * handle the new variable class.</li>
+ * </ul>
+ */
 @SuppressWarnings("Duplicates")
 public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
+
     private Cell cell = null;
     private int numberOfErrors;
     private final StringBuilder errorBuffer;
     private final UIController uiController;
 
-    /**The starter lexical rule for temporary variables*/
-    private static final char TEMP_VAR_STARTER='_';
+    /**
+     * The starter lexical rule for temporary variables
+     */
+    private static final char TEMP_VAR_STARTER = '_';
 
-    /**The temporary variables manager*/
+    /**
+     * The temporary variables manager
+     */
     private final VarContentor temp_contentor;
 
     public FormulaEvalVisitor(Cell cell, UIController uiController) {
@@ -73,7 +100,7 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
         super.visitScript(ctx);
 
         StringBuilder builder = new StringBuilder();
-        for(int i=0; i<ctx.getChildCount(); i++){
+        for (int i = 0; i < ctx.getChildCount(); i++) {
             builder.append(ctx.getChild(i).getText());
             builder.append(" "); // WhiteSpace seems to always be ignored so... to not break things up, this was placed
         }
@@ -82,23 +109,26 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
     }
 
     /**
-     * Handles the behaviour of visiting the ShellScript grammar node. The shellScript node will have the information
-     * needed for what code the beanShell should execute, but also how to execute it.
+     * Handles the behaviour of visiting the ShellScript grammar node. The
+     * shellScript node will have the information needed for what code the
+     * beanShell should execute, but also how to execute it.
      *
-     * The node can start with 2 headers. (1) "&lt;![SHELL[" or (2) "&lt;[SHELL[".
-     * If (1) is chosen, the bean shell code should be run asynchronously and the result of visiting this node is
-     * null. If (2) is chosen, the code should be run synchronously and the result of visiting this node is the return
-     * value of visiting the bean shell code (normally, the value of the last instruction executed).
+     * The node can start with 2 headers. (1) "&lt;![SHELL[" or (2)
+     * "&lt;[SHELL[". If (1) is chosen, the bean shell code should be run
+     * asynchronously and the result of visiting this node is null. If (2) is
+     * chosen, the code should be run synchronously and the result of visiting
+     * this node is the return value of visiting the bean shell code (normally,
+     * the value of the last instruction executed).
      */
     @Override
     public Expression visitShellscript(BlueFormulaParser.ShellscriptContext ctx) {
         BeanShellLoader loader = new BeanShellLoader();
 
-        Literal literal = (Literal)visit(ctx.getChild(1));
+        Literal literal = (Literal) visit(ctx.getChild(1));
         String code = literal.toString().substring(1, literal.toString().length() - 1);
         BeanShellInstance shell = loader.create(code, uiController, temp_contentor);
 
-        if(ctx.getChild(0).getText().charAt(1) == '!'){ // It should run asynchronously
+        if (ctx.getChild(0).getText().charAt(1) == '!') { // It should run asynchronously
             shell.setAsynchronous();
         }
 
@@ -177,37 +207,23 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
     public Expression visitAtom(BlueFormulaParser.AtomContext ctx) {
         if (ctx.getChildCount() == 3) {
             return visit(ctx.getChild(1));
-        }
-        else if (ctx.VARIABLE_NAME() != null) {
+        } else if (ctx.VARIABLE_NAME() != null) {
 
-            String tempVarName=ctx.VARIABLE_NAME().getText();
+            String tempVarName = ctx.VARIABLE_NAME().getText();
 
             try {
-                return temp_contentor.getExpressionOfVariable(tempVarName);
+                return getExpressionOfVariable(tempVarName, temp_contentor);
             } catch (IllegalArgumentException ex) {
                 addVisitError(ex.getLocalizedMessage());
             }
 
-        }
-        else if (ctx.G_VARIABLE_NAME() != null){
-            String tempVarName=ctx.G_VARIABLE_NAME().getText();
+        } else if (ctx.G_VARIABLE_NAME() != null) {
+            String tempVarName = ctx.G_VARIABLE_NAME().getText();
 
             try {
-                return uiController.getActiveWorkbook().globalVariables().getExpressionOfVariable(tempVarName);
+                return getExpressionOfVariable(tempVarName, uiController.getActiveWorkbook().globalVariables());
             } catch (IllegalArgumentException ex) {
                 addVisitError(ex.getLocalizedMessage());
-            }
-        }
-        else if(ctx.assignment() != null) {
-
-            if (ctx.assignment().VARIABLE_NAME() != null) {
-                //it´s a temporary variable
-                Variable temp_var = (Variable)visit(ctx.assignment());
-                temp_contentor.update(temp_var);
-            }else if(ctx.assignment().G_VARIABLE_NAME() != null){
-                //it's a global variable
-                Variable temp_var = (Variable)visit(ctx.assignment());
-                uiController.getActiveWorkbook().updateGlobalVariable(temp_var);
             }
         }
 
@@ -244,6 +260,25 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
     @Override
     public Expression visitReference(BlueFormulaParser.ReferenceContext ctx) {
         try {
+
+            if (ctx.getChildCount() == 1 && ctx.getChild(0).getChildCount() == 2) {
+                Table tableCtx = ((SpreadsheetImpl) uiController.getActiveSpreadsheet()).getTable(cell);
+                if (ctx.getChild(0).getChild(1).getChildCount() > 1) {
+                    String str = StringUtil.removeStartEndSpecialChars(ctx.getChild(0).getChild(1).getChild(1).getText());
+                    int index = tableCtx.getHeaderIndex(str);
+                    if (index == -1) {
+                        throw new InvalidIndexException("Invalid index!");
+                    }
+                    Cell referenceCell = ((DataRow) tableCtx.getRowByCell(cell)).getCellAt(index);
+
+                    return new CellReference(referenceCell.getSpreadsheet(), referenceCell.getAddress().toString());
+                } else {
+                    String number = StringUtil.removeStartEndSpecialChars(ctx.getChild(0).getChild(1).getText());
+                    Cell referenceCell = ((DataRow) tableCtx.getRowByCell(cell)).getCellAt(Integer.parseInt(number));
+
+                    return new CellReference(referenceCell.getSpreadsheet(), referenceCell.getAddress().toString());
+                }
+            }
             if (ctx.getChildCount() == 3) {
                 BinaryOperator operator = Language.getInstance().getBinaryOperator(ctx.getChild(1).getText());
                 return new ReferenceOperation(
@@ -252,13 +287,13 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
                         new CellReference(cell.getSpreadsheet(), ctx.getChild(2).getText())
                 );
             } else {
-                if(ctx.getText().equals("!CELL")){
+                if (ctx.getText().equals("!CELL")) {
                     return new CellReference(cell.getSpreadsheet(), cell.getAddress().toString());
-                }else{
+                } else {
                     return new CellReference(cell.getSpreadsheet(), ctx.getText());
                 }
             }
-        } catch (ParseException | UnknownElementException ex) {
+        } catch (ParseException | UnknownElementException | InvalidIndexException ex) {
             addVisitError(ex.getMessage());
         }
         return null;
@@ -275,7 +310,7 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
 
                 String value = ctx.getText().substring(1, ctx.getText().length() - 1); // Remove Quotes
                 return new Literal(Value.parseValue(value, Value.Type.BOOLEAN, Value.Type.DATE));
-            } 
+            }
         }
 
         return null;
@@ -304,15 +339,14 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
                     addVisitError(ex.getMessage());
                 }
 
-
             } else if (ctx.VARIABLE_NAME() != null) {
                 //it´s a temporary variable
                 String name = ctx.VARIABLE_NAME().getText();
-                return new Variable(name, visit(ctx.comparison()));
-            }else if(ctx.G_VARIABLE_NAME() != null){
+                return setExpressionOfVariable(name, visit(ctx.comparison()), temp_contentor);
+            } else if (ctx.G_VARIABLE_NAME() != null) {
                 //it's a global variable
                 String name = ctx.G_VARIABLE_NAME().getText();
-                return new Variable(name, visit(ctx.comparison()));
+                return setExpressionOfVariable(name, visit(ctx.comparison()), uiController.getActiveWorkbook().globalVariables());
             }
         }
 
@@ -384,5 +418,58 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
         errorBuffer.append(msg).append("\n");
         numberOfErrors++;
     }
-}
 
+    /**
+     * It provides the expression stored in a variable from the container.
+     *
+     * @param visitText The text resulting from the visit. It must contain the
+     * variable's name and, optionally, the index number within square brackets.
+     * @param container The container of the variables. It might be the workbook
+     * container for global variables or the local container for temporary
+     * variables.
+     * @return It returns the expression retrieved from the variable's index.
+     */
+    private Expression getExpressionOfVariable(String visitText, VarContentor container) {
+        Expression theExpression;
+        String[] variableInfo = visitText.split("\\[");
+        if (variableInfo.length == 2) {
+            try {
+                int index = Integer.parseInt(variableInfo[1].substring(0, (variableInfo[1].length() - 1)));
+                theExpression = container.getExpressionOfVariable(variableInfo[0], index);
+            } catch (NumberFormatException | IndexOutOfBoundsException ex) {
+                throw new IllegalArgumentException("Unknown Index.");
+            }
+        } else {
+            theExpression = container.getExpressionOfVariable(variableInfo[0], Variable.DEFAULT_INDEX);
+        }
+        return theExpression;
+    }
+
+    /**
+     * It stores the expression in a variable from the container.
+     *
+     * @param visitText The text resulting from the visit. It must contain the
+     * variable's name and, optionally, the index number within square brackets.
+     * @param theExpression The expression to be stored.
+     * @param container The container of the variables. It might be the workbook
+     * container for global variables or the local container for temporary
+     * variables.
+     * @return It returns the same expression that is received.
+     */
+    private Expression setExpressionOfVariable(String visitText, Expression theExpression, VarContentor container) {
+        int index;
+        String[] variableInfo = visitText.split("\\[");
+        if (variableInfo.length == 2) {
+            try {
+                index = Integer.parseInt(variableInfo[1].substring(0, (variableInfo[1].length() - 1)));
+            } catch (NumberFormatException | IndexOutOfBoundsException ex) {
+                throw new IllegalArgumentException("Unknown Index.");
+            }
+        } else {
+            index = Variable.DEFAULT_INDEX;
+        }
+        container.update(variableInfo[0], index, theExpression);
+        return theExpression;
+    }
+
+}
