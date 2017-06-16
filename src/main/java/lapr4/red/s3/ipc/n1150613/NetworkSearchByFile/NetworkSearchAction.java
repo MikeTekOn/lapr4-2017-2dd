@@ -4,7 +4,6 @@ import csheets.ui.ctrl.BaseAction;
 import java.awt.event.ActionEvent;
 import java.util.Observer;
 import lapr4.blue.s2.ipc.n1151031.searchnetwork.HandlerSearchWorkbookResponseDTO;
-import lapr4.blue.s2.ipc.n1151031.searchnetwork.SearchWorkbookRequestDTO;
 import lapr4.green.s1.ipc.n1150532.comm.CommUDPClient;
 
 /**

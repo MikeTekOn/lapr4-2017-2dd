@@ -8,8 +8,6 @@ package lapr4.red.s3.ipc.n1150613.NetworkSearchByFile;
 import csheets.core.Cell;
 import csheets.core.Spreadsheet;
 import csheets.core.Workbook;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -53,7 +51,9 @@ public class RegexUtil {
       @return true if it matches or false if it doesn't
      */
     public boolean checkIfNameMatches(String filename) {
-
+        if (name.equals("")) {
+            return false;
+        }
         p = Pattern.compile(name);
         m = p.matcher(filename);
         return (m.matches());
@@ -74,6 +74,10 @@ public class RegexUtil {
       @return desired cells information in String array
      */
     public boolean checkIfContentMatches(Workbook w) {
+        if (content.equals("")) {
+            return false;
+        }
+
         String check;
         boolean is = true;
 

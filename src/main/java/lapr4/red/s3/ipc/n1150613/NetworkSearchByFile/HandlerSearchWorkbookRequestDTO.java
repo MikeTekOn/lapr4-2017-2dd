@@ -11,14 +11,11 @@ import java.util.List;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lapr4.blue.s2.ipc.n1151031.searchnetwork.SearchWorkbookRequestDTO;
 
 import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
 import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
 import lapr4.green.s1.ipc.n1150532.comm.connection.HandlerConnectionDetailsRequestDTO;
 import lapr4.green.s1.ipc.n1150532.comm.connection.PacketEncapsulatorDTO;
-import lapr4.red.s3.ipc.n1150613.NetworkSearchByFile.Directory;
-import lapr4.red.s3.ipc.n1150613.NetworkSearchByFile.FileDTO;
 
 /**
  * The class that handles request DTO's.
@@ -49,12 +46,14 @@ public class HandlerSearchWorkbookRequestDTO implements CommHandler, Serializabl
      */
     @Override
     public void handleDTO(Object dto, TrafficOutputStream outStream) {
-        RegexUtil reg = new RegexUtil("[a-zA-Z]+\\.cls", "[a-zA-Z.]+");
+
         lastReceivedDTO = dto;
         List<SearchResults> results = new ArrayList();
         PacketEncapsulatorDTO encapsulator = (PacketEncapsulatorDTO) dto;
         SearchWorkbookRequestDTO request = (SearchWorkbookRequestDTO) encapsulator.getDTO();
-        String workbookName = request.getWorkbookName();
+        String namePattern = request.getNamePattern();
+        String contentPattern = request.getContentPattern();
+        RegexUtil reg = new RegexUtil(namePattern, contentPattern);
         Directory dic = new Directory(new File(System.getProperty("user.home") + "/Desktop"));  // change to C:/ ----------------
 
         try {
