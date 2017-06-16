@@ -50,8 +50,8 @@ public class ControllerFindWorkbooks implements Controller {
      *
      * @param filePath to the workbook to load
      * @return the workbook
-     * @throws IOException
-     * @throws ClassNotFoundException
+     * @throws IOException if the file could not be loaded correctly
+     * @throws java.lang.ClassNotFoundException exception
      */
     public Workbook load(String filePath) throws IOException, ClassNotFoundException {
         return this.rootPath.load(new File(filePath));
@@ -62,8 +62,8 @@ public class ControllerFindWorkbooks implements Controller {
      *
      * @param filePath to the workbook to load
      * @return the workbook
-     * @throws IOException
-     * @throws ClassNotFoundException
+     * @throws IOException preview interface is not possible
+     * @throws ClassNotFoundException load is not possible
      */
     public Workbook loadPrev(String filePath) throws IOException, ClassNotFoundException {
         

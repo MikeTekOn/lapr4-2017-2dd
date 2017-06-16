@@ -90,12 +90,20 @@ public class Table implements Serializable {
         return ((HeaderRow) cells.get(0)).getIndexByContent(ctx);
     }
     
-    public void removeFilter(){
-        filter=null;
+
+
+    /**
+     * @return the filter
+     */
+    public String getFilter() {
+        return filter;
     }
-    
-    public void addfilter(String filter){
-        filter=filter;
+
+    /**
+     * @param filter the filter to set
+     */
+    public void setFilter(String filter) {
+        this.filter = filter;
     }
 
 }

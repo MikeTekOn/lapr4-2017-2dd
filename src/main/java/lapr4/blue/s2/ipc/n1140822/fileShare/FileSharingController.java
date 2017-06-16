@@ -37,9 +37,20 @@ public class FileSharingController {
         return true;
     }
 
+    /**
+     * Created by João Cardoso - 1150943
+     * When adding a file to the downloads list, verfifies if it exists, it it does exist the download info
+     * is updated, if it doesn't exist it is added to the list
+     * @param filename
+     * @param downloadInfo
+     */
     public void addToDownloadsList(String filename, DownloadInfo downloadInfo){
         Map<String,DownloadInfo> downloads = DownloadsListPersistence.getDownloads();
-        downloads.put(filename,downloadInfo);
+        if(downloads.containsKey(filename)){
+            downloads.replace(filename,downloadInfo);
+        }else{
+            downloads.put(filename,downloadInfo);
+        }
         DownloadsListPersistence.saveList(downloads);
     }
 
