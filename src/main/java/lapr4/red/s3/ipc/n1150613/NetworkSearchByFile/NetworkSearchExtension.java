@@ -2,8 +2,8 @@ package lapr4.red.s3.ipc.n1150613.NetworkSearchByFile;
 
 import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.UIExtension;
-import lapr4.blue.s2.ipc.n1151031.searchnetwork.ui.SearchWorkbookNetworkUIExtension;
 import lapr4.blue.s2.ipc.n1151031.searchnetwork.SearchWorkbookNetworkExtension;
+import lapr4.red.s3.ipc.n1150613.NetworkSearchByFile.ui.NetworkSearchUIExtension;
 
 /**
  * The Search workbook in the network Extension.
@@ -25,7 +25,7 @@ public class NetworkSearchExtension extends SearchWorkbookNetworkExtension {
      */
     @Override
     public UIExtension getUIExtension(UIController uiController) {
-        return new SearchWorkbookNetworkUIExtension(this, uiController);
+        return new NetworkSearchUIExtension(this, uiController);
     }
 
     @Override

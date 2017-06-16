@@ -3,15 +3,13 @@ package lapr4.red.s3.ipc.n1150613.NetworkSearchByFile;
 import csheets.ui.ctrl.BaseAction;
 import java.awt.event.ActionEvent;
 import java.util.Observer;
-import lapr4.blue.s2.ipc.n1151031.searchnetwork.HandlerSearchWorkbookResponseDTO;
-import lapr4.blue.s2.ipc.n1151031.searchnetwork.SearchWorkbookRequestDTO;
 import lapr4.green.s1.ipc.n1150532.comm.CommUDPClient;
 
 /**
  * An action to perform a UDP broadcast searching for workbooks (by name) open
  * in other instances of CleanSheets.
  *
- * @author Tiago Correia - 1151031@isep.ipp.pt
+ * @author Diogo Guedes - 1150613@isep.ipp.pt
  */
 public class NetworkSearchAction extends BaseAction {
 
@@ -34,11 +32,13 @@ public class NetworkSearchAction extends BaseAction {
      * The observer who will collect the found workbooks.
      */
     private final Observer table;
-    
+
     /**
      * The name of the workbook to search.
      */
-    private final String workbookName;
+    private final String namePattern;
+
+    
 
     /**
      * The full constructor of the action.
@@ -46,11 +46,13 @@ public class NetworkSearchAction extends BaseAction {
      * @param table the table
      * @param portNumber the port number
      * @param workbookName the workbook name
+     * @param content
      */
     public NetworkSearchAction(Observer table, int portNumber, String workbookName) {
         this.table = table;
         this.portNumber = portNumber;
-        this.workbookName = workbookName;
+        this.namePattern = workbookName;
+      
     }
 
     @Override
@@ -60,7 +62,7 @@ public class NetworkSearchAction extends BaseAction {
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        SearchWorkbookRequestDTO searchRequest = new SearchWorkbookRequestDTO(workbookName);
+        SearchWorkbookRequestDTO searchRequest = new SearchWorkbookRequestDTO(namePattern);
         CommUDPClient worker = new CommUDPClient(searchRequest, portNumber, TIMEOUT);
         HandlerSearchWorkbookResponseDTO handler = new HandlerSearchWorkbookResponseDTO();
         handler.addObserver(table);
