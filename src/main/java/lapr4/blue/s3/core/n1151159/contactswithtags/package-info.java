@@ -185,7 +185,7 @@
  * </ol>
  * <p><b>Today</b></p>
  * <ol>
- *     <li>Spring review & retrospective.</li>
+ *     <li>Spring review &amp; retrospective.</li>
  *     <li>Brainstorming about what was done in core.</li>
  *     <li>Start the functional increment analysis.</li>
  * </ol>
