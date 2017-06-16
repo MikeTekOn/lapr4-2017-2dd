@@ -23,9 +23,9 @@ public class SearchWorkbookRequestDTO implements Serializable, DTO {
      * @param namePattern
      * @param contentPattern
      */
-    public SearchWorkbookRequestDTO(String namePattern, String contentPattern) {
+    public SearchWorkbookRequestDTO(String namePattern) {
         this.namePattern = namePattern;
-        this.contentPattern = contentPattern;
+       
     }
 
     /**

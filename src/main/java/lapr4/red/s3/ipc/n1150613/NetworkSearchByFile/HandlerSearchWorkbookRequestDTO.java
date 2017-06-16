@@ -51,16 +51,16 @@ public class HandlerSearchWorkbookRequestDTO implements CommHandler, Serializabl
         List<SearchResults> results = new ArrayList();
         PacketEncapsulatorDTO encapsulator = (PacketEncapsulatorDTO) dto;
         SearchWorkbookRequestDTO request = (SearchWorkbookRequestDTO) encapsulator.getDTO();
-        String namePattern = request.getNamePattern();
-        String contentPattern = request.getContentPattern();
-        RegexUtil reg = new RegexUtil(namePattern, contentPattern);
+        //String namePattern = request.getNamePattern();
+        //String contentPattern = request.getContentPattern();
+        //RegexUtil reg = new RegexUtil(namePattern, contentPattern);
         Directory dic = new Directory(new File(System.getProperty("user.home") + "/Desktop"));  // change to C:/ ----------------
 
         try {
             dic.searchFiles();
             for (FileDTO f : dic.getDTO()) {
                 Workbook w = dic.load(new File(f.getFilePath()));
-                if ((reg.checkIfContentMatches(w)) || (reg.checkIfNameMatches(f.getFileName()))) {
+              //  if ((reg.checkIfContentMatches(w)) || (reg.checkIfNameMatches(f.getFileName()))) {
                     List<Spreadsheet> spreadsheetList = new ArrayList();
                     int numSpreadsheets = w.getSpreadsheetCount();
                     for (int i = 0; i < numSpreadsheets; i++) {
@@ -69,7 +69,7 @@ public class HandlerSearchWorkbookRequestDTO implements CommHandler, Serializabl
                     SearchResults se = new SearchResults(f.getFileName(), spreadsheetList, null);
                     results.add(se);
                 }
-            }
+            
         } catch (IOException | ClassNotFoundException ex) {
             System.out.println("erro");
         }
@@ -81,7 +81,7 @@ public class HandlerSearchWorkbookRequestDTO implements CommHandler, Serializabl
             if (uiController.getFile(workbook) != null) {
                 String name = uiController.getFile(workbook).getName();
                 List<Spreadsheet> spreadsheetList = new ArrayList();
-                if ((reg.checkIfContentMatches(workbook)) || (reg.checkIfNameMatches(name))) {
+               // if ((reg.checkIfContentMatches(workbook)) || (reg.checkIfNameMatches(name))) {
                     int numSpreadsheets = workbook.getSpreadsheetCount();
                     for (int i = 0; i < numSpreadsheets; i++) {
                         spreadsheetList.add(workbook.getSpreadsheet(i));
@@ -89,7 +89,7 @@ public class HandlerSearchWorkbookRequestDTO implements CommHandler, Serializabl
                     SearchResults searchResult = new SearchResults(name, spreadsheetList, null);
                     results.add(searchResult);
                 }
-            }
+            
         }
 
         SearchWorkbookResponseDTO reply = new SearchWorkbookResponseDTO(results);

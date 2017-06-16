@@ -38,7 +38,7 @@ public class NetworkSearchAction extends BaseAction {
      */
     private final String namePattern;
 
-    private final String contentPattern;
+    
 
     /**
      * The full constructor of the action.
@@ -48,11 +48,11 @@ public class NetworkSearchAction extends BaseAction {
      * @param workbookName the workbook name
      * @param content
      */
-    public NetworkSearchAction(Observer table, int portNumber, String workbookName, String content) {
+    public NetworkSearchAction(Observer table, int portNumber, String workbookName) {
         this.table = table;
         this.portNumber = portNumber;
         this.namePattern = workbookName;
-        contentPattern = content;
+      
     }
 
     @Override
@@ -62,7 +62,7 @@ public class NetworkSearchAction extends BaseAction {
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        SearchWorkbookRequestDTO searchRequest = new SearchWorkbookRequestDTO(namePattern, contentPattern);
+        SearchWorkbookRequestDTO searchRequest = new SearchWorkbookRequestDTO(namePattern);
         CommUDPClient worker = new CommUDPClient(searchRequest, portNumber, TIMEOUT);
         HandlerSearchWorkbookResponseDTO handler = new HandlerSearchWorkbookResponseDTO();
         handler.addObserver(table);
