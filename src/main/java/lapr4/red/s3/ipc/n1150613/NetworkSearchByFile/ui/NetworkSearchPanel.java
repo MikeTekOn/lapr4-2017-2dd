@@ -78,9 +78,7 @@ public class NetworkSearchPanel extends JPanel {
         contentField.setPreferredSize(new Dimension(100, 25));
         bottomPanel.add(textLabel);
         bottomPanel.add(nameField);
-        bottomPanel.add(contentLabel);
-        bottomPanel.add(contentField);
-        bottomPanel.add(createSearchButton(),BorderLayout.SOUTH);
+        bottomPanel.add(createSearchButton());
         return bottomPanel;
     }
 

@@ -46,14 +46,12 @@ public class HandlerSearchWorkbookRequestDTO implements CommHandler, Serializabl
      */
     @Override
     public void handleDTO(Object dto, TrafficOutputStream outStream) {
-
         lastReceivedDTO = dto;
-        List<SearchResults> results = new ArrayList();
+
         PacketEncapsulatorDTO encapsulator = (PacketEncapsulatorDTO) dto;
         SearchWorkbookRequestDTO request = (SearchWorkbookRequestDTO) encapsulator.getDTO();
+        List<SearchResults> results = new ArrayList();
         String names = request.getNamePattern();
-        //String contentPattern = request.getContentPattern();
-        //RegexUtil reg = new RegexUtil(namePattern, contentPattern);
         Directory dic = new Directory(new File(System.getProperty("user.home") + "/Desktop"));  // change to C:/ ----------------
 
         try {
@@ -78,24 +76,24 @@ public class HandlerSearchWorkbookRequestDTO implements CommHandler, Serializabl
 
         //searches for active workbooks with received name pattern
         //returns a list of workbooks found with the name and spreadsheet list
+        
         Stack<Workbook> activeWorkbooks = uiController.getActiveWorkbooks();
         for (Workbook workbook : activeWorkbooks) {
             if (uiController.getFile(workbook) != null) {
                 String name = uiController.getFile(workbook).getName();
                 List<Spreadsheet> spreadsheetList = new ArrayList();
-                // if ((reg.checkIfContentMatches(workbook)) || (reg.checkIfNameMatches(name))) {
-                int numSpreadsheets = workbook.getSpreadsheetCount();
-                for (int i = 0; i < numSpreadsheets; i++) {
-                    spreadsheetList.add(workbook.getSpreadsheet(i));
+                if (name.contains(names) && !names.equals("")) {
+                    int numSpreadsheets = workbook.getSpreadsheetCount();
+                    for (int i = 0; i < numSpreadsheets; i++) {
+                        spreadsheetList.add(workbook.getSpreadsheet(i));
+                    }
+                    SearchResults searchResult = new SearchResults(name, spreadsheetList, null);
+                    results.add(searchResult);
                 }
-                SearchResults searchResult = new SearchResults(name, spreadsheetList, null);
-                results.add(searchResult);
             }
-
         }
 
         SearchWorkbookResponseDTO reply = new SearchWorkbookResponseDTO(results);
-
         try {
             outStream.write(reply);
             outStream.flush();
@@ -103,6 +101,7 @@ public class HandlerSearchWorkbookRequestDTO implements CommHandler, Serializabl
             Logger.getLogger(HandlerConnectionDetailsRequestDTO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
 
     /**
      * A getter of the last received DTO.
