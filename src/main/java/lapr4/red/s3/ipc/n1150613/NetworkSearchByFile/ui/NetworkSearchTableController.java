@@ -86,24 +86,30 @@ public class NetworkSearchTableController extends AbstractTableModel {
         SearchResults result = list.get(rowIndex);
         Object data = result;
 
-        if (columnIndex == 0) {
-            data = result.getAddress().getHostName();
-        } else if (columnIndex == 1) {
-            data = result.getWorkbookName();
-        } else if (columnIndex == 2) {
-            data = result.getSpreadsheetList().size();
-        } else if (columnIndex == 3) {
-            StringBuilder spreadsheetNames = new StringBuilder();
-            for (int i = 0; i < result.getSpreadsheetList().size(); i++) {
-                if (i == result.getSpreadsheetList().size() - 1) {
-                    spreadsheetNames.append(result.getSpreadsheetList().get(i).getTitle());
-                } else {
-                    spreadsheetNames.append(result.getSpreadsheetList().get(i).getTitle() + ", ");
-                }
-            }
-            data = spreadsheetNames.toString();
-        } else if (columnIndex == 4) {
-
+        switch (columnIndex) {
+            case 0:
+                data = result.getAddress().getHostName();
+                break;
+            case 1:
+                data = result.getWorkbookName();
+                break;
+            case 2:
+                data = result.getSpreadsheetList().size();
+                break;
+            case 3:
+                StringBuilder spreadsheetNames = new StringBuilder();
+                for (int i = 0; i < result.getSpreadsheetList().size(); i++) {
+                    if (i == result.getSpreadsheetList().size() - 1) {
+                        spreadsheetNames.append(result.getSpreadsheetList().get(i).getTitle());
+                    } else {
+                        spreadsheetNames.append(result.getSpreadsheetList().get(i).getTitle() + ", ");
+                    }
+                }   data = spreadsheetNames.toString();
+                break;
+            case 4:
+                break;
+            default:
+                break;
         }
         return data;
     }

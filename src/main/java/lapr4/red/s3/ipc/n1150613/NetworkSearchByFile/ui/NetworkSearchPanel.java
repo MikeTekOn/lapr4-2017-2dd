@@ -32,6 +32,8 @@ public class NetworkSearchPanel extends JPanel {
      * The input field for the name to search.
      */
     private JTextField nameField;
+    
+    private JTextField contentField;
 
     public NetworkSearchPanel(UIController uiController, Extension extension) {
         super(new BorderLayout());
@@ -68,9 +70,12 @@ public class NetworkSearchPanel extends JPanel {
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JLabel textLabel = new JLabel("Name:");
         nameField = new JTextField();
-        nameField.setPreferredSize(new Dimension(150, 25));
+        contentField = new JTextField();
+        nameField.setPreferredSize(new Dimension(100, 25));
+        contentField.setPreferredSize(new Dimension(100, 25));
         bottomPanel.add(textLabel);
         bottomPanel.add(nameField);
+        bottomPanel.add(contentField);
         bottomPanel.add(createSearchButton());
         return bottomPanel;
     }
@@ -98,7 +103,7 @@ public class NetworkSearchPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 CommExtension ce = (CommExtension) ExtensionManager.getInstance().getExtension(CommExtension.NAME);
                 resultsTable.clear();
-                (new SearchWorkbookNetworkAction(resultsTable, ce.getUDPServerPortNumber(), nameField.getText())).actionPerformed(e);
+                (new SearchWorkbookNetworkAction(resultsTable, ce.getUDPServerPortNumber(), nameField.getText(),contentField.getText())).actionPerformed(e);
             }
         });
         return button;

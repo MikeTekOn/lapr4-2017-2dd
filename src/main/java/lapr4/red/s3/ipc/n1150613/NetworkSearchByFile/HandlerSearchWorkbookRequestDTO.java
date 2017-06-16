@@ -49,29 +49,30 @@ public class HandlerSearchWorkbookRequestDTO implements CommHandler, Serializabl
      */
     @Override
     public void handleDTO(Object dto, TrafficOutputStream outStream) {
+        RegexUtil reg = new RegexUtil("[a-zA-Z]+\\.cls", "[a-zA-Z.]+");
         lastReceivedDTO = dto;
         List<SearchResults> results = new ArrayList();
         PacketEncapsulatorDTO encapsulator = (PacketEncapsulatorDTO) dto;
         SearchWorkbookRequestDTO request = (SearchWorkbookRequestDTO) encapsulator.getDTO();
         String workbookName = request.getWorkbookName();
-        Directory dic = new Directory(new File(System.getProperty("user.home") + "/Desktop"));  // change to C:/
+        Directory dic = new Directory(new File(System.getProperty("user.home") + "/Desktop"));  // change to C:/ ----------------
 
         try {
             dic.searchFiles();
             for (FileDTO f : dic.getDTO()) {
                 Workbook w = dic.load(new File(f.getFilePath()));
-                List<Spreadsheet> spreadsheetList = new ArrayList();
-                int numSpreadsheets = w.getSpreadsheetCount();
-                for (int i = 0; i < numSpreadsheets; i++) {
-                    spreadsheetList.add(w.getSpreadsheet(i));
+                if ((reg.checkIfContentMatches(w)) && (reg.checkIfNameMatches(f.getFileName()))) {
+                    List<Spreadsheet> spreadsheetList = new ArrayList();
+                    int numSpreadsheets = w.getSpreadsheetCount();
+                    for (int i = 0; i < numSpreadsheets; i++) {
+                        spreadsheetList.add(w.getSpreadsheet(i));
+                    }
+                    SearchResults se = new SearchResults(f.getFileName(), spreadsheetList, null);
+                    results.add(se);
                 }
-                SearchResults se = new SearchResults(f.getFileName(), spreadsheetList, null);
-                results.add(se);
             }
-        } catch (IOException ex) {
+        } catch (IOException | ClassNotFoundException ex) {
             System.out.println("erro");
-        } catch (ClassNotFoundException ex) {
-            System.out.println("123");
         }
 
         //searches for active workbooks with received name pattern
@@ -81,7 +82,7 @@ public class HandlerSearchWorkbookRequestDTO implements CommHandler, Serializabl
             if (uiController.getFile(workbook) != null) {
                 String name = uiController.getFile(workbook).getName();
                 List<Spreadsheet> spreadsheetList = new ArrayList();
-                if (name.contains(workbookName) && !workbookName.equals("")) {
+                if ((reg.checkIfContentMatches(workbook)) && (reg.checkIfNameMatches(name))) {
                     int numSpreadsheets = workbook.getSpreadsheetCount();
                     for (int i = 0; i < numSpreadsheets; i++) {
                         spreadsheetList.add(workbook.getSpreadsheet(i));
@@ -93,6 +94,7 @@ public class HandlerSearchWorkbookRequestDTO implements CommHandler, Serializabl
         }
 
         SearchWorkbookResponseDTO reply = new SearchWorkbookResponseDTO(results);
+
         try {
             outStream.write(reply);
             outStream.flush();
