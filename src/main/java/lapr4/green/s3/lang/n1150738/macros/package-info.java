@@ -31,11 +31,18 @@
  * <p>
  * <b>Tests</b>
  * <p>
+ * <ul>
+ *     <li>ensureLocalVariableIsDetected()</li>
+ * </ul>
  * <p>
  * <p>
  * <p>
  * <p>
  * <b>Design</b><p>
+ *
+ * Changes on Grammar: Add token for local variable name on rule atom and assignment
+ * Changes on Evaluator: On visitAssignement create or update localVar on VarContentor of locals
+ *                      On visitAtom return value of the variable
  *
  *
  * @author Henrique Oliveira [1150738@isep.ipp.pt]
