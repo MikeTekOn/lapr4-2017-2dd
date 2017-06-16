@@ -34,21 +34,23 @@ public class ExportToDatabaseController {
     private String tableName;
 
     /**
+     * The database url.
+     */
+    private String db_url;
+
+    /**
      * Creates a new export to database controller.
      *
      * @param uiController the user interface controller
      * @param range the range of cells
      * @param tableName the table name
      */
-    public ExportToDatabaseController(UIController uiController, CellRange range, String tableName) {
+    public ExportToDatabaseController(UIController uiController, CellRange range, String tableName, String db_url) {
         this.uiController = uiController;
         this.range = range;
         this.tableName = tableName;
+        this.db_url = db_url;
     }
-    
- /*public void changeTableName(String newName){
-        this.tableName = newName;
-    }*/
 
     /**
      * Exports a range of cells to the database.
@@ -56,7 +58,7 @@ public class ExportToDatabaseController {
      * @throws SQLException
      */
     public void export(boolean tableExistsAndWillBeDeleted) throws SQLException, InterruptedException {
-        ThreadExport thread = new ThreadExport(range, new WorkbookHandler(uiController.getActiveWorkbook()), tableName, uiController.getActiveSpreadsheet());
+        ThreadExport thread = new ThreadExport(range, new WorkbookHandler(uiController.getActiveWorkbook()), tableName, uiController.getActiveSpreadsheet(), db_url);
         thread.kill();
     }
 

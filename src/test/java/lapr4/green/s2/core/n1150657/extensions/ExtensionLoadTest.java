@@ -82,6 +82,8 @@ public class ExtensionLoadTest {
     /**
      * Test of numberVersionsByExtension method, of class ExtensionLoad.
      */
+   
+    
     @Test
     public void testNumberVersionsByExtension() {
         System.out.println("numberVersionsByExtension");
@@ -92,7 +94,7 @@ public class ExtensionLoadTest {
         assertEquals(expResult, result);
         
         extensionName = SearchWorkbookExtension.NAME;
-        expResult = 2;
+        expResult = 3;
         result = instance.numberVersionsByExtension(extensionName);
         assertEquals(expResult, result);
         

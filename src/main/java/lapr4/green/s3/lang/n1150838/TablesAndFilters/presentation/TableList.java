@@ -76,7 +76,7 @@ public class TableList extends AbstractListModel {
     }
         /**
      *
-     * @param cell
+     * @param table
      * @return the description of the cell
      */
     public String buildTableDescription(Table table){

@@ -6,8 +6,8 @@
 package lapr4.blue.s1.lang.n1151452.formula.compiler;
 
 import csheets.core.Cell;
+import csheets.core.SpreadsheetImpl;
 import csheets.core.Value;
-import csheets.core.Workbook;
 import csheets.core.formula.*;
 import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.core.formula.compiler.IllegalFunctionCallException;
@@ -18,7 +18,7 @@ import csheets.core.formula.lang.UnknownElementException;
 import csheets.ui.ctrl.UIController;
 import lapr4.blue.s1.lang.n1140822.beanshellwindow.BeanShellInstance;
 import lapr4.blue.s1.lang.n1140822.beanshellwindow.BeanShellLoader;
-import lapr4.blue.s1.lang.n1151452.formula.lang.Language;
+import lapr4.green.s3.lang.n1150901.evalAndWhileLoops.lang.Language;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperation;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperator;
 import lapr4.red.s2.lang.n1150623.globalVariables.VarContentor;
@@ -28,18 +28,20 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import lapr4.green.s3.lang.n1150532.variables.Variable;
+import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.DataRow;
+import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.Table;
+import lapr4.green.s3.lang.n1150838.TablesAndFilters.exception.InvalidIndexException;
+import lapr4.green.s3.lang.n1150838.Util.StringUtil;
 
 /**
  * Represents the Formula Visitor (ANTLR4).
  *
  * @author Diana Silva {1151088@isep.ipp.pt]} on 03/06/17
  * @author Daniel Gonçalves [1151452@isep.ipp.pt] on 01/06/17.
- *
  * @author Guilherme Ferreira 1150623 corrected to work with 'Variable' class and VarContentor
  * @author Ricardo Catalão (1150385) on 08/06/2017
+ * @author Miguel Silva (1150901) on 15/06/2017
  * @author jrt
- * 
- * 
  * @author Manuel Meireles (1150532):
  * <ul>
  * <li>I've changed the Variable class (from
@@ -49,18 +51,23 @@ import lapr4.green.s3.lang.n1150532.variables.Variable;
  * <li>I've updated the methods "visitAtom" and "visitAssignment" in order to
  * handle the new variable class.</li>
  * </ul>
-*/
+ */
 @SuppressWarnings("Duplicates")
 public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
+
     private Cell cell = null;
     private int numberOfErrors;
     private final StringBuilder errorBuffer;
     private final UIController uiController;
 
-    /**The starter lexical rule for temporary variables*/
-    private static final char TEMP_VAR_STARTER='_';
+    /**
+     * The starter lexical rule for temporary variables
+     */
+    private static final char TEMP_VAR_STARTER = '_';
 
-    /**The temporary variables manager*/
+    /**
+     * The temporary variables manager
+     */
     private final VarContentor temp_contentor;
 
     public FormulaEvalVisitor(Cell cell, UIController uiController) {
@@ -84,7 +91,7 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
         super.visitScript(ctx);
 
         StringBuilder builder = new StringBuilder();
-        for(int i=0; i<ctx.getChildCount(); i++){
+        for (int i = 0; i < ctx.getChildCount(); i++) {
             builder.append(ctx.getChild(i).getText());
             builder.append(" "); // WhiteSpace seems to always be ignored so... to not break things up, this was placed
         }
@@ -93,23 +100,26 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
     }
 
     /**
-     * Handles the behaviour of visiting the ShellScript grammar node. The shellScript node will have the information
-     * needed for what code the beanShell should execute, but also how to execute it.
+     * Handles the behaviour of visiting the ShellScript grammar node. The
+     * shellScript node will have the information needed for what code the
+     * beanShell should execute, but also how to execute it.
      *
-     * The node can start with 2 headers. (1) "&lt;![SHELL[" or (2) "&lt;[SHELL[".
-     * If (1) is chosen, the bean shell code should be run asynchronously and the result of visiting this node is
-     * null. If (2) is chosen, the code should be run synchronously and the result of visiting this node is the return
-     * value of visiting the bean shell code (normally, the value of the last instruction executed).
+     * The node can start with 2 headers. (1) "&lt;![SHELL[" or (2)
+     * "&lt;[SHELL[". If (1) is chosen, the bean shell code should be run
+     * asynchronously and the result of visiting this node is null. If (2) is
+     * chosen, the code should be run synchronously and the result of visiting
+     * this node is the return value of visiting the bean shell code (normally,
+     * the value of the last instruction executed).
      */
     @Override
     public Expression visitShellscript(BlueFormulaParser.ShellscriptContext ctx) {
         BeanShellLoader loader = new BeanShellLoader();
 
-        Literal literal = (Literal)visit(ctx.getChild(1));
+        Literal literal = (Literal) visit(ctx.getChild(1));
         String code = literal.toString().substring(1, literal.toString().length() - 1);
         BeanShellInstance shell = loader.create(code, uiController, temp_contentor);
 
-        if(ctx.getChild(0).getText().charAt(1) == '!'){ // It should run asynchronously
+        if (ctx.getChild(0).getText().charAt(1) == '!') { // It should run asynchronously
             shell.setAsynchronous();
         }
 
@@ -141,7 +151,7 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
             return visit(ctx.concatenation(0));
         }
 
-        return visit(ctx.for_loop());
+        return visitChildren(ctx);
     }
 
     @Override
@@ -188,10 +198,9 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
     public Expression visitAtom(BlueFormulaParser.AtomContext ctx) {
         if (ctx.getChildCount() == 3) {
             return visit(ctx.getChild(1));
-        }
-        else if (ctx.VARIABLE_NAME() != null) {
+        } else if (ctx.VARIABLE_NAME() != null) {
 
-            String tempVarName=ctx.VARIABLE_NAME().getText();
+            String tempVarName = ctx.VARIABLE_NAME().getText();
 
             try {
                 return getExpressionOfVariable(tempVarName, temp_contentor);
@@ -199,9 +208,8 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
                 addVisitError(ex.getLocalizedMessage());
             }
 
-        }
-        else if (ctx.G_VARIABLE_NAME() != null){
-            String tempVarName=ctx.G_VARIABLE_NAME().getText();
+        } else if (ctx.G_VARIABLE_NAME() != null) {
+            String tempVarName = ctx.G_VARIABLE_NAME().getText();
 
             try {
                 return getExpressionOfVariable(tempVarName, uiController.getActiveWorkbook().globalVariables());
@@ -243,6 +251,25 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
     @Override
     public Expression visitReference(BlueFormulaParser.ReferenceContext ctx) {
         try {
+
+            if (ctx.getChildCount() == 1 && ctx.getChild(0).getChildCount() == 2) {
+                Table tableCtx = ((SpreadsheetImpl) uiController.getActiveSpreadsheet()).getTable(cell);
+                if (ctx.getChild(0).getChild(1).getChildCount() > 1) {
+                    String str = StringUtil.removeStartEndSpecialChars(ctx.getChild(0).getChild(1).getChild(1).getText());
+                    int index = tableCtx.getHeaderIndex(str);
+                    if (index == -1) {
+                        throw new InvalidIndexException("Invalid index!");
+                    }
+                    Cell referenceCell = ((DataRow) tableCtx.getRowByCell(cell)).getCellAt(index);
+
+                    return new CellReference(referenceCell.getSpreadsheet(), referenceCell.getAddress().toString());
+                } else {
+                    String number = StringUtil.removeStartEndSpecialChars(ctx.getChild(0).getChild(1).getText());
+                    Cell referenceCell = ((DataRow) tableCtx.getRowByCell(cell)).getCellAt(Integer.parseInt(number)-1);
+
+                    return new CellReference(referenceCell.getSpreadsheet(), referenceCell.getAddress().toString());
+                }
+            }
             if (ctx.getChildCount() == 3) {
                 BinaryOperator operator = Language.getInstance().getBinaryOperator(ctx.getChild(1).getText());
                 return new ReferenceOperation(
@@ -251,13 +278,13 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
                         new CellReference(cell.getSpreadsheet(), ctx.getChild(2).getText())
                 );
             } else {
-                if(ctx.getText().equals("!CELL")){
+                if (ctx.getText().equals("!CELL")) {
                     return new CellReference(cell.getSpreadsheet(), cell.getAddress().toString());
-                }else{
+                } else {
                     return new CellReference(cell.getSpreadsheet(), ctx.getText());
                 }
             }
-        } catch (ParseException | UnknownElementException ex) {
+        } catch (ParseException | UnknownElementException | InvalidIndexException ex) {
             addVisitError(ex.getMessage());
         }
         return null;
@@ -274,7 +301,7 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
 
                 String value = ctx.getText().substring(1, ctx.getText().length() - 1); // Remove Quotes
                 return new Literal(Value.parseValue(value, Value.Type.BOOLEAN, Value.Type.DATE));
-            } 
+            }
         }
 
         return null;
@@ -303,12 +330,11 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
                     addVisitError(ex.getMessage());
                 }
 
-
             } else if (ctx.VARIABLE_NAME() != null) {
                 //it´s a temporary variable
                 String name = ctx.VARIABLE_NAME().getText();
-                return setExpressionOfVariable(name, visit(ctx.comparison()),temp_contentor);
-            }else if(ctx.G_VARIABLE_NAME() != null){
+                return setExpressionOfVariable(name, visit(ctx.comparison()), temp_contentor);
+            } else if (ctx.G_VARIABLE_NAME() != null) {
                 //it's a global variable
                 String name = ctx.G_VARIABLE_NAME().getText();
                 return setExpressionOfVariable(name, visit(ctx.comparison()), uiController.getActiveWorkbook().globalVariables());
@@ -373,6 +399,59 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
         }
         return visitChildren(ctx);
     }
+    
+    @Override
+    public Expression visitDo_while_loop(BlueFormulaParser.Do_while_loopContext ctx) {
+
+        if (ctx.DOWHILE() != null) {
+            try {
+                // Get n-ary operator that identifies a dowhile loop
+                String operatorID = ctx.DOWHILE().getText().toLowerCase();
+                NaryOperator operator = Language.getInstance().getNaryOperator(operatorID);
+
+                // Get # of expressions by: dividing by 2 to not count for SEMI-COLON/PARENTHESIS & - 1 for the "dowhile"
+                Expression expressions[] = new Expression[(ctx.getChildCount() / 2) - 1];
+
+                // #1 Convert all the child nodes
+                for (int nChild = 2, i = 0; i < expressions.length; nChild += 2, i++) {
+                    expressions[i] = visit(ctx.getChild(nChild));
+                }
+
+                return new NaryOperation(operator, expressions);
+
+            } catch (UnknownElementException ex) {
+                addVisitError(ex.getMessage());
+            }
+        }
+        return visitChildren(ctx);
+    }
+    
+        @Override
+    public Expression visitWhile_do_loop(BlueFormulaParser.While_do_loopContext ctx) {
+
+        if (ctx.WHILEDO() != null) {
+            try {
+                // Get n-ary operator that identifies a whiledo loop
+                String operatorID = ctx.WHILEDO().getText().toLowerCase();
+                NaryOperator operator = Language.getInstance().getNaryOperator(operatorID);
+
+                // Get # of expressions by: dividing by 2 to not count for SEMI-COLON/PARENTHESIS & - 1 for the "whiledo"
+                Expression expressions[] = new Expression[(ctx.getChildCount() / 2) - 1];
+
+                // #1 Convert all the child nodes
+                for (int nChild = 2, i = 0; i < expressions.length; nChild += 2, i++) {
+
+                    expressions[i] = visit(ctx.getChild(nChild));
+                }
+
+                return new NaryOperation(operator, expressions);
+
+            } catch (UnknownElementException ex) {
+                addVisitError(ex.getMessage());
+            }
+        }
+        return visitChildren(ctx);
+    }
 
     /**
      * Adds an error to the error buffer.
@@ -383,11 +462,10 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
         errorBuffer.append(msg).append("\n");
         numberOfErrors++;
     }
-    
 
     /**
      * It provides the expression stored in a variable from the container.
-     * 
+     *
      * @param visitText The text resulting from the visit. It must contain the
      * variable's name and, optionally, the index number within square brackets.
      * @param container The container of the variables. It might be the workbook
@@ -395,14 +473,14 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
      * variables.
      * @return It returns the expression retrieved from the variable's index.
      */
-    private Expression getExpressionOfVariable(String visitText, VarContentor container){
+    private Expression getExpressionOfVariable(String visitText, VarContentor container) {
         Expression theExpression;
         String[] variableInfo = visitText.split("\\[");
-        if(variableInfo.length==2){
-            try{
-                int index = Integer.parseInt(variableInfo[1].substring(0, (variableInfo[1].length()-1)));
+        if (variableInfo.length == 2) {
+            try {
+                int index = Integer.parseInt(variableInfo[1].substring(0, (variableInfo[1].length() - 1)));
                 theExpression = container.getExpressionOfVariable(variableInfo[0], index);
-            } catch(NumberFormatException | IndexOutOfBoundsException ex){
+            } catch (NumberFormatException | IndexOutOfBoundsException ex) {
                 throw new IllegalArgumentException("Unknown Index.");
             }
         } else {
@@ -413,7 +491,7 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
 
     /**
      * It stores the expression in a variable from the container.
-     * 
+     *
      * @param visitText The text resulting from the visit. It must contain the
      * variable's name and, optionally, the index number within square brackets.
      * @param theExpression The expression to be stored.
@@ -422,13 +500,13 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
      * variables.
      * @return It returns the same expression that is received.
      */
-    private Expression setExpressionOfVariable(String visitText, Expression theExpression, VarContentor container){
+    private Expression setExpressionOfVariable(String visitText, Expression theExpression, VarContentor container) {
         int index;
         String[] variableInfo = visitText.split("\\[");
-        if(variableInfo.length==2){
-            try{
-                index = Integer.parseInt(variableInfo[1].substring(0, (variableInfo[1].length()-1)));
-            } catch(NumberFormatException | IndexOutOfBoundsException ex){
+        if (variableInfo.length == 2) {
+            try {
+                index = Integer.parseInt(variableInfo[1].substring(0, (variableInfo[1].length() - 1)));
+            } catch (NumberFormatException | IndexOutOfBoundsException ex) {
                 throw new IllegalArgumentException("Unknown Index.");
             }
         } else {
@@ -439,4 +517,3 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
     }
 
 }
-

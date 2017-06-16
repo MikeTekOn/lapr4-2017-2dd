@@ -7,18 +7,18 @@ package lapr4.green.s3.lang.n1150838.TablesAndFilters.application;
 
 import csheets.core.Cell;
 import csheets.core.IllegalValueTypeException;
-import csheets.core.Spreadsheet;
 import csheets.core.SpreadsheetImpl;
 import csheets.core.formula.Expression;
+import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.ui.ctrl.UIController;
 import eapli.framework.application.Controller;
 import java.util.ArrayList;
 import java.util.List;
 import lapr4.blue.s1.lang.n1151031.formulastools.ConditionalStyleCompiler;
 import lapr4.green.s1.ipc.n1150800.importexportTXT.CellRange;
-import lapr4.green.s3.lang.n1150838.TablesAndFilters.Header;
-import lapr4.green.s3.lang.n1150838.TablesAndFilters.TableAndFiltersExtension;
-import lapr4.green.s3.lang.n1150838.TablesAndFilters.TableCellExtension;
+import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.DataRow;
+import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.HeaderRow;
+import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.Row;
 import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.Table;
 import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.TableBuilder;
 
@@ -40,8 +40,6 @@ public class TableAndFiltersController implements Controller {
      * The talble
      */
     private Table table;
-    
-
 
     /**
      *
@@ -67,10 +65,10 @@ public class TableAndFiltersController implements Controller {
     }
 
     public boolean defineTable() {
-        
+
         TableBuilder builder = new TableBuilder(selectedCells);
         Table table = builder.build();
-        this.table=table;
+        this.table = table;
         return ((SpreadsheetImpl) uiController.getActiveSpreadsheet()).addTable(table);
     }
 
@@ -82,21 +80,20 @@ public class TableAndFiltersController implements Controller {
     }
 
     public boolean isAvailableToDefine() {
-       return ((SpreadsheetImpl) uiController.getActiveSpreadsheet()).isAvailableToDefine(selectedCells);
+        return ((SpreadsheetImpl) uiController.getActiveSpreadsheet()).isAvailableToDefine(selectedCells);
     }
-    
-    public CellRange isDefined(Cell cell){
+
+    public CellRange isDefined(Cell cell) {
         return ((SpreadsheetImpl) uiController.getActiveSpreadsheet()).isDefined(cell);
     }
-    
-    public List<Table> activeTables(){
+
+    public List<Table> activeTables() {
         return ((SpreadsheetImpl) uiController.getActiveSpreadsheet()).getTables();
     }
 
     public boolean removeTable(Table d) {
-      return ((SpreadsheetImpl) uiController.getActiveSpreadsheet()).removeTable(d);
+        return ((SpreadsheetImpl) uiController.getActiveSpreadsheet()).removeTable(d);
     }
-    
 
     /**
      * @return the table
@@ -104,12 +101,22 @@ public class TableAndFiltersController implements Controller {
     public Table getTable() {
         return table;
     }
-    
-//    public boolean compile(){
-//        Expression expression = null;
-//        expression = ConditionalStyleCompiler.getInstance().compile(getDelegate(), getUserCondition(), uiController);
-//                SortedSet<Reference> references = (new ReferenceFetcher()).getReferences(expression);
-//    }
+
+
+    public List<Row> verifyFormula(Table d, String formula) throws FormulaCompilationException, IllegalValueTypeException {
+        List<Row> invalidRows = new ArrayList();
+        for (int i = 1; i < d.getCells().size(); i++) {
+            Expression expression = null;
+            DataRow row = ((DataRow) d.getRow(i));
+            expression = ConditionalStyleCompiler.getInstance().compile(row.getCellAt(0), formula, uiController);
+          
+            if (!expression.evaluate().toBoolean()) {
+                
+                invalidRows.add(row);
+            }
+        }
+        return invalidRows;
+    }
 
 
 }
