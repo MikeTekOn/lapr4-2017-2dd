@@ -1,0 +1,85 @@
+@startuml domain_model_notes_edition.png
+skinparam handwritten true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false 
+
+package "Company Contact" #F6E3CE{
+    class "CompanyContact\n<<aggregate root>>\n<<CompanyName>>"
+    class "CompanyName\n<<value object>>"
+}
+
+package "Contact Aggregate" #F6E3CE{
+    class "EmailAddress\n<<value object>>"
+    class Agenda
+    class Event
+    class "PhoneNumber\n<<value object>>"
+    class "EmailAddress\n<<value object>>"
+    class "EmailAddress\n<<value object>>"
+    class "Image\n<<value object>>"
+    class "Contact\n<<aggregate root>>"
+    class "Profession\n<<value object>>"
+    package "Note Modifications" #00FF00{
+        class "NoteContent\n<<value object>>"
+        class Note
+        class NoteList
+    }    
+}
+
+class "CompanyName\n<<value object>>"{
+}
+class "Profession\n<<value object>>"{
+}
+class "CompanyContact\n<<aggregate root>>\n<<CompanyName>>"{
+}
+class "Image\n<<value object>>"{
+}
+class "EmailAddress\n<<value object>>"{
+}
+class "PhoneNumber\n<<value object>>"{
+}
+class "Contact\n<<aggregate root>>" {
+    firstName
+    lastName
+    photo
+}
+class Agenda{
+}
+class Event {
+    description
+    dueDate
+}
+class NoteList{
+    -List : noteList
+    +boolean : add(title, content)
+    +boolean : edit(title, content)
+    +boolean : remove(title)
+}
+class Note{
+    -String : title
+    -boolean : removed
+    -List : noteContentList
+    +boolean : add(content)
+    +boolean : remove()
+    +boolean : isRemoved()
+}
+class "NoteContent\n<<value object>>"{
+    -Calendar : timestamp
+    -String : contentNode
+}
+
+
+
+"Contact\n<<aggregate root>>" ----> "Image\n<<value object>>"
+"Contact\n<<aggregate root>>" --> "EmailAddress\n<<value object>>"
+"Contact\n<<aggregate root>>" --> "PhoneNumber\n<<value object>>"
+"Contact\n<<aggregate root>>" *---> "Profession\n<<value object>>"
+"Contact\n<<aggregate root>>" *--> "1" Agenda
+Agenda *--> "*" Event
+"Contact\n<<aggregate root>>" -> "CompanyContact\n<<aggregate root>>\n<<CompanyName>>"
+"CompanyContact\n<<aggregate root>>\n<<CompanyName>>" --> "CompanyName\n<<value object>>"
+"Contact\n<<aggregate root>>" *--> "1"  NoteList 
+NoteList *--> "*" Note
+Note *--> "*" "NoteContent\n<<value object>>"
+
+@enduml

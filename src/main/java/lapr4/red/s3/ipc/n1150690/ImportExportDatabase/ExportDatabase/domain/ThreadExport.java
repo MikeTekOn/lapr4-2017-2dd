@@ -48,18 +48,24 @@ public class ThreadExport implements Runnable {
     private Thread exportThread;
 
     /**
-     * Creates
-     *
-     * @param range
-     * @param workbook
-     * @param tableName
-     * @param spreadsheet
+     * The database url.
      */
-    public ThreadExport(CellRange range, WorkbookHandler workbook, String tableName, Spreadsheet spreadsheet) {
+    private String db_url;
+
+    /**
+     * Creates a new Thread.
+     *
+     * @param range the range of cells
+     * @param workbook the workbook handler
+     * @param tableName the table name
+     * @param spreadsheet the current spreadsheet
+     */
+    public ThreadExport(CellRange range, WorkbookHandler workbook, String tableName, Spreadsheet spreadsheet, String db_url) {
         this.range = range;
         this.workbook = workbook;
         this.tableName = tableName;
         this.spreadsheet = spreadsheet;
+        this.db_url = db_url;
         this.exportThread = new Thread(this);
         this.exportThread.start();
     }
@@ -70,24 +76,26 @@ public class ThreadExport implements Runnable {
     @Override
     public void run() {
         try {
-            DatabaseConnection dbConnection = new DatabaseConnection();
+            DatabaseConnection dbConnection = new DatabaseConnection(db_url);
             dbConnection.openConnection();
             DatabaseExportOperations dbOperations;
             dbOperations = new DatabaseExportOperations(dbConnection.connection(), tableName);
             int columns = range.getColumns();
             int rows = range.getRows();
-            dbOperations.createTable(columns);
             int topLeftRow = range.getFirstCell().getAddress().getRow();
             int bottomRightRow = range.getLastCell().getAddress().getRow();
             int topLeftColumn = range.getFirstCell().getAddress().getColumn();
             int topRightColumn = range.getLastCell().getAddress().getColumn();
-            List<Cell> listCellsBetweenRange = workbook.getListCellsBetweenRange(spreadsheet, topLeftRow, bottomRightRow, topLeftColumn, topRightColumn);
-            dbOperations.fillTable(listCellsBetweenRange, columns, rows);
+            List<Cell> cellsBetweenRange = workbook.getListCellsBetweenRange(spreadsheet, topLeftRow, bottomRightRow, topLeftColumn, topRightColumn);
+            dbOperations.createTable(cellsBetweenRange, columns);
+            dbOperations.fillTable(cellsBetweenRange, columns, rows);
             dbConnection.closeConnection();
         } catch (SQLException ex) {
             Logger.getLogger(ThreadExport.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(ThreadExport.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+   }
 
     /**
      * Kills the current thread.

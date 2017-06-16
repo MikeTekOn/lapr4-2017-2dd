@@ -20,7 +20,6 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
@@ -60,6 +59,8 @@ public class ExportToDatabaseUI extends JDialog {
     private JTextField txtTableName;
 
     private JTextField txtDatabaseConnection;
+    
+    private JLabel labelErrors;
 
     private JLabel success;
 
@@ -97,27 +98,37 @@ public class ExportToDatabaseUI extends JDialog {
         JLabel labelDatabaseConnection = new JLabel("Database Connection:");
         panelConnection.add(labelDatabaseConnection);
         txtDatabaseConnection = new JTextField(20);
+        txtDatabaseConnection.setText("jdbc:h2:..\\db\\csheets-crm-extension");
         panelConnection.add(txtDatabaseConnection);
 
         JButton b = new JButton("Export");
         b.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                boolean successExportation = true;
                 String addressStrFirstCell = txtFieldFirstCell.getText();
                 String addressStrLastCell = txtFieldLastCell.getText();
                 CellRange cellRange = new CellRange(addressStrFirstCell, addressStrLastCell, uiController);
-                controller = new ExportToDatabaseController(uiController, cellRange, txtTableName.getText());
+                controller = new ExportToDatabaseController(uiController, cellRange, txtTableName.getText(), txtDatabaseConnection.getText());
                 try {
                     controller.export(false);
-                    success.setText("Exportation Successful!");
-                    success.setForeground(Color.GREEN);
+                    successExportation = true;
                 } catch (SQLException ex) {
-                   //if (ex.getErrorCode() == 42101) {
+                    labelErrors.setText(ex.getMessage());
+                    labelErrors.setForeground(Color.RED);
+                   
+                        //if (ex.getErrorCode() == 42101) {
                         System.out.println("ola");
                         tableAlreadyExists();
                     //}
                 } catch (InterruptedException ex) {
+                    labelErrors.setText(ex.toString());
+                    labelErrors.setForeground(Color.RED);
                     Logger.getLogger(ExportToDatabaseUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                if(successExportation){
+                    success.setText("Exportation Successful!");
+                    success.setForeground(Color.GREEN);
                 }
             }
         });
@@ -139,6 +150,9 @@ public class ExportToDatabaseUI extends JDialog {
         panel.add(b, grid);
         grid.gridy = 5;
         success = new JLabel();
+        panel.add(success, grid);
+        labelErrors = new JLabel();
+        grid.gridy = 6;
         panel.add(success, grid);
 
         return panel;

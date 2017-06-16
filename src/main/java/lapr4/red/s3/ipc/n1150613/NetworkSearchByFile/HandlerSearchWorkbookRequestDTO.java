@@ -54,7 +54,7 @@ public class HandlerSearchWorkbookRequestDTO implements CommHandler, Serializabl
         PacketEncapsulatorDTO encapsulator = (PacketEncapsulatorDTO) dto;
         SearchWorkbookRequestDTO request = (SearchWorkbookRequestDTO) encapsulator.getDTO();
         String workbookName = request.getWorkbookName();
-        Directory dic = new Directory(new File(System.getProperty("user.home") + "/Desktop"));
+        Directory dic = new Directory(new File(System.getProperty("user.home") + "/Desktop"));  // change to C:/
 
         try {
             dic.searchFiles();

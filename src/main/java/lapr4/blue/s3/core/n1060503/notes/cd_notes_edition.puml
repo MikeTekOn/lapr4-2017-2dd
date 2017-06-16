@@ -1,0 +1,50 @@
+@startuml cd_notes_edition.png
+skinparam handwritten true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false 
+skinparam SequenceMessageAlign center
+
+class NotesEditionUI{    
+}
+class NotesEditionController{
+    +getContacts()
+    +notesOfContact(Contact c)
+    +addNote(String title, String content) 
+    +editNote(Note n, String content)
+    +removeNote(Note n)
+}
+class ContactRepository{
+    +contacts()
+}
+class Contact{
+}
+class NoteList{
+    -List : noteList
+    +boolean : add(title, content)
+    +boolean : edit(title, content)
+    +boolean : remove(title)
+}
+class Note{
+    -String : title
+    -boolean : removed
+    -List : noteContentList
+    +boolean : add(content)
+    +boolean : remove()
+    +boolean : isRemoved()
+}
+class "NoteContent\n<<value object>>"{
+    -Calendar : timestamp
+    -String : contentNode
+}
+
+NotesEditionUI .> NotesEditionController
+NotesEditionController .-> ContactRepository
+NotesEditionController .-> NoteList
+NotesEditionController .-> Contact
+ContactRepository -> Contact : save
+Contact *-> NoteList
+NoteList *-> Note
+Note *-> "NoteContent\n<<value object>>"
+
+@enduml

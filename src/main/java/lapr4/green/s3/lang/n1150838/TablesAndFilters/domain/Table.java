@@ -27,12 +27,12 @@ public class Table implements Serializable {
 
     private CellRange range;
 
-    private Filter filters;
+    private String filter;
 
-    public Table(CellRange range, List<Row> cells, Filter filters) {
+    public Table(CellRange range, List<Row> cells, String filters) {
         this.range = range;
         this.cells = cells;
-        this.filters = filters;
+        this.filter = filters;
 
     }
 
@@ -73,22 +73,6 @@ public class Table implements Serializable {
         return false;
     }
 
-    public boolean insertFilter(String filter) {
-
-        if (filter.startsWith("=")) {
-            filters.getFormulas().add(filter);
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * @return the filters
-     */
-    public Filter getFilters() {
-        return filters;
-    }
-
     public Row getRow(int i) {
         return cells.get(i);
     }
@@ -104,6 +88,14 @@ public class Table implements Serializable {
 
     public int getHeaderIndex(String ctx) {
         return ((HeaderRow) cells.get(0)).getIndexByContent(ctx);
+    }
+    
+    public void removeFilter(){
+        filter=null;
+    }
+    
+    public void addfilter(String filter){
+        filter=filter;
     }
 
 }

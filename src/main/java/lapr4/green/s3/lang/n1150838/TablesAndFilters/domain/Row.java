@@ -28,6 +28,12 @@ public abstract class Row implements Iterable {
      */
     @Override
      public abstract Iterator iterator();
+     /**
+      * 
+     * @param i the position
+      * @return the cell on the given position
+      */
+     public abstract Cell getCellAt(int i);
      
     
 }
