@@ -19,7 +19,7 @@ import csheets.ui.ctrl.UIController;
 import lapr4.blue.s1.lang.n1140822.beanshellwindow.BeanShellInstance;
 import lapr4.blue.s1.lang.n1140822.beanshellwindow.BeanShellLoader;
 import lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable;
-import lapr4.blue.s1.lang.n1151452.formula.lang.Language;
+import lapr4.green.s3.lang.n1150901.evalAndWhileLoops.lang.Language;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperation;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperator;
 import lapr4.red.s2.lang.n1150623.globalVariables.VarContentor;
@@ -27,6 +27,7 @@ import org.antlr.v4.runtime.Token;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -34,9 +35,9 @@ import java.util.List;
  *
  * @author Diana Silva {1151088@isep.ipp.pt]} on 03/06/17
  * @author Daniel Gonçalves [1151452@isep.ipp.pt] on 01/06/17.
- *
  * @author Guilherme Ferreira 1150623 corrected to work with 'Variable' class and VarContentor
  * @author Ricardo Catalão (1150385) on 08/06/2017
+ * @author Miguel Silva (1150901) on 15/06/2017
  * @author jrt
 */
 @SuppressWarnings("Duplicates")
@@ -130,7 +131,7 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
             return visit(ctx.concatenation(0));
         }
 
-        return visit(ctx.for_loop());
+        return visitChildren(ctx);
     }
 
     @Override
@@ -358,6 +359,59 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
                 NaryOperator operator = Language.getInstance().getNaryOperator(operatorID);
 
                 // Get # of expressions by: dividing by 2 to not count for SEMI-COLON/BRACKETS & - 1 for the "for"
+                Expression expressions[] = new Expression[(ctx.getChildCount() / 2) - 1];
+
+                // #1 Convert all the child nodes
+                for (int nChild = 2, i = 0; i < expressions.length; nChild += 2, i++) {
+
+                    expressions[i] = visit(ctx.getChild(nChild));
+                }
+
+                return new NaryOperation(operator, expressions);
+
+            } catch (UnknownElementException ex) {
+                addVisitError(ex.getMessage());
+            }
+        }
+        return visitChildren(ctx);
+    }
+    
+    @Override
+    public Expression visitDo_while_loop(BlueFormulaParser.Do_while_loopContext ctx) {
+
+        if (ctx.DOWHILE() != null) {
+            try {
+                // Get n-ary operator that identifies a dowhile loop
+                String operatorID = ctx.DOWHILE().getText().toLowerCase();
+                NaryOperator operator = Language.getInstance().getNaryOperator(operatorID);
+
+                // Get # of expressions by: dividing by 2 to not count for SEMI-COLON/PARENTHESIS & - 1 for the "dowhile"
+                Expression expressions[] = new Expression[(ctx.getChildCount() / 2) - 1];
+
+                // #1 Convert all the child nodes
+                for (int nChild = 2, i = 0; i < expressions.length; nChild += 2, i++) {
+                    expressions[i] = visit(ctx.getChild(nChild));
+                }
+
+                return new NaryOperation(operator, expressions);
+
+            } catch (UnknownElementException ex) {
+                addVisitError(ex.getMessage());
+            }
+        }
+        return visitChildren(ctx);
+    }
+    
+        @Override
+    public Expression visitWhile_do_loop(BlueFormulaParser.While_do_loopContext ctx) {
+
+        if (ctx.WHILEDO() != null) {
+            try {
+                // Get n-ary operator that identifies a whiledo loop
+                String operatorID = ctx.WHILEDO().getText().toLowerCase();
+                NaryOperator operator = Language.getInstance().getNaryOperator(operatorID);
+
+                // Get # of expressions by: dividing by 2 to not count for SEMI-COLON/PARENTHESIS & - 1 for the "whiledo"
                 Expression expressions[] = new Expression[(ctx.getChildCount() / 2) - 1];
 
                 // #1 Convert all the child nodes
