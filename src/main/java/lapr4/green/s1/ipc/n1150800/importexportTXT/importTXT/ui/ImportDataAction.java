@@ -34,7 +34,7 @@ public class ImportDataAction extends BaseAction {
 
     @Override
     protected String getName() {
-        return "Import Data";
+        return "Import Data From TXT";
     }
 
     @Override

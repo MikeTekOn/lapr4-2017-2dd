@@ -1,7 +1,8 @@
 package lapr4.green.s2.core.n1150738.contacts.domain;
 
-import lapr4.green.s2.core.n1150738.contacts.domain.Image;
 import org.junit.Test;
+
+import java.io.IOException;
 
 /**
  * A Unit Test class to test Image.
@@ -23,7 +24,7 @@ public class ImageTest {
      *
      * Throws IllegalArgumentException if the process fails
      */
-    @Test public void ensureDefaultImageCanBeConstructed(){
+    @Test public void ensureDefaultImageCanBeConstructed() {
         Image i = Image.defaultImage();
     }
 

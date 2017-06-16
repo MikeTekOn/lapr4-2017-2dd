@@ -1,6 +1,6 @@
 package lapr4.green.s2.core.n1150532.sort.sortingDTOs;
 
-import csheets.core.Cell;
+import csheets.core.*;
 import csheets.core.Value;
 import csheets.core.formula.compiler.FormulaCompilationException;
 import java.util.logging.Level;
@@ -22,7 +22,7 @@ public class RangeRowDTO implements SortableDTO<RangeRowDTO> {
     /**
      * The index on the row of the cell to be compared.
      */
-    private final int sortingCellIndex;
+    private int sortingCellIndex;
 
     /**
      * The full constructor of the DTO.
@@ -45,6 +45,15 @@ public class RangeRowDTO implements SortableDTO<RangeRowDTO> {
         return cells[sortingCellIndex].getValue();
     }
 
+    public boolean containsCellAsPivot(Cell cell)
+    {
+        return cells[sortingCellIndex].equals(cell);
+    }
+            
+    public void updateSortingColumn(int sortingCellIndex)
+    {
+        this.sortingCellIndex=sortingCellIndex;
+    }
     /**
      * It provides the encapsulated cells.
      *
@@ -69,10 +78,11 @@ public class RangeRowDTO implements SortableDTO<RangeRowDTO> {
             throw new IllegalArgumentException("Rows have different length.");
         }
         for (int i = 0; i < cells.length; i++) {
+            
             String tempContent = cells[i].getContent();
             try {
-                cells[i].setContent(those[i].getContent());
-                those[i].setContent(tempContent);
+                cells[i].setContentWithoutFiringEvents(those[i].getContent());
+                those[i].setContentWithoutFiringEvents(tempContent);
             } catch (FormulaCompilationException ex) {
                 Logger.getLogger(RangeRowDTO.class.getName()).log(Level.SEVERE, null, ex);
             }

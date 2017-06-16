@@ -35,7 +35,7 @@ public class SortMenuUI extends JMenu {
          * 
          * @author Manuel Meireles (1150532)
          */
-        add(new SortCellRangeAction());
+        add(new SortCellRangeAction(uiController));
     }
 
 }

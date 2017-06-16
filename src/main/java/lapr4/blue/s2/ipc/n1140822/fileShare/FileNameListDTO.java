@@ -31,7 +31,6 @@ public class FileNameListDTO extends Observable implements Serializable {
     public FileNameListDTO(Map<String, Integer> fileDataMap, int tcpPort) {
         this.fileDataMap = fileDataMap;
         this.tcpPort = tcpPort;
-
     }
 
     /**
