@@ -9,60 +9,56 @@
  *
  * <h2>1. Notes</h2>
  *
- * <p>This functional increment is the continuation of the <b>IPC01.1</b> functional increment.</p>
+ * <p>This functional increment is the continuation of the <b>IPC01.1</b> and <b>IPC01.2</b> functional increment.</p>
  * <p>The communication framework is part of this feature and it was implemented in the first iteration.</p>
+ * <p>The cell's style sharing is part of this feature and it was implemented in the second iteration.</p>
  * <p>
- *     Since this FI is an increment to the IPC01.1 FI, all the documentation presented there takes effect here. Any
+ *     Since this FI is an increment to the IPC01.1 and IPC01.2, all the documentation presented there takes effect here. Any
  *     kind of modification will be referred in this page.
  * </p>
  *
  *
- *
- *
  * <h2>2. Requirements</h2>
  *
- * <p>After a connection is established, the updates made in one side must be seen in the other side.</p>
- * <p>The data shared must now include the style of the cells.</p>
- * <p>At the moment it is not required to share the cells with formulas.</p>
- *
+ * <p>It should be possible to have multiple cell shares active at the same time.</p>
+ * <p>Each of the shares should have a unique name.</p>
+ * <p>The location (i.e., range address) of the share in each instance of Cleansheets may be different.</p>
+ * <p>It should be possible to share ranges that include cells with formulas.</p>
  *
  *
  *
  * <h3>3. Analysis</h3>
  *
  * <h4>Clarifications with the product owner</h4>
- * <p><b>Q: </b>How to deal with the merges?</p>
- * <p><b>A: </b>The instance that starts sharing sends the contents and must be merged in the other instance.</p>
+ * <p><b>Q: </b>What does it mean that "Each of the shares should have a unique name."? Each range of shared cells have a name or each share of a cell(each modification) has a name?</p>
+ * <p><b>A: </b>[Asked by hip-chat, had no answer.]</p>
+ * <p><b>PRESUMPTION: </b>Each of the shared range of cells have a unique name</p>
  *
  * <h4>Brainstorming</h4>
- * <p>
- *     There are two main points in this functional increment. One is about sharing the data in real time. The other
- *     is about sending the styles of the cells with the cells itself.
- * </p>
+ * <p> We have two fundamental preoccupations in this use case:</p>
+ * <p> One is make the receiver [of the cells] aware of the share by asking him where to put the shared cells.</p>
+ * <p> Other is to give a name and make the users able to see it easily</p>
  *
- * <h4>Start Sharing</h4>
- * <p>
- *     To start sharing the cells, we must modify the CellDTO in order to include the style of the cell.
- *     As well, in the CommExtension, when we are dealing with the received DTO, we must set the received style.
- * </p>
+ * <h4>Multiple Shares Active:</h4>
  *
- * <h4>Sharing cells in real time</h4>
- * <p>
- *     After a connection being established between two instances of CleanSheets, the communication must be made in
- *     <b>real time</b>. That is, if on instance changes a shared cell, it must automatically send the update to the
- *     other side and vice versa.
- * </p>
- * <p>
- *     The same logic from IPC01.1 will be used. The worker thread will be responsible to share the contents.
- *     When the update of a shared cell happens, a listener must tell the TCP client manager to tell the correspondent
- *     worker thread to send a DTO with the new content of the changed cell.
- * </p>
+ * <p> As the implementation was done in the previous sprint, multiple shares can already be made since each share is an individual "activity"</p>
+ * <p> The formula recognition from the shared cells is already implemented from the previous iteration</p>
  *
- * <h4>Send the style of the cells.</h4>
- * <p>
- *     To send the style of the cells, the same logic described above about sharing content applies. In turn, instead
- *     of sending a DTO with the content, the style will take place.
- * </p>
+ * <h5>What's missing?</h5>
+ * <p> -&gt; The sharing cannot be stopped;</p>
+ * <p> -&gt; A connection can't be "disconnected";</p>
+ * <p> -&gt; There is no waring as to inform the user of mutual cells being shared at the same time (ex. form A1:D20 and at the same time A1:A2);</p>
+ * <p> -&gt; The receiver cannot choose the location of the shared cells</p>
+ * <p> -&gt; The shared blocks of cells do not have names</p>
+ * <h6>(Optional)</h6>
+ * <p> -&gt; Highlight shared blocks of cells</p>
+ *
+ *
+ *
+ *
+ *
+ *
+ *
  *
  *
  *
@@ -115,31 +111,35 @@
  *
  *
  *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
  * <h2>5. Design</h2>
  *
  *
- * <h3>5.1. Changes on CellDTO to send style</h3>
- * <img src="start_sharing.png" alt="start sharing placeholder">
  *
  *
- * <h3>5.2. Share cell content</h3>
- * <img src="share_cell_content_sd.png" alt="send cell content placeholder">
- * <p>
- *     The logic of sending the style of the cell is exactly the same, changing the content by style and using the
- *     equivalent classes for style.
- * </p>
- *
- *
- * <h3>5.3. Receive cell content</h3>
- * <img src="receive_cell_content_sd.png" alt="receive cell content placeholder">
- * <p>
- *     The logic of receiving the style of the cell is exactly the same, using the equivalent classes for style.
- * </p>
  *
  *
  * <h3>5.4. Design Patterns</h3>
  * <p>To make the communication possible, the observer pattern was used to make notifications about the updates.</p>
  * <p>Also, all good practices dictated by SOLID and GRASP was followed, to make the software maintainable.</p>
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
  *
  *
  *
@@ -166,146 +166,6 @@
  *
  *
  *
- *
- * <h2>7. Integration/Demonstration</h2>
- *
- * <p>
- *     It was necessary to integrate this FI using the communication framework developed in the first iteration.
- * </p>
- * <p>I was very active and I successfully collaborate with the team members.</p>
- *
- *
- *
- *
- * <h2>8. Final Remarks</h2>
- * <p>
- *     As a possible future extra for this feature, when two hosts are sharing cells, it should be possible to
- *     highlight the cell that the other host is editing.
- * </p>
- *
- *
- *
- *
- * <h2>9. Work Log</h2>
- *
- * <h3>Tuesday 06/06/2017</h3>
- *
- * <p>Yesterday I've worked on:</p>
- * <ol>
- *     <li>Analysis of previous IPC use cases implementations.</li>
- *     <li>Division and brainstorming about common points of the functional increments for this sprint.</li>
- *     <li>Studying the requirements of this use case.</li>
- * </ol>
- *
- * <p><b>Today</b></p>
- * <ol>
- *     <li>Functional increment analysis.</li>
- * </ol>
- *
- * <p><b>Blocking:</b></p>
- * <ol>
- *     <li>Nothing.</li>
- * </ol>
- *
- *
- *
- * <h3>Wednesday 07/06/2017</h3>
- *
- * <p>Yesterday I've worked on:</p>
- * <ol>
- *     <li>Functional increment analysis.</li>
- * </ol>
- *
- * <p><b>Today</b></p>
- * <ol>
- *     <li>Functional increment tests.</li>
- *     <li>Functional increment design.</li>
- * </ol>
- *
- * <p><b>Blocking:</b></p>
- * <ol>
- *     <li>Nothing.</li>
- * </ol>
- *
- *
- *
- * <h3>Thursday 08/06/2017</h3>
- *
- * <p>Yesterday I've worked on:</p>
- * <ol>
- *     <li>Functional increment tests.</li>
- *     <li>Functional increment design.</li>
- * </ol>
- *
- * <p><b>Today</b></p>
- * <ol>
- *     <li>Finish design.</li>
- *     <li>Implementation.</li>
- * </ol>
- *
- * <p><b>Blocking:</b></p>
- * <ol>
- *     <li>Nothing.</li>
- * </ol>
- *
- *
- *
- * <h3>Friday 09/06/2017</h3>
- *
- * <p>Yesterday I've worked on:</p>
- * <ol>
- *     <li>Functional increment design.</li>
- * </ol>
- *
- * <p><b>Today</b></p>
- * <ol>
- *     <li>Implementation.</li>
- * </ol>
- *
- * <p><b>Blocking:</b></p>
- * <ol>
- *     <li>Nothing.</li>
- * </ol>
- *
- *
- *
- * <h3>Saturday 10/06/2017</h3>
- *
- * <p>Yesterday I've worked on:</p>
- * <ol>
- *     <li>Implementation</li>
- * </ol>
- *
- * <p><b>Today</b></p>
- * <ol>
- *     <li>Implementation</li>
- * </ol>
- *
- * <p><b>Blocking:</b></p>
- * <ol>
- *     <li>Nothing.</li>
- * </ol>
- *
- *
- *
- * <h3>Sunday 11/06/2017</h3>
- *
- * <p>Yesterday I've worked on:</p>
- * <ol>
- *     <li>Implementation</li>
- * </ol>
- *
- * <p><b>Today</b></p>
- * <ol>
- *     <li>Testing</li>
- *     <li>Fix bugs</li>
- *     <li>Update documentation</li>
- * </ol>
- *
- * <p><b>Blocking:</b></p>
- * <ol>
- *     <li>Nothing.</li>
- * </ol>
  *
  *
  *
