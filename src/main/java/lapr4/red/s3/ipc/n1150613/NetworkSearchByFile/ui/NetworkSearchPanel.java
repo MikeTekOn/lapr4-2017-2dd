@@ -12,8 +12,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import lapr4.blue.s2.ipc.n1151031.searchnetwork.SearchWorkbookNetworkAction;
 import lapr4.green.s1.ipc.n1150532.comm.CommExtension;
+import lapr4.red.s3.ipc.n1150613.NetworkSearchByFile.NetworkSearchAction;
 
 /**
  * Creates the sidebar panel that has the search workbooks in the network
@@ -50,11 +50,6 @@ public class NetworkSearchPanel extends JPanel {
         
     }
 
-    private JPanel createButtonPanel() {
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        buttonPanel.add(createSearchButton());
-        return buttonPanel;
-    }
 
     /**
      * Creates the main panel.
@@ -112,7 +107,7 @@ public class NetworkSearchPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 CommExtension ce = (CommExtension) ExtensionManager.getInstance().getExtension(CommExtension.NAME);
                 resultsTable.clear();
-                (new SearchWorkbookNetworkAction(resultsTable, ce.getUDPServerPortNumber(), nameField.getText(), contentField.getText())).actionPerformed(e);
+                (new NetworkSearchAction(resultsTable, ce.getUDPServerPortNumber(), nameField.getText(), contentField.getText())).actionPerformed(e);
             }
         });
         return button;
