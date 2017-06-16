@@ -33,29 +33,24 @@ public class TableBuilder {
         int row = -1;
         List<Row> rows = new ArrayList();
         HeaderRow header = new HeaderRow(new ArrayList());
-        DataRow dataRow = new DataRow(new ArrayList());
+        DataRow dataRow ;
         for (Cell cell : cells) {
             if (cell.getAddress().getRow() == headerRow) {
                 header.add(new Header(index, cell));
                 index++;
-            }
-            if (cell.getAddress().getRow() != headerRow) {
-                if (row == -1) {
-                    rows.add(header);
-                    row = cell.getAddress().getRow();
-                }
-                if (row == cell.getAddress().getRow()) {
-                    dataRow.add(cell);
-
-                } else {
-                    row = cell.getAddress().getRow();
-                    rows.add(dataRow);
-                    dataRow = new DataRow(new ArrayList());
-                    dataRow.add(cell);
-                }
-            }
+        }  
         }
-        return new Table(range, rows, new Filter(new ArrayList()));
+        rows.add(header);
+        for (int i = index; i < cells.size();) {
+            dataRow = new DataRow(new ArrayList());
+            for (int j = 0; j < index; j++) {
+                dataRow.add(cells.get(i));
+                i++;
+            }
+            rows.add(dataRow);
+            
+        }
+        return new Table(range, rows, null);
     }
 
 }

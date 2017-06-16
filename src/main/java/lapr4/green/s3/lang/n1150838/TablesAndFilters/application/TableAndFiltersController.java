@@ -101,36 +101,22 @@ public class TableAndFiltersController implements Controller {
     public Table getTable() {
         return table;
     }
-    public void validateFormula(Table d , String formula) throws FormulaCompilationException{
-         Expression expression = null;
-         DataRow row = ((DataRow) d.getRow(1));
-         expression = ConditionalStyleCompiler.getInstance().compile(row.getCellAt(0), formula, uiController);
-    }
 
-//    public boolean compile(){
-//        Expression expression = null;
-//        expression = ConditionalStyleCompiler.getInstance().compile(getDelegate(), getUserCondition(), uiController);
-//                SortedSet<Reference> references = (new ReferenceFetcher()).getReferences(expression);
-//    }
-    public List<Row> verifyFormula(Table d, String formula,List<Row> invalidRows) throws FormulaCompilationException, IllegalValueTypeException {
+
+    public List<Row> verifyFormula(Table d, String formula) throws FormulaCompilationException, IllegalValueTypeException {
+        List<Row> invalidRows = new ArrayList();
         for (int i = 1; i < d.getCells().size(); i++) {
             Expression expression = null;
             DataRow row = ((DataRow) d.getRow(i));
             expression = ConditionalStyleCompiler.getInstance().compile(row.getCellAt(0), formula, uiController);
+          
             if (!expression.evaluate().toBoolean()) {
+                
                 invalidRows.add(row);
             }
         }
         return invalidRows;
     }
-    
-    public List<Row> verifyAllFormulas(Table d) throws FormulaCompilationException, IllegalValueTypeException{
-        List<Row> invalidRows = new ArrayList() ;
-        for (String formula : d.getFilters().getFormulas()) {
-            verifyFormula(d,formula,invalidRows);
-        }
 
-        return invalidRows;
-    }
-    
+
 }

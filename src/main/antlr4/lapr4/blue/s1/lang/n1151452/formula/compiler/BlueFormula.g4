@@ -134,7 +134,7 @@ NUMBER: ( DIGIT )+ ( COMMA ( DIGIT )+ )? ;
 
 fragment
 DIGIT : '0'..'9' ;
-POSITIVE_DIGIT : '0'..'9' ;
+POSITIVE_DIGIT : '1'..'9' ;
 
 /* Comparison operators */
 EQ		: '=' ;

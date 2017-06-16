@@ -265,7 +265,7 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
                     return new CellReference(referenceCell.getSpreadsheet(), referenceCell.getAddress().toString());
                 } else {
                     String number = StringUtil.removeStartEndSpecialChars(ctx.getChild(0).getChild(1).getText());
-                    Cell referenceCell = ((DataRow) tableCtx.getRowByCell(cell)).getCellAt(Integer.parseInt(number));
+                    Cell referenceCell = ((DataRow) tableCtx.getRowByCell(cell)).getCellAt(Integer.parseInt(number)-1);
 
                     return new CellReference(referenceCell.getSpreadsheet(), referenceCell.getAddress().toString());
                 }

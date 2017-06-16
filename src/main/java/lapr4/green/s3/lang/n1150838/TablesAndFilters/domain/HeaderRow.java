@@ -55,4 +55,9 @@ public class HeaderRow extends Row implements Serializable {
         return -1;
     }
 
+    @Override
+    public Cell getCellAt(int i) {
+        return row.get(i).getCell();
+    }
+
 }
