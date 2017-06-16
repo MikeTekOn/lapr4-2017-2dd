@@ -32,7 +32,7 @@ public class NetworkSearchPanel extends JPanel {
      * The input field for the name to search.
      */
     private JTextField nameField;
-    
+
     private JTextField contentField;
 
     public NetworkSearchPanel(UIController uiController, Extension extension) {
@@ -47,6 +47,13 @@ public class NetworkSearchPanel extends JPanel {
     private void createComponents() {
         add(createMainPanel(), BorderLayout.NORTH);
         add(createBottomPanel(), BorderLayout.CENTER);
+        
+    }
+
+    private JPanel createButtonPanel() {
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.add(createSearchButton());
+        return buttonPanel;
     }
 
     /**
@@ -69,14 +76,16 @@ public class NetworkSearchPanel extends JPanel {
     private JPanel createBottomPanel() {
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JLabel textLabel = new JLabel("Name:");
+        JLabel contentLabel = new JLabel("Content:");
         nameField = new JTextField();
         contentField = new JTextField();
         nameField.setPreferredSize(new Dimension(100, 25));
         contentField.setPreferredSize(new Dimension(100, 25));
         bottomPanel.add(textLabel);
         bottomPanel.add(nameField);
+        bottomPanel.add(contentLabel);
         bottomPanel.add(contentField);
-        bottomPanel.add(createSearchButton());
+        bottomPanel.add(createSearchButton(),BorderLayout.SOUTH);
         return bottomPanel;
     }
 
@@ -103,7 +112,7 @@ public class NetworkSearchPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 CommExtension ce = (CommExtension) ExtensionManager.getInstance().getExtension(CommExtension.NAME);
                 resultsTable.clear();
-                (new SearchWorkbookNetworkAction(resultsTable, ce.getUDPServerPortNumber(), nameField.getText(),contentField.getText())).actionPerformed(e);
+                (new SearchWorkbookNetworkAction(resultsTable, ce.getUDPServerPortNumber(), nameField.getText(), contentField.getText())).actionPerformed(e);
             }
         });
         return button;
