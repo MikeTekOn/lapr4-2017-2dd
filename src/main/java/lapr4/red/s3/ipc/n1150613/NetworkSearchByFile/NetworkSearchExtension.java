@@ -3,18 +3,18 @@ package lapr4.red.s3.ipc.n1150613.NetworkSearchByFile;
 import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.UIExtension;
 import lapr4.blue.s2.ipc.n1151031.searchnetwork.ui.SearchWorkbookNetworkUIExtension;
-import lapr4.green.s1.ipc.n1150901.search.workbook.SearchWorkbookExtension;
+import lapr4.blue.s2.ipc.n1151031.searchnetwork.SearchWorkbookNetworkExtension;
 
 /**
  * The Search workbook in the network Extension.
  *
  * @author Diogo Guedes - 1150613@isep.ipp.pt
  */
-public class NetworkSearchExtension extends SearchWorkbookExtension {
+public class NetworkSearchExtension extends SearchWorkbookNetworkExtension {
 
     public NetworkSearchExtension() {
         super();
-        setVersion(super.getVersion() + 2);
+        setVersion(super.getVersion() + 1);
     }
 
     /**
