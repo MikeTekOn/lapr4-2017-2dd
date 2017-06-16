@@ -158,25 +158,67 @@
  *
  * <h2>5. Design</h2>
  *
+ * <h3>5.1. Associate tags to contacts</h3>
+ * <p>Refer to {@link lapr4.white.s1.core.n4567890.contacts} for adding/editing tags to contacts.</p>
+ * <p>The only change is that the CRM user will insert the tag designation.</p>
+ *
+ * <h3>5.2. Search contacts by tags</h3>
+ * <img src="search_contacts_by_tag_sd.png" alt="Search contacts by tag placeholder">
+ *
+ * <h3>5.3. Display tags with occurrences</h3>
+ * <img src="display_tags_with_occurrences_sd.png" alt="Display tags with occurrences placeholder">
+ * <br>
+ *
+ *
+ *
  *
  * <h2>9. Work Log</h2>
  *
  * <h3>Tuesday 13/06/2017</h3>
- *
  * <p>Yesterday I've worked on:</p>
  * <ol>
- *     <li>Closing the sprint</li>
- *     <li>Presentation of the IPC functional area</li>
+ *     <li>Closing the sprint.</li>
+ *     <li>Presentation of the IPC functional area.</li>
  *     <li>Analysis of previous core use cases implementations.</li>
  *     <li>Division and brainstorming about common points of the functional increments for this sprint.</li>
  *     <li>Studying the requirements of this use case.</li>
  * </ol>
- *
  * <p><b>Today</b></p>
  * <ol>
- *     <li>Functional increment analysis.</li>
+ *     <li>Spring review & retrospective.</li>
+ *     <li>Brainstorming about what was done in core.</li>
+ *     <li>Start the functional increment analysis.</li>
+ * </ol>
+ * <p><b>Blocking:</b></p>
+ * <ol>
+ *     <li>Nothing.</li>
  * </ol>
  *
+ * <h3>Wednesday 14/06/2017</h3>
+ * <p>Yesterday I've worked on:</p>
+ * <ol>
+ *     <li>Started the functional increment analysis</li>
+ * </ol>
+ * <p><b>Today</b></p>
+ * <ol>
+ *     <li>Finish the functional increment analysis</li>
+ * </ol>
+ * <p><b>Blocking:</b></p>
+ * <ol>
+ *     <li>Nothing.</li>
+ * </ol>
+ *
+ * <h3>Thursday 15/06/2017</h3>
+ * <p>Yesterday I've worked on:</p>
+ * <ol>
+ *     <li>Finished the functional increment analysis</li>
+ * </ol>
+ * <p><b>Today</b></p>
+ * <ol>
+ *     <li>Functional increment tests.</li>
+ *     <li>Functional increment design.</li>
+ *     <li>Start the implementation.</li>
+ * </ol>
  * <p><b>Blocking:</b></p>
  * <ol>
  *     <li>Nothing.</li>
