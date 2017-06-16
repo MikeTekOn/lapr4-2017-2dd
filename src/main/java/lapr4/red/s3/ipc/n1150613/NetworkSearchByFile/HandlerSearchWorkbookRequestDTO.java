@@ -59,7 +59,7 @@ public class HandlerSearchWorkbookRequestDTO implements CommHandler, Serializabl
         try {
             dic.searchFiles();
             for (FileDTO f : dic.getDTO()) {
-                Workbook w = dic.load(new File(f.getFilePath()));
+                Workbook w = dic.load(new File(f.getFilePath()));//
                 if (f.getFileName().contains(names)) {
                     //  if ((reg.checkIfContentMatches(w)) || (reg.checkIfNameMatches(f.getFileName()))) {
                     List<Spreadsheet> spreadsheetList = new ArrayList();
