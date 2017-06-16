@@ -1,0 +1,71 @@
+@startuml search_contacts_by_tag_ssd.png
+
+'http://plantuml.com/skinparam.html'
+skinparam handwritten true
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor User as U
+participant "SearchContactByTagDialog" as dialog <<Presentation>>
+participant "SearchContactByTagController" as ctrl <<Application>>
+participant "contacts : List<Taggable>" as contacts
+database PersonContactRepository as pRepo <<Repository>>
+database CompanyContactRepository as cRepo <<repository>>
+participant TagService as serv <<Domain>>
+participant "taggablesThatMatch : List<Taggable>" as ts
+participant "t : Taggable" as t
+
+activate U
+
+U -> dialog : initiates the contact search by tag
+activate dialog
+create ctrl
+dialog -> ctrl : create()
+U <-- dialog : asks for the tag regular expression
+deactivate dialog
+
+U -> dialog : inserts tag regex
+activate dialog
+dialog -> ctrl : findContactsByTag(regex)
+activate ctrl
+create contacts
+ctrl -> contacts : create()
+ctrl -> pRepo : personContacts = findAll()
+activate pRepo
+deactivate pRepo
+ctrl -> contacts : addAll(personContacts)
+activate contacts
+deactivate contacts
+ctrl -> cRepo : companyContacts = findAll()
+activate cRepo
+deactivate cRepo
+ctrl -> contacts : addAll(companyContacts)
+activate contacts
+deactivate contacts
+ctrl -> serv : contactsWithTag = getTaggablesByTagRegex(contacts, regex)
+activate serv
+
+create ts
+serv -> ts : create()
+loop foreach t in contacts
+    serv -> t : b = containsTag()
+    activate t
+    deactivate t
+    alt b is true
+        serv -> ts : add(t)
+        activate ts
+        deactivate ts
+    end
+end
+deactivate serv
+
+
+dialog <-- ctrl : return contactsWithTag
+deactivate ctrl
+
+dialog -> dialog : render()
+deactivate dialog
+
+deactivate U
+
+@enduml
