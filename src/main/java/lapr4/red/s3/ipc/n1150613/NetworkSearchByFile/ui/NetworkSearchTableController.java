@@ -21,7 +21,7 @@ public class NetworkSearchTableController extends AbstractTableModel {
     /**
      * The search results list.
      */
-    private final List<SearchResults> list;
+    private final List<SearchResults> list;//
 
     /**
      * The constructor of the controller.
