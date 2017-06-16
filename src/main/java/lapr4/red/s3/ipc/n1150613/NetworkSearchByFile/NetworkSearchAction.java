@@ -3,7 +3,6 @@ package lapr4.red.s3.ipc.n1150613.NetworkSearchByFile;
 import csheets.ui.ctrl.BaseAction;
 import java.awt.event.ActionEvent;
 import java.util.Observer;
-import lapr4.blue.s2.ipc.n1151031.searchnetwork.HandlerSearchWorkbookResponseDTO;
 import lapr4.green.s1.ipc.n1150532.comm.CommUDPClient;
 
 /**
@@ -67,7 +66,7 @@ public class NetworkSearchAction extends BaseAction {
         CommUDPClient worker = new CommUDPClient(searchRequest, portNumber, TIMEOUT);
         HandlerSearchWorkbookResponseDTO handler = new HandlerSearchWorkbookResponseDTO();
         handler.addObserver(table);
-        worker.addHandler(lapr4.blue.s2.ipc.n1151031.searchnetwork.SearchWorkbookResponseDTO.class, handler);
+        worker.addHandler(SearchWorkbookResponseDTO.class, handler);
         worker.start();
     }
 

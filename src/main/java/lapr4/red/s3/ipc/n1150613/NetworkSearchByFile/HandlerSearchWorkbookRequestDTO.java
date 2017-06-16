@@ -60,7 +60,7 @@ public class HandlerSearchWorkbookRequestDTO implements CommHandler, Serializabl
             dic.searchFiles();
             for (FileDTO f : dic.getDTO()) {
                 Workbook w = dic.load(new File(f.getFilePath()));
-                if ((reg.checkIfContentMatches(w)) && (reg.checkIfNameMatches(f.getFileName()))) {
+                if ((reg.checkIfContentMatches(w)) || (reg.checkIfNameMatches(f.getFileName()))) {
                     List<Spreadsheet> spreadsheetList = new ArrayList();
                     int numSpreadsheets = w.getSpreadsheetCount();
                     for (int i = 0; i < numSpreadsheets; i++) {
@@ -81,7 +81,7 @@ public class HandlerSearchWorkbookRequestDTO implements CommHandler, Serializabl
             if (uiController.getFile(workbook) != null) {
                 String name = uiController.getFile(workbook).getName();
                 List<Spreadsheet> spreadsheetList = new ArrayList();
-                if ((reg.checkIfContentMatches(workbook)) && (reg.checkIfNameMatches(name))) {
+                if ((reg.checkIfContentMatches(workbook)) || (reg.checkIfNameMatches(name))) {
                     int numSpreadsheets = workbook.getSpreadsheetCount();
                     for (int i = 0; i < numSpreadsheets; i++) {
                         spreadsheetList.add(workbook.getSpreadsheet(i));
