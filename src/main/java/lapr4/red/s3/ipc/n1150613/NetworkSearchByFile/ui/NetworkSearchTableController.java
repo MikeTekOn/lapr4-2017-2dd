@@ -15,7 +15,7 @@ public class NetworkSearchTableController extends AbstractTableModel {
     /**
      * The table headers.
      */
-    private final String[] columns = {"Host", "Workbook Name", "SS #", "Spreadsheet Names", "active"};
+    private final String[] columns = {"Host", "Workbook Name", "SS #", "Spreadsheet Names"};
 
     /**
      * The search results list.
@@ -105,8 +105,6 @@ public class NetworkSearchTableController extends AbstractTableModel {
                         spreadsheetNames.append(result.getSpreadsheetList().get(i).getTitle() + ", ");
                     }
                 }   data = spreadsheetNames.toString();
-                break;
-            case 4:
                 break;
             default:
                 break;
