@@ -128,7 +128,7 @@ public class CleanSheets implements Observer {
 
     private ExtensionLoadFrame extensionLoadFrame;
 
-    public static boolean flag = true;
+    public static boolean flag = false;
 
     /**
      * Creates the CleanSheets application.

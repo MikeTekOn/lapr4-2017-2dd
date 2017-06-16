@@ -52,7 +52,7 @@ public class HandlerFileDTO extends Observable implements CommHandler {
                 DownloadsListPersistence.saveList(downloads);
             }else{
                 for (Map.Entry<String,DownloadInfo> e : downloads.entrySet()){
-                    if (e.getKey().equals(filename)){
+                    if (e.getValue().originalFileName().equals(filename)){
                         found = true;
                         di = e.getValue();
                     }

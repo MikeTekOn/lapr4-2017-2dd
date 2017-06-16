@@ -43,33 +43,7 @@ public class DownloadsListPersistence {
     }
 
     public static DownloadInfo getLatestVersionInfo(String originalFileName) {
-        Map<String,DownloadInfo> downloads = getDownloads();
-        Map<String,DownloadInfo> fileVersions = getDownloads();
-        DownloadInfo originalInfo = downloads.get(originalFileName);
-        if(originalInfo.downloadType() == DownloadInfo.DownloadType.ONE_TIME_DOWNLOAD){
-            return originalInfo;
-        }else{
-            if(originalInfo.updateType()==DownloadInfo.UpdateType.RENAME){
-                return originalInfo;
-            }
-        }
-        for (Map.Entry<String,DownloadInfo> e : downloads.entrySet()){
-            if(e.getValue().originalFileName().equals(originalFileName)){
-                fileVersions.put(e.getKey(),e.getValue());
-            }
-        }
-        int latestVersion = 1;
-        DownloadInfo latestVersionInfo = null;
-        for (DownloadInfo downloadInfo : fileVersions.values()){
-            int version = downloadInfo.version();
-            if(version>=latestVersion){
-                latestVersionInfo = downloadInfo;
-            }
-        }
-        if(latestVersionInfo==null){
-            System.err.println("Couldn't find any version of the file");
-        }
-        return latestVersionInfo;
+           return getDownloads().get(getLatestVersion(originalFileName));
     }
 
     /**
