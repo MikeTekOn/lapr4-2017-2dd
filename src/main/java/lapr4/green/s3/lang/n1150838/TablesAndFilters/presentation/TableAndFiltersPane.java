@@ -9,22 +9,20 @@ import csheets.core.Cell;
 import csheets.core.IllegalValueTypeException;
 import csheets.core.Spreadsheet;
 import csheets.core.formula.compiler.FormulaCompilationException;
+import csheets.ext.style.StylableCell;
+import csheets.ext.style.StyleExtension;
 import csheets.ui.ctrl.FocusOwnerAction;
 import csheets.ui.ctrl.SelectionEvent;
 import csheets.ui.ctrl.SelectionListener;
 import csheets.ui.ctrl.UIController;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -38,6 +36,8 @@ import javax.swing.ListSelectionModel;
 import lapr4.green.s2.core.n1150838.GlobalSearch.presentation.CustomListString;
 import lapr4.green.s3.lang.n1150838.TablesAndFilters.TableAndFiltersExtension;
 import lapr4.green.s3.lang.n1150838.TablesAndFilters.application.TableAndFiltersController;
+import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.DataRow;
+import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.Row;
 import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.Table;
 
 /**
@@ -62,6 +62,8 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
 
     private TableAndFiltersController ctrl;
 
+    private UIController uiCtrl;
+
     /* Creates a new Table and Filters panel.
      *
      * @param uiController the user interface controller
@@ -72,6 +74,7 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
         uiController.addSelectionListener(this);
         ctrl = new TableAndFiltersController(uiController);
         build();
+        this.uiCtrl = uiController;
         setName(TableAndFiltersExtension.NAME);
         setVisible(true);
 
@@ -104,7 +107,8 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
                 JList list = (JList) evt.getSource();
                 int index = list.locationToIndex(evt.getPoint());
                 if (index >= 0) {
-
+                    modelTable.setSelectedItem((String) modelTable.getElementAt(index));
+                   
                 }
 
             }
@@ -118,9 +122,11 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
 
     private void buildTableContent() {
         modelTable.removeAll();
+        modelFilters.removeAll();
         for (Table activeTable : ctrl.activeTables()) {
             modelTable.addElement(activeTable);
         }
+
         listTables.updateUI();
     }
 
@@ -156,12 +162,13 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
                 if (table != null) {
                     modelTable.setSelectedItem(table);
                     try {
-                        ctrl.validateFormula(modelTable.getSelectedItem(), field.getText());
-                        
-                        modelTable.getSelectedItem().insertFilter(field.getText());
-                        ctrl.verifyAllFormulas(modelTable.getSelectedItem());
+                        listTables.clearSelection();
+                        modelTable.getSelectedItem();
+                        updateInvalidRows(ctrl.verifyFormula(modelTable.getSelectedItem(), field.getText()));
+                        modelTable.getSelectedItem().addfilter(field.getText());
                     } catch (FormulaCompilationException | IllegalValueTypeException ex) {
-                        ex.printStackTrace();
+                        JOptionPane.showMessageDialog(null, "Invalid Formula!", "Error", JOptionPane.WARNING_MESSAGE);
+
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "Select a table to add the Filter!", "Error", JOptionPane.WARNING_MESSAGE);
@@ -178,7 +185,18 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                String table = ((String) listTables.getSelectedValue());
+                String filter = ((String) listFilters.getSelectedValue());
+                if (filter != null && table != null) {
+                  
+                        modelFilters.removeElement(filter);
+                        modelTable.setSelectedItem(table);
+                        listFilters.updateUI();
+                        resetStyle(modelTable.getSelectedItem());
+                    
+                } else {
+                    JOptionPane.showMessageDialog(null, "Select a filter to remove!", "Error", JOptionPane.WARNING_MESSAGE);
+                }
             }
 
         });
@@ -226,6 +244,33 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
         });
 
         return button;
+    }
+
+    private void updateInvalidRows(List<Row> rows) {
+        for (Row row : rows) {
+            for (Object object : row) {
+                Cell cell = (Cell) object;
+                StylableCell sCell = (StylableCell) cell.getExtension(StyleExtension.NAME);
+                sCell.setForegroundColor(sCell.getBackgroundColor());
+                sCell.valueChanged(cell);
+                uiCtrl.setWorkbookModified(cell.getSpreadsheet().getWorkbook());
+            }
+        }
+
+    }
+
+    private void resetStyle(Table d) {
+        for (int i = 1; i < d.getCells().size() ; i++) {
+            DataRow row = (DataRow) d.getRow(i);
+            for (Object object : row) {
+                Cell cell = (Cell) object;
+                StylableCell sCell = (StylableCell) cell.getExtension(StyleExtension.NAME);
+                sCell.resetStyle();
+                sCell.valueChanged(cell);
+                uiCtrl.setWorkbookModified(cell.getSpreadsheet().getWorkbook());
+            }
+
+        }
     }
 
     protected class CreateNewTableAction extends FocusOwnerAction implements ActionListener {
