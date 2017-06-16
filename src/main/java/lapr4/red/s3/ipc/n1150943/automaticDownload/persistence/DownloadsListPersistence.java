@@ -12,7 +12,7 @@ public class DownloadsListPersistence {
 
     public static void saveList(Map<String,DownloadInfo> downloads){
         try{
-            FileOutputStream fileOut = new FileOutputStream(System.getProperty("user.dir"));
+            FileOutputStream fileOut = new FileOutputStream(new File("downloadsList.ser"));
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(downloads);
             out.close();
@@ -27,7 +27,7 @@ public class DownloadsListPersistence {
     public static Map<String,DownloadInfo> getDownloads(){
         Map<String,DownloadInfo> downloads = null;
         try{
-            FileInputStream fileIn = new FileInputStream(System.getProperty("user.dir"));
+            FileInputStream fileIn = new FileInputStream(new File("downloadsList.ser"));
             ObjectInputStream in = new ObjectInputStream(fileIn);
             downloads = (Map<String,DownloadInfo>) in.readObject();
             in.close();

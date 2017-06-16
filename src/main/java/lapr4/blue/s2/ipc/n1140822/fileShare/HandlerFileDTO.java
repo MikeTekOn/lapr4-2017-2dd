@@ -65,7 +65,10 @@ public class HandlerFileDTO extends Observable implements CommHandler {
             if(found){
                 if(di.updateType()==DownloadInfo.UpdateType.RENAME){
                     Map<String,DownloadInfo> downloadInfoMap = DownloadsListPersistence.getDownloads();
-                    filename = filename + downloadInfoMap.get(filename).version();
+                    String[]aux = filename.split("."); // separate extension from file name
+                    String[]aux2 = aux[1].split("-"); // if already has a version separates de filename from the version
+                    String newName = aux2[0]+"-"+"V"+downloadInfoMap.get(filename).version() + "." + aux[1];
+                    filename = newName;
                 }
             }
 
