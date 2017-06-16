@@ -55,7 +55,21 @@ public class LocalVariableTest {
     public void tearDown() {
     }
 
-    @Test public void ensureLocalVariableIsDetected() throws MacroCompilationException, ParseException, IllegalValueTypeException {
+
+    @Test (expected = MacroCompilationException.class)
+    public void ensureNonDeclareVariableCannotBeReferenced() throws MacroCompilationException{
+        String macro = "_local1";
+        Spreadsheet sheet = app.getWorkbooks()[0].getSpreadsheet(0);
+        Expression m = Macro2Compiler.getInstance().compile(sheet, null, macro);
+    }
+
+    @Test public void ensureLocalVariableIsAssignable() throws MacroCompilationException {
+        String macro = "(_local1 := 2)";
+        Spreadsheet sheet = app.getWorkbooks()[0].getSpreadsheet(0);
+        Expression m = Macro2Compiler.getInstance().compile(sheet, null, macro);
+    }
+
+    @Test public void ensureLocalVariableHoldsValue() throws MacroCompilationException, ParseException, IllegalValueTypeException {
         String macro = "(_local1 := 2)\n" +
                 "_local1";
         Spreadsheet sheet = app.getWorkbooks()[0].getSpreadsheet(0);

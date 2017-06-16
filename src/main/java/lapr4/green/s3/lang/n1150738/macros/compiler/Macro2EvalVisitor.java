@@ -12,11 +12,11 @@ import csheets.core.formula.lang.UnknownElementException;
 import csheets.ui.ctrl.UIController;
 import lapr4.blue.s1.lang.n1140822.beanshellwindow.BeanShellInstance;
 import lapr4.blue.s1.lang.n1140822.beanshellwindow.BeanShellLoader;
-import lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable;
 import lapr4.blue.s1.lang.n1151159.macros.compiler.*;
 import lapr4.blue.s1.lang.n1151452.formula.lang.Language;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperation;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperator;
+import lapr4.green.s3.lang.n1150532.variables.Variable;
 import lapr4.red.s2.lang.n1150623.globalVariables.VarContentor;
 import org.antlr.v4.runtime.Token;
 
@@ -214,14 +214,11 @@ public class Macro2EvalVisitor extends Macro2BaseVisitor<Expression>{
         } else if(ctx.LOCAL_VARIABLE() != null){
             String localName = ctx.LOCAL_VARIABLE().getText();
 
-            try{
-                return locals.getExpressionOfVariable(localName);
-            } catch (IllegalArgumentException ex){
+            try {
+                return getExpressionOfVariable(localName, locals);
+            } catch (IllegalArgumentException ex) {
                 addVisitError(ex.getLocalizedMessage());
             }
-        } else if (ctx.assignment().LOCAL_VARIABLE() != null){
-            Variable local = (Variable) visit(ctx.assignment());
-            locals.update(local);
         }
 
         return visitChildren(ctx);
@@ -293,22 +290,23 @@ public class Macro2EvalVisitor extends Macro2BaseVisitor<Expression>{
     @Override
     public Expression visitAssignment(Macro2Parser.AssignmentContext ctx) {
         if (ctx.ASSIGN() != null) {
-            try {
-                // Convert binary operation
-                BinaryOperator operator = Language.getInstance().getBinaryOperator(ctx.getChild(2).getText());
-                return new BinaryOperation(
-                        visit(ctx.getChild(1)),
-                        operator,
-                        visit(ctx.getChild(3))
-                );
-            } catch (UnknownElementException ex) {
-                addVisitError(ex.getMessage());
+            if (ctx.reference() != null) {
+                try {
+                    // Convert binary operation
+                    BinaryOperator operator = Language.getInstance().getBinaryOperator(ctx.getChild(2).getText());
+                    return new BinaryOperation(
+                            visit(ctx.getChild(1)),
+                            operator,
+                            visit(ctx.getChild(3))
+                    );
+                } catch (UnknownElementException ex) {
+                    addVisitError(ex.getMessage());
+                }
+            } else if (ctx.LOCAL_VARIABLE() != null) {
+                String varName = ctx.LOCAL_VARIABLE().getText();
+                return setExpressionOfVariable(varName, visit(ctx.comparison()), this.locals);
             }
-        } else if(ctx.LOCAL_VARIABLE() != null){
-            String varName = ctx.LOCAL_VARIABLE().getText();
-            return new Variable(varName, visit(ctx.comparison()));
         }
-
         return visitChildren(ctx);
     }
 
@@ -352,5 +350,56 @@ public class Macro2EvalVisitor extends Macro2BaseVisitor<Expression>{
     }
 
 
+    /**
+     * It stores the expression in a variable from the container.
+     *
+     * @param visitText The text resulting from the visit. It must contain the
+     * variable's name and, optionally, the index number within square brackets.
+     * @param theExpression The expression to be stored.
+     * @param container The container of the variables. It might be the workbook
+     * container for global variables or the local container for temporary
+     * variables.
+     * @return It returns the same expression that is received.
+     */
+    private Expression setExpressionOfVariable(String visitText, Expression theExpression, VarContentor container) {
+        int index;
+        String[] variableInfo = visitText.split("\\[");
+        if (variableInfo.length == 2) {
+            try {
+                index = Integer.parseInt(variableInfo[1].substring(0, (variableInfo[1].length() - 1)));
+            } catch (NumberFormatException | IndexOutOfBoundsException ex) {
+                throw new IllegalArgumentException("Unknown Index.");
+            }
+        } else {
+            index = Variable.DEFAULT_INDEX;
+        }
+        container.update(variableInfo[0], index, theExpression);
+        return theExpression;
+    }
 
+    /**
+     * It provides the expression stored in a variable from the container.
+     *
+     * @param visitText The text resulting from the visit. It must contain the
+     * variable's name and, optionally, the index number within square brackets.
+     * @param container The container of the variables. It might be the workbook
+     * container for global variables or the local container for temporary
+     * variables.
+     * @return It returns the expression retrieved from the variable's index.
+     */
+    private Expression getExpressionOfVariable(String visitText, VarContentor container) {
+        Expression theExpression;
+        String[] variableInfo = visitText.split("\\[");
+        if (variableInfo.length == 2) {
+            try {
+                int index = Integer.parseInt(variableInfo[1].substring(0, (variableInfo[1].length() - 1)));
+                theExpression = container.getExpressionOfVariable(variableInfo[0], index);
+            } catch (NumberFormatException | IndexOutOfBoundsException ex) {
+                throw new IllegalArgumentException("Unknown Index.");
+            }
+        } else {
+            theExpression = container.getExpressionOfVariable(variableInfo[0], Variable.DEFAULT_INDEX);
+        }
+        return theExpression;
+    }
 }

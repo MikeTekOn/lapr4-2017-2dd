@@ -8,6 +8,7 @@ import lapr4.blue.s1.lang.n1151159.macros.compiler.MacroCompilationException;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,9 +16,31 @@ import java.util.List;
  * Created by henri on 6/14/2017.
  */
 public class Macro2Compiler extends lapr4.blue.s1.lang.n1151159.macros.compiler.MacroCompiler{
+    protected Macro2Compiler(){
 
+    }
 
-    protected Macro2Compiler(){}
+    /**
+     * The singleton instance
+     */
+    private static final Macro2Compiler instance = new Macro2Compiler();
+
+    /**
+     * Returns the singleton instance.
+     *
+     * @return the singleton instance
+     */
+    public static Macro2Compiler getInstance() {
+        return instance;
+    }
+
+    public Macro compile(Spreadsheet spreadsheet, UIController uiController, String source, String macroName, ArrayList<String> macrosUsed) throws MacroCompilationException {
+        if (macrosUsed.contains(macroName)) {
+            return null;
+        }
+        macrosUsed.add(macroName);
+        return compile(spreadsheet, uiController, source);
+    }
 
     @Override
     public Macro compile(Spreadsheet spreadsheet, UIController uiController, String source) throws MacroCompilationException {
@@ -60,4 +83,5 @@ public class Macro2Compiler extends lapr4.blue.s1.lang.n1151159.macros.compiler.
 
         return new Macro(expressions);
     }
+
 }
