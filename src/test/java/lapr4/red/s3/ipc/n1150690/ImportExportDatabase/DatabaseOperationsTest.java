@@ -5,6 +5,7 @@
  */
 package lapr4.red.s3.ipc.n1150690.ImportExportDatabase;
 
+import lapr4.red.s3.ipc.n1150690.ImportExportDatabase.ExportDatabase.domain.DatabaseExportOperations;
 import java.sql.Array;
 import java.sql.Blob;
 import java.sql.CallableStatement;
@@ -50,7 +51,7 @@ public class DatabaseOperationsTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void ensureTableNameCantBeNullOrEmpty() throws Exception {
-        DatabaseOperations op = new DatabaseOperations(connection, null);
+        DatabaseExportOperations op = new DatabaseExportOperations(connection, null);
     }
 
     /**
@@ -58,6 +59,6 @@ public class DatabaseOperationsTest {
      */
     @Test(expected = IllegalArgumentException.class)
     public void ensureTableNameCantContainSpacesOnly() throws Exception {
-        DatabaseOperations op = new DatabaseOperations(connection, "  ");
+        DatabaseExportOperations op = new DatabaseExportOperations(connection, "  ");
     }
 }

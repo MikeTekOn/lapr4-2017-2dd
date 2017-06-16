@@ -13,6 +13,7 @@ package lapr4.white.s1.core.n4567890.contacts.domain;
 import eapli.framework.domain.AggregateRoot;
 import lapr4.green.s2.core.n1150738.contacts.domain.CompanyContact;
 import lapr4.green.s2.core.n1150738.contacts.domain.Profession;
+import lapr4.blue.s3.core.n1060503.notes.domain.NotesList;
 
 import java.io.Serializable;
 import javax.persistence.*;
@@ -51,6 +52,9 @@ public class Contact implements AggregateRoot<Long>, Serializable {
     
     @OneToOne(cascade = CascadeType.ALL) //(cascade = CascadeType.MERGE)
     private Agenda agenda=null;
+    
+    @OneToOne(cascade = CascadeType.ALL) //(cascade = CascadeType.MERGE)
+    private NotesList notesList=null;
 
     @ManyToOne(optional = true, fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     private CompanyContact companyContact = null;
@@ -80,6 +84,7 @@ public class Contact implements AggregateRoot<Long>, Serializable {
         this.agenda=new Agenda();
         this.companyContact = companyContact;
         this.profession = profession;
+        this.notesList = new NotesList();
     }
 
     public Contact(final String name, final String firstName, final String lastName, String photo, String address, String email, String phone) {
@@ -165,6 +170,15 @@ public class Contact implements AggregateRoot<Long>, Serializable {
 
     public void setProfession(Profession profession) {
         this.profession = profession;
+    }
+    
+    /**
+     * List of notes of a contact
+     * Implemented by Pedro Fernandes 1060503
+     * @return list of notes of a contact
+     */
+    public NotesList notesList() {
+        return this.notesList;
     }
 
     /**

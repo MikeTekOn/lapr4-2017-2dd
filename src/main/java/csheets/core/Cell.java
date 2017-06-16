@@ -90,7 +90,9 @@ public interface Cell extends Comparable<Cell>, Extensible<Cell>, Serializable {
 	 * @throws FormulaCompilationException if an incorrectly formatted formula was entered
 	 */
 	public void setContent(String content) throws FormulaCompilationException;
-
+        
+        
+                  public void setContentWithoutFiringEvents(String content) throws FormulaCompilationException;
 	/**
 	 * Clears the content of the cell.
 	 */

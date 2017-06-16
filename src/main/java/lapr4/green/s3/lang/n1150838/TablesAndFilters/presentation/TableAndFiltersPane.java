@@ -7,25 +7,38 @@ package lapr4.green.s3.lang.n1150838.TablesAndFilters.presentation;
 
 import csheets.core.Cell;
 import csheets.core.IllegalValueTypeException;
+import csheets.core.Spreadsheet;
+import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.ui.ctrl.FocusOwnerAction;
 import csheets.ui.ctrl.SelectionEvent;
 import csheets.ui.ctrl.SelectionListener;
 import csheets.ui.ctrl.UIController;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import lapr4.green.s1.ipc.n1150800.importexportTXT.CellRange;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import lapr4.green.s2.core.n1150838.GlobalSearch.presentation.CustomListString;
 import lapr4.green.s3.lang.n1150838.TablesAndFilters.TableAndFiltersExtension;
-import lapr4.green.s3.lang.n1150838.TablesAndFilters.TableCellExtension;
 import lapr4.green.s3.lang.n1150838.TablesAndFilters.application.TableAndFiltersController;
+import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.Table;
 
 /**
  *
@@ -37,6 +50,16 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
 
     private final String labelRangePreFix = "Table: ";
 
+    private TableList modelTable;
+
+    private JList listTables;
+
+    private CustomListString modelFilters;
+
+    private JList listFilters;
+
+    private JTextField field;
+
     private TableAndFiltersController ctrl;
 
     /* Creates a new Table and Filters panel.
@@ -46,67 +69,163 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
     public TableAndFiltersPane(UIController uiController) {
         super();
         // Configures panel
-        BoxLayout box = new BoxLayout(this, BoxLayout.Y_AXIS);
-        this.setLayout(box);
         uiController.addSelectionListener(this);
         ctrl = new TableAndFiltersController(uiController);
         build();
-        this.setName(TableAndFiltersExtension.NAME);
-        this.setVisible(true);
+        setName(TableAndFiltersExtension.NAME);
+        setVisible(true);
 
     }
 
     public void build() {
-        this.add(buildTableLabel());
+        BoxLayout box = new BoxLayout(this, BoxLayout.Y_AXIS);
+        setLayout(box);
+
+        add(buildTableList());
         JPanel panelButtons = new JPanel();
         panelButtons.add(buildDefineButton());
         panelButtons.add(buildRemoveButton());
+        add(panelButtons);
+        add(buildFiltersList());
+        add(buildFiltersField());
+        panelButtons = new JPanel();
+        panelButtons.add(buttonAdd());
+        panelButtons.add(buttonRemove());
+        add(panelButtons);
 
-        this.add(panelButtons);
     }
 
-    private JPanel buildTableLabel() {
-        JPanel mainPanel = new JPanel();
-        labelRange = new JLabel(labelRangePreFix + "not defined");
-        mainPanel.add(labelRange);
-        return mainPanel;
+    private JScrollPane buildTableList() {
+        modelTable = new TableList(new ArrayList());
+        listTables = new JList(modelTable);
+        listTables.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                JList list = (JList) evt.getSource();
+                int index = list.locationToIndex(evt.getPoint());
+                if (index >= 0) {
+
+                }
+
+            }
+        });
+        listTables.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        listTables.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Tables: "));
+        JScrollPane pane = new JScrollPane(listTables);
+        pane.setPreferredSize(new Dimension(100, 100));
+        return pane;
     }
 
-    private JPanel buildDefineButton() {
-        JPanel panelButton = new JPanel();
-        JButton button = new JButton("Define Table");
-        button.addActionListener(new CreateNewTableAction());
-        panelButton.add(button);
-        return panelButton;
+    private void buildTableContent() {
+        modelTable.removeAll();
+        for (Table activeTable : ctrl.activeTables()) {
+            modelTable.addElement(activeTable);
+        }
+        listTables.updateUI();
     }
 
-    private JPanel buildRemoveButton() {
-        JPanel panelButton = new JPanel();
-        JButton button = new JButton("Remove Table");
-        button.addActionListener(new RemoveTableAction());
-        panelButton.add(button);
-        return panelButton;
+    private JScrollPane buildFiltersList() {
+        modelFilters = new CustomListString(new ArrayList());
+        listFilters = new JList(modelFilters);
+        listFilters.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        listFilters.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Filters: "));
+        JScrollPane pane = new JScrollPane(listFilters);
+        pane.setPreferredSize(new Dimension(100, 100));
+        return pane;
+    }
+
+    private JPanel buildFiltersField() {
+        JPanel pane = new JPanel(new BorderLayout());
+
+        JLabel insert = new JLabel("Insert Filters");
+        field = new JTextField();
+        field.setPreferredSize(new Dimension(150, 30));
+        pane.add(insert, BorderLayout.WEST);
+        pane.add(field, BorderLayout.CENTER);
+
+        return pane;
+
+    }
+
+    private JButton buttonAdd() {
+        JButton button = new JButton("Add");
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String table = ((String) listTables.getSelectedValue());
+                if (table != null) {
+                    modelTable.setSelectedItem(table);
+                    try {
+                        ctrl.validateFormula(modelTable.getSelectedItem(), field.getText());
+                        
+                        modelTable.getSelectedItem().insertFilter(field.getText());
+                        ctrl.verifyAllFormulas(modelTable.getSelectedItem());
+                    } catch (FormulaCompilationException | IllegalValueTypeException ex) {
+                        ex.printStackTrace();
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Select a table to add the Filter!", "Error", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+
+        });
+
+        return button;
+    }
+
+    private JButton buttonRemove() {
+        JButton button = new JButton("Remove");
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+
+        });
+
+        return button;
     }
 
     @Override
     public void selectionChanged(SelectionEvent event) {
-        Cell cell = event.getCell();
-        if (cell == null) {
-            return;
+
+        Spreadsheet spreadsheet = event.getSpreadsheet();
+
+        if (ctrl != null && spreadsheet != null) {
+            buildTableContent();
+
         }
+    }
 
-        TableCellExtension cellTable = (TableCellExtension) cell.getExtension(TableAndFiltersExtension.NAME);
+    private JButton buildDefineButton() {
 
-        if (cellTable == null) {
-            return;
-        } else {
-            CellRange range = cellTable.getRange();
-            if (range == null) {
-                labelRange.setText(labelRangePreFix + "not defined");
-            } else {
-                labelRange.setText(labelRangePreFix + range.getFirstCell() + ":" + range.getLastCell());
+        JButton button = new JButton("Define Table");
+        button.addActionListener(new CreateNewTableAction());
+
+        return button;
+    }
+
+    private JButton buildRemoveButton() {
+
+        JButton button = new JButton("Remove Table");
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Object table = listTables.getSelectedValue();
+                if (table != null) {
+                    modelTable.setSelectedItem((String) table);
+                    ctrl.removeTable(modelTable.getSelectedItem());
+                    modelTable.removeElement(modelTable.getSelectedItem());
+                    listTables.updateUI();
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "Select a table to remove!", "Error", JOptionPane.WARNING_MESSAGE);
+                }
             }
-        }
+
+        });
+
+        return button;
     }
 
     protected class CreateNewTableAction extends FocusOwnerAction implements ActionListener {
@@ -124,12 +243,15 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
                 JOptionPane.showMessageDialog(null, "Select cells to define a table", "Error", JOptionPane.WARNING_MESSAGE);
             } else if (ctrl.setSelectedCells(selectedCells)) {
                 if (ctrl.isAvailableToDefine()) {
-                  
-                        ctrl.defineTable();
-                    
-                      
-                    labelRange.setText(labelRangePreFix + ctrl.getRange().getFirstCell() + ":" + ctrl.getRange().getLastCell());
-                     JOptionPane.showMessageDialog(null, "Table defined!", "Sucess", JOptionPane.INFORMATION_MESSAGE);
+
+                    if (ctrl.defineTable()) {
+                        modelTable.addElement(ctrl.getTable());
+                        listTables.updateUI();
+                        JOptionPane.showMessageDialog(null, "Table defined!", "Sucess", JOptionPane.INFORMATION_MESSAGE);
+
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.WARNING_MESSAGE);
+                    }
 
                 } else {
                     JOptionPane.showMessageDialog(null, "There is a table already defined on the given range!", "Error", JOptionPane.WARNING_MESSAGE);
@@ -137,31 +259,6 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
 
             } else {
                 JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.WARNING_MESSAGE);
-            }
-        }
-
-    }
-
-    protected class RemoveTableAction extends FocusOwnerAction implements ActionListener {
-
-        @Override
-        protected String getName() {
-            return "Remove table";
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            Cell activeCell = focusOwner.getSelectedCell();
-            TableCellExtension tableCell = (TableCellExtension) activeCell.getExtension(TableAndFiltersExtension.NAME);
-            CellRange range = tableCell.getRange();
-
-            if (range != null) {
-                ctrl.removeTable(range);
-                labelRange.setText(labelRangePreFix + "not defined");
-                JOptionPane.showMessageDialog(null, "Table removed!", "Sucess", JOptionPane.INFORMATION_MESSAGE);
-
-            } else {
-                JOptionPane.showMessageDialog(null, "The selected cell doesnt bellong to a table", "Error", JOptionPane.WARNING_MESSAGE);
             }
         }
 

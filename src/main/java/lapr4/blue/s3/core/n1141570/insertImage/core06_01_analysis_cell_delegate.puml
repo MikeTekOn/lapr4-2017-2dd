@@ -1,0 +1,33 @@
+@startuml core02_01_analysis_cell_delegate.png
+    interface Extensible<T> {
+        +T getExtension(String name);
+    }
+    interface "Cell : Extensible<Cell>" as Cell {
+    }
+    class CellImpl {
+        -transient Map<String, CellExtension> extensions;
+        +Cell getExtension(String name);
+    }
+    class CellExtension {
+	-Cell delegate;
+	-String name;
+        +CellExtension(Cell delegate, String name)
+    }
+    interface CellListenner {
+    }
+    class "<<analysis>> ImageableCell" as ImageableCell {
+    }
+
+    Extensible <|-- Cell
+
+    Cell <|-- CellExtension
+    CellListenner <|-- CellExtension
+
+    Cell <|-- CellImpl
+
+    CellImpl o- CellExtension : extensions
+
+    CellExtension <|-- ImageableCell
+
+@enduml
+
