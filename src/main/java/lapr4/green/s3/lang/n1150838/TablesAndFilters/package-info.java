@@ -21,9 +21,10 @@
  * of the index. For instance, if the header of column 2 is 'cidade' it should
  * be possible the get the value of this column for the current row by using
  * '_col[“cidade“]'. An example of a filter for a table could be:
- * '=or(_col[“idade“]>10; _col[3]<123)'.
+ * '=or(_col[“idade“]&gt;10; _col[3]&lt;123)'.
  *
- * </p> <p>
+ * </p>
+ * <p>
  * This extension should add a new sidebar window that should be used to edit
  * tables and its filters.
  * </p>
@@ -66,13 +67,13 @@
  * the data row will stay visible.
  * </p>
  * <p>
- * <b>Variable:</b>: A variable should start with &COL and with an index will
- * reference a column.
+ * <b>Variable:</b>: A variable should start with &amp;COL and with an index
+ * will reference a column.
  * </p>
  * <p>
  * <b>Index:</b>: A index should be included a variable in order to reference a
  * column. For instance a index referencing the first column of a table will be
- * represented like : &COL[1] or &COL["COL HEADER NAME"]
+ * represented like : &amp;COL[1] or &amp;COL["COL HEADER NAME"]
  * </p>
  *
  *
@@ -97,8 +98,8 @@
  * equal to the background color thus giving the desired invisible effect.
  * </p>
  * <p>
- * <b>Variable Creation</b>: An variable must start with &COL . The variables
- * can be used as an array by simply using the index reference.
+ * <b>Variable Creation</b>: An variable must start with &amp;COL . The
+ * variables can be used as an array by simply using the index reference.
  * </p>
  * <p>
  * <b>Variable Indexing</b>: The indexing reference is made by using the numeric
@@ -116,6 +117,9 @@
  * <h3>Notes:</h3>
  * A table only can be defined if the given range doesnt contain another defined
  * table.
+ * <p>
+ * An index is a number if it does not start and end with quotation marks.
+ * </p>
  *
  * <h1>Tests</h1>
  *
@@ -170,8 +174,8 @@
  * <h2>Grammar</h2>
  *
  * <p>
- * In order to support the variable '&COL' to reference columns the grammar was
- * changed. Added an array to cell references As we can see below:
+ * In order to support the variable '&amp;COL' to reference columns the grammar
+ * was changed. Added an array to cell references As we can see below:
  * </p>
  * <blockquote>
  * <pre>
@@ -181,7 +185,7 @@
  * ;
  *
  * array:
- * (ARRAY_NAME)(index|string_index) 
+ * (ARRAY_NAME)(index|string_index)
  * ;
  *
  * ARRAY_NAME:
@@ -192,18 +196,22 @@
  * </blockquote>
  * <p>
  * The existing grammar already handles the index with numbers. In order to
- * handle the index reference with columns name and '&COL' variable i added the
- * following grammar.
+ * handle the index reference with columns name and '&amp;COL' variable added
+ * the following grammar.
  * </p>
  * <blockquote>
  * <pre>
  * {@code
- * reference
- * :CELL_REF ( ( COLON ) CELL_REF )? | CELL | array
+ * index:
+ * INDEX
  * ;
  *
- * array:
- * (ARRAY_NAME)(index|string_index) ;
+ * string_index:
+ * '[' STRING ']'
+ * ;
+ * INDEX:
+ * L_RIGHT_PAR POSITIVE_DIGIT (DIGIT)* R_RIGHT_PAR
+ * ;
  *
  * ARRAY_NAME:
  * '&''COL'
@@ -212,108 +220,44 @@
  * </pre>
  * </blockquote>
  * <p>
- * Now both variables have the ability to contain or not a reference to the
- * index. The index should always start with an opening square bracket followed
- * by a positive integer and then a closing square bracket. The positive integer
- * is a number that only contains digits and at least one, as well as the
- * leftmost digit is not equal to zero.
+ * Now the grammar can has the hability to support cells reference by column.
  * </p>
  *
  * <h2>Visits</h2>
  *
  * <p>
- * The existing visit methodology handles both temporary and global variables.
- * However, now that must be changed so it checks and handles the index
- * reference. Since we added a new rule to handle the index reference, it could
- * be treated at that visit method. However, the existing implementation
- * provides an easier and more suitable solution: handle the index at the
- * variable visit. Since the index belongs to the variable and the variable's
- * name and index are provided at this time, it makes sense that this rule
- * examines the tokens, splits the name from the index and saves &#47; gets the
- * matching expression.
+ * It was necessary to change the visitReference method so that it supports
+ * column references. As the visit is made per data row whenever it is called it
+ * checks if the inserted index is valid and if it is it will get the cell of
+ * the data row that corresponds that index. If the index is a string it will
+ * check if there is any cell in the header row that contains that name and if
+ * it does returns the number of the index corresponding to the column otherwise
+ * a InvalidIndexException is thrown.
  * </p>
- *
- * <h2>Variable</h2>
- *
- * <p>
- * The variable concept is more than just a name and an expression now. This
- * requires the {@link lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable}
- * to be altered. Although a completely new and different implementation is
- * needed (as discussed above), the current proposal is to maintain the original
- * concept as far as possible.
- * </p>
- * <p>
- * The variable have indexes now, which means an array. The implementation could
- * then be performed by using an array. However, the size of the array is
- * unknown and dynamical, i.e. it may change during runtime. So a
- * {@link java.util.List} could be used. The client also states that the indexes
- * may not be straight sequential (there might be gaps). Moreover, the first
- * element is at index number one and not zero. For this approach, a
- * {@link java.util.Map} whose key is the index and the value the expression
- * seems more suitable.
- * </p>
- * <p>
- * The variables hold expressions which are capable of handling all different
- * value types. This solves the multi-type array issue since each position holds
- * its own expression.
- * </p>
- *
- * <h2>VarContentor</h2>
- *
- * <p>
- * The above said also requires the
- * {@link lapr4.red.s2.lang.n1150623.globalVariables.VarContentor} to change
- * some of its methods, like the
- * {@link lapr4.red.s2.lang.n1150623.globalVariables.VarContentor#getExpressionOfVariable}
- * and {@link lapr4.red.s2.lang.n1150623.globalVariables.VarContentor#update}.
- * These will now require the index in which to operate. By default the first
- * element should be used as previously discussed.
- * </p>
- *
  * <h2>Compiler</h2>
  *
- * The side bar will receive user input to change the content of a global
- * variable. That user input shall then be compiled. For that purpose, the
+ * The side bar will receive user input to change the table filter . That user
+ * input shall then be compiled. For that purpose, the
  * {@link lapr4.blue.s1.lang.n1151452.formula.compiler.ExcelExpressionCompiler}
- * can be used.
+ * will be used.
  *
  * <h2>Update</h2>
- *
  * <p>
- * In order to update the side bar with the changes to global variables and
- * following the existing implementation, the
- * {@link lapr4.red.s2.lang.n1150623.globalVariables.VarContentor} can be an
- * {@link java.util.Observable} container which will be monitored by the side
- * bar. Although the VarContentor already extends another class, that extension
- * is not being used anywhere and it has no apparent reason to exist. So it can
- * be replaced.
+ * It is necessary to implement the editlistenner in order to know when a cell
+ * is modified and after that check if new cell value verifys the filter .
+ * Also it is necessary to implement the selectionlistenner to know when the
+ * spreadsheet is changed in order to refresh the table list.
+ * The {@link csheets.ui.ctrl.FocusOwnerAction} will be extended to get the selected cells to define a table.
  * </p>
  * <p>
- * On the other hand, the side bar can notify the workbook to update its cells.
- * It is a rather radical strategy but it seems like the only possible one,
- * since the global variables have no track of their precedents and dependents.
- * It is never enough to mention that this is only a bandage to attempt to
- * partially solve the issue. The best solution would be to refactor the whole
- * implementation and concepts. Regardless, since the client does not explicitly
- * require the cells to be updated on this Feature Increment, this solution will
- * not be implemented neither.
- * </p>
- * <p>
- * Plus, the side bar should also implement the
- * {@link csheets.SpreadsheetAppListener}, as well as the
+ * Implemented listeners:
+ * {@link csheets.ui.ctrl.EditListener}, as well as the
  * {@link csheets.ui.ctrl.SelectionListener}, in order to monitor the workbook
  * activity to update the side bar.
  * </p>
- *
- * <h2>Alternatives</h2>
- *
+ * <h2>UC Realization</h2>
+ * <img src="core03_03_design_sd.png" alt="image">
  * <p>
- * Besides all the stated possibilities and advised changes, another alternative
- * (to the current implementation), would be to simply change the grammar as
- * stated. This would then create a global variable to each of the indexes
- * inserted and it would work normally. However, in business terms, this is not
- * what it was required and it would represent a short sight for future
- * maintenance.
  * </p>
  *
  * @author Nuno Pinto (1150838)

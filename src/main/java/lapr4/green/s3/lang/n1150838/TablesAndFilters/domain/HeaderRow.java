@@ -17,6 +17,9 @@ import java.util.List;
  */
 public class HeaderRow extends Row implements Serializable {
 
+    /**
+     * the header row
+     */
     private List<Header> row;
 
     public HeaderRow(List<Header> row) {
@@ -33,6 +36,12 @@ public class HeaderRow extends Row implements Serializable {
         return false;
     }
 
+    /**
+     * adds the given header to the row
+     *
+     * @param d the given header
+     * @return true if the header was added to the row
+     */
     public boolean add(Header d) {
         return row.add(d);
     }
@@ -45,10 +54,16 @@ public class HeaderRow extends Row implements Serializable {
         }
         return cells.iterator();
     }
-    
-    public int getIndexByContent(String content){
+
+    /**
+     *
+     * @param content the given content
+     * @return true the index of a cell with the given contet . If there isnt a
+     * cell with the given content it will return -1
+     */
+    public int getIndexByContent(String content) {
         for (Header header : row) {
-            if(header.getHeaderContent().equals(content)){
+            if (header.getHeaderContent().equals(content)) {
                 return header.getHeaderIndex();
             }
         }

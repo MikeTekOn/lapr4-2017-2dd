@@ -81,7 +81,12 @@ end group
 group #A9F5A9 alt : edit note
 User -> UI : choose edit note option
 activate UI
-UI --> UI : editNoteWindow()
+UI -> CTRL : notesContentOfNote(n)
+activate CTRL
+CTRL -> NL : getNotesContentList(n)
+activate NL
+deactivate NL
+deactivate CTRL
 UI --> User : show window to fill the new content of selected note
 deactivate UI
 User -> UI : confirm submission
@@ -110,7 +115,12 @@ end group
 group #A9BCF5 alt : remove note
 User -> UI : choose remove note option
 activate UI
-UI --> UI : addNewNoteWindow()
+UI -> CTRL : notesContentOfNote(n)
+activate CTRL
+CTRL -> NL : getNotesContentList(n)
+activate NL
+deactivate NL
+deactivate CTRL
 UI --> User : show window of notes
 deactivate UI
 User -> UI : selecte note to be removed

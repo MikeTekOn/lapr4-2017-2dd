@@ -35,6 +35,8 @@ import javax.swing.SwingConstants;
 import lapr4.green.s1.ipc.n1150838.findworkbooks.FindWorkbooksPublisher;
 import lapr4.green.s1.ipc.n1150838.findworkbooks.FileDTO;
 import lapr4.green.s1.ipc.n1150838.findworkbooks.ctrl.ControllerFindWorkbooks;
+import lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch.CommUDPServer;
+import lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch.FilePathDTO;
 
 /**
  *
@@ -55,32 +57,36 @@ public class FindWorkbooksSideBar extends JPanel implements Observer {
         buildPanel();
 
     }
+
     // set the main panel properties 
     private void setUpMainPanel() {
         setLayout(new BorderLayout());
     }
+
     /*
     * calls all the methos to build the panel
-    */
+     */
     private void buildPanel() {
-        add(labelInicial(),BorderLayout.NORTH);
-        add(mainList(),BorderLayout.CENTER);
-        add(buttonsPanel(),BorderLayout.SOUTH);
+        add(labelInicial(), BorderLayout.NORTH);
+        add(mainList(), BorderLayout.CENTER);
+        add(buttonsPanel(), BorderLayout.SOUTH);
     }
+
     /*
     * creates the inicial label 
-    */
+     */
     private JPanel labelInicial() {
         JLabel labelInicial = new JLabel("<html>Find Workbooks <br>(double click to open)</html>");
         JPanel panel = new JPanel();
-        panel.setPreferredSize(new Dimension(100,40));
+        panel.setPreferredSize(new Dimension(100, 40));
         panel.add(labelInicial);
         return panel;
     }
+
     /*
     * creates the list that will contain the files to open and
     * the program behavior when a mouse is double clicked
-    */
+     */
     private JScrollPane mainList() {
         modeloWorkbook = new WorkbookList(new ArrayList());
         listWorkbook = new JList(modeloWorkbook);
@@ -96,7 +102,7 @@ public class FindWorkbooksSideBar extends JPanel implements Observer {
                     FileDTO dto = modeloWorkbook.getSelectedItem();
 
                     try {
-                        Workbook b =controller.load(dto.getFilePath());
+                        Workbook b = controller.load(dto.getFilePath());
                         extension.setActiveWorkbook(b);
 //               
                     } catch (IOException ex) {
@@ -111,21 +117,25 @@ public class FindWorkbooksSideBar extends JPanel implements Observer {
         JScrollPane mainScroll = new JScrollPane(listWorkbook);
         return mainScroll;
     }
+
     /**
      * creates the button to search for files
-     * @return 
+     *
+     * @return
      */
     private JPanel buttonsPanel() {
         JPanel buttonsPanel = new JPanel();
         buttonsPanel.add(labelField());
         buttonsPanel.add(fieldTextField());
         buttonsPanel.add(mainButton());
-         buttonsPanel.setPreferredSize(new Dimension(100,85));
+        buttonsPanel.setPreferredSize(new Dimension(100, 85));
         return buttonsPanel;
     }
+
     /**
      * creates the field inser path
-     * @return 
+     *
+     * @return
      */
     private JLabel labelField() {
         JLabel label = new JLabel("<html>Insert path</html>");
@@ -137,9 +147,12 @@ public class FindWorkbooksSideBar extends JPanel implements Observer {
         listField = new JTextField(10);
         return listField;
     }
+
     /**
-     * creates the main button and the behavior off the method if a user clicks to search for files.
-     * @return 
+     * creates the main button and the behavior off the method if a user clicks
+     * to search for files.
+     *
+     * @return
      */
     private JButton mainButton() {
         JButton mainButton = new JButton("Search");
@@ -147,10 +160,13 @@ public class FindWorkbooksSideBar extends JPanel implements Observer {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    if(controller!=null)controller.stopSearch();
+                    if (controller != null) {
+                        controller.stopSearch();
+                    }
                     modeloWorkbook.removeAll();
                     controller = new ControllerFindWorkbooks(listField.getText());
                     controller.searchFiles();
+                    CommUDPServer srv = new CommUDPServer();
                 } catch (IllegalStateException ex) {
                     JOptionPane.showMessageDialog(new JFrame(), "Insert a valid path!");
                 }
@@ -159,16 +175,25 @@ public class FindWorkbooksSideBar extends JPanel implements Observer {
         });
         return mainButton;
     }
+
     /**
      * update method use when a new file was found after a search
+     *
      * @param o
-     * @param arg 
+     * @param arg
      */
     @Override
     public void update(Observable o, Object arg) {
-        FileDTO workbook = (FileDTO) arg;
+        
+        if (arg instanceof FileDTO) {
+            FileDTO workbook = (FileDTO) arg;
 
-        modeloWorkbook.addElement(workbook);
+            modeloWorkbook.addElement(workbook);
+        }
+        
+        if (arg instanceof FilePathDTO){
+            
+        }
     }
 
 }
