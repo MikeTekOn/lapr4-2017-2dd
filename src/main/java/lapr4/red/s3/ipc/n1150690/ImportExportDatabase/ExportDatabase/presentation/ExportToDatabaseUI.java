@@ -72,6 +72,8 @@ public class ExportToDatabaseUI extends JDialog {
     private JPanel panel;
     
     private String driver;
+    
+    private static boolean printSucess = true;
 
     public ExportToDatabaseUI(UIController uiController) {
         this.uiController = uiController;
@@ -118,6 +120,7 @@ public class ExportToDatabaseUI extends JDialog {
         b.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                labelErrors.setText("");
                 boolean successExportation = false;
                 String addressStrFirstCell = txtFieldFirstCell.getText();
                 String addressStrLastCell = txtFieldLastCell.getText();
@@ -125,9 +128,8 @@ public class ExportToDatabaseUI extends JDialog {
                 controller = new ExportToDatabaseController(uiController, cellRange, txtTableName.getText(), txtDatabaseConnection.getText(), driver);
                 try {
                     controller.export(false);
-                    successExportation = true;
+                    printSucess = true;
                 } catch (Exception ex) {
-                    successExportation = false;
                     ExportToDatabaseUI.printException(ex.getMessage());
                 }
                 if (successExportation) {
@@ -207,6 +209,7 @@ public class ExportToDatabaseUI extends JDialog {
     }
     
     public static void printException(String message){
+        printSucess = false;
         labelErrors.setText(message);
         labelErrors.setForeground(Color.RED);
     }
