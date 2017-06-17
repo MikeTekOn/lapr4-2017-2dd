@@ -9,6 +9,7 @@ import csheets.CleanSheets;
 import csheets.ui.ctrl.UIController;
 import eapli.framework.persistence.DataConcurrencyException;
 import eapli.framework.persistence.DataIntegrityViolationException;
+import lapr4.blue.s3.core.n1151159.contactswithtags.ui.SearchContactsByTagButton;
 import lapr4.green.s2.core.n1150738.contacts.application.CompanyContactController;
 import lapr4.green.s2.core.n1150738.contacts.domain.*;
 import lapr4.red.s1.core.n1150623.labelsForContacts.application.LabelsForContactsController;
@@ -57,6 +58,7 @@ public class CompanyContactPanel extends JPanel implements ActionListener {
      */
     private JTextArea commentField = new JTextArea();
 
+    private final UIController uiController;
 
     // Controls for the contacts panel
     private JLabel labelContacts = null;
@@ -116,6 +118,7 @@ public class CompanyContactPanel extends JPanel implements ActionListener {
         filterPane.add(labelContacts);
         filterPane.add(contactsFilterField);
         filterPane.add(contactsApplyFilterButton);
+        filterPane.add(new SearchContactsByTagButton(uiController));
 
         contactsModel = new DefaultListModel();
         Iterable<CompanyContact> contacts = controller.allCompanyContacts();
@@ -255,6 +258,8 @@ public class CompanyContactPanel extends JPanel implements ActionListener {
         // Configures panel
         super(new BorderLayout());
         setName(ContactsExtension.NAME);
+
+        this.uiController = uiController;
 
         // Creates controllers
         this.controller = new CompanyContactController(uiController.getUserProperties());
