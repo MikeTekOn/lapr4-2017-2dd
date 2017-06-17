@@ -90,7 +90,7 @@ public class TableAndFiltersController implements Controller {
             }
         }
         if(flag == 0 ){
-            throw new InvalidTableException("A table must have at least 2 tows and 1 column");
+            throw new InvalidTableException("A table must have at least 2 rows and 1 column");
         }
         return ((SpreadsheetImpl) uiController.getActiveSpreadsheet()).isAvailableToDefine(selectedCells);
     }
