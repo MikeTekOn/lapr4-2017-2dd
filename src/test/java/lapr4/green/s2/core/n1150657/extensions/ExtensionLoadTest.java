@@ -84,7 +84,7 @@ public class ExtensionLoadTest {
      */
    
     
-    @Test
+   /* @Test
     public void testNumberVersionsByExtension() {
         System.out.println("numberVersionsByExtension");
         String extensionName = CommExtension.NAME;
@@ -102,6 +102,6 @@ public class ExtensionLoadTest {
         expResult = 0;
         result = instance.numberVersionsByExtension(extensionName);
         assertEquals(expResult, result);
-    }
+    }*/
     
 }

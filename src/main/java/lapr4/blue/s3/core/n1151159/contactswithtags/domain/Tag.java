@@ -39,6 +39,25 @@ public class Tag implements ValueObject, Comparable<Tag> {
         this.designation = designation;
     }
 
+    /**
+     * Verify if the tag matches the given regular expression.
+     *
+     * @param regex the regular expression
+     * @return true if it matches, false otherwise
+     */
+    public boolean matches(String regex) {
+        return designation.matches(regex);
+    }
+
+    /**
+     * Retrieves the designation of the tag.
+     *
+     * @return tag designation
+     */
+    public String designation() {
+        return designation;
+    }
+
     @Override
     public int hashCode() {
         return designation.hashCode();

@@ -20,10 +20,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.attribute.UserDefinedFileAttributeView;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -200,6 +197,16 @@ public class ShareFrame extends JFrame implements Observer {
                     // if it is find the latest version's name
                 boolean isPermanent = false;
                 boolean isRenameFile = false;
+                File downloadsList = new File("downloadsList.ser");
+                try {
+                    boolean createdFile = downloadsList.createNewFile();
+                    if (createdFile){
+                        Map<String,DownloadInfo>newMap = new HashMap<>();
+                        DownloadsListPersistence.saveList(newMap);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 Map<String,DownloadInfo> downloads = DownloadsListPersistence.getDownloads();
                 String latestVersionName = fileName;
 
@@ -247,9 +254,6 @@ public class ShareFrame extends JFrame implements Observer {
                         DownloadInfo newInfo = new DownloadInfo(fileName,latestVersionInfo.downloadType(),latestVersionInfo.updateType());
                         newInfo.setVersion(latestVersionInfo.version()+1);
                         if(isRenameFile){
-                            String[]aux = fileName.split("-");
-                            String newName = aux[0]+"-"+"V"+newInfo.version();
-
                             shareController.addToDownloadsList(fileName,newInfo);
                             shareController.requestFile(fileName);
 
@@ -311,6 +315,8 @@ public class ShareFrame extends JFrame implements Observer {
                         }
                         if(downloadInfo==null) return;
                         shareController.addToDownloadsList(fileName,downloadInfo);
+                        DownloadingPanel dp = new DownloadingPanel(fileName);
+                        dp.setVisible(true);
                         shareController.requestFile(fileName);
 
                     } catch (Exception ex) {

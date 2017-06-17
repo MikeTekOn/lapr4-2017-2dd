@@ -12,8 +12,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import lapr4.blue.s2.ipc.n1151031.searchnetwork.SearchWorkbookNetworkAction;
 import lapr4.green.s1.ipc.n1150532.comm.CommExtension;
+import lapr4.red.s3.ipc.n1150613.NetworkSearchByFile.NetworkSearchAction;
 
 /**
  * Creates the sidebar panel that has the search workbooks in the network
@@ -33,6 +33,8 @@ public class NetworkSearchPanel extends JPanel {
      */
     private JTextField nameField;
 
+    private JTextField contentField;
+
     public NetworkSearchPanel(UIController uiController, Extension extension) {
         super(new BorderLayout());
         setName(CommExtension.NAME);
@@ -45,7 +47,9 @@ public class NetworkSearchPanel extends JPanel {
     private void createComponents() {
         add(createMainPanel(), BorderLayout.NORTH);
         add(createBottomPanel(), BorderLayout.CENTER);
+        
     }
+
 
     /**
      * Creates the main panel.
@@ -67,11 +71,16 @@ public class NetworkSearchPanel extends JPanel {
     private JPanel createBottomPanel() {
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JLabel textLabel = new JLabel("Name:");
+        JLabel contentLabel = new JLabel("Content:");
         nameField = new JTextField();
-        nameField.setPreferredSize(new Dimension(150, 25));
+        contentField = new JTextField();
+        nameField.setPreferredSize(new Dimension(100, 25));
+        contentField.setPreferredSize(new Dimension(100, 25));
         bottomPanel.add(textLabel);
         bottomPanel.add(nameField);
-        bottomPanel.add(createSearchButton());
+        bottomPanel.add(contentLabel);
+        bottomPanel.add(contentField);
+        bottomPanel.add(createSearchButton(),BOTTOM_ALIGNMENT);
         return bottomPanel;
     }
 
@@ -98,7 +107,7 @@ public class NetworkSearchPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 CommExtension ce = (CommExtension) ExtensionManager.getInstance().getExtension(CommExtension.NAME);
                 resultsTable.clear();
-                (new SearchWorkbookNetworkAction(resultsTable, ce.getUDPServerPortNumber(), nameField.getText())).actionPerformed(e);
+                (new NetworkSearchAction(resultsTable, ce.getUDPServerPortNumber(), nameField.getText(),contentField.getText())).actionPerformed(e);
             }
         });
         return button;
