@@ -28,20 +28,6 @@ public class RegexUtil {
         this.name = name;
     }
 
-    /*
-      The call to the method to check if the regular expression is valid
-      @return true if valid or false if not
-     */
-    public boolean isRegexValid() {
-        boolean test = true;
-        try {
-            Pattern.compile(content);
-            Pattern.compile(name);
-        } catch (PatternSyntaxException exception) {
-            test = false;
-        }
-        return test;
-    }
 
     /*
       The call to the method to check if the cellContent matches with the
@@ -52,7 +38,7 @@ public class RegexUtil {
      */
     public boolean checkIfNameMatches(String filename) {
         if (name.equals("")) {
-            return false;
+            return true;
         }
         p = Pattern.compile(name);
         m = p.matcher(filename);
@@ -75,16 +61,11 @@ public class RegexUtil {
      */
     public boolean checkIfContentMatches(Workbook w) {
         if (content.equals("")) {
-            return false;
+            return true;
         }
 
         String check;
         boolean is = false;
-
-        if (!isRegexValid()) {
-            System.out.println("Invalid regex");
-            return false;
-        }
 
         for (Spreadsheet s : w) {
             for (Cell c : s) {
@@ -97,4 +78,5 @@ public class RegexUtil {
 
         return is;
     }
+
 }

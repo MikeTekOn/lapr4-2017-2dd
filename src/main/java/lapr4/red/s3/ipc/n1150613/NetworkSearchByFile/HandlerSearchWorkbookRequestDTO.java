@@ -75,9 +75,22 @@ public class HandlerSearchWorkbookRequestDTO implements CommHandler, Serializabl
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(HandlerSearchWorkbookRequestDTO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         //searches for active workbooks with received name pattern
         //returns a list of workbooks found with the name and spreadsheet list
+        activeWorkbooks(results, reg);
+
+        SearchWorkbookResponseDTO reply = new SearchWorkbookResponseDTO(results);
+        try {
+            outStream.write(reply);
+            outStream.flush();
+        } catch (IOException ex) {
+            Logger.getLogger(HandlerConnectionDetailsRequestDTO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private List<SearchResults> activeWorkbooks(List<SearchResults> sr, RegexUtil reg) {
+
         Stack<Workbook> activeWorkbooks = uiController.getActiveWorkbooks();
         for (Workbook workbook : activeWorkbooks) {
             if (uiController.getFile(workbook) != null) {
@@ -89,18 +102,14 @@ public class HandlerSearchWorkbookRequestDTO implements CommHandler, Serializabl
                         spreadsheetList.add(workbook.getSpreadsheet(i));
                     }
                     SearchResults searchResult = new SearchResults(name, spreadsheetList, null);
-                    results.add(searchResult);
+                    if (!sr.contains(searchResult)) {
+                        sr.add(searchResult);
+                    }
                 }
             }
         }
 
-        SearchWorkbookResponseDTO reply = new SearchWorkbookResponseDTO(results);
-        try {
-            outStream.write(reply);
-            outStream.flush();
-        } catch (IOException ex) {
-            Logger.getLogger(HandlerConnectionDetailsRequestDTO.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        return sr;
     }
 
     /**
