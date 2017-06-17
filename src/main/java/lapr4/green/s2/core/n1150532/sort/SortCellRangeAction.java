@@ -3,6 +3,8 @@ package lapr4.green.s2.core.n1150532.sort;
 import csheets.CleanSheets;
 import csheets.core.Cell;
 import csheets.ui.ctrl.FocusOwnerAction;
+import csheets.ui.ctrl.UIController;
+
 import java.awt.event.ActionEvent;
 import static javax.swing.Action.SMALL_ICON;
 import javax.swing.ImageIcon;
@@ -31,12 +33,18 @@ public class SortCellRangeAction extends FocusOwnerAction {
         return NAME;
     }
 
+    private UIController uiController;
+
     /**
      * It defines a small icon to be shown along with the action name.
      */
     @Override
     protected void defineProperties() {
         putValue(SMALL_ICON, new ImageIcon(CleanSheets.class.getResource("res/img/insert_column.gif")));
+    }
+
+    public SortCellRangeAction(UIController uiController) {
+        this.uiController = uiController;
     }
 
     /**
@@ -53,7 +61,7 @@ public class SortCellRangeAction extends FocusOwnerAction {
         } else if (selectedCells.length < 2) {
             JOptionPane.showMessageDialog(null, "There are not enough rows selected to sort.", "Unable to sort", JOptionPane.WARNING_MESSAGE);
         } else {
-            new SortCellRangeUI(selectedCells);
+            new SortCellRangeUI(selectedCells,uiController);
         }
     }
 

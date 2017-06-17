@@ -1,7 +1,13 @@
 package lapr4.green.s2.core.n1150532.sort;
 
+import com.sun.java.swing.plaf.motif.MotifBorders;
 import csheets.core.Cell;
+import csheets.ext.style.StylableCell;
+import csheets.ext.style.StyleExtension;
+import csheets.ui.ctrl.UIController;
 import eapli.framework.application.Controller;
+
+import java.awt.*;
 import java.util.List;
 import lapr4.blue.s3.core.n1140822.autoSorting.AutoSortingThread;
 import lapr4.green.s2.core.n1150532.sort.algorithms.AlgorithmFactory;
@@ -11,6 +17,10 @@ import lapr4.green.s2.core.n1150532.sort.algorithms.SortingAlgorithm;
 import lapr4.green.s2.core.n1150532.sort.comparators.ComparatorFactory;
 import lapr4.green.s2.core.n1150532.sort.comparators.RangeRowDTOComparator;
 import lapr4.green.s2.core.n1150532.sort.sortingDTOs.RangeRowDTO;
+
+import javax.swing.border.BevelBorder;
+import javax.swing.border.MatteBorder;
+import javax.swing.border.TitledBorder;
 
 /**
  * The controller of the SortCellRange use case. It provides the available
@@ -31,13 +41,16 @@ class SortCellRangeController implements Controller {
      */
     private final AlgorithmFactory algorithms;
 
+    private UIController uiController;
+
     /**
      * The controller full constructor. It creates the algorithms and
      * comparators factories.
      */
-    public SortCellRangeController() {
+    public SortCellRangeController(UIController controller) {
         comparators = new ComparatorFactory();
         algorithms = new AlgorithmFactory();
+        uiController = controller;
     }
 
     /**
@@ -73,18 +86,19 @@ class SortCellRangeController implements Controller {
      * @param isDescendant The descendant order flag ("true" orders the values
      * in a descendant order).
      */
-    public void sort(Cell[][] selectedCells, int sortingColumnIndex, SortingAlgorithm algorithm, RangeRowDTOComparator comparator, boolean isDescendant) {
+    public void sort(Cell[][] selectedCells, int sortingColumnIndex,int realColumnIndex, SortingAlgorithm algorithm, RangeRowDTOComparator comparator, boolean isDescendant) {
 
         comparator.setDescendant(isDescendant);
         RangeRowDTO[] dto = createDTOs(selectedCells, sortingColumnIndex);
        
-        AutoSortingThread sortingThread = new AutoSortingThread(dto, comparator, algorithm, sortingColumnIndex);
+        AutoSortingThread sortingThread = new AutoSortingThread(dto, comparator, algorithm, sortingColumnIndex,realColumnIndex);
         for (int i = 0; i < selectedCells.length; i++) {
             for (int j = 0; j < selectedCells[i].length; j++) {
                 selectedCells[i][j].addCellListener(sortingThread);
+
             }
         }
-     
+        uiController.addHeaderCellListener(sortingThread);
         sortingThread.start();
 
     }

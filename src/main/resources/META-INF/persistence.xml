@@ -6,6 +6,10 @@
     <class>lapr4.white.s1.core.n4567890.contacts.domain.Agenda</class>
     <class>lapr4.white.s1.core.n4567890.contacts.domain.Event</class>
     <class>lapr4.green.s2.core.n1150738.contacts.domain.CompanyContact</class>
+    <class>lapr4.blue.s3.core.n1060503.notes.domain.Note</class>
+    <class>lapr4.blue.s3.core.n1060503.notes.domain.NotesList</class>
+    <class>lapr4.blue.s3.core.n1060503.notes.domain.NoteContent</class>
+    
     <properties>
       <!--<property name="javax.persistence.jdbc.url" value="jdbc:h2:../db/demoapplication;MV_STORE=FALSE"/>-->
       <property name="javax.persistence.jdbc.url" value="jdbc:h2:..\db\csheets-crm-extension;MV_STORE=FALSE"/>

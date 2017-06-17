@@ -188,7 +188,9 @@ public class GlobalVariablesExtensionSideBarUI extends JPanel implements Spreads
      */
     @Override
     public void workbookLoaded(SpreadsheetAppEvent event) {
-        // There is nothing to do.
+        VarContentor globalVariables = event.getWorkbook().globalVariables();
+        table.buildTableContent(globalVariables);
+        globalVariables.addObserver(table);
     }
 
     /**
@@ -198,7 +200,9 @@ public class GlobalVariablesExtensionSideBarUI extends JPanel implements Spreads
      */
     @Override
     public void workbookUnloaded(SpreadsheetAppEvent event) {
-        // There is nothing to do.
+        VarContentor globalVariables = event.getWorkbook().globalVariables();
+        table.clear();
+        globalVariables.deleteObserver(table);
     }
 
     /**
@@ -211,11 +215,17 @@ public class GlobalVariablesExtensionSideBarUI extends JPanel implements Spreads
         // There is nothing to do.
     }
 
+    /**
+     * It changes the table listeners and items from the old workbook to the new
+     * selected one.
+     *
+     * @param event The event carrying both old and new workbooks.
+     */
     @Override
     public void selectionChanged(SelectionEvent event) {
         Workbook oldWorkbook = event.getPreviousWorkbook();
         Workbook newWorkbook = event.getWorkbook();
-        if(!oldWorkbook.equals(newWorkbook)){
+        if (!oldWorkbook.equals(newWorkbook)) {
             VarContentor globalVariables = oldWorkbook.globalVariables();
             globalVariables.deleteObserver(table);
             globalVariables = newWorkbook.globalVariables();

@@ -20,9 +20,11 @@
  */
 package csheets.ui.sheet;
 
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -92,7 +94,17 @@ public class SpreadsheetTable extends Grid implements SelectionListener {
 		// Stores members
 		this.uiController = uiController;
 		uiController.addSelectionListener(this);
+		getTableHeader().addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent mouseEvent) {
+				int index = convertColumnIndexToModel(columnAtPoint(mouseEvent.getPoint()));
+				if (index >= 0) {
+					 uiController.setLastClickedColumn(index);
 
+				}
+			}
+			;
+		});
 		// Configures cell rendering and editing
 		setDefaultRenderer(Cell.class, new CellRenderer(uiController));
 		setDefaultEditor(Cell.class, new CellEditor(uiController));
@@ -101,6 +113,7 @@ public class SpreadsheetTable extends Grid implements SelectionListener {
 
 		// Configures cell editing actions
 		ActionMap actionMap = getActionMap();
+
 		actionMap.put(TransferHandler.getCutAction().getValue(Action.NAME),
 			TransferHandler.getCutAction());
 		actionMap.put(TransferHandler.getCopyAction().getValue(Action.NAME),

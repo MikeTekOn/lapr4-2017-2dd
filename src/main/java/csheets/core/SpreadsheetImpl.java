@@ -297,6 +297,20 @@ public class SpreadsheetImpl implements Spreadsheet {
         public boolean removeTable(Table d){
             return tables.remove(d);
         }
+        
+        /**
+          *
+        * @param cell
+        * @return
+        */
+        public Table getTable(Cell cell){
+            for (Table table : tables) {
+                if(table.containsCell(cell)){
+                    return table;
+                }
+            }
+            return null; // should not happen
+        }
 /*
  * EVENT HANDLING
  */

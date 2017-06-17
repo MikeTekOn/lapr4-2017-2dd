@@ -8,6 +8,7 @@ package lapr4.green.s2.core.n1150738.contacts.ui;
 import csheets.CleanSheets;
 import eapli.framework.persistence.DataConcurrencyException;
 import eapli.framework.persistence.DataIntegrityViolationException;
+import lapr4.blue.s3.core.n1151159.contactswithtags.ui.TagManagerPanel;
 import lapr4.green.s2.core.n1150738.contacts.application.CompanyContactController;
 import lapr4.green.s2.core.n1150738.contacts.domain.CompanyContact;
 import lapr4.green.s2.core.n1150738.contacts.domain.Profession;
@@ -105,6 +106,8 @@ public class CompanyContactDialog extends JDialog implements ActionListener {
 
     private JLabel statusLabel = null;
 
+    private TagManagerPanel tagsPanel = null;
+
     private void setupContactsWidgets() {
         formPanel = new JPanel(new SpringLayout());
 
@@ -167,11 +170,20 @@ public class CompanyContactDialog extends JDialog implements ActionListener {
                 break;
         }
 
+        // Creates the tags panel
+        tagsPanel = new TagManagerPanel(this);
+        tagsPanel.setBorder(BorderFactory.createTitledBorder("Associated Tags"));
+
+        // Creates the fields panel
+        JPanel fieldsPanel = new JPanel(new BorderLayout());
+        fieldsPanel.add(formPanel, BorderLayout.NORTH);
+        fieldsPanel.add(tagsPanel, BorderLayout.CENTER);
+
 
         //Put everything together, using the content pane's BorderLayout.
         Container contentPane = getContentPane();
         //contentPane.add(picPanel, BorderLayout.BEFORE_FIRST_LINE);
-        contentPane.add(formPanel, BorderLayout.PAGE_START);
+        contentPane.add(fieldsPanel, BorderLayout.PAGE_START);
         contentPane.add(buttonPanel, BorderLayout.CENTER);
         contentPane.add(statusLabel, BorderLayout.PAGE_END);
     }
@@ -182,6 +194,7 @@ public class CompanyContactDialog extends JDialog implements ActionListener {
             this.emailField.setText(_contact.mail().toString());
             this.phoneField.setText(_contact.phoneNumber().toString());
             //this.addressField.setText(_contact.address());
+            this.tagsPanel.setTags(_contact.getTags());
         }
     }
 
@@ -234,7 +247,12 @@ public class CompanyContactDialog extends JDialog implements ActionListener {
                             }
 
 
-                            _contact = this.ctrl.addContact(this.nameField.getText(), this.emailField.getText(), this.phoneField.getText(), image);
+                            _contact = this.ctrl.addContact(
+                                    this.nameField.getText(),
+                                    this.emailField.getText(),
+                                    this.phoneField.getText(),
+                                    image,
+                                    tagsPanel.getTags());
                             _success = true;
                             // Exit the dialog
                             CompanyContactDialog.dialog.setVisible(false);
@@ -295,7 +313,7 @@ public class CompanyContactDialog extends JDialog implements ActionListener {
                             }
 
 
-                            _contact = this.ctrl.updateContact(_contact, this.nameField.getText(), this.emailField.getText(), this.phoneField.getText(), image);
+                            _contact = this.ctrl.updateContact(_contact, this.nameField.getText(), this.emailField.getText(), this.phoneField.getText(), image, tagsPanel.getTags());
 
 
                             _success = true;

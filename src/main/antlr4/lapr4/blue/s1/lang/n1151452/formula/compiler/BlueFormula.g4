@@ -11,6 +11,8 @@ comparison
 	: concatenation
 		(  ( EQ | NEQ | LTEQ | GTEQ | GT | LT ) concatenation )?
 	| for_loop
+        | do_while_loop
+        | while_do_loop
 	;
 
 concatenation
@@ -46,6 +48,14 @@ for_loop
     : FOR L_CURLY_BRACKET assignment SEMI  comparison ( SEMI comparison )+ R_CURLY_BRACKET
     ;
 
+do_while_loop
+    : DOWHILE LPAR comparison SEMI comparison RPAR
+    ;
+
+while_do_loop
+    : WHILEDO LPAR comparison SEMI comparison RPAR
+    ;
+
 block
 	: L_CURLY_BRACKET comparison ( SEMI comparison )* R_CURLY_BRACKET
 	;
@@ -61,7 +71,7 @@ function_call
 	;
 
 reference
-	:	CELL_REF ( ( COLON ) CELL_REF )? | CELL 
+	:	CELL_REF ( ( COLON ) CELL_REF )? | CELL | array
 	;
 
 literal
@@ -69,10 +79,20 @@ literal
 	|	STRING
 	;
 
+array:  
+    (ARRAY_NAME)(index|string_index) ;
+
+index: INDEX;
+
+string_index: '[' STRING ']';
 
 fragment LETTER: ('a'..'z'|'A'..'Z') ;
 
 FOR : 'FOR' | 'for' | 'For';
+
+DOWHILE : 'DOWHILE' | 'dowhile' | 'DoWhile';
+
+WHILEDO : 'WHILEDO' | 'whiledo' | 'WhileDo';
 
 FUNCTION :
 	  ( LETTER )+
@@ -86,6 +106,9 @@ CELL_REF
 
 CELL : '!' 'CELL';
 
+
+ARRAY_NAME: '&''COL';
+               
 VARIABLE_NAME 
         : UNDERSCORE LETTER (DIGIT|LETTER)* (INDEX)?
         ;
