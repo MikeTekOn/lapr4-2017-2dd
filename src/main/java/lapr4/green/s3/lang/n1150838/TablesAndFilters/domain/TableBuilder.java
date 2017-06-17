@@ -50,7 +50,7 @@ public class TableBuilder {
             rows.add(dataRow);
             
         }
-        return new Table(range, rows, null);
+        return new Table(range, rows, "none");
     }
 
 }

@@ -97,4 +97,12 @@ public class NotesList implements Serializable{
         }
         return false;
     }
+    
+    /**
+     * gets this notes list
+     * @return this notes list
+     */
+    public Set<Note> getNotesList(){
+        return this.notesList;
+    }
 }

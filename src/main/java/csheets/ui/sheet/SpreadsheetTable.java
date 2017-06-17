@@ -20,7 +20,7 @@
  */
 package csheets.ui.sheet;
 
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -100,6 +100,7 @@ public class SpreadsheetTable extends Grid implements SelectionListener {
 				int index = convertColumnIndexToModel(columnAtPoint(mouseEvent.getPoint()));
 				if (index >= 0) {
 					 uiController.setLastClickedColumn(index);
+
 				}
 			}
 			;
