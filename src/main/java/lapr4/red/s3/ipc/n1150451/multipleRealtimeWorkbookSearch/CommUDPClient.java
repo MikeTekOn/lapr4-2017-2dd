@@ -81,7 +81,6 @@ public class CommUDPClient extends Thread implements Observer {
      *
      * @param dtoToSend The request DTO.
      * @param thePortNumber The port number in which to send the broadcast.
-     * @param theWaitingTime The receiving replies timeout value.
      */
     public CommUDPClient(Object dtoToSend, int thePortNumber) {
         dto = dtoToSend;

@@ -64,7 +64,7 @@
  * }
  * </pre>
  * </li>
- * <li>We will mainly use {@link com.itextpdf.text.pdf.PdfPTable}, {@link com.itextpdf.text.pdf.PdfPCell} & {@link com.itextpdf.text.Anchor} elements. </li>
+ * <li>We will mainly use {@link com.itextpdf.text.pdf.PdfPTable}, {@link com.itextpdf.text.pdf.PdfPCell} and {@link com.itextpdf.text.Anchor} elements. </li>
  * </ol>
  * <p>
  * - <b>3.1.2. PdfUtil</b><p>
@@ -151,7 +151,6 @@
  * </ol>
  * <p>
  * <h2>5. Design</h2>
- * </ol>
  * <p>
  * <h2>6. Integration/Demonstration</h2>
  * <p>
