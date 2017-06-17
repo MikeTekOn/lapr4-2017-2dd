@@ -22,7 +22,7 @@ public class NoteTest {
     String validTitle = "My Title";
     String invalidString = "";
     String validContent = "**Hello Word!**";
-    NoteContent nc = new NoteContent(validContent);
+    NoteContent nc = new NoteContent(validContent,1);
     
     public NoteTest() {
     }
