@@ -15,17 +15,18 @@ public class SearchWorkbookRequestDTO implements Serializable, DTO {
      */
     private String namePattern;
 
-    private String contentPattern;
+    private String content;
 
     /**
      * Creates the DTO for the UDP broadcast request.
      *
      * @param namePattern
-     * @param contentPattern
+     *
      */
-    public SearchWorkbookRequestDTO(String namePattern) {
+    public SearchWorkbookRequestDTO(String namePattern, String content) {
         this.namePattern = namePattern;
-       
+        this.content = content;
+
     }
 
     /**
@@ -37,10 +38,8 @@ public class SearchWorkbookRequestDTO implements Serializable, DTO {
         return namePattern;
     }
 
-    /**
-     * @return the contentPattern
-     */
-    public String getContentPattern() {
-        return contentPattern;
+    public String getContent() {
+        return content;
     }
+
 }
