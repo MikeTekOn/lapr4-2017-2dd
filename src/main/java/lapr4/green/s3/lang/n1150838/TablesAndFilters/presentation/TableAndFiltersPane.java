@@ -20,9 +20,8 @@ import csheets.ui.ctrl.SelectionEvent;
 import csheets.ui.ctrl.SelectionListener;
 import csheets.ui.ctrl.UIController;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,8 +29,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -47,6 +44,7 @@ import lapr4.green.s3.lang.n1150838.TablesAndFilters.application.TableAndFilters
 import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.DataRow;
 import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.Row;
 import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.Table;
+import lapr4.green.s3.lang.n1150838.TablesAndFilters.exception.InvalidTableException;
 
 /**
  *
@@ -170,6 +168,8 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
                     } catch (FormulaCompilationException | IllegalValueTypeException ex) {
                         JOptionPane.showMessageDialog(null, "Invalid Formula!", "Error", JOptionPane.WARNING_MESSAGE);
 
+                    } catch (IndexOutOfBoundsException ex) {
+                        JOptionPane.showMessageDialog(null, "Invalid Index!", "Error", JOptionPane.WARNING_MESSAGE);
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "Select a table to add the Filter!", "Error", JOptionPane.WARNING_MESSAGE);
@@ -208,7 +208,10 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
     public void selectionChanged(SelectionEvent event) {
 
         Spreadsheet spreadsheet = event.getSpreadsheet();
-        labelFilters.setText(PREFIX);
+        labelFilters.setText(PREFIX + "none");
+        if( spreadsheet!=null){
+            
+        }
         if (ctrl != null && spreadsheet != null) {
             buildTableContent();
 
@@ -269,7 +272,7 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
                 Cell cell = (Cell) object;
                 StylableCell sCell = (StylableCell) cell.getExtension(StyleExtension.NAME);
                 cell.addCellListener(sCell);
-                sCell.resetStyle();
+                sCell.setForegroundColor(Color.BLACK);
                 ((CellImpl) cell).updateCellStyle();
             }
 
@@ -277,7 +280,7 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
     }
 
     private JLabel buildLabelFilters() {
-        labelFilters = new JLabel("Filters Used: ");
+        labelFilters = new JLabel("Filters Used: none ");
         return labelFilters;
     }
 
@@ -295,19 +298,23 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
             if (size == 0) {
                 JOptionPane.showMessageDialog(null, "Select cells to define a table", "Error", JOptionPane.WARNING_MESSAGE);
             } else if (ctrl.setSelectedCells(selectedCells)) {
-                if (ctrl.isAvailableToDefine()) {
-
-                    if (ctrl.defineTable()) {
-                        modelTable.addElement(ctrl.getTable());
-                        listTables.updateUI();
-                        JOptionPane.showMessageDialog(null, "Table defined!", "Sucess", JOptionPane.INFORMATION_MESSAGE);
-
+                try {
+                    if (ctrl.isAvailableToDefine()) {
+                        
+                        if (ctrl.defineTable()) {
+                            modelTable.addElement(ctrl.getTable());
+                            listTables.updateUI();
+                            JOptionPane.showMessageDialog(null, "Table defined!", "Sucess", JOptionPane.INFORMATION_MESSAGE);
+                            
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.WARNING_MESSAGE);
+                        }
+                        
                     } else {
-                        JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "There is a table already defined on the given range!", "Error", JOptionPane.WARNING_MESSAGE);
                     }
-
-                } else {
-                    JOptionPane.showMessageDialog(null, "There is a table already defined on the given range!", "Error", JOptionPane.WARNING_MESSAGE);
+                } catch (InvalidTableException ex) {
+                     JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
                 }
 
             } else {
@@ -318,25 +325,31 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
     }
 
     protected class CreateNewListener implements EditListener {
-
+        
         @Override
         public void workbookModified(EditEvent event) {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
-                public void run() {                  
+                public void run() {
+                    
                     Cell activeCell = uiCtrl.getActiveCell();
+                    activeCell=uiCtrl.getActiveSpreadsheet().getCell(activeCell.getAddress().getColumn(), activeCell.getAddress().getRow()-1);
                     Table d = ((SpreadsheetImpl) uiCtrl.getActiveSpreadsheet()).getTable(activeCell);
                     if (d != null && !d.getFilter().equals("none")) {
                         
                         List<Row> rows;
                         try {
+                            
                             rows = ctrl.verifyFormula(d, d.getFilter());
                             resetStyle(d);
                             updateInvalidRows(rows);
-                        } catch (FormulaCompilationException ex) {
-                            Logger.getLogger(TableAndFiltersPane.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (IllegalValueTypeException ex) {
-                            Logger.getLogger(TableAndFiltersPane.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (FormulaCompilationException | IllegalValueTypeException ex) {
+                            resetStyle(d);
+                            JOptionPane.showMessageDialog(null, "Invalid Formula!", "Error", JOptionPane.WARNING_MESSAGE);
+
+                        } catch (IndexOutOfBoundsException ex) {
+                            resetStyle(d);
+                            JOptionPane.showMessageDialog(null, "Invalid Index!", "Error", JOptionPane.WARNING_MESSAGE);
                         }
 
                     }

@@ -21,6 +21,7 @@ import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.HeaderRow;
 import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.Row;
 import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.Table;
 import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.TableBuilder;
+import lapr4.green.s3.lang.n1150838.TablesAndFilters.exception.InvalidTableException;
 
 /**
  *
@@ -79,7 +80,18 @@ public class TableAndFiltersController implements Controller {
         return range;
     }
 
-    public boolean isAvailableToDefine() {
+    public boolean isAvailableToDefine() throws InvalidTableException {
+        int flag = 0;
+        int headerRow = selectedCells.get(0).getAddress().getRow();
+        for (Cell selectedCell : selectedCells) {
+            if (selectedCell.getAddress().getRow() != headerRow) {
+                flag=1;
+                break;
+            }
+        }
+        if(flag == 0 ){
+            throw new InvalidTableException("A table must have at least 2 rows and 1 column");
+        }
         return ((SpreadsheetImpl) uiController.getActiveSpreadsheet()).isAvailableToDefine(selectedCells);
     }
 
@@ -102,21 +114,19 @@ public class TableAndFiltersController implements Controller {
         return table;
     }
 
-
     public List<Row> verifyFormula(Table d, String formula) throws FormulaCompilationException, IllegalValueTypeException {
         List<Row> invalidRows = new ArrayList();
         for (int i = 1; i < d.getCells().size(); i++) {
             Expression expression = null;
             DataRow row = ((DataRow) d.getRow(i));
             expression = ConditionalStyleCompiler.getInstance().compile(row.getCellAt(0), formula, uiController);
-          
+
             if (!expression.evaluate().toBoolean()) {
-                
+
                 invalidRows.add(row);
             }
         }
         return invalidRows;
     }
-
 
 }

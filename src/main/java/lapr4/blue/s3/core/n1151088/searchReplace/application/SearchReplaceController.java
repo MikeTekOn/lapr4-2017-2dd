@@ -27,8 +27,8 @@ public class SearchReplaceController extends GlobalSearchController{
      * @param cellList list of cells which will be replaced
      * @param content replaced content
      */
-     public void  startPreviewThread(CellList cellList, String content){
-         threadPreview = new Thread(new Previewer(cellList, content, ctrl));
+     public void  startPreviewThread(Cell cell, String content,String exp){
+         threadPreview = new Thread(new Previewer(cell, exp, content, ctrl));
          threadPreview.start();
     }
     /**

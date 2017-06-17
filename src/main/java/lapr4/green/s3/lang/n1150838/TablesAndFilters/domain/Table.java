@@ -54,6 +54,7 @@ public class Table implements Serializable {
 
         for (Row row : this.getCells()) {
             for (Cell cell : cells) {
+                
                 if (row.containsCell(cell)) {
                     return true;
                 }
