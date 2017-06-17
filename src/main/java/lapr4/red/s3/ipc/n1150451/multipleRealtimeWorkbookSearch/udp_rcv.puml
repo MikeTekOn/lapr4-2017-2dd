@@ -1,0 +1,19 @@
+@startuml
+actor User
+User -> UI : Search button is clicked
+create CommUDPServer
+UI -> CommUDPServer : create
+UI -> CommUDPServer : add(new FilePathDTOHandler)
+UI -> CommUDPServer : start()
+    == CommUDPServer thread ==
+CommUDPServer -> CommUDPServer : receive()
+CommUDPServer -> CommUDPServer : notifyObservers(receivedDto)
+    == Main thread ==
+UI -> UI : updatePreview(DTO)
+note right of UI
+This method should check
+if the DTO received is
+part of the WorkBook List.
+If it isn't it should be ignored.
+end note
+@enduml
