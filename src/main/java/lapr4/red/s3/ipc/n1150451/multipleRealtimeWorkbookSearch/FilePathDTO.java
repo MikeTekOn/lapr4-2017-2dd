@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr4.green.s1.ipc.n1150838.findworkbooks;
+package lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch;
 
 import csheets.core.Workbook;
 import eapli.framework.dto.DTO;
@@ -14,12 +14,12 @@ import java.util.Objects;
  * DTO to transfer file information through events
  * @author nunopinto
  */
-public class FileDTO implements Serializable, Comparable<FileDTO>, DTO {
+public class FilePathDTO implements Serializable, Comparable<FilePathDTO>, DTO {
 
     private String fileName;
     private String filePath;
     
-    public FileDTO(String fileName,String filePath){
+    public FilePathDTO(String fileName,String filePath){
         this.fileName=fileName;
         this.filePath=filePath;
     }
@@ -40,7 +40,7 @@ public class FileDTO implements Serializable, Comparable<FileDTO>, DTO {
     }
 
     @Override
-    public int compareTo(FileDTO o) {
+    public int compareTo(FilePathDTO o) {
         return getFileName().compareTo(o.getFileName());
     }
     /**
@@ -48,8 +48,8 @@ public class FileDTO implements Serializable, Comparable<FileDTO>, DTO {
      * @return 
      */
     @Override
-    public FileDTO clone() {
-        return new FileDTO(fileName,filePath);
+    public FilePathDTO clone() {
+        return new FilePathDTO(fileName,filePath);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class FileDTO implements Serializable, Comparable<FileDTO>, DTO {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final FileDTO other = (FileDTO) obj;
+        final FilePathDTO other = (FilePathDTO) obj;
         if (!Objects.equals(this.fileName, other.fileName)) {
             return false;
         }
