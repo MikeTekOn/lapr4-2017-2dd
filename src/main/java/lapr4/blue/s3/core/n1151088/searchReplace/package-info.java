@@ -158,10 +158,19 @@
  * </ol>
  * 
  * <h3>Unit tests</h3>
- * <p>rejectReplaceWithInvalidExpression() - tests if the replace text inserted 
+ * <p>ensureReplaceContentOk() - tests if replace content inserted is valid</p>
+ * <p>ensureBeforeCellOK() - tests if cell is valid</p>
+ * <p>rejectReplaceContentWithInvalidExpression() - tests if the replace text inserted 
  * is valid</p>
- * <p>replaceWithValidFormula</p>
- * <p>showForeignerContentOfFoundString()</p>
+ * <p>rejectReplaceIsNotEmpty() - tests if the replace text inserted is fullfilled</p>
+ * <p>ensureReplaceCellText() - tests if replace a cell of type Text</p>
+ * <p>ensureReplaceReplaceCellOperation() - tests if replace value caused by replace of formula</p>
+ * <p>rejectReplaceWithInvalidFormula - test if the replace text is an invalid
+ * formula</p>
+ * <p>ensureReplaceWithValidFormula - tests if content of cell is updated with replace</p>
+ * <p>replaceComment - tests if comment of cell is updated with replace</p>
+ * <p>showForeignerContentOfFoundString() - tests if displays only the adjacent
+ * text</p>
  * 
  * <h2>5. UC Realization</h2>
  * 

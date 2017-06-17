@@ -224,6 +224,21 @@
  *     <li>Nothing.</li>
  * </ol>
  *
+ * <h3>Friday 16/06/2017</h3>
+ * <p>Yesterday I've worked on:</p>
+ * <ol>
+ *     <li>Tests</li>
+ *     <li>Design</li>
+ * </ol>
+ * <p><b>Today</b></p>
+ * <ol>
+ *     <li>Implementation</li>
+ * </ol>
+ * <p><b>Blocking:</b></p>
+ * <ol>
+ *     <li>Nothing.</li>
+ * </ol>
+ *
  *
  *
  *

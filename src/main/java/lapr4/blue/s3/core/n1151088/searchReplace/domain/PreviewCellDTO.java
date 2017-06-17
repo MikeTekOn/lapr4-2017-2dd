@@ -2,7 +2,6 @@ package lapr4.blue.s3.core.n1151088.searchReplace.domain;
 
 import csheets.core.Cell;
 import csheets.core.IllegalValueTypeException;
-import csheets.core.Value;
 import csheets.core.formula.compiler.FormulaCompilationException;
 import eapli.framework.dto.DTO;
 import java.util.List;
@@ -17,12 +16,22 @@ public class PreviewCellDTO implements DTO {
     
     private final Cell beforeCell;
     private Cell afterCell;
+    private String insertedExp;
     private final String replaceContent;
     
-    public PreviewCellDTO(Cell beforeCell, String replaceContent){
-        this.beforeCell=beforeCell;
-        this.replaceContent=replaceContent;  
-        this.afterCell=beforeCell;
+    public PreviewCellDTO(Cell beforeCell, String insertedExp, String replace){
+        if(beforeCell==null){
+            throw new IllegalArgumentException();
+        }
+        if(beforeCell.getContent().contains(insertedExp)){
+            this.beforeCell=beforeCell;
+            this.replaceContent=replace;  
+            this.insertedExp=insertedExp;
+        }else{
+            throw new IllegalArgumentException();  
+        }
+                
+                          
     }
     
     public Cell getBeforeCell(){
@@ -38,28 +47,37 @@ public class PreviewCellDTO implements DTO {
     }
     
     public void previewReplace() throws IllegalValueTypeException, FormulaCompilationException{
-
-    //    afterCell.copyFrom(beforeCell);
-        if(afterCell.getValue().isOfType(Value.Type.TEXT)){
-            String text=beforeCell.getValue().toText();
-            String[]parts= text.split(" ");
-            for(String part: parts){
-                if(part.equals(replaceContent)){
-                    part=replaceContent;
+        afterCell=beforeCell;
+        
+        String replacedContent=replaceContent();
+        validateReplace(replaceContent);
+      
+        afterCell.setContent(replacedContent);
+        
+        if( ((CommentableCellWithMultipleUsers) beforeCell.getExtension(CommentsExtension.NAME)).hasComment()) {
+                
+            for (List<String> comments : ((CommentableCellWithMultipleUsers) afterCell.getExtension(CommentsExtension.NAME)).comments().values()) {
+                for (String comment : comments) {
+                    String contain=comment.replace(insertedExp, replaceContent);
+                    comment=contain;
                 }
             }
-            
-        }if( ((CommentableCellWithMultipleUsers) beforeCell.getExtension(CommentsExtension.NAME)).hasComment()) 
-                
-            for (List<String> comments : ((CommentableCellWithMultipleUsers) beforeCell.getExtension(CommentsExtension.NAME)).comments().values()) {
-                for (String comment : comments) {
-                    if(comment.equals(replaceContent)){
-                        comment=replaceContent;
-                    }
-                }
+        }
+    }
+
+    public String replaceContent(){
+        String text=beforeCell.getContent();
+        String replaced=text.replace(insertedExp, replaceContent);
+        return replaced;
+    }
         
-        }else{
-            afterCell.setContent(replaceContent);
+    public void validateReplace(String replacedText) throws FormulaCompilationException{
+        
+        try{
+            afterCell.setContent(replacedText);
+        }catch (FormulaCompilationException ex){
+            ex.getMessage();
+           throw new FormulaCompilationException();
         }
     }
     
@@ -67,10 +85,11 @@ public class PreviewCellDTO implements DTO {
      * clones the DTO
      *
      * @return
+     * @throws java.lang.CloneNotSupportedException
      */
     @Override
     public PreviewCellDTO clone() throws CloneNotSupportedException {
-        return new PreviewCellDTO(beforeCell, replaceContent);
+        return new PreviewCellDTO(beforeCell, insertedExp, replaceContent);
     }
 
     

@@ -19,43 +19,46 @@ import lapr4.green.s2.core.n1150838.GlobalSearch.presentation.CellList;
  */
 public class Previewer implements Runnable {
     
-    /**The content that will replace the cell´s content**/
-    private String content;
+    /**The content that will replace the cell´s content with exp**/
+    private String content, exp;
     /**Cells that will be previewed**/
-    private CellList cellList;
+    private Cell cell;
     /**The controller that manage searchReplace user interface actions**/
     private UIController uiCtrl;
     
-    public Previewer(CellList cellList, String content, UIController uiCtrl){
+    public Previewer(Cell cell, String exp, String content, UIController uiCtrl){
         try{
             validateContent(content);
         }catch(FormulaCompilationException | IllegalValueTypeException ex ){
             ex.getMessage();
         }
-        this.content=content;
-        
-        this.cellList=cellList;
+        if(!validateContainsExp(cell, exp)){
+           throw new IllegalStateException();
+        }
+        this.exp=exp;
+        this.content=content;      
+        this.cell=cell;
         this.uiCtrl=uiCtrl;
     }
-    
-   /**
-    * Update the list with new cell
-    * @param cell cell to replace
-    * @return true if added, false if not
-    */
-    public boolean addCell(CellInfoDTO cell){
-        try{
-            validateContent(cell.getCell().getContent());
-        }catch(FormulaCompilationException | IllegalValueTypeException ex ){
-            ex.getMessage();
-        }
-//        if(cellList.containsElement(cell)){
-//            return false;
-//        } else {
-//            cellList.addElement(cell);
+//    
+//   /**
+//    * Update the list with new cell
+//    * @param cell cell to replace
+//    * @return true if added, false if not
+//    */
+//    public boolean addCell(CellInfoDTO cell){
+//        try{
+//            validateContent(cell.getCell().getContent());
+//        }catch(FormulaCompilationException | IllegalValueTypeException ex ){
+//            ex.getMessage();
 //        }
-        return true;
-    }
+////        if(cellList.containsElement(cell)){
+////            return false;
+////        } else {
+////            cellList.addElement(cell);
+////        }
+//        return true;
+//    }
     
     /**
      * Validate if content is compilable by Formula
@@ -78,12 +81,15 @@ public class Previewer implements Runnable {
         previewContent();
  
     }
+    
+    private boolean validateContainsExp(Cell cell,String exp){
+        return cell.getContent().contains(exp);
+    }
 
     private void previewContent() {
-        ArrayList<CellInfoDTO> clone= cellList.clone();
-        for(CellInfoDTO cell: clone){
-            SearchReplacePublisher.getInstance().notifyObservers(new PreviewCellDTO(cell.getCell(), content));
-        }
+        
+        SearchReplacePublisher.getInstance().notifyObservers(new PreviewCellDTO(cell, exp,content));
+        
     }
     
 }

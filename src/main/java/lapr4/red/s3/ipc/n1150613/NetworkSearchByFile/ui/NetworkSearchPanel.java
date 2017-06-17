@@ -78,7 +78,9 @@ public class NetworkSearchPanel extends JPanel {
         contentField.setPreferredSize(new Dimension(100, 25));
         bottomPanel.add(textLabel);
         bottomPanel.add(nameField);
-        bottomPanel.add(createSearchButton());
+        bottomPanel.add(contentLabel);
+        bottomPanel.add(contentField);
+        bottomPanel.add(createSearchButton(),BOTTOM_ALIGNMENT);
         return bottomPanel;
     }
 
@@ -105,7 +107,7 @@ public class NetworkSearchPanel extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 CommExtension ce = (CommExtension) ExtensionManager.getInstance().getExtension(CommExtension.NAME);
                 resultsTable.clear();
-                (new NetworkSearchAction(resultsTable, ce.getUDPServerPortNumber(), nameField.getText())).actionPerformed(e);
+                (new NetworkSearchAction(resultsTable, ce.getUDPServerPortNumber(), nameField.getText(),contentField.getText())).actionPerformed(e);
             }
         });
         return button;
