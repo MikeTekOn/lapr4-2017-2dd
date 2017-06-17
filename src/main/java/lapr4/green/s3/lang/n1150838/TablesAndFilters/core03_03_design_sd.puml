@@ -1,0 +1,30 @@
+@startuml 
+
+    actor User 
+    participant "TableAndFiltersPane" as UI
+    participant "TablesAndFilters : ctrl" as ctrl
+    participant "FocusOwnerAction" <<ActionListener>> 
+    participant "Table : d" as d
+    
+
+    User -> UI : Selects cells and press define button
+    UI -> FocusOwnerAction : List<Cell> cells = getSelectedCells()
+    UI -> ctrl : setSelectedCells(cells)
+    ctrl -> ctrl: isAvailableToDefine()
+    ctrl-> ctrl: defineTable()
+    create d
+    ctrl --> d : create()
+    UI -> UI: addTable(d)
+    UI -> UI: update()
+    User <--UI : shows the available tables
+    User -> UI : inserts a filter and press add button
+    UI->ctrl : List<Row> invalidRows = verifyFormula(String filter)
+    ctrl -> d: insertFilter(String filter)
+    UI->UI : updateInvalidRows(invalidRows)
+    User<--UI: shows the applied filter
+    
+
+
+
+    
+@enduml

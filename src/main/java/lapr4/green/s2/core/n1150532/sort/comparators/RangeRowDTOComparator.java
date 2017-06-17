@@ -75,6 +75,15 @@ public class RangeRowDTOComparator implements Comparator<RangeRowDTO> {
         shouldInvert = isToBeDescendant;
     }
 
+    public boolean orderState()
+    {
+        return this.shouldInvert;
+    }
+    public void changeOrder()
+    {
+        this.shouldInvert=!shouldInvert;
+    }
+
     /**
      * It provides the type comparator's name.
      *

@@ -38,7 +38,7 @@ public class Notification extends JFrame {
         setUndecorated(true);
         setSize(500,100);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
         timer = new Timer(10000, new ActionListener() {
             @Override

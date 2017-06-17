@@ -269,13 +269,15 @@ public class CellImpl implements Cell {
 		fireCellCleared();
 	}
 
+        @Override
 	public void setContent(String content) throws FormulaCompilationException {
 		if (!this.content.equals(content)) {
-			storeContent(content);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       			storeContent(content);
 			fireContentChanged();
 			reevaluate();
 		}
 	}
+        @Override
         public void setContentWithoutFiringEvents(String content) throws FormulaCompilationException {
 		if (!this.content.equals(content)) {
 			storeContent(content);
