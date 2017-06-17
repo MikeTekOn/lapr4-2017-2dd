@@ -79,7 +79,7 @@ public class RegexUtil {
         }
 
         String check;
-        boolean is = true;
+        boolean is = false;
 
         if (!isRegexValid()) {
             System.out.println("Invalid regex");
@@ -89,8 +89,8 @@ public class RegexUtil {
         for (Spreadsheet s : w) {
             for (Cell c : s) {
                 check = c.getValue().toString();
-                if (!checkContent(check)) {
-                    is = false;
+                if (checkContent(check)) {
+                    is = true;
                 }
             }
         }
