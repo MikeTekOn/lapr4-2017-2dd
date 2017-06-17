@@ -67,8 +67,9 @@ public class NotesListTest {
     @Test
     public void testEditNoteIsOk() {
         NotesList notesList = new NotesList();
-        notesList.add(validTitle, validContent);
-        notesList.edit(validTitle, "new content");
+        boolean a = notesList.add(validTitle, validContent);
+        boolean b = notesList.edit(validTitle, "new content");
+        assertEquals(b, a);
     }
     
     /**

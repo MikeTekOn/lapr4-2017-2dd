@@ -6,8 +6,8 @@
 package lapr4.blue.s3.core.n1060503.notes.domain;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.LinkedList;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,13 +30,13 @@ public class NotesList implements Serializable{
      * list of Notes
      */
     @OneToMany(cascade = CascadeType.ALL)
-    private final Set<Note> notesList ;
+    private final List<Note> notesList ;
     
     /**
      * Constructor by default
      */
     public NotesList() {
-        notesList = new HashSet<>();
+        notesList = new LinkedList<>();
     }
     
     /**
@@ -57,9 +57,13 @@ public class NotesList implements Serializable{
         Note note = null;
         for(Note n : notesList){
             if(n.title().equals(title)){
-                note = n;
+                if(n.isRemoved()){
+                    return false;
+                }else{
+                    note = n;
                 note.add(content);
-                break;                
+                return true;                 
+                }                              
             }
         }
         if(note == null){
@@ -78,7 +82,11 @@ public class NotesList implements Serializable{
     public boolean edit(String title, String content) {
         for (Note n : notesList){
             if(n.title().equals(title)){
-                return n.add(content);
+                if(n.isRemoved()){
+                    return false;
+                }else{
+                    return n.add(content);                
+                }                
             }
         }
         return false;
@@ -92,7 +100,11 @@ public class NotesList implements Serializable{
     public boolean remove(String title) {
         for (Note n : notesList){
             if(n.title().equals(title)){
-                return n.remove();                
+                if(n.isRemoved()){
+                    return false;
+                }else{
+                    return n.remove();                
+                }
             }
         }
         return false;
@@ -102,7 +114,7 @@ public class NotesList implements Serializable{
      * gets this notes list
      * @return this notes list
      */
-    public Set<Note> getNotesList(){
+    public List<Note> getNotesList(){
         return this.notesList;
     }
 }
