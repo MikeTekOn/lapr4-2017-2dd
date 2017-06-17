@@ -14,8 +14,13 @@ import java.io.Serializable;
  */
 public class Header implements Serializable {
 
+    /**
+     * The header index
+     */
     private int headerIndex;
-
+    /**
+     * The header cell
+     */
     private Cell headerCell;
 
     public Header(int headerIndex, Cell headerCell) {
@@ -23,10 +28,18 @@ public class Header implements Serializable {
         this.headerCell = headerCell;
     }
 
+    /**
+     *
+     * @param headerIndex the given index
+     * @return true if the given index is equal to this index
+     */
     public boolean isHeader(int headerIndex) {
         return this.getHeaderIndex() == headerIndex;
     }
-
+    /**
+     * 
+     * @return this header contet
+     */
     public String getHeaderContent() {
         String content;
         if (headerCell.getFormula() != null) {
@@ -36,8 +49,12 @@ public class Header implements Serializable {
         }
         return content;
     }
-    
-    public Cell getCell(){
+
+    /**
+     *
+     * @return this cell
+     */
+    public Cell getCell() {
         return headerCell;
     }
 

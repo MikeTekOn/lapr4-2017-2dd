@@ -21,7 +21,10 @@ public class TableBuilder {
     public TableBuilder(List<Cell> cells) {
         this.cells = cells;
     }
-
+    /**
+     * Builds the table and his rows
+     * @return the table
+     */
     public Table build() {
         List<Cell> bodyCells = new ArrayList();
         List<Header> headerCells = new ArrayList();
