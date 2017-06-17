@@ -349,6 +349,7 @@ public class FindWorkbookSideBar extends JPanel implements Observer {
                     }
                     cache.remove(dto.getFilePath());
                     updatePreview(dto.getFilePath(), wb);
+                    JOptionPane.showMessageDialog(this, dto.getFileName() + " was updated.");
                 }
             }
         }
