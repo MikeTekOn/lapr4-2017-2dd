@@ -52,7 +52,7 @@ public class HandlerSearchWorkbookRequestDTO implements CommHandler, Serializabl
         List<SearchResults> results = new ArrayList();
         String namePattern = request.getNamePattern();
         String content = request.getContent();
-        Directory dic = new Directory(new File(System.getProperty("user.home") + "/Desktop"));  // change to C:/ ----------------
+        Directory dic = new Directory(new File(System.getProperty("user.home")));  // change to C:/ ----------------
         RegexUtil reg = new RegexUtil(namePattern, content);
 
         try {
