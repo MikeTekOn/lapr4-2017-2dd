@@ -43,14 +43,26 @@ public class WorkbookNode extends NavigationNode {
      * @param uiController the received uiController
      * @param treeModel the data model to which the node belongs
      */
-    public WorkbookNode(Workbook workbook, UIController uiController, DefaultTreeModel treeModel) {
+    public WorkbookNode(Workbook workbook, UIController uiController, DefaultTreeModel treeModel) throws IllegalStateException {
         super(workbook, treeModel);
+        if (workbook == null) {
+            throw new IllegalStateException("WorkbookNode could not be created!");
+        }
         this.workbook = workbook;
         this.uIController = uiController;
 
         for (int i = 0; i < workbook.getSpreadsheetCount(); i++) {
             spreadsheets.add(workbook.getSpreadsheet(i));
         }
+    }
+    
+    /**
+     * Returns the spreadsheet list.
+     * 
+     * @return the spreadsheet list
+     */
+    public SortedSet<Spreadsheet> getSpreadsheets(){
+        return spreadsheets;
     }
 
     @Override

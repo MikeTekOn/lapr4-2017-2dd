@@ -154,6 +154,15 @@
  * <h3>Sequence Diagram of the tree creation:</h3>
  * <img src="core04_1_design1.png" alt="image">
  *
+ * <h2>5. Tests</h2>
+ * <ol>
+ * <li>ensureWorkbookNodeHasWorkbook
+ * <li>ensureSpreadsheetListIsInCorrectOrder
+ * <li>ensureActiveWorkbookListIsInCorrectOrder
+ * <li>ensureCellListIsInCorrectOrder
+ * </ol>
+ *
+ * <h3>5.1. Functional Tests</h3>
  *
  * <h2>8. Work Log</h2>
  * <p>
