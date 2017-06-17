@@ -38,6 +38,17 @@ public class CustomUtil {
     }
 
     /**
+     * Validates if a {@link Integer} is non null or negative
+     *
+     * @param num the integer to validate
+     * @return true if valid, false otherwise
+     */
+    public static boolean isNonNullOrNonNegative(Integer num) {
+
+        return !(num == null || num < 0);
+    }
+
+    /**
      * Returns the number of bytes the object
      *
      * @param obj the object to get count
