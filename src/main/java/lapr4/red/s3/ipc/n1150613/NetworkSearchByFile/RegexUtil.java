@@ -37,7 +37,7 @@ public class RegexUtil {
       @return true if it matches or false if it doesn't
      */
     public boolean checkIfNameMatches(String filename) {
-        if (name.equals("")) {
+        if (name.trim().equals("")) {
             return true;
         }
         p = Pattern.compile(name);
@@ -60,23 +60,22 @@ public class RegexUtil {
       @return desired cells information in String array
      */
     public boolean checkIfContentMatches(Workbook w) {
-        if (content.equals("")) {
+        if (content.trim().equals("")) {
             return true;
         }
 
         String check;
-        boolean is = false;
 
         for (Spreadsheet s : w) {
             for (Cell c : s) {
                 check = c.getValue().toString();
                 if (checkContent(check)) {
-                    is = true;
+                    return true;
                 }
             }
         }
 
-        return is;
+        return false;
     }
 
 }
