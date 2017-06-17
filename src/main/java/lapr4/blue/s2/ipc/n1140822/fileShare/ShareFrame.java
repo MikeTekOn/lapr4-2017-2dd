@@ -315,6 +315,8 @@ public class ShareFrame extends JFrame implements Observer {
                         }
                         if(downloadInfo==null) return;
                         shareController.addToDownloadsList(fileName,downloadInfo);
+                        DownloadingPanel dp = new DownloadingPanel(fileName);
+                        dp.setVisible(true);
                         shareController.requestFile(fileName);
 
                     } catch (Exception ex) {
