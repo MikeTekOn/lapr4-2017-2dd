@@ -7,6 +7,7 @@ package lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch;
 
 import csheets.ui.FileChooser;
 import csheets.ui.ctrl.UIController;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -52,7 +53,7 @@ public class MultipleRealtimeWorkbookSearchUI extends JPanel {
     private void createComponents() {
 
         tabs = new JTabbedPane(JTabbedPane.TOP);
-        JButton b = new JButton("Add");
+        JButton b = new JButton("New search");
         b.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -62,9 +63,9 @@ public class MultipleRealtimeWorkbookSearchUI extends JPanel {
         });
 
         tabs.addTab("search" + auxTabCount, createMainPanel());
-        setLayout(new GridLayout());
-        add(tabs);
-        add(b);
+        setLayout(new BorderLayout());
+        add(tabs, BorderLayout.NORTH);
+        add(b, BorderLayout.CENTER);
 
     }
 
