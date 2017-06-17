@@ -80,8 +80,11 @@
  * We can see in more detail how a JTree should be used here:
  * <a href="https://docs.oracle.com/javase/tutorial/uiswing/components/tree.html"></a>
  *
+ * <h2>4. Design</h2>
  *
- *
+ * <img src="core04_1_dm.png" alt="image">
+ * 
+ * <img src="core04_1_design1.png" alt="image">
  *
  *
  * <h2>8. Work Log</h2>

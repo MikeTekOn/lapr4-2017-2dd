@@ -1,0 +1,98 @@
+@startuml core04_1_dm.png
+
+class NavigationNode <<Abstract>> {
+    - object : Object
+    - populated : boolean
+    - treeModel : DefaultTreeModel
+    --
+    ~ getObject() : object
+    ~ populate() : void
+    --
+    ~ {abstract} addChildren() : void
+}
+
+class DefaultMutableTreeNode {
+}
+
+class RootNode {
+    - uiController : UIController
+    - activeWorkbooks : List<Workbook>
+    --
+    ~ addChildren() : void
+    ~ isLeaf() : boolean
+    ~ toString() : String
+}
+
+class WorkbookNode {
+    - uiController : UIController
+    - workbook : Workbook
+    - spreadsheets : TreeSet<Spreadsheet>
+    --
+    ~ addChildren() : void
+    ~ isLeaf() : boolean
+    ~ toString() : String
+}
+
+class SpreadsheetNode {
+    - uiController : UIController
+    - nonEmptyCells : List<Cell>
+    --
+    ~ addChildren() : void
+    ~ isLeaf() : boolean
+    ~ toString() : String
+}
+
+class FilledCellNode {
+    - formula : Formula
+    - value : Value
+    --
+    ~ addChildren() : void
+    ~ isLeaf() : boolean
+    ~ toString() : String
+}
+
+class ValueNode {
+    --
+    ~ addChildren() : void
+    ~ isLeaf() : boolean
+    ~ toString() : String
+}
+
+class FormulaNode {
+    --
+    ~ addChildren() : void
+    ~ isLeaf() : boolean
+    ~ toString() : String
+}
+
+class Cell {
+}
+
+class Workbook {
+}
+
+class Spreadsheet {
+}
+
+class Formula {
+}
+
+class Value {
+}
+
+DefaultMutableTreeNode <|- NavigationNode
+NavigationNode <|- RootNode
+NavigationNode <|- SpreadsheetNode
+NavigationNode <|- WorkbookNode
+NavigationNode <|- FilledCellNode
+NavigationNode <|- FormulaNode
+NavigationNode <|- ValueNode
+
+RootNode "1" --> "*" Workbook
+WorkbookNode "1" o- "1" Workbook
+WorkbookNode "1" --> "*" Spreadsheet
+FilledCellNode "1" --> "0..1" Formula
+FilledCellNode "1" o- "1" Value
+SpreadsheetNode "1" --> "*" Cell
+
+@enduml
