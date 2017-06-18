@@ -64,7 +64,14 @@
  *
  * <h3>4.1. Functional Tests</h3>
  * Test plan to test the UDP communication:
- *
+ * <ol>
+ * <li>Start the instances of Cleansheets</li>
+ * <li>In the first one, save a workbook with the first cells filled.</li>
+ * <li>The the second one, open the Find Workbook functionality, select the file
+ * path and regex, and click search. Check that the preview is correct.</li>
+ * <li>In the first instance, change a cell and click save.</li>
+ * <li>Verify that the preview in the second instances updates automaticly.</li>
+ * </ol>
  *
  * <h3>4.2. UC Realization</h3>
  *
