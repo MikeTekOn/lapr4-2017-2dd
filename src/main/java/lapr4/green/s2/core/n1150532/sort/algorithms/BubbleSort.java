@@ -35,7 +35,7 @@ public class BubbleSort<T extends SortableDTO>  extends Observable  implements S
     public void sort(T[] array, Comparator<T> comparator) {
         executeSort(array, comparator, array.length);
         setChanged();
-         notifyObservers();
+        notifyObservers(this);
     }
 
     /**

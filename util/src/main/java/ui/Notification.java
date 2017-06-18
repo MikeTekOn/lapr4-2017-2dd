@@ -5,9 +5,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Rectangle2D;
 
-import static java.awt.GraphicsDevice.WindowTranslucency.PERPIXEL_TRANSPARENT;
-import static java.awt.GraphicsDevice.WindowTranslucency.TRANSLUCENT;
-
 /**
  * Created by João Cardoso - 1150943 on 14-06-2017.
  * Based on http://tinyurl.com/y8jx3lgs
@@ -43,7 +40,6 @@ public class Notification extends JFrame {
         timer = new Timer(10000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                Toolkit.getDefaultToolkit().beep();
                 thisFrame.dispose();
             }
         });
@@ -89,40 +85,7 @@ public class Notification extends JFrame {
     }
 
     public static void notifyHost(JFrame downloadFrame, String message) {
-        // Determine what the GraphicsDevice can support.
-        GraphicsEnvironment ge =
-                GraphicsEnvironment.getLocalGraphicsEnvironment();
-        GraphicsDevice gd = ge.getDefaultScreenDevice();
-        final boolean isTranslucencySupported =
-                gd.isWindowTranslucencySupported(TRANSLUCENT);
-
-        //If shaped windows aren't supported, exit.
-        if (!gd.isWindowTranslucencySupported(PERPIXEL_TRANSPARENT)) {
-            System.err.println("Shaped windows are not supported");
-            System.exit(0);
-        }
-
-        //If translucent windows aren't supported,
-        //create an opaque window.
-        if (!isTranslucencySupported) {
-            System.out.println(
-                    "Translucency is not supported, creating an opaque window");
-        }
-
         // Create the GUI on the event-dispatching thread
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                Notification notification = new Notification(downloadFrame, message);
-
-                // Set the window to 70% translucency, if supported.
-                if (isTranslucencySupported) {
-                    notification.setOpacity(0.7f);
-                }
-
-                // Display the window.
-                notification.setVisible(true);
-            }
-        });
+        SwingUtilities.invokeLater(new NotificationRunnable(downloadFrame, message));
     }
 }

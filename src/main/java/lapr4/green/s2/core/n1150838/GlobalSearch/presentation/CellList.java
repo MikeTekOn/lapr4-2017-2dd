@@ -5,7 +5,6 @@
  */
 package lapr4.green.s2.core.n1150838.GlobalSearch.presentation;
 
-import csheets.core.Cell;
 import java.util.ArrayList;
 import javax.swing.AbstractListModel;
 
@@ -47,7 +46,7 @@ public class CellList extends AbstractListModel {
      *
      * @return
      */
-    public CellInfoDTO getSelectedItem() {
+    public CellInfoDTO getSelectedItem() throws CloneNotSupportedException {
 
         CellInfoDTO clone = selected.clone();
 
