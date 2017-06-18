@@ -60,8 +60,6 @@ public class ExportToDatabaseController {
 
     /**
      * Exports a range of cells to the database.
-     *
-     * @throws SQLException
      */
     public void export(boolean tableExistsAndWillBeDeleted) {
         try{
