@@ -11,20 +11,14 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import lapr4.green.s1.ipc.n1150800.importexportTXT.CellRange;
 import lapr4.red.s3.ipc.n1150690.ImportExportDatabase.DatabaseDriver;
 import lapr4.red.s3.ipc.n1150690.ImportExportDatabase.ExportDatabase.application.ExportToDatabaseController;
@@ -70,10 +64,10 @@ public class ExportToDatabaseUI extends JDialog {
     private JLabel success;
 
     private JPanel panel;
-    
+
     private String driver;
-    
-    private static boolean printSucess;
+
+    public static boolean printSucess = false;
 
     public ExportToDatabaseUI(UIController uiController) {
         this.uiController = uiController;
@@ -102,32 +96,38 @@ public class ExportToDatabaseUI extends JDialog {
         panelTableName.add(labelTableName);
         txtTableName = new JTextField(15);
         panelTableName.add(txtTableName);
-        
+
         JPanel panelDriver = new JPanel();
         JLabel labeDriver = new JLabel("Database Driver:");
+
         panelDriver.add(labeDriver);
+
         panelDriver.add(createCombobox());
 
         JPanel panelConnection = new JPanel();
         JLabel labelDatabaseConnection = new JLabel("Database Connection:");
+
         panelConnection.add(labelDatabaseConnection);
         txtDatabaseConnection = new JTextField(20);
+
         txtDatabaseConnection.setText(DatabaseDriver.H2.defaultURL());
         panelConnection.add(txtDatabaseConnection);
         driver = DatabaseDriver.H2.value();
 
         JButton b = new JButton("Export");
-        b.addActionListener(new ActionListener() {
+
+        b.addActionListener(
+                new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                printSucess = true;
+            public void actionPerformed(ActionEvent e) {              
                 labelErrors.setText("");
+                success.setText("");
                 String addressStrFirstCell = txtFieldFirstCell.getText();
                 String addressStrLastCell = txtFieldLastCell.getText();
                 CellRange cellRange = new CellRange(addressStrFirstCell, addressStrLastCell, uiController);
                 controller = new ExportToDatabaseController(uiController, cellRange, txtTableName.getText(), txtDatabaseConnection.getText(), driver);
                 try {
-                    controller.export(false);
+                    controller.export();
                 } catch (Exception ex) {
                     ExportToDatabaseUI.printException(ex.getMessage());
                 }
@@ -136,7 +136,8 @@ public class ExportToDatabaseUI extends JDialog {
                     success.setForeground(Color.GREEN);
                 }
             }
-        });
+        }
+        );
 
         panel = new JPanel(new GridBagLayout());
         GridBagConstraints grid = new GridBagConstraints();
@@ -144,22 +145,30 @@ public class ExportToDatabaseUI extends JDialog {
         grid.gridx = 0;
         grid.gridy = 0;
         JLabel labelRange = new JLabel("<html><b>Range of Cells</b></html>");
+
         panel.add(labelRange, grid);
         grid.gridy = 1;
+
         panel.add(panelRange, grid);
         grid.gridy = 2;
+
         panel.add(panelTableName, grid);
         grid.gridy = 3;
+
         panel.add(panelDriver, grid);
         grid.gridy = 4;
+
         panel.add(panelConnection, grid);
         grid.gridy = 5;
+
         panel.add(b, grid);
         grid.gridy = 6;
         success = new JLabel();
+
         panel.add(success, grid);
         labelErrors = new JLabel();
         grid.gridy = 7;
+
         panel.add(labelErrors, grid);
 
         return panel;
@@ -201,19 +210,11 @@ public class ExportToDatabaseUI extends JDialog {
         });
         return drivers;
     }
-    
-    public static void printException(String message){
+
+    public static void printException(String message) {
         printSucess = false;
         labelErrors.setText(message);
         labelErrors.setForeground(Color.RED);
     }
-    
-    public static boolean tableWithTheSameName(){
-        int op = JOptionPane.showConfirmDialog(null, "A table with the name already exists! Do you want to delete the existing table?", "Warning", JOptionPane.YES_NO_OPTION);
-        if(op == 0){
-            return true;
-        }
-        return false;
-    }
-   
+
 }

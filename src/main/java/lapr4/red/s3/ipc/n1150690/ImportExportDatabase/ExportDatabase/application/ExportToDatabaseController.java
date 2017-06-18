@@ -49,6 +49,8 @@ public class ExportToDatabaseController {
      * @param uiController the user interface controller
      * @param range the range of cells
      * @param tableName the table name
+     * @param db_url
+     * @param driver
      */
     public ExportToDatabaseController(UIController uiController, CellRange range, String tableName, String db_url, String driver) {
         this.uiController = uiController;
@@ -61,14 +63,15 @@ public class ExportToDatabaseController {
     /**
      * Exports a range of cells to the database.
      */
-    public void export(boolean tableExistsAndWillBeDeleted) {
+    public void export() throws Exception {
+        ThreadExport thread = null;
         try{
-            ThreadExport thread = new ThreadExport(range, new WorkbookHandler(uiController.getActiveWorkbook()), tableName, uiController.getActiveSpreadsheet(), db_url, driver);
-            thread.kill();
+            thread = new ThreadExport(range, new WorkbookHandler(uiController.getActiveWorkbook()), tableName, uiController.getActiveSpreadsheet(), db_url, driver);
+            thread.start();
         }catch (Exception ex){
-            ex.getMessage();
+            thread.interrupt();
+            throw new Exception(ex.getMessage()); 
         }
-        
     }
 
 }

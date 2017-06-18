@@ -13,9 +13,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import lapr4.green.s1.ipc.n1150800.importexportTXT.exportTXT.ui.ExportDataUI;
+import javax.swing.JOptionPane;
 import lapr4.red.s3.ipc.n1150690.ImportExportDatabase.ExportDatabase.presentation.ExportToDatabaseUI;
 
 /**
@@ -23,14 +21,14 @@ import lapr4.red.s3.ipc.n1150690.ImportExportDatabase.ExportDatabase.presentatio
  * @author Sofia Silva [1150690@isep.ipp.pt]
  */
 public class DatabaseExportOperations {
-    
+
     private Connection connection;
     private Statement statement;
     private String tableName;
     private String insertInto;
     private int indexFirstColumn;
     private int indexFirstRow;
-    
+
     public DatabaseExportOperations(Connection connection, String tableName) throws SQLException {
         if (Strings.isNullOrEmpty(tableName) || Strings.isNullOrWhiteSpace(tableName)) {
             throw new IllegalArgumentException("The table name can not be empty!");
@@ -45,7 +43,7 @@ public class DatabaseExportOperations {
         this.indexFirstColumn = Integer.MAX_VALUE;
         this.indexFirstRow = Integer.MAX_VALUE;
     }
-    
+
     public void createTable(List<Cell> cellsBetweenRange, int numberOfColumns) throws SQLException {
         String createTable = "CREATE TABLE " + tableName + "(";
         insertInto = "INSERT INTO " + tableName + " (";
@@ -64,22 +62,27 @@ public class DatabaseExportOperations {
         boolean tableSameName = false;
         try {
             statement.executeUpdate(createTable);
+            ExportToDatabaseUI.printSucess = true;
         } catch (SQLException e) {
-            deleteTable = ExportToDatabaseUI.tableWithTheSameName();
+            ExportToDatabaseUI.printSucess = false;
+            int op = JOptionPane.showConfirmDialog(null, "A table with the name already exists! Do you want to delete the existing table?", "Warning", JOptionPane.YES_NO_OPTION);
+            if (op == 0) {
+                deleteTable = true;
+            }
             tableSameName = true;
         } finally {
-            if(tableSameName){
+            if (tableSameName) {
                 if (deleteTable) {
-                String sql = "DROP TABLE " + tableName;
-                statement.executeUpdate(sql);
-                statement.executeUpdate(createTable);
-            } else {
-                ExportToDatabaseUI.printException("A table with the name already exists! Please change the table name");
+                    String sql = "DROP TABLE " + tableName;
+                    statement.executeUpdate(sql);
+                    statement.executeUpdate(createTable);
+                } else {
+                    ExportToDatabaseUI.printException("Please change the table name");
+                }
             }
-            }   
         }
     }
-    
+
     public void fillTable(List<Cell> cellsBetweenRange, int numberOfColumns, int numberLines) throws SQLException {
         String line = "";
         int row = indexFirstRow;
@@ -109,7 +112,7 @@ public class DatabaseExportOperations {
         } catch (SQLException se2) {
         }// nothing we can do
     }
-    
+
     private List<String> findColumnNames(List<Cell> cellsBetweenRange) {
         List<String> columnsName = new ArrayList<>();
         List<Integer> columnsIndex = new ArrayList();
@@ -142,5 +145,5 @@ public class DatabaseExportOperations {
         Collections.sort(columnsName);
         return columnsName;
     }
-    
+
 }
