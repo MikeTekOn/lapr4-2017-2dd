@@ -122,7 +122,6 @@ public class CommUDPClient extends Thread implements Observer {
                 byte[] data = bos.toByteArray();
                 DatagramPacket udpPacket = new DatagramPacket(data, data.length, InetAddress.getByName(BROADCAST_ADDRESS), portNumber);
                 sock.send(udpPacket);
-                System.out.println("Enviei broadcast");
         } catch (SocketTimeoutException ex) {
             // There are no more replies, the client should finish its execution
         } catch (IOException ex) {

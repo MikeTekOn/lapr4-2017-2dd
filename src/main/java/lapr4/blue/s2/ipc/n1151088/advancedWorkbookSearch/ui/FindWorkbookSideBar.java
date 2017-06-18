@@ -306,9 +306,9 @@ public class FindWorkbookSideBar extends JPanel implements Observer {
                 JOptionPane.showMessageDialog(new JFrame(), "Please complete all fields!");
                 flagSucessClick = false;
             } else {
-                CommUDPServer srv=null;
+                CommUDPServer srv = null;
                 if (searchButton.getText().equalsIgnoreCase("search")) {
-                     srv = new CommUDPServer();
+                    srv = new CommUDPServer();
                     srv.addHandler(FilePathDTO.class, new HandlerFilePathDTO());
 
                     try {
@@ -318,14 +318,17 @@ public class FindWorkbookSideBar extends JPanel implements Observer {
                         findController = new ControllerFindWorkbooks(pathField.getText(), regexField.getText(), isThreadActive);
 
                         findController.searchFiles();
-                        if (!srv.isAlive()) {
+                       // if (!srv.isAlive()) {
                             srv.start();
-                        }
+                        //}
                         searchButton.setText("Stop");
                         flagSucessClick = true;
-                        JOptionPane.showMessageDialog(new JFrame(), "The search has finished");
+
+                        if (!isThreadActive) {
+                            JOptionPane.showMessageDialog(new JFrame(), "The search has finished");
+                            //srv.stop();
+                        }
                         searchButton.setText("Search");
-                        srv.interrupt();
                     } catch (IllegalStateException ex) {
                         JOptionPane.showMessageDialog(new JFrame(), "Insert a valid path!");
                         flagSucessClick = false;
@@ -335,7 +338,6 @@ public class FindWorkbookSideBar extends JPanel implements Observer {
 
                     findController.stopSearch();
                     searchButton.setText("Search");
-                    srv.interrupt();
 
                 }
             }
