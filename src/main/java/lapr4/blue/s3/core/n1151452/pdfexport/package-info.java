@@ -38,9 +38,8 @@
  * <li>A <b>PdfExportableCell</b> should be responsible of parsing a cell and its extensions into a pdf block.</li>
  * <li>A <b>PdfExportableSpreadsheet</b> should be responsible of interpreting a spreadsheet and it's style extension.</li>
  * <li>A <b>PdfExportableWorkbook</b> should be responsible to extract macros and spreadsheets.</li>
- * <li>To prevent creation exposure of a <b>PdfExportableCell</b> we will make a factory class that owns the creation logic
- * (will associate the cell data with a width and height from the spreadsheet). [<b>Factory Pattern</b>]</li>
- * <li>Due to the complex construction of the <b>PdfExport</b> we will use a builder, with a fluent interface, to build "step-by-step" the PdfExport object. [<b>Factory Pattern</b>]</li>
+ * <li>To prevent creation exposure of a <b>PdfExport</b> we will create a factory class. More specifically, due to the complex construction of
+ * the <b>PdfExport</b> we will use a builder, with a fluent interface, to build "step-by-step" the PdfExport object. [<b>Factory Pattern</b>]</li>
  * <li>This solution will integrate the already in use {@link lapr4.s1.export.ExportStrategy}.</li>
  * <li>To transport the user input options to the PdfExportBuilder we will use a <b>PdfOptionsDTO</b> object, preventing business
  * logic to be transferred to the presentation layer. [<b>DTO Pattern</b>]</li>
@@ -65,18 +64,13 @@
  * }
  * </pre>
  * </li>
- * <li>We will mainly use {@link com.itextpdf.text.pdf.PdfPTable}, {@link com.itextpdf.text.pdf.PdfPCell} & {@link com.itextpdf.text.Anchor} elements. </li>
+ * <li>We will mainly use {@link com.itextpdf.text.pdf.PdfPTable}, {@link com.itextpdf.text.pdf.PdfPCell} and {@link com.itextpdf.text.Anchor} elements. </li>
  * </ol>
  * <p>
- * - <b>3.1.2. PdfExportableCellFactory</b><p>
+ * - <b>3.1.2. PdfUtil</b><p>
  * <ol>
- * <li>The spreadsheet will inform the factory of the cells width and height.</li>
- * <li>The factory will receive an array of Cells to create a list of PdfExportableCell.</li>
- * <li>The factory will associate the correct height and width to each <b>PdfExportableCell</b> it creates.</li>
+ * <li>This class will contain helper class to translate swing components to itext PDF components</li>
  * </ol>
- * <i>3.1.2.1. PdfExportableCellFactory Diagram</i>
- * <p>
- * <img src="PdfExportableCellFactory_SD.png" alt="PDF Exportable Cell Factory SD.png"><p>
  * <p>
  * - <b>3.1.3. PDFExport Builder</b><p>
  * <ol>
@@ -88,8 +82,13 @@
  * <p>
  * <img src="PdfExportBuilder_SD.png" alt="Pdf Export Builder SD"><p>
  * <p>
+ * <h3>3.2. Domain Model (<i>Excerpt</i>)</h3>
  * <p>
- * <h3>3.2.3. Domain Model (<i>Excerpt</i>)</h3>
+ * <h4>3.2.2. Domain Model [Core Concepts]</h4>
+ * <p>
+ * <img src="core_concepts_dm.png" alt="Core Concepts DM"><p>
+ * <p>
+ * <h4>3.2.2. Domain Model [Export Concepts]</h4>
  * <p>
  * <img src="complete_pdf_export_dm.png" alt="Complete PDF Export DM"><p>
  * <p>
@@ -106,21 +105,68 @@
  * <p>
  * <h3>4.1. Unit Tests</h3>
  * <p><ol>
- * <li></li>
+ * <li>PdfExportableComment<ol>
+ * <li>ensurePdfExportableCommentHasNonNullCommentableCell</li>
+ * <li>ensurePdfExportableCommentExportsComment</li>
+ * <li>ensurePdfExportableCommentExportsHistory</li>
+ * </ol></li>
+ * <li>PdfExportableCell<ol>
+ * <li>ensurePdfExportableCellHasNonNullCell</li>
+ * <li>ensurePdfExportableCellExportsCell</li>
+ * <li>ensurePdfExportableCellExportsFormula</li>
+ * <li>ensurePdfExportableCellExportsComments</li>
+ * </ol></li>
+ * <li>PdfExportableSpreadsheet<ol>
+ * <li>ensurePdfExportableSpreadsheetHasNonNullSpreadsheet</li>
+ * <li>ensurePdfExportableSpreadsheetExportsCells</li>
+ * <li>ensurePdfExportableSpreadsheetExportsCellRange</li>
+ * <li>ensurePdfExportableSpreadsheetExportsSelection</li>
+ * </ol></li>
+ * <li>PdfExportableWorkbook<ol>
+ * <li>ensurePdfExportableWorkbookHasNonNullWorkbook</li>
+ * <li>ensurePdfExportableWorkbookExportsSpreadsheetWithCorrectIndex</li>
+ * <li>ensurePdfExportableWorkbookExportsSpreadsheets</li>
+ * <li>ensurePdfExportableWorkbookExportsMacros</li>
+ * </ol></li>
+ * <li>PdfExportableWorkbook<ol>
+ * <li>ensurePdfExportableMacroHasNonNullMacro</li>
+ * <li>ensurePdfExportableMacroExportsMacro</li>
+ * </ol></li>
+ * <li>PdfExport<ol>
+ * <li>ensurePdfExportHasNonNullListOfActiveCells</li>
+ * <li>ensurePdfExportHasNonEmptyListOfActiveCells</li>
+ * <li>ensurePdfExportHasNonNullGridType</li>
+ * <li>ensurePdfExportHasNonNullPrintArea</li>
+ * <li>ensurePdfExportHasNonNullPath</li>
+ * </ol></li>
  * </ol><p>
- * <h3>4.2. Acceptance Tests</h3>
- * <p><ol>
- * <li></li>
- * </ol>
  * <p>
- * <h3>4.3. Functional Tests</h3>
+ * <h3>4.2. Functional Tests</h3>
  * <p><ol>
- * <li></li>
+ * <li>Edit a spreadsheet.</li>
+ * <li>Click export PDF in the file menu.</li>
+ * <li>Select the pdf options and export.</li>
+ * <li>Verify if created pdf is like desired.</li>
+ * <li>Repeat to test all export options.</li>
  * </ol>
- * <p>
  * <p>
  * <h2>5. Design</h2>
+ * <p>
+ * <h3>5.1. Export PDF Action SD</h3>
+ * <img src="pdf_export_ui_sd.png" alt="Export PDF Action SD">
+ * <p>
+ * <h3>5.2. Export PDF Controller &amp; Domain SD</h3>
+ * <img src="pdf_export_controller_sd.png" alt="Export PDF Controller &amp; Domain SD">
+ * <p>
+ * <h3>5.3. Design Patterns and Best Practices</h3>
+ * <p><ol>
+ * <li>I used the <b>factory pattern</b> to build the pdf export, to prevent creation exposure. More specifically,
+ * due to the complex construction of the <b>PdfExport</b> we will use a builder, with a fluent interface,
+ * to build "step-by-step" the PdfExport object..</li>
+ * <li>I used a DTO to handle the export options between UI &amp; Domain, making the communication between them independent.</li>
+ * <li>We used the <b>strategy pattern</b> to abstract the export context responsibility.</li>
  * </ol>
+ * <p>
  * <p>
  * <h2>6. Integration/Demonstration</h2>
  * <p>
@@ -176,6 +222,37 @@
  * <li>Complete Analysis.</li>
  * <li>Elaborate tests.</li>
  * <li>Start Design</li>
+ * </ol><p>
+ * Blocking:
+ * <p>
+ * -nothing-
+ * <p>
+ * <b>Friday [16/06/2017]</b><p>
+ * I worked on:<p>
+ * Yesterday
+ * <p><ol>
+ * <li>Updated Analysis.</li>
+ * <li>Elaborate tests and setup Domain classes [TDD approach]</li>
+ * </ol><p>
+ * Today
+ * <p><ol>
+ * <li>Continue tests and domain classes setup</li>
+ * </ol><p>
+ * Blocking:
+ * <p>
+ * -nothing-
+ * <p>
+ * <b>Saturday [17/06/2017]</b><p>
+ * I worked on:<p>
+ * Yesterday
+ * <p><ol>
+ * <li>Continued tests and domain classes setup</li>
+ * </ol><p>
+ * Today
+ * <p><ol>
+ * <li>Finish domain class setup</li>
+ * <li>Complete design</li>
+ * <li>Start application layer implementation</li>
  * </ol><p>
  * Blocking:
  * <p>

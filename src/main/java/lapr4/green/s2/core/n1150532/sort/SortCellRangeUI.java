@@ -86,6 +86,8 @@ public class SortCellRangeUI extends JDialog {
      */
     private JButton btSort;
 
+    private int realColumnIndex;
+
     /**
      * The full constructor of the user interface.
      *
@@ -251,7 +253,9 @@ public class SortCellRangeUI extends JDialog {
      * @return It returns the sorting column index.
      */
     private int getSortingColumnIndex() {
+
         int columnIndex = translateColumn(inSortingColumn.getText());
+        this.realColumnIndex =  translateColumn(inSortingColumn.getText());
         return changeToCellRangeIndex(columnIndex);
     }
 
@@ -325,7 +329,8 @@ public class SortCellRangeUI extends JDialog {
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
-                controller.sort(selectedCells, getSortingColumnIndex(), (SortingAlgorithm) outAlgorithms.getSelectedItem(), (RangeRowDTOComparator) outComparators.getSelectedItem(), btDescending.isSelected());
+                controller.sort(selectedCells, getSortingColumnIndex(),SortCellRangeUI.this
+                .realColumnIndex,(SortingAlgorithm) outAlgorithms.getSelectedItem(), (RangeRowDTOComparator) outComparators.getSelectedItem(), btDescending.isSelected());
                 dispose();
             } catch (IllegalArgumentException ex) {
                 outInformation.setText(ex.getMessage());

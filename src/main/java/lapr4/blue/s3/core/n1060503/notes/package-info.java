@@ -107,14 +107,42 @@
  * <h3>4.2. Functional Tests</h3>
  *
  * <p>
- * TODO
+ * Add Note:
  *
  * <ol>
- * <li>  </li>
- * <li>  </li>
- * <li>  </li>
- * <li>  </li>
- * <li>  </li>
+ * <li> Select Notes Editon Tab </li>
+ * <li> Select a contact </li>
+ * <li> Click Add Button </li>
+ * <li> A new Window will appear. Insert a title, press Enter and insert the content of note </li>
+ * <li> Click Add Button </li>
+ * <li> A message with the success of the operation will appear on the screen </li>
+ * </ol>
+ * 
+ * <p>
+ * Edit Note:
+ *
+ * <ol>
+ * <li> Select Notes Editon Tab </li>
+ * <li> Select a contact </li>
+ * <li> Select note from the list </li>
+ * <li> Click Edit Button </li>
+ * <li> Insert the new content </li>
+ * <li> A message with the success of the operation will appear on the screen </li>
+ * <li> History list will be updated with versions and timestamp </li>
+ * </ol>
+ * 
+ * <p>
+ * Remove Note:
+ *
+ * <ol>
+ * <li> Select Notes Editon Tab </li>
+ * <li> Select a contact </li>
+ * <li> Select note from the list </li>
+ * <li> Select Remove button </li>
+ * <li> A popup window will appear to confirm the operation </li>
+ * <li> Click Yes </li>
+ * <li> A message with the success of the operation will appear on the screen </li>
+ * <li> Note will have the annotation: (Removed) </li>
  * </ol>
  * 
  *
@@ -136,13 +164,67 @@
  * <h2>5. Implementation</h2>
  *
  *
- * <p>
- * nome do que o metodo faz
+ * <h3>NotesEditionController:</h3>
+ * 
  * <pre>
  * {@code
- *  public class  extends JPanel{
+ *  public class NotesEditionController{
  *      ...
-
+ * 
+ *      public List<Note> notesOfContact(String contactName) {
+ *          Contact contact = findContactByName(contactName);
+ *          notesList = contact.notesList();
+ *          return notesList.getNotesList();
+ *      }
+ * 
+ *      ...
+ * 
+ *      public List<NoteContent> notesContentOfNote(Note n) {
+ *          if (n != null) {
+ *              return n.getNoteContentList();
+ *          }
+ *          return new Vector<>();
+ *      }
+ * 
+ *      ...
+ *          
+ *      public boolean addNote(String contactName, String title, String content) throws DataConcurrencyException, DataIntegrityViolationException {
+ *          title = title.replaceAll("(\\r|\\n|\\t)", "");
+ *          Contact contact = findContactByName(contactName);
+ *          if (contact.notesList().add(title, content)) {
+ *              Contact c = contactRepository.save(contact);
+ *              if (!(c == null)) {
+ *                  return true;
+ *              }
+ *          }
+ *          return false;
+ *      }
+ * 
+ *      ...
+ * 
+ *      public boolean editNote(String contactName, Note n, String content) throws DataConcurrencyException, DataIntegrityViolationException {
+ *          Contact contact = findContactByName(contactName);
+ *          if (contact.notesList().edit(n.title(), content)) {
+ *              Contact c = contactRepository.save(contact);
+ *              if (!(c == null)) {
+ *                  return true;
+ *             }
+ *         }
+ *         return false;
+ *      }
+ * 
+ *      ...
+ * 
+ *      public boolean removeNote(String contactName, Note n) throws DataConcurrencyException, DataIntegrityViolationException {
+ *          Contact contact = findContactByName(contactName);
+ *          if (contact.notesList().remove(n.title())) {
+ *              Contact c = contactRepository.save(contact);
+ *              if (!(c == null)) {
+ *                  return true;
+ *              }
+ *          }
+ *          return false;
+ *      } 
  *  }    
  * }
  * </pre>
@@ -167,12 +249,12 @@
  * <p>
  * <b>Friday</b>
  * <p>
- * 
+ * Continue Implementation. Same Problems with data base
  *
  * <p>
  * <b>Saturday</b>
  * <p>
- * 
+ * Concluded Implementation
  *
  * <p>
  * <b>Sunday</b>

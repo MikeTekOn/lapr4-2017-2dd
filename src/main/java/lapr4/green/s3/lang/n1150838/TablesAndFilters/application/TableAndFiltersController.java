@@ -17,10 +17,10 @@ import java.util.List;
 import lapr4.blue.s1.lang.n1151031.formulastools.ConditionalStyleCompiler;
 import lapr4.green.s1.ipc.n1150800.importexportTXT.CellRange;
 import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.DataRow;
-import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.HeaderRow;
 import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.Row;
 import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.Table;
 import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.TableBuilder;
+import lapr4.green.s3.lang.n1150838.TablesAndFilters.exception.InvalidTableException;
 
 /**
  *
@@ -64,6 +64,11 @@ public class TableAndFiltersController implements Controller {
         return this.selectedCells.addAll(selectedCells);
     }
 
+    /**
+     * Defines a table with this selectedCells
+     *
+     * @return true if the table was added
+     */
     public boolean defineTable() {
 
         TableBuilder builder = new TableBuilder(selectedCells);
@@ -79,18 +84,47 @@ public class TableAndFiltersController implements Controller {
         return range;
     }
 
-    public boolean isAvailableToDefine() {
+    /**
+     *
+     * @return true if the table is available to define otherwise return null.
+     * @throws InvalidTableException if the selectedCells have just 1 row
+     */
+    public boolean isAvailableToDefine() throws InvalidTableException {
+        int flag = 0;
+        int headerRow = selectedCells.get(0).getAddress().getRow();
+        for (Cell selectedCell : selectedCells) {
+            if (selectedCell.getAddress().getRow() != headerRow) {
+                flag = 1;
+                break;
+            }
+        }
+        if (flag == 0) {
+            throw new InvalidTableException("A table must have at least 2 rows and 1 column");
+        }
         return ((SpreadsheetImpl) uiController.getActiveSpreadsheet()).isAvailableToDefine(selectedCells);
     }
 
+    /**
+     *
+     * @param cell the given cell
+     * @return the cell range of the table were the given cell is defined or
+     * null if the given cell hasnt a table.
+     */
     public CellRange isDefined(Cell cell) {
         return ((SpreadsheetImpl) uiController.getActiveSpreadsheet()).isDefined(cell);
     }
-
+    /**
+     * 
+     * @return the active tables on the active spreadsheet
+     */
     public List<Table> activeTables() {
         return ((SpreadsheetImpl) uiController.getActiveSpreadsheet()).getTables();
     }
-
+    /**
+     * 
+     * @param d the given table
+     * @return false if the given table wasnt removed  true otherwise
+     */
     public boolean removeTable(Table d) {
         return ((SpreadsheetImpl) uiController.getActiveSpreadsheet()).removeTable(d);
     }
@@ -102,21 +136,28 @@ public class TableAndFiltersController implements Controller {
         return table;
     }
 
-
+    /**
+     *
+     * @param d the given table
+     * @param formula the given formula
+     * @return the list of rows from the given table that doesnt match the given
+     * formula
+     * @throws FormulaCompilationException
+     * @throws IllegalValueTypeException
+     */
     public List<Row> verifyFormula(Table d, String formula) throws FormulaCompilationException, IllegalValueTypeException {
         List<Row> invalidRows = new ArrayList();
         for (int i = 1; i < d.getCells().size(); i++) {
             Expression expression = null;
             DataRow row = ((DataRow) d.getRow(i));
             expression = ConditionalStyleCompiler.getInstance().compile(row.getCellAt(0), formula, uiController);
-          
+
             if (!expression.evaluate().toBoolean()) {
-                
+
                 invalidRows.add(row);
             }
         }
         return invalidRows;
     }
-
 
 }

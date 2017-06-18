@@ -41,17 +41,17 @@ public class NoteContentTest {
 
     @Test
     public void ensureNoteContentOk() {
-        NoteContent nc = new NoteContent(validContent);
+        NoteContent nc = new NoteContent(validContent,0);
     }
     
     @Test(expected = IllegalStateException.class)
     public void ensureContentIsNotNull() {
-        NoteContent nc = new NoteContent(null);
+        NoteContent nc = new NoteContent(null,0);
     }
     
     @Test(expected = IllegalStateException.class)
     public void ensureContentIsNotEmpty() {
-        NoteContent nc = new NoteContent(invalidContent);
+        NoteContent nc = new NoteContent(invalidContent,0);
     }
     
 }

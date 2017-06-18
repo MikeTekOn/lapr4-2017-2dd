@@ -23,6 +23,7 @@ import lapr4.green.s1.ipc.n1150532.comm.ui.UICommExtensionSideBar;
 import lapr4.green.s1.ipc.n1150532.startSharing.HandlerRequestSharedCellsDTO;
 import lapr4.green.s1.ipc.n1150532.startSharing.HandlerResponseSharedCellsDTO;
 import lapr4.green.s1.ipc.n1150532.startSharing.SharedCellsEvent;
+import lapr4.red.s3.ipc.n1150613.NetworkSearchByFile.HandlerSearchWorkbookRequestDTO;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -37,8 +38,6 @@ import lapr4.blue.s2.ipc.n1140822.fileShare.FileNameListDTO;
 import lapr4.blue.s2.ipc.n1140822.fileShare.HandlerFileDTO;
 import lapr4.blue.s2.ipc.n1140822.fileShare.HandlerFileNameDTO;
 import lapr4.blue.s2.ipc.n1140822.fileShare.HandlerFileNameListDTO;
-import lapr4.blue.s2.ipc.n1151031.searchnetwork.HandlerSearchWorkbookRequestDTO;
-import lapr4.blue.s2.ipc.n1151031.searchnetwork.SearchWorkbookRequestDTO;
 import lapr4.green.s1.ipc.n1150657.chat.ControllerConnection;
 import lapr4.green.s1.ipc.n1150657.chat.HandlerRequestMessageDTO;
 import lapr4.green.s1.ipc.n1150657.chat.MessageEvent;
@@ -52,6 +51,7 @@ import lapr4.green.s1.ipc.n1150901.search.workbook.SearchWorkbookEvent;
 import lapr4.red.s3.ipc.n1150623.MultipleSharing.CellHandler;
 import lapr4.red.s3.ipc.n1150623.MultipleSharing.LocationOfSharesFrame;
 import lapr4.red.s3.ipc.n1150623.MultipleSharing.ShareOptionsController;
+import lapr4.red.s3.ipc.n1150613.NetworkSearchByFile.SearchWorkbookRequestDTO;
 
 /**
  * The Communication extension. It manages all the servers and clients of the
@@ -231,6 +231,7 @@ public class CommExtension extends Extension implements Observer {
         udpServer.addHandler(UserChatDTO.class, hucp);
         HandlerSearchWorkbookRequestDTO h3 = new HandlerSearchWorkbookRequestDTO(uiController);
         udpServer.addHandler(SearchWorkbookRequestDTO.class, h3);
+        
         //TODO
     }
 
