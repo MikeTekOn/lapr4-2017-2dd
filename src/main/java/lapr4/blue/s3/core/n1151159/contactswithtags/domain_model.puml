@@ -1,0 +1,61 @@
+@startuml domain_model.png
+
+'http://plantuml.com/skinparam.html'
+skinparam handwritten true
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+hide methods
+
+class Tag << Value Object >>
+interface Taggable
+
+package "Person Contact Aggregate" <<Cloud>> {
+    class PersonContact <<aggregate root>> {
+        firstName
+        lastName
+        photo
+    }
+    class Agenda {
+    }
+    class Event {
+        description
+        dueDate
+    }
+    class Profession <<value object>>
+}
+
+package "Company Contact Aggregate" <<Cloud>> {
+    class CompanyName <<value object>>
+    class CompanyContact <<aggregate root>> <<CompanyName>>
+    class Image  <<value object>>
+    class EmailAddress  <<value object>>
+    class PhoneNumber  <<value object>>
+}
+
+CompanyContact "1" <-   PersonContact
+CompanyContact     -->  "1" CompanyName
+CompanyContact     ---> "1" Image
+CompanyContact     ---> "1" EmailAddress
+CompanyContact     -->  "1" PhoneNumber
+
+PersonContact *--> "1" Profession
+PersonContact *--> "1" Agenda
+Agenda *-->        "*" Event
+
+Tag "*" <- PersonContact : associated with
+Tag "*" <- CompanyContact : associated with
+Taggable <|- PersonContact
+Taggable <|- CompanyContact
+
+note as N1
+  This value object is contained on
+  both aggregates. It is represented
+  outside because plant uml doesn't
+  allow to represent it inside both
+  aggregates.
+end note
+
+Tag . N1
+
+@enduml

@@ -1,0 +1,148 @@
+@startuml sd_notes_edition.png
+skinparam handwritten true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false 
+skinparam SequenceMessageAlign center
+
+actor User 
+participant "NotesEditionUI" as UI
+participant "NotesEditionController" as CTRL
+participant "ContactRepository" as CR
+participant "c : Contact" as C
+participant "NotesList" as NL
+participant "n : Note" as N
+participant "NoteContent" as NC
+
+
+User -> UI : select notes editon tab
+activate UI
+create CTRL
+UI --> CTRL : create
+UI -> CTRL : getContacts()
+activate CTRL
+CTRL -> CR : contacts()
+deactivate CTRL
+UI --> User : show all contacts
+deactivate UI
+User -> UI : choose a contact
+activate UI
+
+
+UI -> CTRL : notesOfContact(c)
+activate CTRL
+CTRL -> C : c.notesList();
+activate C
+C ->  NL : getNotesList();
+activate NL
+deactivate C
+deactivate NL
+deactivate CTRL
+
+UI --> User : show the history of notes associated from selected contact
+deactivate UI
+
+group #F3F781 alt : new note
+User -> UI : choose new note option
+activate UI
+UI --> UI : addNewNoteWindow()
+UI --> User : show window to fill title and content
+deactivate UI
+User -> UI : confirm submission
+activate UI
+UI -> CTRL : addNote(title, content)
+activate CTRL
+CTRL -> C : c.notesList();
+activate C
+C ->  NL : getNotesList();
+activate NL
+deactivate NL
+deactivate C
+CTRL -> NL : nl.add(title, content)
+activate NL
+create N
+NL --> N : create 
+NL -> N : add(title, content) 
+activate N
+create NC
+N --> NC : create
+N -> NC : add(content)
+activate NC
+deactivate NC
+deactivate N
+deactivate NL
+CTRL -> CR : save(c)
+activate CR
+deactivate CR
+deactivate CTRL
+deactivate UI
+end group
+
+group #A9F5A9 alt : edit note
+User -> UI : choose edit note option
+activate UI
+UI -> CTRL : notesContentOfNote(n)
+activate CTRL
+CTRL -> NL : getNotesContentList(n)
+activate NL
+deactivate NL
+deactivate CTRL
+UI --> User : show window to fill the new content of selected note
+deactivate UI
+User -> UI : confirm submission
+activate UI
+UI -> CTRL : editNote(Note n, String content)
+activate CTRL
+
+CTRL -> NL : nl.edit( content)
+activate NL
+NL -> N : n.add( content) 
+activate N
+create NC
+N --> NC : create
+N -> NC : add(content)
+activate NC
+deactivate NC
+deactivate N
+deactivate NL
+CTRL -> CR : save(c)
+activate CR
+deactivate CR
+deactivate CTRL
+deactivate UI
+end group
+
+group #A9BCF5 alt : remove note
+User -> UI : choose remove note option
+activate UI
+UI -> CTRL : notesContentOfNote(n)
+activate CTRL
+CTRL -> NL : getNotesContentList(n)
+activate NL
+deactivate NL
+deactivate CTRL
+UI --> User : show window of notes
+deactivate UI
+User -> UI : selecte note to be removed
+activate UI
+UI -> CTRL : removeNote(n)
+activate CTRL
+CTRL -> NL : nl.remove(n)
+activate NL
+note right of NL
+    remove() : change the flag state of "boolean: removed",
+    so it is possible to keep the history
+end note
+NL -> N : n.remove() 
+activate N
+deactivate N
+deactivate NL
+CTRL -> CR : save(c)
+activate CR
+deactivate CR
+deactivate CTRL
+deactivate UI
+end group
+UI --> User : informs the success of the operation
+
+@enduml

@@ -18,7 +18,7 @@ public class Notification extends JFrame {
     JFrame downloadFrame;
     Timer timer;
 
-    public Notification(JFrame downloadFrame) {
+    public Notification(JFrame downloadFrame, String message) {
         super("Downloading Update");
         this.downloadFrame = downloadFrame;
         setLayout(new GridBagLayout());
@@ -38,7 +38,7 @@ public class Notification extends JFrame {
         setUndecorated(true);
         setSize(500,100);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
         timer = new Timer(10000, new ActionListener() {
             @Override
@@ -63,18 +63,21 @@ public class Notification extends JFrame {
             }
         };
 
-        MouseListener mouseListener3 = new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent mouseEvent) {
-                downloadFrame.setVisible(true);
-            }
-        };
-
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        panel.add(new JLabel("Dowloading automatic update, click to check progress"));
+        panel.add(new JLabel(message));
+
+        if(downloadFrame!=null) {
+            MouseListener mouseListener3 = new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent mouseEvent) {
+                    downloadFrame.setVisible(true);
+                }
+            };
+            panel.addMouseListener(mouseListener3);
+        }
+
         panel.addMouseListener(mouseListener1);
         panel.addMouseListener(mouseListener2);
-        panel.addMouseListener(mouseListener3);
 
         this.add(panel);
         GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -85,7 +88,7 @@ public class Notification extends JFrame {
         this.setLocation(x, y);
     }
 
-    public static void notifyHost(JFrame downloadFrame) {
+    public static void notifyHost(JFrame downloadFrame, String message) {
         // Determine what the GraphicsDevice can support.
         GraphicsEnvironment ge =
                 GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -110,7 +113,7 @@ public class Notification extends JFrame {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                Notification notification = new Notification(downloadFrame);
+                Notification notification = new Notification(downloadFrame, message);
 
                 // Set the window to 70% translucency, if supported.
                 if (isTranslucencySupported) {

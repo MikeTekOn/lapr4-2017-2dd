@@ -60,6 +60,8 @@ import java.util.Observer;
 import java.util.ResourceBundle;
 import lapr4.blue.s2.ipc.n1140822.fileShare.ShareConfiguration;
 import lapr4.green.s2.core.n1150657.extensions.ui.ExtensionLoadFrame;
+import lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch.CommUDPClient;
+import lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch.FilePathDTO;
 
 /**
  * CleanSheets - the main class of the application. The class manages workbooks,
@@ -255,7 +257,7 @@ public class CleanSheets implements Observer {
      * @param args the command-line arguments (not used)
      */
     public static void main(String[] args) {
-        //CleanSheets.setFlag(true); if the beggining of the app is without the loading
+        CleanSheets.setFlag(true); //if the beggining of the app is without the loading
         CleanSheets app = new CleanSheets();
 
         // Configures look and feel
@@ -387,6 +389,8 @@ public class CleanSheets implements Observer {
         File file = workbooks.get(workbook);
         if (file != null) {
             saveAs(workbook, file);
+            CommUDPClient c = new CommUDPClient(new FilePathDTO(file.getName(), file.getAbsolutePath()), 15310);
+            c.start();
         } else {
             throw new FileNotFoundException("No file assigned to the workbook.");
         }
@@ -416,13 +420,18 @@ public class CleanSheets implements Observer {
                 } catch (IOException e) {
                 }
             }
-            writePreviewWorkbookMetadata(file);
+           try{
+                writePreviewWorkbookMetadata(file);
+           }
+           catch (Exception ex)
+           {
+               
+           }
+             
             workbooks.put(workbook, file);
             fireSpreadsheetAppEvent(workbook, file, SpreadsheetAppEvent.Type.SAVED);
         }
     }
-
-  
 
     /**
      * Returns the workbooks that are open.
@@ -593,42 +602,45 @@ public class CleanSheets implements Observer {
             }
         }
     }
-    
+
     /**
      * Writes metadata on the workbook so it can be previewed
+     *
      * @param file the workbook file
      * @throws IOException if not found
      */
-      private void writePreviewWorkbookMetadata(File file) throws IOException {
-        UserDefinedFileAttributeView view = Files.getFileAttributeView(file.toPath(), UserDefinedFileAttributeView.class);
-        List<Cell> listCells = new LinkedList<>();
-        //add 3x3 cells from the first filled cell
-        for (int i = 0; i < uiController.getActiveSpreadsheet().getColumnCount() + 1; i++) {
-            for (int j = 0; j < uiController.getActiveSpreadsheet().getRowCount() + 1; j++) {
-                if (!uiController.getActiveSpreadsheet().getCell(i, j).getContent().equals("")) {
-                    int rowIndex = i;
-                    int colIndex = j;
-                    for (int k = rowIndex; k < rowIndex + 3; k++) {
-                        for (int l = colIndex; l < colIndex + 3; l++) {
-                            listCells.add(uiController.getActiveSpreadsheet().getCell(k, l));
+    private void writePreviewWorkbookMetadata(File file) throws IOException {
+        if (file != null) {
+            UserDefinedFileAttributeView view = Files.getFileAttributeView(file.toPath(), UserDefinedFileAttributeView.class);
+            List<Cell> listCells = new LinkedList<>();
+            //add 3x3 cells from the first filled cell
+            for (int i = 0; i < uiController.getActiveSpreadsheet().getColumnCount() + 1; i++) {
+                for (int j = 0; j < uiController.getActiveSpreadsheet().getRowCount() + 1; j++) {
+                    if (!uiController.getActiveSpreadsheet().getCell(i, j).getContent().equals("")) {
+                        int rowIndex = i;
+                        int colIndex = j;
+                        for (int k = rowIndex; k < rowIndex + 3; k++) {
+                            for (int l = colIndex; l < colIndex + 3; l++) {
+                                listCells.add(uiController.getActiveSpreadsheet().getCell(k, l));
+                            }
                         }
-                    }
-                    break;
-                }
-            }
-            
-        }
-        int row = 0, col = 0;
-        for (int i = 0; i < listCells.size(); i++) {
-            if (i < 10) {
-                //write the first cells as metadata into 3x3 matrix
-                view.write("cell" + i, Charset.defaultCharset().encode(row + "," + col + "," + listCells.get(i).getContent()));
-                row++;
-                if (row == 3) {
-                    row = 0;
-                    col++;
-                    if (col == 3) {
                         break;
+                    }
+                }
+
+            }
+            int row = 0, col = 0;
+            for (int i = 0; i < listCells.size(); i++) {
+                if (i < 10) {
+                    //write the first cells as metadata into 3x3 matrix
+                    view.write("cell" + i, Charset.defaultCharset().encode(row + "," + col + "," + listCells.get(i).getContent()));
+                    row++;
+                    if (row == 3) {
+                        row = 0;
+                        col++;
+                        if (col == 3) {
+                            break;
+                        }
                     }
                 }
             }

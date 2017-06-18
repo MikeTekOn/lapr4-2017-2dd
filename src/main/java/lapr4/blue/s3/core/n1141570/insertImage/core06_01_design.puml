@@ -1,0 +1,21 @@
+  @startuml core02_01_design.png
+  participant "uic : UIController" as UIC
+  participant ExtensionManager as ExtManager
+  participant "extension : ImagesExtension" as ImagesExtens
+  participant "uiExtension : UIExtensionImages" as UIExt
+  participant "ImagesPanel : JPanel" as ip
+  UIC -> ExtManager : extensions=getExtensions();
+  loop for Extension ext : extensions
+  	UIC -> ImagesExtens : uiExtension=getUIExtension(this);
+  	activate ImagesExtens
+  	create UIExt
+  	ImagesExtens -> UIExt : new(extension, uic)
+  	deactivate ImagesExtens
+  	UIExt -> UIExt : getSideBar();
+  	activate UIExt
+  	create ip
+  	UIExt -> ip :  new (uic)  	
+  	deactivate UIExt
+  	UIC -> UIC : uiExtensions.add(uiExtension);
+  end
+  @enduml
