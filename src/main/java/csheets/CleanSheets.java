@@ -60,8 +60,8 @@ import java.util.Observer;
 import java.util.ResourceBundle;
 import lapr4.blue.s2.ipc.n1140822.fileShare.ShareConfiguration;
 import lapr4.green.s2.core.n1150657.extensions.ui.ExtensionLoadFrame;
-import lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch.CommUDPClient;
-import lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch.FilePathDTO;
+import lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch.comms.CommUDPClient;
+import lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch.comms.FilePathDTO;
 
 /**
  * CleanSheets - the main class of the application. The class manages workbooks,
