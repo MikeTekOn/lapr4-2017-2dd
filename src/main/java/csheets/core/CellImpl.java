@@ -291,7 +291,7 @@ public class CellImpl implements Cell {
 	 */
 	private void storeContent(String content) throws FormulaCompilationException {
 		// Parses formula
-		Formula formula = null;
+		Formula formula = null;    
 		if (content.length() > 1)
 			formula = FormulaCompiler.getInstance().compile(this, content, uiController);
 
