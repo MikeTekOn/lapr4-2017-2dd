@@ -34,13 +34,13 @@ public class TableList extends AbstractListModel {
     /**
      * search the file that counts the item parameter
      *
-     * @param item
+     * @param item the item
      */
     public void setSelectedItem(String item) {
         for (Table f : tableList) {
             if (buildTableDescription(f).equals(item)) {
 
-               selected = f;
+                selected = f;
             }
         }
     }
@@ -48,7 +48,7 @@ public class TableList extends AbstractListModel {
     /**
      * returns the selected item
      *
-     * @return
+     * @return the table
      */
     public Table getSelectedItem() {
 
@@ -61,7 +61,7 @@ public class TableList extends AbstractListModel {
      */
     @Override
     public int getSize() {
-        return  tableList.size();
+        return tableList.size();
     }
 
     /**
@@ -71,22 +71,23 @@ public class TableList extends AbstractListModel {
      */
     @Override
     public Object getElementAt(int index) {
-        
+
         return buildTableDescription(tableList.get(index));
     }
-        /**
+
+    /**
      *
-     * @param table
+     * @param table the table
      * @return the description of the cell
      */
-    public String buildTableDescription(Table table){
+    public String buildTableDescription(Table table) {
         StringBuilder sb = new StringBuilder();
         sb.append("Table: ");
         CellRange range = table.getRange();
         sb.append(range.getFirstCell());
         sb.append(":");
         sb.append(range.getLastCell());
-        
+
         return sb.toString();
     }
 
@@ -115,7 +116,7 @@ public class TableList extends AbstractListModel {
      *
      * @param d
      */
-    public void removeElement(Table  d) {
+    public void removeElement(Table d) {
         int indice = tableList.indexOf(d);
         tableList.remove(d);
         if (!tableList.contains(d) && tableList.remove(d)) {

@@ -20,9 +20,8 @@ import csheets.ui.ctrl.SelectionEvent;
 import csheets.ui.ctrl.SelectionListener;
 import csheets.ui.ctrl.UIController;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,8 +29,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -47,6 +44,7 @@ import lapr4.green.s3.lang.n1150838.TablesAndFilters.application.TableAndFilters
 import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.DataRow;
 import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.Row;
 import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.Table;
+import lapr4.green.s3.lang.n1150838.TablesAndFilters.exception.InvalidTableException;
 
 /**
  *
@@ -85,9 +83,13 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
 
     }
 
+    /**
+     * Builds the main side bar
+     */
     public void build() {
 
         setLayout(new BorderLayout());
+        // upper panel with the table list
         JPanel upper = new JPanel(new BorderLayout());
         upper.add(buildTableList(), BorderLayout.CENTER);
 
@@ -96,7 +98,9 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
         panelButtons.add(buildRemoveButton());
         upper.add(panelButtons, BorderLayout.SOUTH);
         add(upper, BorderLayout.NORTH);
+        // the panel that will contain the field to insert filters
         JPanel bottom = new JPanel(new BorderLayout());
+        // the label with the applied filters
         add(buildLabelFilters(), BorderLayout.CENTER);
         bottom.add(buildFiltersField(), BorderLayout.CENTER);
         panelButtons = new JPanel();
@@ -107,6 +111,11 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
 
     }
 
+    /**
+     * Builds the scroll pane that will contain the table list
+     *
+     * @return the scroll with the list of the tables
+     */
     private JScrollPane buildTableList() {
         modelTable = new TableList(new ArrayList());
         listTables = new JList(modelTable);
@@ -130,6 +139,9 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
         return pane;
     }
 
+    /**
+     * Builds the list of the tables
+     */
     private void buildTableContent() {
         modelTable.removeAll();
         for (Table activeTable : ctrl.activeTables()) {
@@ -139,6 +151,11 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
         listTables.updateUI();
     }
 
+    /**
+     * Builds the filters field
+     *
+     * @return the filters field
+     */
     private JPanel buildFiltersField() {
         JPanel pane = new JPanel(new GridLayout(1, 1));
 
@@ -152,6 +169,11 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
 
     }
 
+    /**
+     * Builds the button add and all his listeners
+     *
+     * @return the button
+     */
     private JButton buttonAdd() {
         JButton button = new JButton("Add");
         button.addActionListener(new ActionListener() {
@@ -170,6 +192,8 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
                     } catch (FormulaCompilationException | IllegalValueTypeException ex) {
                         JOptionPane.showMessageDialog(null, "Invalid Formula!", "Error", JOptionPane.WARNING_MESSAGE);
 
+                    } catch (IndexOutOfBoundsException ex) {
+                        JOptionPane.showMessageDialog(null, "Invalid Index!", "Error", JOptionPane.WARNING_MESSAGE);
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "Select a table to add the Filter!", "Error", JOptionPane.WARNING_MESSAGE);
@@ -181,6 +205,11 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
         return button;
     }
 
+    /**
+     * Builds the button to remove
+     *
+     * @return the button
+     */
     private JButton buttonRemove() {
         JButton button = new JButton("Remove");
         button.addActionListener(new ActionListener() {
@@ -204,17 +233,24 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
         return button;
     }
 
+    // Already commented !
     @Override
     public void selectionChanged(SelectionEvent event) {
-
+        // verifys if the spreadsheet was changed!
         Spreadsheet spreadsheet = event.getSpreadsheet();
-        labelFilters.setText(PREFIX);
+        labelFilters.setText(PREFIX + "none");
+
         if (ctrl != null && spreadsheet != null) {
             buildTableContent();
 
         }
     }
 
+    /**
+     * builds the define table button
+     *
+     * @return the button
+     */
     private JButton buildDefineButton() {
 
         JButton button = new JButton("Define Table");
@@ -223,6 +259,11 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
         return button;
     }
 
+    /**
+     * Builds the remove table button
+     *
+     * @return the button
+     */
     private JButton buildRemoveButton() {
 
         JButton button = new JButton("Remove Table");
@@ -232,6 +273,7 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
                 Object table = listTables.getSelectedValue();
                 if (table != null) {
                     modelTable.setSelectedItem((String) table);
+                    resetStyle(modelTable.getSelectedItem());
                     ctrl.removeTable(modelTable.getSelectedItem());
                     modelTable.removeElement(modelTable.getSelectedItem());
                     listTables.updateUI();
@@ -246,6 +288,11 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
         return button;
     }
 
+    /**
+     * Sets invisible the invalid rows
+     *
+     * @param rows to update
+     */
     private void updateInvalidRows(List<Row> rows) {
 
         for (Row row : rows) {
@@ -262,6 +309,11 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
 
     }
 
+    /**
+     * Reset the style of the rows
+     *
+     * @param d the table to reset
+     */
     private void resetStyle(Table d) {
         for (int i = 1; i < d.getCells().size(); i++) {
             DataRow row = (DataRow) d.getRow(i);
@@ -269,15 +321,20 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
                 Cell cell = (Cell) object;
                 StylableCell sCell = (StylableCell) cell.getExtension(StyleExtension.NAME);
                 cell.addCellListener(sCell);
-                sCell.resetStyle();
+                sCell.setForegroundColor(Color.BLACK);
                 ((CellImpl) cell).updateCellStyle();
             }
 
         }
     }
 
+    /**
+     * The label with the filters used
+     *
+     * @return the label
+     */
     private JLabel buildLabelFilters() {
-        labelFilters = new JLabel("Filters Used: ");
+        labelFilters = new JLabel("Filters Used: none ");
         return labelFilters;
     }
 
@@ -287,7 +344,10 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
         protected String getName() {
             return "Add table";
         }
-
+        /**
+         * Creates the new table and verifys if it fits the conditions to create a table
+         * @param actionEvent the event
+         */
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             ArrayList<Cell> selectedCells = focusOwner.getSelectedCellsList();
@@ -295,19 +355,23 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
             if (size == 0) {
                 JOptionPane.showMessageDialog(null, "Select cells to define a table", "Error", JOptionPane.WARNING_MESSAGE);
             } else if (ctrl.setSelectedCells(selectedCells)) {
-                if (ctrl.isAvailableToDefine()) {
+                try {
+                    if (ctrl.isAvailableToDefine()) {
 
-                    if (ctrl.defineTable()) {
-                        modelTable.addElement(ctrl.getTable());
-                        listTables.updateUI();
-                        JOptionPane.showMessageDialog(null, "Table defined!", "Sucess", JOptionPane.INFORMATION_MESSAGE);
+                        if (ctrl.defineTable()) {
+                            modelTable.addElement(ctrl.getTable());
+                            listTables.updateUI();
+                            JOptionPane.showMessageDialog(null, "Table defined!", "Sucess", JOptionPane.INFORMATION_MESSAGE);
+
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.WARNING_MESSAGE);
+                        }
 
                     } else {
-                        JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "There is a table already defined on the given range!", "Error", JOptionPane.WARNING_MESSAGE);
                     }
-
-                } else {
-                    JOptionPane.showMessageDialog(null, "There is a table already defined on the given range!", "Error", JOptionPane.WARNING_MESSAGE);
+                } catch (InvalidTableException ex) {
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
                 }
 
             } else {
@@ -316,27 +380,36 @@ public class TableAndFiltersPane extends JPanel implements SelectionListener {
         }
 
     }
-
+    /**
+     * Creates the listener to check if a table cell was modified and if it does updates the table
+     */
     protected class CreateNewListener implements EditListener {
 
         @Override
         public void workbookModified(EditEvent event) {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
-                public void run() {                  
+                public void run() {
+
                     Cell activeCell = uiCtrl.getActiveCell();
+                    activeCell = uiCtrl.getActiveSpreadsheet().getCell(activeCell.getAddress().getColumn(), activeCell.getAddress().getRow() - 1);
                     Table d = ((SpreadsheetImpl) uiCtrl.getActiveSpreadsheet()).getTable(activeCell);
                     if (d != null && !d.getFilter().equals("none")) {
-                        
+
                         List<Row> rows;
                         try {
+
                             rows = ctrl.verifyFormula(d, d.getFilter());
                             resetStyle(d);
                             updateInvalidRows(rows);
-                        } catch (FormulaCompilationException ex) {
-                            Logger.getLogger(TableAndFiltersPane.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (IllegalValueTypeException ex) {
-                            Logger.getLogger(TableAndFiltersPane.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (FormulaCompilationException | IllegalValueTypeException ex) {
+                            resetStyle(d);
+                            d.setFilter("none");
+                            JOptionPane.showMessageDialog(null, "Invalid Formula, the filter was removed!", "Error", JOptionPane.WARNING_MESSAGE);
+
+                        } catch (IndexOutOfBoundsException ex) {
+                            resetStyle(d);
+                            JOptionPane.showMessageDialog(null, "Invalid Index!", "Error", JOptionPane.WARNING_MESSAGE);
                         }
 
                     }

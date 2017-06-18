@@ -25,10 +25,8 @@ import javax.swing.ListSelectionModel;
 import lapr4.blue.s3.core.n1151088.searchReplace.SearchReplacePublisher;
 import lapr4.blue.s3.core.n1151088.searchReplace.application.SearchReplaceController;
 import lapr4.blue.s3.core.n1151088.searchReplace.domain.PreviewCellDTO;
-import lapr4.blue.s3.core.n1151088.searchReplace.domain.Previewer;
 import lapr4.blue.s3.core.n1151088.searchReplace.domain.PreviewerList;
 import lapr4.green.s2.core.n1150838.GlobalSearch.GlobalSearchExtension;
-import lapr4.green.s2.core.n1150838.GlobalSearch.presentation.CellInfoDTO;
 import lapr4.green.s2.core.n1150838.GlobalSearch.presentation.ConfigPane;
 import lapr4.green.s2.core.n1150838.GlobalSearch.presentation.GlobalSearchSideBar;
 

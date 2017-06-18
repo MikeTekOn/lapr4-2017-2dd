@@ -7,6 +7,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Set;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -16,6 +17,7 @@ import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
 import lapr4.green.s1.ipc.n1150532.startSharing.ShareCellsAction;
 import lapr4.green.s1.ipc.n1150657.chat.ControllerConnection;
 import lapr4.green.s1.ipc.n1150657.chat.ui.ChatAction;
+import lapr4.red.s3.ipc.n1150623.MultipleSharing.ReceivedShareInfo;
 import lapr4.red.s3.ipc.n1150943.automaticDownload.persistence.DownloadsListPersistence;
 
 /**
@@ -71,6 +73,8 @@ public class UICommExtensionSideBar extends JPanel {
      * The button to share messages
      */
     private JButton btMessage;
+
+
 
     /**
      * A table with the available instances within the network.
@@ -207,6 +211,27 @@ public class UICommExtensionSideBar extends JPanel {
         return peersTable;
     }
 
+
+    /**
+     * The button to show shares active
+     */
+    private JButton btShares;
+
+
+    private void showShares(){
+
+        Set<ReceivedShareInfo> rec = theController.sharesInfo();
+        StringBuilder s = new StringBuilder();
+        if(rec.size()==0){
+            s.append("No shares done, yet.\n");
+        }
+
+        for(ReceivedShareInfo r : rec){
+            s.append(r.toString());
+        }
+        JOptionPane.showMessageDialog(null,  s.toString(), "Shares Done", JOptionPane.PLAIN_MESSAGE);
+    }
+
     /**
      * It builds the souther buttons panel from the peers panel.
      *
@@ -216,7 +241,7 @@ public class UICommExtensionSideBar extends JPanel {
         final String shareCellsBtText = "Share Cells";
         final String sharetext = "Share files";
         final int allignment = FlowLayout.CENTER;
-        final JPanel panel = new JPanel(new GridLayout(1, 2));
+        final JPanel panel = new JPanel(new GridLayout(0, 3));
         final JPanel p1 = new JPanel(new FlowLayout(allignment));
         btShareCells = new JButton(shareCellsBtText);
         btShare = new JButton(sharetext);
@@ -224,12 +249,17 @@ public class UICommExtensionSideBar extends JPanel {
         final String message = "New Message";
         final JPanel p2 = new JPanel(new FlowLayout(allignment));
         final JPanel p3 = new JPanel(new FlowLayout(allignment));
+        final JPanel p4 = new JPanel(new FlowLayout(allignment));
         btMessage = new JButton(message);
+        btShares = new JButton("See Shares");
+
         p2.add(btMessage);
         p3.add(btShare);
+        p4.add(btShares);
         panel.add(p1);
         panel.add(p2);
         panel.add(p3);
+        panel.add(p4);
         return panel;
     }
 
@@ -246,6 +276,7 @@ public class UICommExtensionSideBar extends JPanel {
         btShareCells.addActionListener(new ShareCellsWithAction());
         btMessage.addActionListener(new NewMessageAction());
         btShare.addActionListener(new FileSharingAction());
+        btShares.addActionListener(new ShowSharesAction());
     }
 
     /**
@@ -283,6 +314,7 @@ public class UICommExtensionSideBar extends JPanel {
         btShareCells.setEnabled(true);
         btMessage.setEnabled(true);
         btShare.setEnabled(true);
+        btShares.setEnabled(true);
     }
 
     /**
@@ -334,6 +366,8 @@ public class UICommExtensionSideBar extends JPanel {
             ConnectionID connection = networkTable.getSelectedRowFile();
             if (connection != null) {
                 (new ConnectToPeerAction(connection)).actionPerformed(e);
+            }else{
+                JOptionPane.showMessageDialog(null, "First select who you want to connect with.", "ERROR", JOptionPane.WARNING_MESSAGE);
             }
         }
 
@@ -347,8 +381,11 @@ public class UICommExtensionSideBar extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             ConnectionID connection = peersTable.getSelectedRowFile();
+
             if (connection != null) {
                 (new ShareCellsAction(connection, theController)).actionPerformed(e);
+            }else{
+                JOptionPane.showMessageDialog(null, "First select who you want share cells with with.", "ERROR", JOptionPane.WARNING_MESSAGE);
             }
 
         }
@@ -385,4 +422,11 @@ public class UICommExtensionSideBar extends JPanel {
         }
     }
 
+    private class ShowSharesAction implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e){
+            showShares();
+        }
+    }
 }

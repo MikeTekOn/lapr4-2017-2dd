@@ -31,7 +31,7 @@ import lapr4.green.s3.lang.n1150532.variables.Variable;
 import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.DataRow;
 import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.Table;
 import lapr4.green.s3.lang.n1150838.TablesAndFilters.exception.InvalidIndexException;
-import lapr4.green.s3.lang.n1150838.Util.StringUtil;
+import lapr4.green.s3.lang.n1150838.TablesAndFilters.util.StringUtil;
 
 /**
  * Represents the Formula Visitor (ANTLR4).

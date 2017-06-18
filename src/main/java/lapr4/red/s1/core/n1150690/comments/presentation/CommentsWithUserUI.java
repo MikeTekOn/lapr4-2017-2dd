@@ -209,6 +209,12 @@ public class CommentsWithUserUI extends JPanel implements SelectionListener, Com
         }));
         return b;
     }
+    
+//    public void addComment(String name, String comment){
+//        System.out.println("aqui");
+//        controller.addComment(comment,name);
+//        model.addElement(name + ": " + comment);
+//    }
 
     /**
      * Creates and returns a button to change a comment.

@@ -11,20 +11,24 @@ import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.core.formula.lang.UnknownElementException;
 import csheets.ui.ctrl.UIController;
 import java.util.List;
+import javax.swing.JTextField;
 import lapr4.blue.s1.lang.n1060503.functionWizard.FunctionWizardController;
 import lapr4.blue.s1.lang.n1151452.formula.compiler.ExcelExpressionCompiler;
 import lapr4.red.s2.lang.n1150613.FunctionWizard.FunctionUtils;
 
 /**
  * Represents the function wizard controller (Sprint 2 - LANG.04)
- *
+ * 
+ * @author Pedro Chilro [1150800@isep.ipp.pt] on 17/06/17.
  * @author Diogo Guedes
  */
 public class IntermediateFunctionWizardController extends FunctionWizardController {
 
     private FunctionUtils func;
     private int type;
-    private ExcelExpressionCompiler exc = new ExcelExpressionCompiler();
+    
+    /* Changed the access modifier of this variable */
+    protected ExcelExpressionCompiler exc = new ExcelExpressionCompiler();
 
     /**
      * intermediate function wizard controller
@@ -39,12 +43,12 @@ public class IntermediateFunctionWizardController extends FunctionWizardControll
     /**
      * Returns the result of the formula with the given expression
      *
-     * @param parameters inserted parameters
+     * @param expression inserted expression
      * @return result result of the function
      * @throws csheets.core.formula.compiler.FormulaCompilationException
      * @throws csheets.core.IllegalValueTypeException
      */
-    private String compile(String expression) throws FormulaCompilationException, IllegalValueTypeException {
+    protected String compile(String expression) throws FormulaCompilationException, IllegalValueTypeException {
 
         Value eval = exc.compile(uiController.getActiveCell(), expression, uiController).evaluate();
         return eval.toString();
@@ -65,7 +69,7 @@ public class IntermediateFunctionWizardController extends FunctionWizardControll
 
         result = func.calculateResult(parameters, syntax);
         result = compile(result);
-
+        
         return result;
     }
 
@@ -96,5 +100,11 @@ public class IntermediateFunctionWizardController extends FunctionWizardControll
     public int getType() {
         return type;
     }
+    
+    /* This is a change made by 1150800@isep.ipp.pt */
+    public void setUpdatableBox(JTextField editBox) {
+        exc.setUpdatableBox(editBox);
+    }
+    /* -------------------------------------------- */
 
 }

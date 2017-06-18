@@ -1,21 +1,33 @@
 package lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.ui;
 
+import csheets.CleanSheets;
 import csheets.core.Workbook;
 import csheets.ui.ctrl.UIController;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -24,11 +36,16 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 import lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.ctrl.ControllerFindWorkbooks;
 import lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.ctrl.ControllerPreviewWorkbook;
 import lapr4.green.s1.ipc.n1150838.findworkbooks.FileDTO;
 import lapr4.green.s1.ipc.n1150838.findworkbooks.FindWorkbooksPublisher;
 import lapr4.green.s1.ipc.n1150838.findworkbooks.ui.WorkbookList;
+import lapr4.red.s1.core.n1150451.exportPDF.presentation.ExportToPDFUI;
+import lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch.CommUDPServer;
+import lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch.FilePathDTO;
+import lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch.HandlerFilePathDTO;
 
 /**
  * @author nunopinto
@@ -38,35 +55,57 @@ import lapr4.green.s1.ipc.n1150838.findworkbooks.ui.WorkbookList;
 public class FindWorkbookSideBar extends JPanel implements Observer {
 
     protected ActionListener[] buttonListeners;
-    ControllerFindWorkbooks findController;
+    public ControllerFindWorkbooks findController;
     ControllerPreviewWorkbook previewController;
     private UIController findExtension;
     private WorkbookList modeloWorkbook;
     private JList listWorkbook;
-    private JTextField listField;
+    private JTextField pathField;
     private JTextField regexField;
 
-    private PreviewSpreadSheetTableModel previewTableModel;
-    private JTable tablePreview;
+    private int currentIndexSelected;
+    /**
+     * Variable used to indicate the Thread if its an active search or not.
+     */
+    public boolean isThreadActive = false;
 
+    private JTable tablePreview;
+    public JButton searchButton;
+    public boolean flagSucessClick = true;
+
+    /**
+     * IMPLEMENTED BY DIOGO SANTOS 1150451 This HashMap represents the Cache.
+     *
+     */
+    private HashMap<String, PreviewSpreadSheetTableModel> cache = new HashMap<>();
+
+    /**
+     * @param previewExtension
+     */
     public FindWorkbookSideBar(UIController previewExtension) {
         this.findExtension = previewExtension;
         FindWorkbooksPublisher.getInstance().addObserver(this);
 
         buildModels();
-        buildPanel();
+        add(buildSearchPreviewPanels());
     }
 
-    private void buildPanel() {
-        setLayout(new GridLayout(2, 1));
-        add(searchPanel());
-        add(previewPanel());
+    public JPanel buildSearchPreviewPanels() {
+        JPanel panel = new JPanel(new GridBagLayout());
+        GridBagConstraints grid = new GridBagConstraints();
+        grid.fill = GridBagConstraints.VERTICAL;
+        grid.gridx = 0;
+        grid.gridy = 0;
+        panel.add(searchPanel(), grid);
+        grid.gridy = 1;
+        panel.add(previewPanel(), grid);
+        return panel;
     }
 
     private void buildModels() {
         modeloWorkbook = new WorkbookList(new ArrayList());
         listWorkbook = new JList(modeloWorkbook);
-        previewTableModel = new PreviewSpreadSheetTableModel(
+        PreviewSpreadSheetTableModel previewTableModel = new PreviewSpreadSheetTableModel(
                 buildPreviewWorkbookDefault().getSpreadsheet(0), findExtension);
         tablePreview = new JTable(previewTableModel);
 
@@ -81,7 +120,6 @@ public class FindWorkbookSideBar extends JPanel implements Observer {
 
         p.add(tablePreview);
         previewPanel.add(p);
-        previewPanel.setPreferredSize(new Dimension(100, 40));
         return previewPanel;
     }
 
@@ -92,11 +130,11 @@ public class FindWorkbookSideBar extends JPanel implements Observer {
             @Override
             public void mouseClicked(MouseEvent evt) {
                 JList list = (JList) evt.getSource();
-                int index = list.locationToIndex(evt.getPoint());
-                if (evt.getClickCount() == 2 && index >= 0) {
+                currentIndexSelected = list.locationToIndex(evt.getPoint());
+                if (evt.getClickCount() == 2 && currentIndexSelected >= 0) {
 
                     // Double-click detected
-                    modeloWorkbook.setSelectedItem(((String) modeloWorkbook.getElementAt(index)));
+                    modeloWorkbook.setSelectedItem(((String) modeloWorkbook.getElementAt(currentIndexSelected)));
 
                     FileDTO dto = modeloWorkbook.getSelectedItem();
 
@@ -111,37 +149,32 @@ public class FindWorkbookSideBar extends JPanel implements Observer {
 
                 }
 
-                if (evt.getClickCount() == 1 && index >= 0) {
+                if (evt.getClickCount() == 1 && currentIndexSelected >= 0) {
 
                     // One-click detected
-                    modeloWorkbook.setSelectedItem(((String) modeloWorkbook.getElementAt(index)));
+                    modeloWorkbook.setSelectedItem(((String) modeloWorkbook.getElementAt(currentIndexSelected)));
 
                     FileDTO dto = modeloWorkbook.getSelectedItem();
 
+                    //try {
+                    Workbook wb = null;
                     try {
-
-                        Workbook wb = findController.loadPrev(dto.getFilePath());
+                        wb = findController.loadPrev(dto.getFilePath());
 //                        RangeDialog j = new RangeDialog(findExtension, wb, tablePreview);
                         //if(previewController!=null)previewController.stopPreview();
-
-                        try {
-               
-                
-                         tablePreview.removeAll();
-                        
-                        PreviewSpreadSheetTableModel model=new PreviewSpreadSheetTableModel(wb.getSpreadsheet(0), findExtension);
-                        tablePreview.setModel(model);
-                
-        
-                
-            } catch (IllegalArgumentException ex) {
-                ex.getMessage();
-            }
-                        
-                        
-                    } catch (IOException | ClassNotFoundException ex) {
-                        JOptionPane.showMessageDialog(new JFrame(), "It wasn´t possible to generate the preview!");
+                    } catch (IOException ex) {
+                        Logger.getLogger(FindWorkbookSideBar.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(FindWorkbookSideBar.class.getName()).log(Level.SEVERE, null, ex);
                     }
+
+                    try {
+                        updatePreview(dto.getFilePath(), wb);
+                    } catch (IllegalArgumentException ex) {
+                        ex.getMessage();
+                    }
+
+                    //}
                 }
             }
         });
@@ -151,6 +184,24 @@ public class FindWorkbookSideBar extends JPanel implements Observer {
         p.add(mainScroll, BorderLayout.CENTER);
         p.add(buttonsPanel(), BorderLayout.SOUTH);
         return p;
+    }
+
+    /**
+     * Added by Diogo Santos Deletes and updates the preview.
+     *
+     * @return
+     */
+    private void updatePreview(String dtoPath, Workbook wb) {
+        tablePreview.removeAll();
+
+        PreviewSpreadSheetTableModel model = cache.get(dtoPath);
+        if (model == null) {
+            model = new PreviewSpreadSheetTableModel(wb.getSpreadsheet(0), findExtension);
+            cache.put(dtoPath, model);
+            System.out.println("coloquei na cache");
+        }
+        tablePreview.setModel(model);
+
     }
 
     private Workbook buildPreviewWorkbookDefault() {
@@ -167,44 +218,78 @@ public class FindWorkbookSideBar extends JPanel implements Observer {
      * @return
      */
     private JPanel buttonsPanel() {
-        JPanel buttonsPanel = new JPanel();
-     
-        buttonsPanel.add(fieldsPanel());
-        buttonsPanel.add(mainButton());
-        buttonsPanel.setPreferredSize(new Dimension(100, 85));
+        JPanel buttonsPanel = new JPanel(new GridBagLayout());
+
+        GridBagConstraints grid = new GridBagConstraints();
+        grid.fill = GridBagConstraints.VERTICAL;
+        grid.gridx = 0;
+        grid.gridy = 0;
+        buttonsPanel.add(fieldsPanel(), grid);
+
+        grid.gridy = 1;
+        buttonsPanel.add(searchButton(), grid);
+        //buttonsPanel.setPreferredSize(new Dimension(100, 85));
         return buttonsPanel;
     }
-    
-    private JPanel fieldsPanel(){
-        JPanel panel =new JPanel();
-        panel.setLayout(new GridLayout(3,1));
-        panel.add(labelField("<html>Insert path</html>"));  
-        panel.add(fieldTextField());
-        panel.add(labelField("<html>Expression</html>"));
-        panel.add(fieldTextExp());
-        
+
+    private JPanel fieldsPanel() {
+        JPanel panel = new JPanel();
+        panel.setLayout(new GridBagLayout());
+
+        GridBagConstraints grid = new GridBagConstraints();
+        grid.fill = GridBagConstraints.VERTICAL;
+        grid.gridx = 0;
+        grid.gridy = 0;
+        panel.add(createPathLabelFieldPanel(), grid);
+        grid.gridy = 1;
+        panel.add(createExpressionLabelFieldPanel(), grid);
         return panel;
     }
 
-    /**
-     * creates the field inser path
-     *
-     * @return
-     */
-    private JLabel labelField(String content) {
-        JLabel label = new JLabel(content);
+    private JPanel createPathLabelFieldPanel() {
+        JPanel panel = new JPanel(new FlowLayout());
+        JLabel label = new JLabel("Path:");
         label.setAlignmentX(Component.LEFT_ALIGNMENT);
-        return label;
+        panel.add(label);
+        pathField = new JTextField(10);
+        panel.add(pathField);
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+        Image img = null;
+        try {
+            img = ImageIO.read(CleanSheets.class.getResource("res/img/open.gif"));
+        } catch (IOException ex) {
+            Logger.getLogger(ExportToPDFUI.class.getName()).log(Level.FINE, null, ex);
+        }
+        Image newimg = img.getScaledInstance(25, 25, Image.SCALE_SMOOTH);
+        ImageIcon icon = new ImageIcon(newimg);
+        JButton button = new JButton();
+        button.setIcon(icon);
+        Border emptyBorder = BorderFactory.createEmptyBorder();
+        button.setBorder(emptyBorder);
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                chooser.showOpenDialog(getRootPane());
+                if (chooser.getSelectedFile() != null) {
+                    pathField.setText(chooser.getSelectedFile().getPath());
+                }
+            }
+        });
+        panel.add(button);
+        return panel;
     }
 
-    private JTextField fieldTextField() {
-        listField = new JTextField(10);
-        return listField;
-    }
-    
-    private JTextField fieldTextExp() {
+    private JPanel createExpressionLabelFieldPanel() {
+        JPanel panel = new JPanel(new FlowLayout());
+        JLabel label = new JLabel("Reg. Expression:");
+        label.setAlignmentX(Component.LEFT_ALIGNMENT);
+        panel.add(label);
         regexField = new JTextField(10);
-        return regexField;
+        panel.add(regexField);
+        return panel;
+
     }
 
     /**
@@ -213,40 +298,92 @@ public class FindWorkbookSideBar extends JPanel implements Observer {
      *
      * @return
      */
-    private JButton mainButton() {
-        JButton mainButton = new JButton("Search");
-        
-        mainButton.addActionListener((ActionEvent e) -> {
-            if(listField.getText().trim().isEmpty() ||  regexField.getText().trim().isEmpty()){
-               JOptionPane.showMessageDialog(new JFrame(), "Please complete all fields!");
-            }else{
-               
-                try {
-                    if (findController != null) {
-                        findController.stopSearch();
+    private JButton searchButton() {
+        searchButton = new JButton("Search");
+
+        searchButton.addActionListener((ActionEvent e) -> {
+            if (pathField.getText().trim().isEmpty() || regexField.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(new JFrame(), "Please complete all fields!");
+                flagSucessClick = false;
+            } else {
+                CommUDPServer srv=null;
+                if (searchButton.getText().equalsIgnoreCase("search")) {
+                     srv = new CommUDPServer();
+                    srv.addHandler(FilePathDTO.class, new HandlerFilePathDTO());
+
+                    try {
+
+                        modeloWorkbook.removeAll();
+                        cache.clear(); //CLEARS THE CACHE
+                        findController = new ControllerFindWorkbooks(pathField.getText(), regexField.getText(), isThreadActive);
+
+                        findController.searchFiles();
+                        if (!srv.isAlive()) {
+                            srv.start();
+                        }
+                        searchButton.setText("Stop");
+                        flagSucessClick = true;
+                        JOptionPane.showMessageDialog(new JFrame(), "The search has finished");
+                        searchButton.setText("Search");
+                        srv.interrupt();
+                    } catch (IllegalStateException ex) {
+                        JOptionPane.showMessageDialog(new JFrame(), "Insert a valid path!");
+                        flagSucessClick = false;
+
                     }
-                    modeloWorkbook.removeAll();
-                    previewTableModel.removeAll();
-                    findController = new ControllerFindWorkbooks(listField.getText(), regexField.getText());
-                    findController.searchFiles();
-                } catch (IllegalStateException ex) {
-                    JOptionPane.showMessageDialog(new JFrame(), "Insert a valid path!");
+                } else {
+
+                    findController.stopSearch();
+                    searchButton.setText("Search");
+                    srv.interrupt();
+
                 }
             }
         });
-        return mainButton;
+        return searchButton;
+    }
+
+    public boolean checkFindControllerNull() {
+        return findController == null;
     }
 
     @Override
     public void update(Observable o, Object arg) {
         if (arg instanceof FileDTO) {
             FileDTO workbook = (FileDTO) arg;
-            modeloWorkbook.addElement(workbook);
+            if (!modeloWorkbook.contains(workbook)) {
+                modeloWorkbook.addElement(workbook);
+            }
         }
+
+        if (arg instanceof FilePathDTO) {
+            FilePathDTO dto = (FilePathDTO) arg;
+            if (modeloWorkbook.contains(dto)) {
+                int idx = listWorkbook.getSelectedIndex();
+                if (idx >= 0) {
+
+                    Workbook wb = null;
+                    try {
+                        wb = findController.loadPrev(dto.getFilePath());
+//                        RangeDialog j = new RangeDialog(findExtension, wb, tablePreview);
+                        //if(previewController!=null)previewController.stopPreview();
+                    } catch (IOException ex) {
+                        Logger.getLogger(FindWorkbookSideBar.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ClassNotFoundException ex) {
+                        Logger.getLogger(FindWorkbookSideBar.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    cache.remove(dto.getFilePath());
+                    updatePreview(dto.getFilePath(), wb);
+                    JOptionPane.showMessageDialog(this, dto.getFileName() + " was updated.");
+                }
+            }
+        }
+
         if (arg instanceof Workbook) {
             tablePreview.removeAll();
             Workbook workbook = (Workbook) arg;
-            previewTableModel = new PreviewSpreadSheetTableModel(workbook.getSpreadsheet(0), findExtension);
+
+            PreviewSpreadSheetTableModel previewTableModel = new PreviewSpreadSheetTableModel(workbook.getSpreadsheet(0), findExtension);
             tablePreview.setModel(previewTableModel);
         }
 
