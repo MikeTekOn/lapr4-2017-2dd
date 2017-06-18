@@ -122,11 +122,11 @@ public class CommTCPClientsManager extends Observable implements Serializable {
      * @param firstAddress The first address of the range.
      * @param lastAddress  The last address of the range.
      */
-    public void shareCellsWith(ConnectionID connection, Spreadsheet spreadsheet, Address firstAddress, Address lastAddress) {
+    public void shareCellsWith(ConnectionID connection, Spreadsheet spreadsheet, Address firstAddress, Address lastAddress, String shareName) {
         CommTCPClientWorker worker = clients.get(connection);
         if (worker != null) {
-            addSharingListeners(connection, spreadsheet, firstAddress, lastAddress);
-            RequestSharedCellsDTO request = new RequestSharedCellsDTO(spreadsheet.getTitle(), spreadsheet, firstAddress, lastAddress);
+            addSharingListeners(connection, spreadsheet, firstAddress, lastAddress); //listeners to cells
+            RequestSharedCellsDTO request = new RequestSharedCellsDTO(spreadsheet.getTitle(), spreadsheet, firstAddress, lastAddress, shareName);
             try {
                 worker.getObjectOutputStream().write(request);
             } catch (IOException ex) {
@@ -167,7 +167,7 @@ public class CommTCPClientsManager extends Observable implements Serializable {
             try {
                 worker.getObjectOutputStream().write(cellStyleDTO);
             } catch (IOException e) {
-                Logger.getLogger(CommTCPClientsManager.class.getName()).log(Level.SEVERE, null, e);
+                e.printStackTrace();
             }
         }
     }
