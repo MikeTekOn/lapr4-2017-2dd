@@ -13,11 +13,14 @@ import java.awt.event.ActionEvent;
 import static javax.swing.Action.SMALL_ICON;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import lapr4.green.s3.lang.n1150800.AdvancedFunctionWizard.presentation.AdvancedFunctionWizardUI;
 
 /**
  * represent the action for Function Wizard
- *
  * @author Diogo Guedes
+ * 
+ * Changed by:
+ * @editor Pedro Chilro
  */
 public class IntermediateFunctionWizardAction extends FocusOwnerAction {
 
@@ -63,7 +66,9 @@ public class IntermediateFunctionWizardAction extends FocusOwnerAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         try {
-            final IntermediateFunctionWizardUI functionWizardUI = new IntermediateFunctionWizardUI(uiController);
+            /* The user interface is now the AdvancedFunctionWizardUI 
+            instead of previous IntermediateFunctionWizardUI */
+            final AdvancedFunctionWizardUI functionWizardUI = new AdvancedFunctionWizardUI(uiController);
         } catch (UnknownElementException ex) {
             JOptionPane.showMessageDialog(
                     null,
