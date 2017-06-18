@@ -273,7 +273,7 @@ public class CellImpl implements Cell {
         @Override
 	public void setContent(String content) throws FormulaCompilationException {
 		if (!this.content.equals(content)) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       			storeContent(content);
+                        storeContent(content);
 			fireContentChanged();
 			reevaluate();
 		}
