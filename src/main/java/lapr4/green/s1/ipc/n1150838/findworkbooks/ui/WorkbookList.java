@@ -8,6 +8,7 @@ package lapr4.green.s1.ipc.n1150838.findworkbooks.ui;
 import java.util.ArrayList;
 import javax.swing.AbstractListModel;
 import lapr4.green.s1.ipc.n1150838.findworkbooks.FileDTO;
+import lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch.comms.FilePathDTO;
 
 /**
  *
@@ -116,4 +117,17 @@ public class WorkbookList extends AbstractListModel {
         workbookList.clear();
         fireIntervalRemoved(this, min, max);
     }
+    
+    public boolean contains(FileDTO d){
+        return workbookList.contains(d);
+    }
+    
+     public boolean contains(FilePathDTO d){
+         for (FileDTO fileDTO : workbookList) {
+             if (fileDTO.getFilePath().equals(d.getFilePath())) return true;
+         }
+         return false;
+    }
+    
+    
 }

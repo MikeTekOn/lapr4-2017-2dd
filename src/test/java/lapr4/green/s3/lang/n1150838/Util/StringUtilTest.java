@@ -5,6 +5,7 @@
  */
 package lapr4.green.s3.lang.n1150838.Util;
 
+import lapr4.green.s3.lang.n1150838.TablesAndFilters.util.StringUtil;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

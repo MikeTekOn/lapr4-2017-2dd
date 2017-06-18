@@ -1,0 +1,55 @@
+@startuml core04_1_design1.png
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+participant "NavigationTree" as nav
+participant "RootNode" as root
+participant "DefaultTreeModel" as dtm
+participant "WorkbookNode" as wnode
+participant "SpreadsheetNode" as snode
+participant "FilledCellNode" as fcnode
+participant "FormulaNode" as fnode
+participant "ValueNode" as vnode
+participant "UIController" as ui
+
+-> nav : selectionChanged()
+create root
+nav -> root : node = new RootNode(uiController, treeModel)
+nav -> root : populate()
+root -> ui : activeWorkbooks = uiController.getActiveWorkbooks()
+loop forEach Workbook workbook : activeWorkbooks
+create wnode
+root -> wnode : workbookNode = new WorkbookNode()
+root -> root : add(workbookNode)
+end
+loop
+wnode -> Workbook : spreadsheets.add(workbook.getSpreadsheet(i))
+end
+loop forEach Spreadsheet spreadsheet : spreadsheets
+create snode
+wnode -> snode : spreadsheetNode = new SpreadsheetNode()
+wnode -> wnode : add(spreadsheetNode)
+end
+loop
+snode -> Cell : nonEmptyCells.add(cell)
+end
+loop forEach Cell cell : nonEmptyCells
+create fcnode
+snode -> fcnode : FilledCellNode cellNode= new FilledCellNode()
+snode -> snode : add(cellNode)
+end
+
+fcnode -> Cell : formula = getFormula()
+fcnode -> Cell : value = getValue()
+note left: we need to check if formula and value are not null
+create fnode
+fcnode -> fnode : formulaNode = new FormulaNode()
+fcnode -> fcnode : add(formulaNode)
+create vnode
+fcnode -> vnode : valueNode = new ValueNode()
+fcnode -> fcnode : add(valueNode)
+root -> dtm : setRoot(node)
+
+
+@enduml

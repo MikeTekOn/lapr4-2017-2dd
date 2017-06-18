@@ -12,13 +12,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import lapr4.green.s1.ipc.n1150800.importexportTXT.CellRange;
 import lapr4.red.s3.ipc.n1150690.ImportExportDatabase.DatabaseConnection;
+import lapr4.red.s3.ipc.n1150690.ImportExportDatabase.ImportDatabase.presentation.ImportFromDatabaseUI;
 
 /**
  * A Thread to perform the importation from a database.
  *
  * @author Sofia Silva [1150690@isep.ipp.pt]
  */
-public class ThreadImport implements Runnable {
+public class ThreadImport extends Thread implements Runnable {
 
     /**
      * The table name.
@@ -31,17 +32,16 @@ public class ThreadImport implements Runnable {
     private Spreadsheet spreadsheet;
 
     /**
-     * The writer thread.
-     */
-    private Thread importThread;
-    
-    /**
      * The database url.
      */
     private String db_url;
-    
-    private CellRange range;
 
+    /**
+     * The database driver;
+     */
+    private String driver;
+
+    private CellRange range;
 
     /**
      * Creates a new Thread
@@ -49,13 +49,12 @@ public class ThreadImport implements Runnable {
      * @param tableName the table name
      * @param spreadsheet the current spreadsheet
      */
-    public ThreadImport(String tableName, Spreadsheet spreadsheet, String db_url, CellRange range) {
+    public ThreadImport(String tableName, Spreadsheet spreadsheet, String db_url, CellRange range, String driver) {
         this.tableName = tableName;
         this.spreadsheet = spreadsheet;
         this.db_url = db_url;
         this.range = range;
-        this.importThread = new Thread(this);
-        this.importThread.start();
+        this.driver = driver;
     }
 
     /**
@@ -64,36 +63,21 @@ public class ThreadImport implements Runnable {
     @Override
     public void run() {
         try {
-            DatabaseConnection dbConnection = new DatabaseConnection(db_url);
+            DatabaseConnection dbConnection = new DatabaseConnection(db_url, driver);
             dbConnection.openConnection();
             DatabaseImportOperations dbOperations = new DatabaseImportOperations(dbConnection.connection(), tableName, spreadsheet);
-            if(range != null){
-                int columns = range.getColumns();
-                int rows = range.getRows();
+            if (range != null) {
                 int topLeftRow = range.getFirstCell().getAddress().getRow();
                 int bottomRightRow = range.getLastCell().getAddress().getRow();
                 int topLeftColumn = range.getFirstCell().getAddress().getColumn();
                 int topRightColumn = range.getLastCell().getAddress().getColumn();
                 dbOperations.importTableContent(topLeftRow, bottomRightRow, topLeftColumn, topRightColumn);
-            }else{
+            } else {
                 dbOperations.importTableContent();
-            }               
-            dbConnection.closeConnection();
-        } catch (SQLException ex) {
-            if(ex.getErrorCode() ==  42102){
-               //
             }
-        } catch (FormulaCompilationException ex) {
-            Logger.getLogger(ThreadImport.class.getName()).log(Level.SEVERE, null, ex);
+            dbConnection.closeConnection();
         } catch (Exception ex) {
-            Logger.getLogger(ThreadImport.class.getName()).log(Level.SEVERE, null, ex);
+            ImportFromDatabaseUI.printException(ex.getMessage());
         }
-    }
-
-    /**
-     * Kills the current thread.
-     */
-    public void kill() throws InterruptedException {
-        this.importThread.join();
     }
 }

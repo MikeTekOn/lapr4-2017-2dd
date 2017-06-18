@@ -17,19 +17,22 @@ import lapr4.green.s1.ipc.n1150800.importexportTXT.CellRange;
 public class Table implements Serializable {
 
     /**
-     * @return the cells
+     * The table rows
      */
-    public List<Row> getCells() {
-        return cells;
-    }
-
     private List<Row> cells;
-
+    /**
+     * The table range
+     */
     private CellRange range;
-
+    /**
+     * The table filter
+     */
     private String filter;
 
     public Table(CellRange range, List<Row> cells, String filters) {
+        if(cells.size()<2){
+            throw new IllegalStateException();
+        }
         this.range = range;
         this.cells = cells;
         this.filter = filters;
@@ -50,10 +53,17 @@ public class Table implements Serializable {
         this.range = range;
     }
 
+    /**
+     * Checks if a table contains any of the given cells
+     *
+     * @param cells the given cells
+     * @return true if the table contains the given cells false otherwise
+     */
     public boolean containsCells(List<Cell> cells) {
 
         for (Row row : this.getCells()) {
             for (Cell cell : cells) {
+
                 if (row.containsCell(cell)) {
                     return true;
                 }
@@ -63,6 +73,12 @@ public class Table implements Serializable {
         return false;
     }
 
+    /**
+     * Checks if a table contains the given cell
+     *
+     * @param cell the given cell
+     * @return true if the table contains the given cell false otherwise
+     */
     public boolean containsCell(Cell cell) {
         for (Row row : getCells()) {
             if (row.containsCell(cell)) {
@@ -73,10 +89,26 @@ public class Table implements Serializable {
         return false;
     }
 
+    /**
+     *
+     * @param i the given index
+     * @return the row on the given index
+     */
     public Row getRow(int i) {
         return cells.get(i);
     }
 
+    /**
+     * @return the cells
+     */
+    public List<Row> getCells() {
+        return cells;
+    }
+    /**
+     * 
+     * @param cell the given cell
+     * @return the row that contains the given cell or null otherwise
+     */
     public Row getRowByCell(Cell cell) {
         for (Row cell1 : cells) {
             if (cell1.containsCell(cell)) {
@@ -85,17 +117,27 @@ public class Table implements Serializable {
         }
         return null;
     }
-
+    /**
+     * 
+     * @param ctx the colum name
+     * @return the index of a column with the given name
+     */
     public int getHeaderIndex(String ctx) {
         return ((HeaderRow) cells.get(0)).getIndexByContent(ctx);
     }
-    
-    public void removeFilter(){
-        filter=null;
+
+    /**
+     * @return the filter
+     */
+    public String getFilter() {
+        return filter;
     }
-    
-    public void addfilter(String filter){
-        filter=filter;
+
+    /**
+     * @param filter the filter to set
+     */
+    public void setFilter(String filter) {
+        this.filter = filter;
     }
 
 }

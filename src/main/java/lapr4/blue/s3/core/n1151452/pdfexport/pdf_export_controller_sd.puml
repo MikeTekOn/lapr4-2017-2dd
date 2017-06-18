@@ -1,0 +1,33 @@
+@startuml pdf_export_controller_sd.png
+participant PdfExportCtrl as controller <<Controller>>
+participant "dto : PdfExportDTO" as dto <<DTO>>
+collections "b : PdfExportBuilder" as builder <<Factory>>
+participant PdfExport as pdf <<<Entity>>
+
+[-> controller : export(dto)
+controller -> dto : getCells()
+controller -> dto : getSections()
+...
+controller -> dto : getGridType()
+controller -> dto : getGridColor()
+
+create builder
+controller -> builder : create()
+
+controller -> builder : withPrintArea(printArea) : b
+controller -> builder : withCells(Cell[] cells) : b
+controller -> builder : withGrid(gridType) : b
+...
+controller -> builder : withSection(int section) : b
+controller -> builder : build() : PdfExport
+create pdf
+builder -> pdf : create()
+...
+controller <-- builder : returns a PdfExport
+
+controller -> pdf : export()
+pdf --> controller : returns true if success
+
+<-- controller : informs success
+
+@enduml

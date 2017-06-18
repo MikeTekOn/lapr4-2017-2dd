@@ -20,10 +20,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.attribute.UserDefinedFileAttributeView;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -196,10 +193,35 @@ public class ShareFrame extends JFrame implements Observer {
         boolean update = true;
         if (o instanceof HandlerFileNameListDTO) {
             for (String fileName : dto.filesMap().keySet()) {
+                // Verify if the current file (to be inspected) update method is rename,
+                    // if it is find the latest version's name
+                boolean isPermanent = false;
+                boolean isRenameFile = false;
+                File downloadsList = new File("downloadsList.ser");
+                try {
+                    boolean createdFile = downloadsList.createNewFile();
+                    if (createdFile){
+                        Map<String,DownloadInfo>newMap = new HashMap<>();
+                        DownloadsListPersistence.saveList(newMap);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Map<String,DownloadInfo> downloads = DownloadsListPersistence.getDownloads();
+                String latestVersionName = fileName;
+
+                if(downloads.containsKey(fileName)){
+                    if(downloads.get(fileName).downloadType() == DownloadInfo.DownloadType.PERMANENT){
+                        isPermanent=true;
+                        if (downloads.get(fileName).updateType() == DownloadInfo.UpdateType.RENAME){
+                            isRenameFile=true;
+                            latestVersionName = DownloadsListPersistence.getLatestVersion(fileName);
+                        }
+                    }
+                }
 
                 for (int i = 0; i < tableModel.getDataVector().size(); i++) {
-                    String originalFileName = DownloadsListPersistence.getOriginalFileName(tableModel.getValueAt(i, 0).toString());
-                    if (originalFileName.equals(fileName) && tableModel.getValueAt(i, 1).equals(dto.connID())) {
+                    if (tableModel.getValueAt(i, 0).toString().equals(latestVersionName) && tableModel.getValueAt(i, 1).equals(dto.connID())) {
                         if (tableModel.getValueAt(i, 2).equals(dto.filesMap().get(fileName) + " bytes")) {
                             update = false;
                         } else {
@@ -208,17 +230,16 @@ public class ShareFrame extends JFrame implements Observer {
                         }
                     }
                 }
+
                 if (update) {
+                    shareController = new FileSharingController(dto.connID());
                     Object[] rowData = new Object[3];
                     rowData[0] = fileName;
                     rowData[1] = dto.connID();
                     rowData[2] = (dto.filesMap().get(fileName)) + " bytes";
                     tableModel.addRow(rowData);
 
-                        //TODO verify if the file to be updated is permanent and if it is download it
-                    DownloadInfo latestFileInfo = DownloadsListPersistence.getLatestVersionInfo(fileName);
-                    String latestVersionName = DownloadsListPersistence.getLatestVersion(fileName);
-                    if(latestFileInfo.downloadType()==DownloadInfo.DownloadType.ONE_TIME_DOWNLOAD){
+                    if(isPermanent==false){
                         for (int row = 0; row < dlTable.getRowCount(); row++) {
                             if (dlTableModel.getValueAt(row, 0).equals(latestVersionName) && dlTableModel.getValueAt(row, 1).equals("/" + dto.connID().toString())) {
                                 if (!dlTableModel.getValueAt(row, 2).equals(rowData[2].toString())) {
@@ -227,19 +248,21 @@ public class ShareFrame extends JFrame implements Observer {
                             }
                         }
                     }else{
-                        DownloadInfo newInfo = new DownloadInfo(fileName,latestFileInfo.downloadType(),latestFileInfo.updateType());
-                        newInfo.setVersion(latestFileInfo.version()+1);
-                        if(latestFileInfo.updateType() == DownloadInfo.UpdateType.RENAME){
-                            String[]aux = fileName.split("-");
-                            String newName = aux[0]+"-"+"V"+newInfo.version();
-                            shareController.addToDownloadsList(newName,newInfo);
-                            //TODO add file downloads
+                        DownloadInfo latestVersionInfo = DownloadsListPersistence.getLatestVersionInfo(fileName);
+                        //In this case the download type is permanent so it's needed to
+                        // verify the update type
+                        DownloadInfo newInfo = new DownloadInfo(fileName,latestVersionInfo.downloadType(),latestVersionInfo.updateType());
+                        newInfo.setVersion(latestVersionInfo.version()+1);
+                        int fileNewSize = dto.filesMap().get(fileName);
+                        DownloadingPanel.startDownloadingPanel(latestVersionName,fileNewSize,false);
+                        if(isRenameFile){
+                            shareController.addToDownloadsList(latestVersionName,newInfo);
+                            shareController.requestFile(fileName);
 
                         }else{
                             shareController.addToDownloadsList(fileName,newInfo);
-
+                            shareController.requestFile(fileName);
                         }
-                            Notification.notifyHost(new DownloadingPanel((String) tableModel.getValueAt(table.getSelectedRow(), 0)),"Updating file "+(String) tableModel.getValueAt(table.getSelectedRow(), 0));
                     }
                     update = true;
                 }
@@ -249,8 +272,7 @@ public class ShareFrame extends JFrame implements Observer {
         }
 
         if (o instanceof HandlerFileDTO) {
-            Notification.notifyHost(null,"Downloaded Update Successfully");
-            //JOptionPane.showMessageDialog(ShareFrame.this, "File " + (String) tableModel.getValueAt(table.getSelectedRow(), 0) + " downloaded with success.");
+            Notification.notifyHost(null,"File Downloaded Successfully");
             try {
                 fillDownloadTable();
             } catch (IOException e) {
@@ -274,7 +296,31 @@ public class ShareFrame extends JFrame implements Observer {
                 if (table.getSelectedRow() != -1) {
                     try {
                         shareController = new FileSharingController((ConnectionID) tableModel.getValueAt(table.getSelectedRow(), 1));
-                        shareController.requestFile((String) tableModel.getValueAt(table.getSelectedRow(), 0));
+                        String fileName = (String) tableModel.getValueAt(table.getSelectedRow(), 0);
+                        String fileSizeStr = (String) table.getValueAt(table.getSelectedRow(),2);
+                        String[]aux = fileSizeStr.split(" ");
+                        int fileSize = Integer.parseInt(aux[0]);
+                        DownloadInfo downloadInfo = null;
+                        int op = JOptionPane.showOptionDialog(getContentPane(),"Do you want this download to be updated automatically?",
+                                "Permanent Download?", JOptionPane.YES_NO_OPTION,JOptionPane.PLAIN_MESSAGE,null,null,null);
+                        if (op==JOptionPane.NO_OPTION){
+                            downloadInfo = new DownloadInfo(fileName, DownloadInfo.DownloadType.ONE_TIME_DOWNLOAD,null);
+                        }else if(op==JOptionPane.YES_OPTION){
+                            String[] options = new String[] {"Replace", "Rename"};
+                            int response = JOptionPane.showOptionDialog(getContentPane(), "Do you want the updates to replace the current file or to rename it?", "Update method",
+                                    JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
+                                    null, options, options[0]);
+                            if (response==0){
+                                downloadInfo = new DownloadInfo(fileName, DownloadInfo.DownloadType.PERMANENT, DownloadInfo.UpdateType.REPLACE);
+                            }else if (response==1){
+                                downloadInfo = new DownloadInfo(fileName, DownloadInfo.DownloadType.PERMANENT, DownloadInfo.UpdateType.RENAME);
+                            }
+                        }
+                        if(downloadInfo==null) return;
+                        shareController.addToDownloadsList(fileName,downloadInfo);
+
+                        DownloadingPanel.startDownloadingPanel(fileName, fileSize, true);
+                        shareController.requestFile(fileName);
 
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(ShareFrame.this, "Error occured when downloading the file", "Error", JOptionPane.ERROR_MESSAGE);

@@ -78,6 +78,7 @@ public class CommTCPClientWorker extends Thread implements Serializable {
         try {
             socketOut = socket.getOutputStream();
             socketIn = socket.getInputStream();
+            socket.setSoTimeout(2000);
 //
 //            socketIn.mark(0);
 //
