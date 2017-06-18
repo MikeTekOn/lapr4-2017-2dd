@@ -6,7 +6,7 @@ import csheets.core.Address;
 import csheets.core.Cell;
 import csheets.ext.style.StylableCell;
 import csheets.ext.style.StyleExtension;
-import lapr4.blue.s3.core.n1151452.pdfexport.PdfUtil;
+import lapr4.blue.s3.core.n1151452.pdfexport.util.PdfUtil;
 import lapr4.green.s2.core.n1150901.richCommentsAndHistory.domain.CommentsWithHistoryExtension;
 import lapr4.red.s1.core.n1150690.comments.CommentableCellWithMultipleUsers;
 
@@ -57,6 +57,15 @@ public class PdfExportableCell implements Comparable<PdfExportableCell> {
     }
 
     /**
+     * Obtains the cell
+     *
+     * @return the cell
+     */
+    public Cell cell() {
+        return cell;
+    }
+
+    /**
      * Exports to PDF the related cell
      *
      * @return a PdfExportableCell
@@ -71,10 +80,10 @@ public class PdfExportableCell implements Comparable<PdfExportableCell> {
         cellFont.setSize(styleCell.getFont().getSize());
         cellFont.setColor(PdfUtil.convertToBaseColor(styleCell.getForegroundColor()));
         // Create Anchor
-        Anchor cellAnchor = new Anchor(cell.getContent(), cellFont);
+        Anchor cellAnchor = new Anchor(cell.getValue().toString(), cellFont);
         cellAnchor.setName(cell.getSpreadsheet().getWorkbook().hashCode() + cell.getSpreadsheet().getTitle() + cell.getAddress().toString());
         // Create PdfPCell
-        PdfPCell pdfCell = new PdfPCell(new Phrase(cellAnchor));
+        PdfPCell pdfCell = new PdfPCell(cellAnchor);
         // Set Background
         pdfCell.setBackgroundColor(PdfUtil.convertToBaseColor(styleCell.getBackgroundColor()));
         // Set H & V Alignment
@@ -88,6 +97,19 @@ public class PdfExportableCell implements Comparable<PdfExportableCell> {
         }
 
         return pdfCell;
+    }
+
+    /**
+     * Has default border
+     *
+     * @return has default border
+     */
+    public boolean hasDefaultBorder() {
+
+        // Cell's styles
+        StylableCell styleCell = (StylableCell) cell.getExtension(StyleExtension.NAME);
+
+        return !(styleCell.getBorder() instanceof MatteBorder);
     }
 
     /**
@@ -121,19 +143,25 @@ public class PdfExportableCell implements Comparable<PdfExportableCell> {
      *
      * @return a formula in a PDF Phrase
      */
-    public Phrase exportFormula() {
+    public Anchor exportFormula() {
 
         Anchor cellRef = new Anchor(cell.getAddress().toString() + " ");
         Font refFont = cellRef.getFont();
         refFont.setColor(BaseColor.BLUE);
         cellRef.setFont(refFont);
         cellRef.setReference("#" + cell.getSpreadsheet().getWorkbook().hashCode() + cell.getSpreadsheet().getTitle() + cell.getAddress().toString());
-        cellRef.setName(FORMULA_REF_HEADER + cell.getSpreadsheet().getWorkbook().hashCode() + cell.getSpreadsheet().getTitle() + cell.getAddress().toString());
+//        cellRef.setName(FORMULA_REF_HEADER + cell.getSpreadsheet().getWorkbook().hashCode() + cell.getSpreadsheet().getTitle() + cell.getAddress().toString());
 
-        Phrase pdfFormula = new Phrase(cellRef);
-        pdfFormula.add("\t" + cell.getFormula().toString());
+        return cellRef;
+    }
 
-        return pdfFormula;
+    /**
+     * Exports the formula text
+     *
+     * @return the formula text
+     */
+    public Phrase exportFormulaText() {
+        return new Phrase("  " + cell.getFormula().toString() + "\n");
     }
 
     /**
@@ -141,21 +169,44 @@ public class PdfExportableCell implements Comparable<PdfExportableCell> {
      *
      * @return the comments in a PDF Paragraph
      */
-    public Paragraph exportComments() {
+    public Anchor exportCommentsAnchor() {
 
         Anchor cellRef = new Anchor("Comments on " + cell.getAddress().toString());
         Font refFont = cellRef.getFont();
         refFont.setColor(BaseColor.GRAY);
         cellRef.setFont(refFont);
-        cellRef.setReference("#" + cell.getAddress().toString());
-        cellRef.setName(COMMENT_REF_HEADER + cell.getSpreadsheet().getWorkbook().hashCode() + cell.getSpreadsheet().getTitle() + cell.getAddress().toString());
+        cellRef.setReference("#" + cell.getSpreadsheet().getWorkbook().hashCode() + cell.getSpreadsheet().getTitle() + cell.getAddress().toString());
 
-        Paragraph pdfComments = new Paragraph(cellRef);
+//        cellRef.setName(COMMENT_REF_HEADER + cell.getSpreadsheet().getWorkbook().hashCode() + cell.getSpreadsheet().getTitle() + cell.getAddress().toString());
+        return cellRef;
+    }
+
+    /**
+     * Exports the comments text
+     *
+     * @return the comments text
+     */
+    public Paragraph exportComments() {
+
+        Paragraph pdfComments = new Paragraph();
 
         CommentableCellWithMultipleUsers commentableCell = (CommentableCellWithMultipleUsers) cell.getExtension(CommentsWithHistoryExtension.NAME);
         pdfComments.add(new PdfExportableComment((commentableCell)).exportComment());
 
         return pdfComments;
+    }
+
+    /**
+     * Has comments
+     *
+     * @return true if comments exist
+     */
+    public boolean hasComments() {
+
+        CommentableCellWithMultipleUsers commentableCell =
+                (CommentableCellWithMultipleUsers) cell.getExtension(CommentsWithHistoryExtension.NAME);
+
+        return commentableCell.hasComments();
     }
 
     @Override
@@ -175,6 +226,16 @@ public class PdfExportableCell implements Comparable<PdfExportableCell> {
 
     @Override
     public int compareTo(PdfExportableCell o) {
-        return cell.getAddress().compareTo(o.cell.getAddress());
+
+        int column = o.address().getColumn();
+        int row = o.address().getRow();
+
+        int rowDiff = this.address().getRow() - row;
+
+        if (rowDiff != 0) {
+            return rowDiff;
+        } else {
+            return this.address().getColumn() - column;
+        }
     }
 }
