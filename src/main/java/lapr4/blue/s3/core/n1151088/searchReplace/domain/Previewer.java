@@ -59,6 +59,7 @@ public class Previewer implements Runnable {
     /**
      * Validate if content is compilable by Formula
      * @param content 
+     * @param cell1 
      * @return true if content is valid, false if not
      * @throws FormulaCompilationException
      * @throws IllegalValueTypeException 

@@ -257,7 +257,7 @@ public class CleanSheets implements Observer {
      * @param args the command-line arguments (not used)
      */
     public static void main(String[] args) {
-        CleanSheets.setFlag(true); //if the beggining of the app is without the loading
+       // CleanSheets.setFlag(true); //if the beggining of the app is without the loading
         CleanSheets app = new CleanSheets();
 
         // Configures look and feel

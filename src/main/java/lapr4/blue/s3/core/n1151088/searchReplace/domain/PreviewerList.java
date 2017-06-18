@@ -1,12 +1,10 @@
 package lapr4.blue.s3.core.n1151088.searchReplace.domain;
 
-import csheets.core.IllegalValueTypeException;
-import csheets.core.formula.compiler.FormulaCompilationException;
 import java.util.ArrayList;
 import javax.swing.AbstractListModel;
 
 /**
- *
+ * Represents the list of cell preview´s before the replace
  * @author Diana Silva {1151088 [isep.ipp.pt]
  */
 public class PreviewerList extends AbstractListModel {
@@ -39,11 +37,9 @@ public class PreviewerList extends AbstractListModel {
      * @param item
      */
     public void setSelectedItem(String item) {
-        for (PreviewCellDTO f : previewList) {
-            if (f.getBeforeCell().toString().equals(item)) {
-               selected = f;
-            }
-        }
+        previewList.stream().filter((f) -> (f.getBeforeCell().toString().equals(item))).forEachOrdered((f) -> {
+            selected = f;
+        });
     }
     
     /**
