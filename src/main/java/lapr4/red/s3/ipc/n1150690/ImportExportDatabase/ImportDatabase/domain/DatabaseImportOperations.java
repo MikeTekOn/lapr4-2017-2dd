@@ -70,14 +70,18 @@ public class DatabaseImportOperations {
     public void importTableContent() throws SQLException, FormulaCompilationException {
         String content = "SELECT * FROM " + tableName;
         statement = connection.createStatement();
-        ResultSet executeQuery = statement.executeQuery(content);
+        ResultSet executeQuery = null;
+        try{
+            executeQuery = statement.executeQuery(content);
+        }catch(SQLException e){
+            throw new SQLException("The table does not exist! Please insert another name.");
+        }
         ResultSetMetaData metadata = executeQuery.getMetaData();
 
         int numberColumns = metadata.getColumnCount();
-        executeQuery.next();
         List<Integer> columns = new ArrayList();
         for (int i = 1; i <= numberColumns; i++) {
-            String c = (String) executeQuery.getObject(i);
+            String c = metadata.getColumnName(i);
             columns.add(convertStringColumnToInteger(c));
         }
 

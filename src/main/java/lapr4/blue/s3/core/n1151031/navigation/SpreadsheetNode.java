@@ -55,6 +55,10 @@ class SpreadsheetNode extends NavigationNode implements EditListener {
 
     }
 
+    public SortedSet<Cell> getNonEmptyCells() {
+        return nonEmptyCells;
+    }
+
     @Override
     protected void addChildren() {
         for (Cell cell : nonEmptyCells) {

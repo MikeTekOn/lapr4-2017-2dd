@@ -59,6 +59,10 @@ public class RootNode extends NavigationNode {
             activeWorkbooks.add(workbook);
         }
     }
+    
+    public SortedSet<Workbook> getActiveWorkbooks() {
+        return activeWorkbooks;
+    }
 
     @Override
     protected void addChildren() {

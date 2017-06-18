@@ -12,11 +12,6 @@ import java.sql.SQLException;
 public class DatabaseConnection {
 
     /**
-     * The h2 database driver.
-     */
-    private static final String JDBC_DRIVER = "org.h2.Driver";
-
-    /**
      * The connection.
      */
     private Connection connection;
@@ -27,13 +22,19 @@ public class DatabaseConnection {
     private String db_url;
 
     /**
+     * The database driver;
+     */
+    private String driver;
+
+    /**
      * Creates a new DatabaseConnection.
      *
      * @param db_url the database url
      */
-    public DatabaseConnection(String db_url) {
+    public DatabaseConnection(String db_url, String driver) {
         this.connection = null;
         this.db_url = db_url;
+        this.driver = driver;
     }
 
     /**
@@ -50,16 +51,16 @@ public class DatabaseConnection {
      */
     public void openConnection() throws Exception {
         try {
-            //STEP 2: Register JDBC driver
-            //Class.forName(JDBC_DRIVER);
+            //Register JDBC driver
+            Class.forName(driver);
 
-            //STEP 3: Open a connection
+            //Open a connection
             connection = DriverManager.getConnection(db_url);
 
         } catch (SQLException se) {
             throw new SQLException("Is not possible to connect to the database!");
-        } catch (Exception e) {
-            throw new Exception("The driver can not be registered!");
+        } catch (ClassNotFoundException ex) {
+            throw new ClassNotFoundException("Unable to load driver class!");
         }
     }
 
