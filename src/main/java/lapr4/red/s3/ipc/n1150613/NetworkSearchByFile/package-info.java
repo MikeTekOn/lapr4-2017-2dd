@@ -21,9 +21,9 @@
  * <p>
  * <b>Use Case "Network Search by File Contents":</b>
  * The user should select the option to search in the network and enter the
- * pattern of the content/name of the workbook he wants to search for on the
- * remote system files. The system will display a list with the results of the
- * search (instance name, name of the workbook and summary of its content).
+ * pattern of the content/name or both of the workbook he wants to search for on
+ * the remote system files. The system will display a list with the results of
+ * the search (instance name, name of the workbook and summary of its content).
  *
  * <p>
  * <img src="ipc03_2_ssd.png" alt="image">
@@ -33,22 +33,25 @@
  * <h3>3.1 Insert pattern to search for the name/content of the workbook</h3>
  * For this we will need to create a new class called RegexUtil which will
  * contain boolean methods that return if there are any workbooks name/content
- * or both that match the pattern inserted by the user.
+ * or both that match the pattern(s) inserted by the user,such in file systems
+ * as in active ones.
  *
  * <h3>3.2 Search in the remote file systems </h3>
- * In this case we will need to create another class too, which will return all
- * the workbooks in the remote file systems in the network, adding them to the
- * stack of workbooks to be checked,so the RegexUtil class can check if they are
- * the pretended ones or not.
+ * In this case we will need to create other classes (Directory and FileDTO),
+ * which will return all the workbooks in the remote file systems in the
+ * network, adding them to the stack of workbooks to be checked,so the RegexUtil
+ * class can check if they are the pretended ones or not.
  *
- *
+ * Note: The path selected in Directory class will be the user folder,which is
+ * almost the root of the file systems,given by system properties from Java.
+ * FileDTO will contain the name and the path of the file.
  * <p>
  *
  *
  * <h2>4. Design</h2>
  * So far, the design classes are:
  * <ul>
- * <li>SearchWorkbookNetworkExtension - the extension we are adding to
+ * <li>NetworkSearchExtension - the extension we are adding to
  * CleanSheets</li>
  * <li>SearchWorkbookRequestDTO - data transfer object for the UDP
  * broadcast</li>
@@ -58,6 +61,9 @@
  * <li>SearchWorkbookNetworkAction - creates the UDPClient thread that will
  * handle the broadcast</li>
  * <li>SearchWorkbookNetworkPanel - sidebar panel for the feature</li>
+ * <li> Directory - Used to search the file systems.</li>
+ * <li> FileDTO - contains the file information </li>
+ * <li> RegexUtil - to search the given patterns </li>
  * </ul>
  *
  * <h3>4.1 How to send the UDP broadcast with the workbook name</h3>
