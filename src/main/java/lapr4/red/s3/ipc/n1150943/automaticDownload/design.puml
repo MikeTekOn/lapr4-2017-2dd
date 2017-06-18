@@ -1,0 +1,54 @@
+@startuml design.png
+Client1->UI : start sharing
+UI -> UIAction1 : create()
+UIAction1 -> UIAction1 : fill list of shared files
+UIAction1-> CommUDPClient1 : create(list of files)
+CommUDPClient1 -> CommUDPServer2 : Broadcasts Available files
+Client2->UI2 : start sharing
+CommUDPServer2 ->CommUDPServer2 : Receives DTO
+CommUDPServer2-> FileNamesListDTOHandler :HandleDTO(dto)
+FileNamesListDTOHandler -> UI2 : notifyObservers() -> notifies UI class to fill the list
+UI2 -> UI2 : update(Observable o, DTO dto) -> updates the list of file names
+
+alt is there are changes in downloaded files
+    UI2 -> UI2 : verifies DownloadType and Update Type
+    alt One time download
+        UI2 -> UI2 : updates download status to OUTDATED
+    else Permanent
+        alt Rename
+            UI2 -> UI2 : filename = (new file name with the new version)
+        else Replace
+        end
+        UI2 -> DownloadingPanel : create(fileName)
+        UI2 -> DownloadingPanel : startDownload(fileSize)
+        UI2 -> FileShareController : addToDownloadsList(fileName, newInfo)
+        UI2->FileShareController : requestFile(fileName)
+    end
+end
+
+Client2 -> UI2 : Chooses a file
+UI2 -> Client2 : Asks if download is permanent
+UI2 -> Client2 : Asks if update mode is Rename or Replace
+Client2 -> UI2 : Chooses options
+
+UI2 -> DownloadingPanel : create(fileName)
+UI2 -> DownloadingPanel : startDownload(fileSize)
+UI2 -> FileShareController : addToDownloadsList(fileName, newInfo)
+UI2->FileShareController : requestFile(fileName)
+DownloadingPanel -> Notification : notifyHost ()
+
+FileShareController -> CommTCPClientsManager : requestFile(file name dto)
+CommTCPClientsManager -> CommTCPClientsManager : requestConnection(udp client info);
+CommTCPClientsManager -> CommTCPClientWorker : create(dto)
+CommTCPClientsManager ->CommTCPClientWorker : writeObject(dto)
+CommTCPServer2 -> CommTCPServer2 : read(dto)
+CommTCPServer2 -> HandlerFileNameDTO : handleDTO(dto)
+ HandlerFileNameDTO ->  HandlerFileNameDTO : searchFileByName(dto.getFileName())
+ HandlerFileNameDTO -> FileDTO: create(fileName,fileData)
+ HandlerFileNameDTO ->  HandlerFileNameDTO : out.writeObject(fileDTO)
+CommTCPClientWorker ->  CommTCPClientWorker : read(fileDTO)
+CommTCPClientWorker -> HandlerFileDTO : handleDTO(fileDTO)
+HandlerFileDTO -> HandlerFileDTO : reads file data and builds file
+HandlerFileDTO ->UI2 : notifyObservers() -> updates downloaded list on the UI
+UI2 -> Notification : notifyHost(null,"Downloaded Successfuly");
+@enduml
