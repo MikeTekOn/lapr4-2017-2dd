@@ -13,7 +13,7 @@ participant "HandlerSearchWorkbookResponseDTO" as handlerResponse
 User -> panel : inserts the name of the workbook
 panel -> action : create(resultsTable, portNumber, workbookName)
 create reqDTO
-action -> reqDTO : searchRequest = create(String workbookName)
+action -> reqDTO : searchRequest = create(String namePattern,String contentPattern)
 create udpClient
 action -> udpClient : create(searchRequest, portNumber, timeout)
 create handlerResponse

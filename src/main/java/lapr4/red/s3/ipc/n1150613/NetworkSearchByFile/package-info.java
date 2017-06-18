@@ -26,7 +26,7 @@
  * the search (instance name, name of the workbook and summary of its content).
  *
  * <p>
- * <img src="ipc03_2_ssd.png" alt="image">
+ * <img src="ipc03_3_ssd.png" alt="image">
  *
  * <h2>3. Analysis</h2>
  *
@@ -51,8 +51,7 @@
  * <h2>4. Design</h2>
  * So far, the design classes are:
  * <ul>
- * <li>NetworkSearchExtension - the extension we are adding to
- * CleanSheets</li>
+ * <li>NetworkSearchExtension - the extension we are adding to CleanSheets</li>
  * <li>SearchWorkbookRequestDTO - data transfer object for the UDP
  * broadcast</li>
  * <li>SearchWorkbookResponseDTO - data transfer object for the reply</li>
@@ -66,36 +65,82 @@
  * <li> RegexUtil - to search the given patterns </li>
  * </ul>
  *
- * <h3>4.1 How to send the UDP broadcast with the workbook name</h3>
+ * <h3>4.1 How to send the UDP broadcast with the workbook name/content
+ * pattern</h3>
  * <p>
- * <img src="ipc03_2_design1.png" alt="image">
+ * <img src="ipc03_3_design1.png" alt="image">
  *
  * <h3>4.2 How to handle the requestDTO</h3>
  * <p>
  *
  *
- * <img src="ipc03_2_design3.png" alt="image">
+ * <img src="ipc03_3_design3.png" alt="image">
  *
  * <h3>4.3 How to handle the responseDTO</h3>
  * <p>
- * <img src="ipc03_2_design2.png" alt="image">
+ * <img src="ipc03_3_design2.png" alt="image">
  *
  * <h2>5. Tests</h2>
  *
  * <h3>Functional tests</h3>
  * <ul>
  * <li>Open instances of cleansheets in different computers.</li>
- * <li>open some workbooks in each instance.</li>
- * <li>go to Network sidebar and activate the network in both computers.</li>
- * <li>in one of the computers, search for a workbook name that is active in the
- * other computer.</li>
- * <li>make sure the workbook is found and the list is updated with the correct
+ * <li>Open/save some workbooks in each instance.</li>
+ * <li>Go to Network sidebar and activate the network in both computers.</li>
+ * <li>In one of the computers, search for a workbook name/content (or both)
+ * pattern that is active in the other computer.</li>
+ * <li>Make sure the workbook is found and the list is updated with the correct
  * information.</li>
- * <li>repeat for other files and using only the "cls" extension as name.</li>
- * <li>all the active workbooks must appear.</li>
+ * <li>Repeat for other files and using only the "cls" extension pattern as
+ * name.</li>
+ * <li>All the active workbooks must appear.</li>
  * </ul>
  *
  *
+ *
+ * <h2>8. Work Log</h2>
+ * <p>
+ * <b>Tuesday 13/06/2017</b>
+ * <p>
+ * Yesterday: our team distributed the funcionalities to be worked on this
+ * sprint.
+ * <p>
+ * Today: I started the analysis process.
+ * <p>
+ * Blocking:---
+ * <p>
+ * <b>Wednesday 14/06/2017</b>
+ * <p>
+ * Yesterday: finshed the analysis.
+ * <p>
+ * Today: Start design
+ * <p>
+ * Blocking: None
+ * <p>
+ * <b>Thursday 15/06/2017 </b>
+ * <p>
+ * Yesterday: Finshed base design.
+ * <p>
+ * Today: Start the implementation.
+ * <p>
+ * Blocking: None
+ * <p>
+ * <b>Friday 16/06/2017</b>
+ * <p>
+ * Yesterday: Implementation partially completed.
+ * <p>
+ * Today: finish the implementation.
+ * <p>
+ * Blocking: None
+ * <p>
+ * <b>Monday 19/06/2017</b>
+ * <p>
+ * Yesterday:
+ * <p>
+ * Today:
+ * <p>
+ * Blocking:
+ * <p>
  *
  * @author Diogo Guedes - 1150613@isep.ipp.pt
  */

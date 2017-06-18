@@ -10,20 +10,33 @@ participant "SearchWorkbookResponseDTO" as resDTO
 participant "SearchResults" as sresults
 participant "File" as file
 participant "ObjectOutputStream" as oos
+participant "Directory" as dic
 
 -> handlerDTO : handleDTO(dto)
 handlerDTO -> packet : request = getDTO()
-handlerDTO -> packet : String workbookName = getWorkbookName()
+handlerDTO -> packet : String namePattern = getNamePattern()
+handlerDTO -> packet : String contentPattern = getContentPattern()
+handlerDTO -> dic : searchFiles()
+loop forEach FileDTO f : dic.getDTO()
+handlerDTO -> dic : workbook w = load()
+alt : if regexChecks()
+handlerDTO -> SearchResults : create()
+handlerDTO -> handlerDTO : resultList.add(SearchResult)
+end
+end
 handlerDTO -> uiController : Stack<Workbook> activeWorkbooks = getActiveWorkbooks()
 loop forEach Workbook workbook : activeWorkbooks
 handlerDTO -> uiController : String name = getFile(workbook)
 uiController -> file : getName()
+
+create sresults
+alt : if regexChecks()
+handlerDTO -> sresults : create()
 loop forEach Spreadsheet spreadsheet : workbook.getSpreadsheets()
 handlerDTO -> handlerDTO : spreadsheetList.add(spreadsheet)
 end
-create sresults
-handlerDTO -> sresults : create()
 handlerDTO -> handlerDTO : resultList.add(searchResult)
+end
 end
 create resDTO
 handlerDTO -> resDTO : reply = create()
