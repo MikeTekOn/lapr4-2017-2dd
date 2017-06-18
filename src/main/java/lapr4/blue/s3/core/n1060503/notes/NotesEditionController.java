@@ -30,7 +30,6 @@ public class NotesEditionController {
     private final ContactRepository contactRepository;
     private final PersistenceContext persistenceContext;
     private final ExtensionSettings extensionSettings;
-    private NotesList notesList;
 
     /**
      * Construtor of notes edition controller
@@ -67,8 +66,7 @@ public class NotesEditionController {
      */
     public List<Note> notesOfContact(String contactName) {
         Contact contact = findContactByName(contactName);
-        notesList = contact.notesList();
-        return notesList.getNotesList();
+        return contact.notesList().getNotesList();
     }
 
     /**
