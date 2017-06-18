@@ -62,20 +62,22 @@ public class DatabaseExportOperations {
         boolean tableSameName = false;
         try {
             statement.executeUpdate(createTable);
-            ExportToDatabaseUI.printSucess = true;
         } catch (SQLException e) {
+            ExportToDatabaseUI.printException("");
             ExportToDatabaseUI.printSucess = false;
+            ExportToDatabaseUI.showJOptionPane = true;
             int op = JOptionPane.showConfirmDialog(null, "A table with the name already exists! Do you want to delete the existing table?", "Warning", JOptionPane.YES_NO_OPTION);
             if (op == 0) {
                 deleteTable = true;
             }
-            tableSameName = true;
+            tableSameName = true;     
         } finally {
             if (tableSameName) {
                 if (deleteTable) {
                     String sql = "DROP TABLE " + tableName;
                     statement.executeUpdate(sql);
                     statement.executeUpdate(createTable);
+                    ExportToDatabaseUI.printSucess = true;
                 } else {
                     ExportToDatabaseUI.printException("Please change the table name");
                 }
