@@ -20,4 +20,20 @@ public class Pair<T, E> {
     public E getValue(){
         return value;
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode() +
+                7 * key.hashCode() +
+                11 * value.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if((o != null) && (o instanceof Pair)){
+            Pair obj = (Pair) o;
+            return obj.getKey().equals(this.getKey()) && obj.getValue().equals(this.getValue());
+        }
+        return false;
+    }
 }

@@ -192,11 +192,22 @@ public class AddNoteDialog extends JDialog {
                 try {
                     add();
                 } catch (BadLocationException ex) {
-                    Logger.getLogger(AddNoteDialog.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(
+                    null,
+                    "You must insert title in first line and"
+                            + " the content on next lines!",
+                    "Add note to contact: " + contactName,
+                    JOptionPane.ERROR_MESSAGE);
                 } catch (DataConcurrencyException ex) {
                     Logger.getLogger(AddNoteDialog.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (DataIntegrityViolationException ex) {
-                    Logger.getLogger(AddNoteDialog.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(AddNoteDialog.class.getName()).log(Level.SEVERE, null, ex);                
+                } catch (IllegalStateException ex) {
+                    JOptionPane.showMessageDialog(
+                    null,
+                    "The content is empty!",
+                    "Add note to contact: " + contactName,
+                    JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
