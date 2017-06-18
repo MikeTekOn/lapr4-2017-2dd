@@ -231,9 +231,12 @@ public class Address implements Comparable<Address>, Serializable {
         return finalChar[getColumn()];
     }
 
-
     public int translateRowByIndex() {
-        return row+1;
+        return row + 1;
+    }
+
+    public int RowDistanceTo(Address last) {
+        return Math.abs(this.getRow() - last.getRow());
     }
 
 }

@@ -2,6 +2,7 @@ package lapr4.green.s2.core.n1150738.contacts.application;
 
 import eapli.framework.persistence.DataConcurrencyException;
 import eapli.framework.persistence.DataIntegrityViolationException;
+import lapr4.blue.s3.core.n1151159.contactswithtags.domain.Tag;
 import lapr4.green.s2.core.n1150738.contacts.domain.*;
 import lapr4.green.s2.core.n1150738.contacts.persistence.CompanyContactRepository;
 import lapr4.white.s1.core.n4567890.contacts.ExtensionSettings;
@@ -13,6 +14,7 @@ import lapr4.white.s1.core.n4567890.contacts.persistence.PersistenceContext;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 /**
  * Represents a controller for the user story of company contacts Core10.1.2
@@ -63,8 +65,8 @@ public class CompanyContactController {
         return companyContactRepository.findByCompanyName(id);
     }
 
-    public CompanyContact addContact(String name, String email, String phone, byte[] image) throws DataConcurrencyException, DataIntegrityViolationException {
-        CompanyContact c = new CompanyContact(new CompanyName(name), new EmailAddress(email), new PhoneNumber(phone), image == null ? null : new Image(image));
+    public CompanyContact addContact(String name, String email, String phone, byte[] image, Set<Tag> tags) throws DataConcurrencyException, DataIntegrityViolationException {
+        CompanyContact c = new CompanyContact(new CompanyName(name), new EmailAddress(email), new PhoneNumber(phone), image == null ? null : new Image(image), tags);
         c = companyContactRepository.save(c);
         return c;
     }
@@ -78,8 +80,8 @@ public class CompanyContactController {
         return companyContactRepository.remove(contact);
     }
 
-    public CompanyContact updateContact(CompanyContact c, String name, String email, String phone, byte[] image) throws DataConcurrencyException, DataIntegrityViolationException {
-        c.update(new CompanyName(name), new EmailAddress(email), new PhoneNumber(phone), image == null ? null : new Image(image));
+    public CompanyContact updateContact(CompanyContact c, String name, String email, String phone, byte[] image, Set<Tag> tags) throws DataConcurrencyException, DataIntegrityViolationException {
+        c.update(new CompanyName(name), new EmailAddress(email), new PhoneNumber(phone), image == null ? null : new Image(image), tags);
         companyContactRepository.save(c);
         return c;
     }

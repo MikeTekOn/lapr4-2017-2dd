@@ -1,18 +1,12 @@
 package lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.ctrl;
 
-import csheets.core.IllegalValueTypeException;
 import csheets.core.Workbook;
 import eapli.framework.application.Controller;
 import java.io.File;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.attribute.UserDefinedFileAttributeView;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.Directory;
 import lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.PreviewWorkbookBuilder;
+import lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.SearchPattern;
 
 /**
  * @author Diana Silva [1151088@isep.ipp.pt]
@@ -24,6 +18,8 @@ public class ControllerFindWorkbooks implements Controller {
      * The path to search for cls,etc..files
      */
     private Directory rootPath;
+    private SearchPattern regex;
+    private PreviewWorkbookBuilder builder;
 
     /**
      * The builder of workbook
@@ -31,8 +27,8 @@ public class ControllerFindWorkbooks implements Controller {
     private PreviewWorkbookBuilder previewBuilder;
     private Thread files;
 
-    public ControllerFindWorkbooks(String rootPath) {
-        this.rootPath = new Directory(new File(rootPath));
+    public ControllerFindWorkbooks(String rootPath, String regex, boolean isThreadActive) {
+        this.rootPath = new Directory(new File(rootPath),regex, isThreadActive);
     }
 
     /**
@@ -54,8 +50,8 @@ public class ControllerFindWorkbooks implements Controller {
      *
      * @param filePath to the workbook to load
      * @return the workbook
-     * @throws IOException
-     * @throws ClassNotFoundException
+     * @throws IOException if the file could not be loaded correctly
+     * @throws java.lang.ClassNotFoundException exception
      */
     public Workbook load(String filePath) throws IOException, ClassNotFoundException {
         return this.rootPath.load(new File(filePath));
@@ -66,43 +62,12 @@ public class ControllerFindWorkbooks implements Controller {
      *
      * @param filePath to the workbook to load
      * @return the workbook
-     * @throws IOException
-     * @throws ClassNotFoundException
+     * @throws IOException preview interface is not possible
+     * @throws ClassNotFoundException load is not possible
      */
     public Workbook loadPrev(String filePath) throws IOException, ClassNotFoundException {
-
-        File file = new File(filePath);
-        String[][] cellObj = new String[3][3];
-        Workbook wb = new Workbook();
-
-        for (int i = 0; i < 9; i++) {
-            //Vai buscar o atributo de cada celula
-            UserDefinedFileAttributeView view = Files.getFileAttributeView(file.toPath(), UserDefinedFileAttributeView.class);
-            ByteBuffer buf = ByteBuffer.allocate(view.size("cell" + i));
-            view.read("cell" + i, buf);
-            buf.flip();
-            String cellValue = Charset.defaultCharset().decode(buf).toString();
-            String[] cellInfo = cellValue.split(",");
-            int row = Integer.parseInt(cellInfo[0]);
-            int col = Integer.parseInt(cellInfo[1]);
-            //calcula a coluna e a linha
-            //se lenght menor que 3 é porque celula tava vazia entao metemos "" para evitar null
-            if (cellInfo.length < 3) {
-                cellObj[row][col] = " ";
-            } else {
-                cellObj[row][col] = cellInfo[2];
-            }
-
-        }
-        try {
-            //so adicionar a spreadsheet preenchida com a matriz
-            wb.addSpreadsheet(cellObj);
-
-        } catch (Exception ex) {
-            Logger.getLogger(ControllerFindWorkbooks.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return wb;
-
+        
+        this.builder=new PreviewWorkbookBuilder(filePath);
+        return builder.loadPrev();
     }
 }

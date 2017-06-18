@@ -1,8 +1,15 @@
 package lapr4.blue.s2.ipc.n1140822.fileShare;
 
 import csheets.ui.ctrl.UIController;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
+import lapr4.red.s3.ipc.n1150943.automaticDownload.DownloadInfo;
+import lapr4.red.s3.ipc.n1150943.automaticDownload.persistence.DownloadsListPersistence;
+import lapr4.red.s3.ipc.n1150943.automaticDownload.ui.DownloadingPanel;
+import ui.Notification;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -13,29 +20,12 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.attribute.UserDefinedFileAttributeView;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JList;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
 
 /**
- *
+ * Edited by João Cardoso - 1150943
  * @author Renato Oliveira 1140822@isep.ipp.pt
  */
 public class ShareFrame extends JFrame implements Observer {
@@ -116,7 +106,7 @@ public class ShareFrame extends JFrame implements Observer {
                 try {
 
                     ShareConfiguration.changeDownloadFolder(fileChooser.getSelectedFile().getAbsolutePath());
-                    JOptionPane.showMessageDialog(ShareFrame.this, "Folder changed with success.");
+                    JOptionPane.showMessageDialog(ShareFrame.this, "Download folder changed with success.");
 
                 } catch (IOException | NullPointerException ex) {
                     JOptionPane.showMessageDialog(ShareFrame.this, "Error selecting download folder.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -132,10 +122,10 @@ public class ShareFrame extends JFrame implements Observer {
                 try {
 
                     ShareConfiguration.changeSharedFolder(fileChooser.getSelectedFile().getAbsolutePath());
-                    JOptionPane.showMessageDialog(ShareFrame.this, "Folder changed with success.");
+                    JOptionPane.showMessageDialog(ShareFrame.this, "Shared folder changed with success.");
 
                 } catch (IOException | NullPointerException ex) {
-                    JOptionPane.showMessageDialog(ShareFrame.this, "Error selecting download folder.", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(ShareFrame.this, "Error selecting shared folder.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -199,14 +189,40 @@ public class ShareFrame extends JFrame implements Observer {
      */
     @Override
     public void update(Observable o, Object arg) {
-
+        FileNameListDTO dto = (FileNameListDTO) arg;
         boolean update = true;
         if (o instanceof HandlerFileNameListDTO) {
+            for (String fileName : dto.filesMap().keySet()) {
+                // Verify if the current file (to be inspected) update method is rename,
+                    // if it is find the latest version's name
+                boolean isPermanent = false;
+                boolean isRenameFile = false;
+                File downloadsList = new File("downloadsList.ser");
+                try {
+                    boolean createdFile = downloadsList.createNewFile();
+                    if (createdFile){
+                        Map<String,DownloadInfo>newMap = new HashMap<>();
+                        DownloadsListPersistence.saveList(newMap);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Map<String,DownloadInfo> downloads = DownloadsListPersistence.getDownloads();
+                String latestVersionName = fileName;
 
-            for (String fileName : ((FileNameListDTO) arg).filesMap().keySet()) {
+                if(downloads.containsKey(fileName)){
+                    if(downloads.get(fileName).downloadType() == DownloadInfo.DownloadType.PERMANENT){
+                        isPermanent=true;
+                        if (downloads.get(fileName).updateType() == DownloadInfo.UpdateType.RENAME){
+                            isRenameFile=true;
+                            latestVersionName = DownloadsListPersistence.getLatestVersion(fileName);
+                        }
+                    }
+                }
+
                 for (int i = 0; i < tableModel.getDataVector().size(); i++) {
-                    if (tableModel.getValueAt(i, 0).equals(fileName) && tableModel.getValueAt(i, 1).equals(((FileNameListDTO) arg).connID())) {
-                        if (tableModel.getValueAt(i, 2).equals(((FileNameListDTO) arg).filesMap().get(fileName) + " bytes")) {
+                    if (tableModel.getValueAt(i, 0).toString().equals(latestVersionName) && tableModel.getValueAt(i, 1).equals(dto.connID())) {
+                        if (tableModel.getValueAt(i, 2).equals(dto.filesMap().get(fileName) + " bytes")) {
                             update = false;
                         } else {
                             tableModel.removeRow(i);
@@ -214,28 +230,54 @@ public class ShareFrame extends JFrame implements Observer {
                         }
                     }
                 }
+
                 if (update) {
+                    shareController = new FileSharingController(dto.connID());
                     Object[] rowData = new Object[3];
                     rowData[0] = fileName;
-                    rowData[1] = ((FileNameListDTO) arg).connID();
-                    rowData[2] = (((FileNameListDTO) arg).filesMap().get(fileName)) + " bytes";
+                    rowData[1] = dto.connID();
+                    rowData[2] = (dto.filesMap().get(fileName)) + " bytes";
                     tableModel.addRow(rowData);
 
-                    for (int row = 0; row < dlTable.getRowCount(); row++) {
-                        if (dlTableModel.getValueAt(row, 0).equals(fileName) && dlTableModel.getValueAt(row, 1).equals("/" + ((FileNameListDTO) arg).connID().toString())) {
-                            if (!dlTableModel.getValueAt(row, 2).equals(rowData[2].toString())) {
-                                dlTableModel.setValueAt("OUTDATED", row, 3);
+                    if(isPermanent==false){
+                        for (int row = 0; row < dlTable.getRowCount(); row++) {
+                            if (dlTableModel.getValueAt(row, 0).equals(latestVersionName) && dlTableModel.getValueAt(row, 1).equals("/" + dto.connID().toString())) {
+                                if (!dlTableModel.getValueAt(row, 2).equals(rowData[2].toString())) {
+                                    dlTableModel.setValueAt("OUTDATED", row, 3);
+                                }
                             }
                         }
+                    }else{
+                        DownloadInfo latestVersionInfo = DownloadsListPersistence.getLatestVersionInfo(fileName);
+                        //In this case the download type is permanent so it's needed to
+                        // verify the update type
+                        DownloadInfo newInfo = new DownloadInfo(fileName,latestVersionInfo.downloadType(),latestVersionInfo.updateType());
+                        newInfo.setVersion(latestVersionInfo.version()+1);
+                        if(isRenameFile){
+                            shareController.addToDownloadsList(fileName,newInfo);
+                            shareController.requestFile(fileName);
+
+                        }else{
+                            shareController.addToDownloadsList(fileName,newInfo);
+                            shareController.requestFile(fileName);
+                        }
+                            Notification.notifyHost(new DownloadingPanel((String) tableModel.getValueAt(table.getSelectedRow(), 0)),"Updating file "+(String) tableModel.getValueAt(table.getSelectedRow(), 0));
                     }
+                    update = true;
                 }
-                update = true;
             }
             table.setModel(tableModel);
 
         }
+
         if (o instanceof HandlerFileDTO) {
-            JOptionPane.showMessageDialog(ShareFrame.this, "File " + (String) tableModel.getValueAt(table.getSelectedRow(), 0) + " downloaded with success.");
+            Notification.notifyHost(null,"Download Successfully");
+            //JOptionPane.showMessageDialog(ShareFrame.this, "File " + (String) tableModel.getValueAt(table.getSelectedRow(), 0) + " downloaded with success.");
+            try {
+                fillDownloadTable();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
     }
@@ -254,8 +296,28 @@ public class ShareFrame extends JFrame implements Observer {
                 if (table.getSelectedRow() != -1) {
                     try {
                         shareController = new FileSharingController((ConnectionID) tableModel.getValueAt(table.getSelectedRow(), 1));
-                        shareController.requestFile((String) tableModel.getValueAt(table.getSelectedRow(), 0));
-                        fillDownloadTable();
+                        String fileName = (String) tableModel.getValueAt(table.getSelectedRow(), 0);
+                        DownloadInfo downloadInfo = null;
+                        int op = JOptionPane.showOptionDialog(getContentPane(),"Do you want this download to be updated automatically?",
+                                "Permanent Download?", JOptionPane.YES_NO_OPTION,JOptionPane.PLAIN_MESSAGE,null,null,null);
+                        if (op==JOptionPane.NO_OPTION){
+                            downloadInfo = new DownloadInfo(fileName, DownloadInfo.DownloadType.ONE_TIME_DOWNLOAD,null);
+                        }else{
+                            String[] options = new String[] {"Replace", "Rename"};
+                            int response = JOptionPane.showOptionDialog(getContentPane(), "Do you want the updates to replace the current file or to rename it?", "Update method",
+                                    JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
+                                    null, options, options[0]);
+                            if (response==0){
+                                downloadInfo = new DownloadInfo(fileName, DownloadInfo.DownloadType.PERMANENT, DownloadInfo.UpdateType.REPLACE);
+                            }else{
+                                downloadInfo = new DownloadInfo(fileName, DownloadInfo.DownloadType.PERMANENT, DownloadInfo.UpdateType.RENAME);
+                            }
+                        }
+                        if(downloadInfo==null) return;
+                        shareController.addToDownloadsList(fileName,downloadInfo);
+                        DownloadingPanel dp = new DownloadingPanel(fileName);
+                        dp.setVisible(true);
+                        shareController.requestFile(fileName);
 
                     } catch (Exception ex) {
                         JOptionPane.showMessageDialog(ShareFrame.this, "Error occured when downloading the file", "Error", JOptionPane.ERROR_MESSAGE);
@@ -277,7 +339,6 @@ public class ShareFrame extends JFrame implements Observer {
      */
     public void fillDownloadTable() throws IOException {
         dlTableModel.setRowCount(0);
-        Map<String, Integer> tempMap = new LinkedHashMap<>();
         File folder = new File(ShareConfiguration.getDownloadFolder());
         folder.mkdirs();
         File[] files = folder.listFiles();

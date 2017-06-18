@@ -16,6 +16,7 @@ import org.junit.Test;
 
 import java.util.Calendar;
 import java.util.Properties;
+import java.util.TreeSet;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -60,7 +61,7 @@ public class AddContactAcceptanceTest {
         controller=new ContactController(appProps);
         
         // Populate the repository
-        aContact=controller.addContact("John Doe", "John", "Doe","","asd","asd","asd", null, null);
+        aContact=controller.addContact("John Doe", "John", "Doe","","asd","asd","asd", null, null, new TreeSet<>());
 
         EventController c = new EventController(appProps);
         Calendar date = Calendar.getInstance();
@@ -79,15 +80,15 @@ public class AddContactAcceptanceTest {
     @Test(expected = DataIntegrityViolationException.class)
     public void ensureNoContactDuplicates() throws DataConcurrencyException, DataIntegrityViolationException { 
 
-        controller.addContact("John Doe2", "John", "Doe2","","asd","asd","asd", null, null);
+        controller.addContact("John Doe2", "John", "Doe2","","asd","asd","asd", null, null, new TreeSet<>());
         
-        controller.addContact("John Doe2", "John", "Doe2","","asd","asd","asd", null, null);
+        controller.addContact("John Doe2", "John", "Doe2","","asd","asd","asd", null, null, new TreeSet<>());
     } 
     
     @Test 
     public void ensureNewContactHasAgenda() throws DataIntegrityViolationException, DataConcurrencyException { 
         
-        Contact contact=controller.addContact("Jane Doe3", "Jane", "Doe3","","asd","asd","asd", null, null);
+        Contact contact=controller.addContact("Jane Doe3", "Jane", "Doe3","","asd","asd","asd", null, null, new TreeSet<>());
         assertNotNull(contact.agenda().id());
     } 
 
