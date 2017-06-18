@@ -4,6 +4,7 @@ import csheets.ext.Extension;
 import csheets.ext.simple.ui.ExampleMenu;
 import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.CellDecorator;
+import csheets.ui.ext.TableDecorator;
 import csheets.ui.ext.UIExtension;
 import javax.swing.Icon;
 import javax.swing.JComponent;
@@ -15,9 +16,11 @@ import javax.swing.JToolBar;
  * @author Eric
  */
 public class UIExtensionImages extends UIExtension {
-   
-    /** A cell decorator that visualizes images on cells */
-	private CellDecorator cellDecorator;
+
+    /**
+     * A cell decorator that visualizes images on cells
+     */
+    private CellDecorator cellDecorator;
 
     /**
      * A side bar that provides editing of comments
@@ -30,7 +33,6 @@ public class UIExtensionImages extends UIExtension {
      * @param extension extension
      * @param uiController ui controller
      */
-//	private ImagesMenu menu;
     public UIExtensionImages(Extension extension, UIController uiController) {
 
         super(extension, uiController);
@@ -69,13 +71,16 @@ public class UIExtensionImages extends UIExtension {
         return cellDecorator;
     }
 
-//	/**
-//	 * Returns a table decorator that visualizes the data added by the extension.
-//	 * @return a table decorator, or null if the extension does not provide one
-//	 */
-//	public TableDecorator getTableDecorator() {
-//		return null;
-//	}	
+    /**
+     * Returns a table decorator that visualizes the data added by the
+     * extension.
+     *
+     * @return a table decorator, or null if the extension does not provide one
+     */
+    public TableDecorator getTableDecorator() {
+        return null;
+    }
+
     /**
      * Returns a toolbar that gives access to extension-specific functionality.
      *

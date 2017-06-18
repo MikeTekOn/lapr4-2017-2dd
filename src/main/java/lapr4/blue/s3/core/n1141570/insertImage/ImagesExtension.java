@@ -59,7 +59,5 @@ public class ImagesExtension extends Extension {
     public CellExtension extend(Cell cell) {
         return new ImageableCell(cell);
     }
-    
-    
 
 }
