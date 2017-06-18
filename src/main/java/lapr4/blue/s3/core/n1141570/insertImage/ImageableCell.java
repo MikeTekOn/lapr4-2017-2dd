@@ -2,6 +2,7 @@ package lapr4.blue.s3.core.n1141570.insertImage;
 
 import csheets.core.Cell;
 import csheets.ext.CellExtension;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,8 +21,10 @@ public class ImageableCell extends CellExtension {
      * The cell's user-specified image path
      */
     private String imagePath;
-    
-    ///////////////////////////////
+
+    /**
+     * The list with the images paths
+     */
     private List<String> imagesPaths = new ArrayList();
 
     /**
@@ -39,50 +42,62 @@ public class ImageableCell extends CellExtension {
         super(cell, ImagesExtension.NAME);
     }
 
-    /*
- * DATA UPDATES
-     */
-	public void contentChanged(Cell cell) {
-	}
-    
+//    /*
+// * DATA UPDATES
+//     */
+//	public void contentChanged(Cell cell) {
+//	}
     /*
  * IMAGE ACCESSORS
      */
     /**
      * Get the cell's image.
      *
-     * @return the image for the cell or <code>null</code> if no
-     * user supplied image exists.
+     * @return the image for the cell or <code>null</code> if no user supplied
+     * image exists.
      */
     public String getImage() {
         return imagePath;
     }
-    //////////////////////////////////
-    public List<String> getImages(){
+
+    /**
+     * Obtains a list with the images paths of a given cell.
+     *
+     * @return the list with the images paths of a given cell
+     */
+    public List<String> getImages() {
         return imagesPaths;
-    }
-    
-    public void removeImageFromImages(String imagePath){
-        for (String imgPath : imagesPaths) {
-            if (imgPath.equalsIgnoreCase(imagePath)) {
-                imagesPaths.remove(imgPath);
-            }
-        }
     }
 
     /**
-     * Returns whether the cell has a image.
+     * Removes the image passed as parameter from the list of images.
      *
-     * @return true if the cell has a image
+     * @param imagePath the image path to remove
      */
-    public boolean hasImage() {
-        return imagePath != null;
+    public boolean removeImageFromImages(String imagePath) {
+        boolean flag = true;
+        List<String> newImagesPaths = new ArrayList();
+        for (String imgPath : imagesPaths) {
+            if (!imgPath.equalsIgnoreCase(imagePath)) {
+                newImagesPaths.add(imgPath);
+            }
+        }
+        if (imagesPaths.size() == newImagesPaths.size()) {
+            flag = false;
+        }
+        imagesPaths.clear();
+        imagesPaths = newImagesPaths;
+
+        return flag;
     }
-    
-    //////////////////////////////////////////////////////
+
+    /**
+     * Obtains true if the cell has any image, false otherwise.
+     *
+     * @return true if the cell has any image, false otherwise
+     */
     public boolean hasAnyImage() {
         return imagesPaths != null;
-        
     }
 
     /*
@@ -98,8 +113,12 @@ public class ImageableCell extends CellExtension {
         // Notifies listeners
         fireImagesChanged();
     }
-    
-    ////////////////////////////////////////////
+
+    /**
+     * Adds the image to the images list.
+     *
+     * @param imagePath the image to add to the list
+     */
     public void setImageToImages(String imagePath) {
         this.imagesPaths.add(imagePath);
         // Notifies the listeners
