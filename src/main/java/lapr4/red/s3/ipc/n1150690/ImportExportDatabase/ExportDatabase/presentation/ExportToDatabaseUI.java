@@ -73,7 +73,7 @@ public class ExportToDatabaseUI extends JDialog {
     
     private String driver;
     
-    private static boolean printSucess = true;
+    private static boolean printSucess;
 
     public ExportToDatabaseUI(UIController uiController) {
         this.uiController = uiController;
@@ -120,19 +120,18 @@ public class ExportToDatabaseUI extends JDialog {
         b.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                printSucess = true;
                 labelErrors.setText("");
-                boolean successExportation = false;
                 String addressStrFirstCell = txtFieldFirstCell.getText();
                 String addressStrLastCell = txtFieldLastCell.getText();
                 CellRange cellRange = new CellRange(addressStrFirstCell, addressStrLastCell, uiController);
                 controller = new ExportToDatabaseController(uiController, cellRange, txtTableName.getText(), txtDatabaseConnection.getText(), driver);
                 try {
                     controller.export(false);
-                    printSucess = true;
                 } catch (Exception ex) {
                     ExportToDatabaseUI.printException(ex.getMessage());
                 }
-                if (successExportation) {
+                if (printSucess) {
                     success.setText("Exportation Successful!");
                     success.setForeground(Color.GREEN);
                 }
@@ -173,7 +172,6 @@ public class ExportToDatabaseUI extends JDialog {
         drivers.addItem(DatabaseDriver.H2.name());
         drivers.addItem(DatabaseDriver.JavaDBEmbedded.name());
         drivers.addItem(DatabaseDriver.MySQL.name());
-        drivers.addItem(DatabaseDriver.Oracle.name());
         drivers.addItem(DatabaseDriver.PostgreSQL.name());
 
         drivers.setSelectedIndex(0);
@@ -194,10 +192,6 @@ public class ExportToDatabaseUI extends JDialog {
                         driver = DatabaseDriver.MySQL.value();
                     }
                     if (drivers.getSelectedIndex() == 3) {
-                        txtDatabaseConnection.setText(DatabaseDriver.Oracle.defaultURL());
-                        driver = DatabaseDriver.Oracle.value();
-                    }
-                    if (drivers.getSelectedIndex() == 4) {
                         txtDatabaseConnection.setText(DatabaseDriver.PostgreSQL.defaultURL());
                         driver = DatabaseDriver.PostgreSQL.value();
                     }
@@ -212,6 +206,14 @@ public class ExportToDatabaseUI extends JDialog {
         printSucess = false;
         labelErrors.setText(message);
         labelErrors.setForeground(Color.RED);
+    }
+    
+    public static boolean tableWithTheSameName(){
+        int op = JOptionPane.showConfirmDialog(null, "A table with the name already exists! Do you want to delete the existing table?", "Warning", JOptionPane.YES_NO_OPTION);
+        if(op == 0){
+            return true;
+        }
+        return false;
     }
    
 }
