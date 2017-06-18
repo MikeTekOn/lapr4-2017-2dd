@@ -43,9 +43,9 @@ import lapr4.green.s1.ipc.n1150838.findworkbooks.FileDTO;
 import lapr4.green.s1.ipc.n1150838.findworkbooks.FindWorkbooksPublisher;
 import lapr4.green.s1.ipc.n1150838.findworkbooks.ui.WorkbookList;
 import lapr4.red.s1.core.n1150451.exportPDF.presentation.ExportToPDFUI;
-import lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch.CommUDPServer;
-import lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch.FilePathDTO;
-import lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch.HandlerFilePathDTO;
+import lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch.comms.CommUDPServer;
+import lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch.comms.FilePathDTO;
+import lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch.comms.HandlerFilePathDTO;
 
 /**
  * @author nunopinto
