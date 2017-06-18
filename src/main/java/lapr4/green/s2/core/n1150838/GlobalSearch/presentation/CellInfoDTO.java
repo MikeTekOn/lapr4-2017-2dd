@@ -75,9 +75,10 @@ public class CellInfoDTO implements DTO {
      * clones the DTO
      *
      * @return
+     * @throws java.lang.CloneNotSupportedException it´s not possible to clone
      */
     @Override
-    public CellInfoDTO clone() {
+    public CellInfoDTO clone() throws CloneNotSupportedException {
         return new CellInfoDTO(cell,  getSpreadsheetNumber(), getWorkbook(),getWorkbookName());
     }
 

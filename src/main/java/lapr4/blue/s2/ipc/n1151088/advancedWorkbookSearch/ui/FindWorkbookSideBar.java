@@ -1,5 +1,6 @@
 package lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.ui;
 
+import csheets.CleanSheets;
 import csheets.core.Workbook;
 import csheets.ui.ctrl.UIController;
 import java.awt.BorderLayout;
@@ -9,6 +10,7 @@ import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -21,6 +23,9 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -31,11 +36,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 import lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.ctrl.ControllerFindWorkbooks;
 import lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.ctrl.ControllerPreviewWorkbook;
 import lapr4.green.s1.ipc.n1150838.findworkbooks.FileDTO;
 import lapr4.green.s1.ipc.n1150838.findworkbooks.FindWorkbooksPublisher;
 import lapr4.green.s1.ipc.n1150838.findworkbooks.ui.WorkbookList;
+import lapr4.red.s1.core.n1150451.exportPDF.presentation.ExportToPDFUI;
 import lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch.CommUDPServer;
 import lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch.FilePathDTO;
 import lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch.HandlerFilePathDTO;
@@ -248,7 +255,19 @@ public class FindWorkbookSideBar extends JPanel implements Observer {
         panel.add(pathField);
         JFileChooser chooser = new JFileChooser();
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        JButton button = new JButton("");
+
+        Image img = null;
+        try {
+            img = ImageIO.read(CleanSheets.class.getResource("res/img/open.gif"));
+        } catch (IOException ex) {
+            Logger.getLogger(ExportToPDFUI.class.getName()).log(Level.FINE, null, ex);
+        }
+        Image newimg = img.getScaledInstance(25, 25, Image.SCALE_SMOOTH);
+        ImageIcon icon = new ImageIcon(newimg);
+        JButton button = new JButton();
+        button.setIcon(icon);
+        Border emptyBorder = BorderFactory.createEmptyBorder();
+        button.setBorder(emptyBorder);
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -287,30 +306,36 @@ public class FindWorkbookSideBar extends JPanel implements Observer {
                 JOptionPane.showMessageDialog(new JFrame(), "Please complete all fields!");
                 flagSucessClick = false;
             } else {
-                CommUDPServer srv = new CommUDPServer();
-                srv.addHandler(FilePathDTO.class, new HandlerFilePathDTO());
+                CommUDPServer srv=null;
+                if (searchButton.getText().equalsIgnoreCase("search")) {
+                     srv = new CommUDPServer();
+                    srv.addHandler(FilePathDTO.class, new HandlerFilePathDTO());
 
-                try {
-                    if (!checkFindControllerNull()) {
-                        findController.stopSearch();
+                    try {
+
+                        modeloWorkbook.removeAll();
+                        cache.clear(); //CLEARS THE CACHE
+                        findController = new ControllerFindWorkbooks(pathField.getText(), regexField.getText(), isThreadActive);
+
+                        findController.searchFiles();
+                        if (!srv.isAlive()) {
+                            srv.start();
+                        }
+                        searchButton.setText("Stop");
+                        flagSucessClick = true;
+                        JOptionPane.showMessageDialog(new JFrame(), "The search has finished");
                         searchButton.setText("Search");
                         srv.interrupt();
-                        return;
-                    }
+                    } catch (IllegalStateException ex) {
+                        JOptionPane.showMessageDialog(new JFrame(), "Insert a valid path!");
+                        flagSucessClick = false;
 
-                    modeloWorkbook.removeAll();
-                    cache.clear(); //CLEARS THE CACHE
-                    findController = new ControllerFindWorkbooks(pathField.getText(), regexField.getText(), isThreadActive);
-
-                    findController.searchFiles();
-                    if (!srv.isAlive()) {
-                        srv.start();
                     }
-                    searchButton.setText("Stop");
-                    flagSucessClick = true;
-                } catch (IllegalStateException ex) {
-                    JOptionPane.showMessageDialog(new JFrame(), "Insert a valid path!");
-                    flagSucessClick = false;
+                } else {
+
+                    findController.stopSearch();
+                    searchButton.setText("Search");
+                    srv.interrupt();
 
                 }
             }

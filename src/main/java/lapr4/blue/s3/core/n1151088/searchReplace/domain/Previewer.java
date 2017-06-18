@@ -6,11 +6,7 @@ import csheets.core.formula.Formula;
 import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.core.formula.compiler.FormulaCompiler;
 import csheets.ui.ctrl.UIController;
-import java.util.ArrayList;
-import java.util.List;
 import lapr4.blue.s3.core.n1151088.searchReplace.SearchReplacePublisher;
-import lapr4.green.s2.core.n1150838.GlobalSearch.presentation.CellInfoDTO;
-import lapr4.green.s2.core.n1150838.GlobalSearch.presentation.CellList;
 
 /**
  *
@@ -20,24 +16,24 @@ import lapr4.green.s2.core.n1150838.GlobalSearch.presentation.CellList;
 public class Previewer implements Runnable {
     
     /**The content that will replace the cell´s content with exp**/
-    private String content, exp;
+    private String to, exp;
     /**Cells that will be previewed**/
     private Cell cell;
     /**The controller that manage searchReplace user interface actions**/
     private UIController uiCtrl;
     
-    public Previewer(Cell cell, String exp, String content, UIController uiCtrl){
-        try{
-            validateContent(content);
-        }catch(FormulaCompilationException | IllegalValueTypeException ex ){
-            ex.getMessage();
-        }
-        if(!validateContainsExp(cell, exp)){
+    public Previewer(Cell cellBefore, String expR, String to, UIController uiCtrl){
+//        try{
+//            validateContent(content, cellBefore);
+//        }catch(FormulaCompilationException | IllegalValueTypeException ex ){
+//            ex.getMessage();
+//        }
+        if(!validateContainsExp(cellBefore, expR)){
            throw new IllegalStateException();
         }
-        this.exp=exp;
-        this.content=content;      
-        this.cell=cell;
+        this.exp=expR;
+        this.to=to;      
+        this.cell=cellBefore;
         this.uiCtrl=uiCtrl;
     }
 //    
@@ -67,9 +63,9 @@ public class Previewer implements Runnable {
      * @throws FormulaCompilationException
      * @throws IllegalValueTypeException 
      */
-    public boolean validateContent(String content) throws FormulaCompilationException, IllegalValueTypeException{
+    public boolean validateContent(String content, Cell cell1) throws FormulaCompilationException, IllegalValueTypeException{
         FormulaCompiler instance = FormulaCompiler.getInstance();
-        Formula f = instance.compile(null, content, uiCtrl);
+        Formula f = instance.compile(cell1, content, uiCtrl);
         f.evaluate();
         return true;
     }
@@ -82,13 +78,13 @@ public class Previewer implements Runnable {
  
     }
     
-    private boolean validateContainsExp(Cell cell,String exp){
-        return cell.getContent().contains(exp);
+    private boolean validateContainsExp(Cell cell,String expInserted){
+        return cell.getContent().contains(expInserted);
     }
 
     private void previewContent() {
-        
-        SearchReplacePublisher.getInstance().notifyObservers(new PreviewCellDTO(cell, exp,content));
+       
+       SearchReplacePublisher.getInstance().notifyObservers(new PreviewCellDTO(cell, exp,to));
         
     }
     

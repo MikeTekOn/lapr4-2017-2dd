@@ -72,6 +72,7 @@ dependencies {
     
     // https://mvnrepository.com/artifact/org.apache.derby/derby
     compile group: 'org.apache.derby', name: 'derby', version: '10.13.1.1'
+    
 
     // https://mvnrepository.com/artifact/mysql/mysql-connector-java
     compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.6'

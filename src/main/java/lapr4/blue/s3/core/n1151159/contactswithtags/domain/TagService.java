@@ -1,9 +1,9 @@
-package lapr4.green.s2.core.n1150738.contacts.domain;
-
-import lapr4.blue.s3.core.n1151159.contactswithtags.domain.Contactable;
+package lapr4.blue.s3.core.n1151159.contactswithtags.domain;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * Represents a domain service to manipulate tags.
@@ -29,5 +29,27 @@ public class TagService {
         }
 
         return filteredContacts;
+    }
+
+    /**
+     * Retrieves the tags frequency.
+     *
+     * @param contacts the contacts to seek the tags
+     * @return tags frequency
+     */
+    public Map<Tag, Integer> filterTagsWithFrequency(Set<Contactable> contacts) {
+        Map<Tag, Integer> result = new TreeMap<>();
+
+        for (Contactable contact : contacts) {
+            for (Tag tag : contact.getTags()) {
+                if (result.containsKey(tag)) {
+                    result.put(tag, result.get(tag) + 1);
+                } else {
+                    result.put(tag, 1);
+                }
+            }
+        }
+
+        return result;
     }
 }

@@ -2,7 +2,6 @@ package lapr4.blue.s3.core.n1151088.searchReplace.application;
 
 import csheets.core.Cell;
 import csheets.ui.ctrl.UIController;
-import java.util.ArrayList;
 import lapr4.blue.s3.core.n1151088.searchReplace.domain.Previewer;
 import lapr4.green.s2.core.n1150838.GlobalSearch.application.GlobalSearchController;
 import lapr4.green.s2.core.n1150838.GlobalSearch.presentation.CellInfoDTO;
@@ -17,6 +16,7 @@ public class SearchReplaceController extends GlobalSearchController{
 
     protected Thread threadReplace;
     protected Thread threadPreview;
+    private Previewer util;
     
     public SearchReplaceController(UIController ctrl) {
          super(ctrl);
@@ -24,10 +24,12 @@ public class SearchReplaceController extends GlobalSearchController{
     
     /**
      * Starts the thread to search 
-     * @param content replaced content
+     * @param cell cell to preview replace
+     * @param exp inserted expression to replace
+     * @param to
      */
-     public void  startPreviewThread(Cell cell, String content,String exp){
-         threadPreview = new Thread(new Previewer(cell, exp, content, ctrl));
+     public void  startPreviewThread(Cell cell, String exp,String to){
+         threadPreview = new Thread(new Previewer(cell, exp, to, ctrl));
          threadPreview.start();
     }
     /**
@@ -57,6 +59,21 @@ public class SearchReplaceController extends GlobalSearchController{
 //        }
     }
     
-    
+       /**
+     * The call to the method to check if regex is valid
+     *
+     * @param beforeCell before cell content
+     * @param exp
+     * @param to
+     * @param uictrl uicontroller
+     * @return previewer builded
+     */
+    public Previewer checkIfPreviewValid(Cell beforeCell,  String exp, String to,UIController uictrl) {
+        try{
+            return new Previewer(beforeCell, exp, to, ctrl);
+        }catch (IllegalStateException ex){
+            return null;
+        }
+    }
     
 }

@@ -193,7 +193,6 @@ public class ImportFromDatabaseUI extends JDialog {
         drivers.addItem(DatabaseDriver.H2.name());
         drivers.addItem(DatabaseDriver.JavaDBEmbedded.name());
         drivers.addItem(DatabaseDriver.MySQL.name());
-        drivers.addItem(DatabaseDriver.Oracle.name());
         drivers.addItem(DatabaseDriver.PostgreSQL.name());
 
         drivers.setSelectedIndex(0);
@@ -214,10 +213,6 @@ public class ImportFromDatabaseUI extends JDialog {
                         driver = DatabaseDriver.MySQL.value();
                     }
                     if (drivers.getSelectedIndex() == 3) {
-                        txtDatabaseConnection.setText(DatabaseDriver.Oracle.defaultURL());
-                        driver = DatabaseDriver.Oracle.value();
-                    }
-                    if (drivers.getSelectedIndex() == 4) {
                         txtDatabaseConnection.setText(DatabaseDriver.PostgreSQL.defaultURL());
                         driver = DatabaseDriver.PostgreSQL.value();
                     }

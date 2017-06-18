@@ -1,5 +1,7 @@
 package lapr4.blue.s3.core.n1151088.searchReplace.presentation;
 
+import csheets.core.IllegalValueTypeException;
+import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.ui.ctrl.UIController;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -12,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -24,7 +28,10 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.TitledBorder;
 import lapr4.blue.s3.core.n1151088.searchReplace.SearchReplaceExtension;
+import lapr4.blue.s3.core.n1151088.searchReplace.SearchReplacePublisher;
 import lapr4.blue.s3.core.n1151088.searchReplace.application.SearchReplaceController;
+import lapr4.blue.s3.core.n1151088.searchReplace.domain.PreviewCellDTO;
+import lapr4.blue.s3.core.n1151088.searchReplace.domain.PreviewerList;
 import lapr4.green.s2.core.n1150838.GlobalSearch.domain.Filter;
 import lapr4.green.s2.core.n1150838.GlobalSearch.presentation.CellInfoDTO;
 import lapr4.green.s2.core.n1150838.GlobalSearch.presentation.CellList;
@@ -37,15 +44,18 @@ import lapr4.green.s2.core.n1150838.GlobalSearch.util.GlobalSearchPublisher;
  */
 public class SearchReplaceSideBar extends JPanel implements Observer {
 
-    private JTextField searchField, replaceField ,toField, previewField;
+    private JTextField searchField, replaceField ,toField;
+    private JLabel previewLabel;
     private UIController extension;
     private SearchReplaceController ctrl;
     private JList searchList, replaceList;
-    private CellList model, modelReplace;
+    private CellList model;
+    private PreviewerList modelReplace;
     private ConfigPane paneFilters;
-
+ 
     public SearchReplaceSideBar(UIController extension) {
         GlobalSearchPublisher.getInstance().addObserver(this);
+        SearchReplacePublisher.getInstance().addObserver(this);
         setName(SearchReplaceExtension.NAME);
         this.extension = extension;
         ctrl = new SearchReplaceController(extension);
@@ -110,22 +120,6 @@ public class SearchReplaceSideBar extends JPanel implements Observer {
         return searchPanel;
     }
     
-    private JPanel labelWithField(JTextField field, String label){
-        JPanel p=new JPanel();
-        
-        BoxLayout box = new BoxLayout(p, BoxLayout.X_AXIS);
-        p.setLayout(box);;
-        
-        field=new JTextField();
-        field.setPreferredSize(new Dimension(100,5));
-       
-        JLabel jlabel=new JLabel(label);
-        
-        p.add(jlabel);
-        p.add(field); 
-        return p;
-    }
-    
      /**
      * Creates a panel with all the necessary buttons
      *
@@ -148,8 +142,8 @@ public class SearchReplaceSideBar extends JPanel implements Observer {
         
         JPanel lower=new JPanel();
         lower.setLayout(new BorderLayout());
-        lower.add(ocurrencesPanel(), BorderLayout.CENTER);
-        lower.add(previewPanel(), BorderLayout.EAST);
+        lower.add(occurrencesPanel(), BorderLayout.CENTER);
+       // lower.add(previewPanel(), BorderLayout.EAST);
         
         replacePanel.add(upper, BorderLayout.NORTH);
         replacePanel.add(lower, BorderLayout.CENTER);
@@ -159,19 +153,17 @@ public class SearchReplaceSideBar extends JPanel implements Observer {
     
     private JPanel previewPanel(){
         JPanel p=new JPanel();
-        buildBorder("Preview", p);
+        buildBorder("Preview (Value | Content)", p);
                 
         BoxLayout box = new BoxLayout(p, BoxLayout.Y_AXIS);
         p.setLayout(box);;
         
-        previewField=new JTextField();
-        previewField.setPreferredSize(new Dimension(100,5));
-        previewField.setEditable(false);
- 
-        p.add(previewField); 
-        p.add(createPreviewButton());
+        previewLabel=new JLabel();
+        previewLabel.setPreferredSize(new Dimension(100,5));
       
-                
+        p.add(previewLabel); 
+      //  p.add(createPreviewButton());
+         
         return p;
        
     }
@@ -180,27 +172,40 @@ public class SearchReplaceSideBar extends JPanel implements Observer {
      *
      * @return JScrollPanel
      */
-    private JPanel ocurrencesPanel() {
+    private JPanel occurrencesPanel() {
         JPanel p=new JPanel();
         p.setLayout(new BorderLayout());
         buildBorder("Occurrences", p);
-        modelReplace = new CellList(new ArrayList());
-        replaceList = new JList(model);
+        modelReplace = new PreviewerList(new ArrayList(), "");
+        replaceList = new JList(modelReplace);
         replaceList.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-        replaceList.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Results: "));
+        replaceList.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Occurrences: "));
         replaceList.addMouseListener(new MouseAdapter() {
             @Override
+          
             public void mouseClicked(MouseEvent evt) {
                 JList list = (JList) evt.getSource();
                 int index = list.locationToIndex(evt.getPoint());
                 if (evt.getClickCount() == 1 && index >= 0) {
-                    modelReplace.setSelectedItem((String) modelReplace.getElementAt(index));
-                    extension.setActiveCell(model.getSelectedItem().getCell());
+                    PreviewCellDTO prev=(PreviewCellDTO) replaceList.getSelectedValue();
+                    modelReplace.setSelectedItem(prev.getBeforeCell().toString());
+                    if(previewLabel.getText().length()>0){
+                        try {
+                            preview();
+                        } catch (CloneNotSupportedException ex) {
+                             JOptionPane.showMessageDialog(null,
+                                            "It wasn´t possible to preview.",
+                                            "Invalid fieds",
+                                            JOptionPane.ERROR_MESSAGE);
+                            
+                        }
+                    }
+                   
                 }
 
             }
-        });
-        JScrollPane scroll = new JScrollPane(searchList);
+        }); 
+        JScrollPane scroll = new JScrollPane(replaceList);
         scroll.setPreferredSize(new Dimension(50, 50));
         p.add(scroll, BorderLayout.CENTER);
         p.add(createReplaceButtons(), BorderLayout.SOUTH);
@@ -212,21 +217,20 @@ public class SearchReplaceSideBar extends JPanel implements Observer {
         p.setLayout(new GridLayout(1,2));
         p.add(buttonReplace());
         p.add(buttonsReplaceAll());
-        return p;
-        
+        return p;     
     }
     
     private JButton buttonReplace(){
-        JButton b = new JButton("Replace");
+        JButton btReplace= new JButton("Replace");
         //b.setPreferredSize(new Dimension(10,10));
-        b.addActionListener((new ActionListener() {
+        btReplace.addActionListener((new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                paneFilters.setVisible(true);
-
+                
             }
+                
         }));
-        return b;
+        return btReplace;
     }
     
       private JButton nextButton(){
@@ -243,25 +247,69 @@ public class SearchReplaceSideBar extends JPanel implements Observer {
     }
     
     private JButton buttonsReplaceAll(){
-        JButton b = new JButton("Replace All");
+        JButton btReplaceAll = new JButton("Replace All");
         //b.setPreferredSize(new Dimension(10,10));
-        b.addActionListener((new ActionListener() {
+        btReplaceAll.addActionListener((new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                paneFilters.setVisible(true);
-
+                PreviewCellDTO prev= (PreviewCellDTO) replaceList.getSelectedValue();
+                ctrl.stopPreviewThread();       
+                
+                try {
+                    if(prev.getAfterCell().getContent()!=prev.getBeforeCell().getContent()){
+                    prev.replace();
+                    prev.getBeforeCell().setContent(prev.getAfterCell().getContent());
+                    }
+                } catch (FormulaCompilationException ex) {
+                     JOptionPane.showMessageDialog(null,
+                            "It wasn´t possible to replace.",
+                            "Replace error",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+//              
             }
         }));
-        return b;
+        return btReplaceAll;
     }
     
     private JPanel replaceFields(){
+        JPanel upper=new JPanel();
+        upper.setLayout(new BorderLayout());
         JPanel p=new JPanel();
         JPanel replacePanel=new JPanel();
         replacePanel.setLayout(new GridLayout(2,1));
  
-        replacePanel.add(labelWithField(replaceField, "Replace"));
-        replacePanel.add(labelWithField(toField, "To"));
+        
+        JPanel pReplace=new JPanel();
+        
+        BoxLayout box = new BoxLayout(pReplace, BoxLayout.X_AXIS);
+        pReplace.setLayout(box);;
+        
+        replaceField=new JTextField();
+        replaceField.setPreferredSize(new Dimension(100,5));
+       
+        JLabel jlabel=new JLabel("Replace");
+        
+        pReplace.add(jlabel);
+        pReplace.add(replaceField); 
+        
+        
+         JPanel pTo=new JPanel();
+        
+        BoxLayout box2 = new BoxLayout(pTo, BoxLayout.X_AXIS);
+        pTo.setLayout(box2);;
+        
+        toField=new JTextField();
+        toField.setPreferredSize(new Dimension(100,5));
+       
+        JLabel jlabel2=new JLabel("To");
+        
+        pTo.add(jlabel2);
+        pTo.add(toField); 
+        
+     
+        replacePanel.add(pReplace);
+        replacePanel.add(pTo);
         
         JPanel button =new JPanel();
         button.add(createPreviewButton());
@@ -269,7 +317,10 @@ public class SearchReplaceSideBar extends JPanel implements Observer {
         p.add(replacePanel,BorderLayout.NORTH);
         p.add(button,BorderLayout.SOUTH);
         
-        return p;
+        upper.add(p, BorderLayout.WEST);
+        upper.add(previewPanel(), BorderLayout.EAST );
+        
+        return upper;
     }
 
      /**
@@ -290,7 +341,11 @@ public class SearchReplaceSideBar extends JPanel implements Observer {
                 int index = list.locationToIndex(evt.getPoint());
                 if (evt.getClickCount() == 1 && index >= 0) {
                     model.setSelectedItem((String) model.getElementAt(index));
-                    extension.setActiveCell(model.getSelectedItem().getCell());
+                    try {
+                        extension.setActiveCell(model.getSelectedItem().getCell());
+                    } catch (CloneNotSupportedException ex) {
+                        Logger.getLogger(SearchReplaceSideBar.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
 
             }
@@ -310,6 +365,7 @@ public class SearchReplaceSideBar extends JPanel implements Observer {
         JButton b = new JButton("Search");
         //b.setPreferredSize(new Dimension(10,10));
         b.addActionListener((new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
 
                 ctrl.stop();
@@ -325,6 +381,9 @@ public class SearchReplaceSideBar extends JPanel implements Observer {
                             "Invalid regex",
                             JOptionPane.ERROR_MESSAGE);
                 }
+                
+                ctrl.stopPreviewThread();
+                modelReplace.removeAll();
             }
         }));
 
@@ -353,39 +412,114 @@ public class SearchReplaceSideBar extends JPanel implements Observer {
      * @return the button to add filters
      */
     private JButton createPreviewButton() {
-        JButton b = new JButton("Preview");
+        JButton btPreview = new JButton("Preview");
         //b.setPreferredSize(new Dimension(10,10));
-        b.addActionListener((new ActionListener() {
+        btPreview.addActionListener((new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                paneFilters.setVisible(true);
+                ctrl.stopPreviewThread();            
+                try {
+                  preview();
+                } catch (CloneNotSupportedException ex) {
+                    JOptionPane.showMessageDialog(null,
+                                            "It wasn´t possible to preview.",
+                                            "Invalid fieds",
+                                            JOptionPane.ERROR_MESSAGE);
+                }
 
-            }
-        }));
-        return b;
+        }
+    }));
+    return btPreview;
     }
 
+    private void preview() throws CloneNotSupportedException{
+         if(replaceList.getSelectedIndex()>=0){
+                    PreviewCellDTO prev=(PreviewCellDTO) replaceList.getSelectedValue();
+                    modelReplace.setSelectedItem(prev.getBeforeCell().toString());
+
+                        if(replaceField.getText().length()>0 && toField.getText().length()>0){              
+                            if (modelReplace.getSelectedItem()!=null){
+                                PreviewCellDTO selected=(PreviewCellDTO)  modelReplace.getSelectedItem();
+
+                                if (ctrl.checkIfPreviewValid(selected.getBeforeCell(),
+                                        replaceField.getText(), toField.getText(), extension)!=null ){
+
+                                    ctrl.startPreviewThread(selected.getBeforeCell(),
+                                            replaceField.getText(),toField.getText());
+                                } else {
+                                    JOptionPane.showMessageDialog(null,
+                                            "The inserted expression to replace is not valid. Verify if cell contains expression to replace",
+                                            "Invalid replace text",
+                                            JOptionPane.ERROR_MESSAGE);
+                                }
+
+                            }
+
+                        }else{
+                             JOptionPane.showMessageDialog(null,
+                                        "Please fill the replace and expression to replace.",
+                                        "Invalid fieds",
+                                        JOptionPane.ERROR_MESSAGE);
+                        }
+
+
+                }
+    }
     @Override
     public void update(Observable o, Object arg) {
-        if (arg!=null && arg instanceof CellInfoDTO) {
-            if (!((CellInfoDTO) arg).getCell().toString().equals("0")) {// ignore the null CELL
-                java.awt.EventQueue.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        model.addElement((CellInfoDTO) arg);
-                        modelReplace.addElement((CellInfoDTO) arg);
-                        searchList.updateUI();
-                        replaceList.updateUI();
-                    }
-                });
-            }
 
-        }else{
+    if (arg!=null && arg instanceof PreviewCellDTO) {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+
+                    PreviewCellDTO cell= (PreviewCellDTO) arg;
+                    try {
+                        previewLabel.setText(cell.buildCellPreviewDescription());                    
+                        previewLabel.updateUI(); 
+
+                    } catch (IllegalValueTypeException | FormulaCompilationException ex) {
+                           JOptionPane.showMessageDialog(null,
+                        "It wasn´t possible to preview! ",
+                        "Preview error",
+                        JOptionPane.ERROR_MESSAGE);
+                    }
+
+                }
+            });
+
+        }
+       
+        
+    
+        if(arg!=null && arg instanceof CellInfoDTO) {
+                if (!((CellInfoDTO) arg).getCell().toString().equals("0")) {// ignore the null CELL
+                    java.awt.EventQueue.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            CellInfoDTO cell= (CellInfoDTO) arg;
+                            model.addElement(cell);
+                            searchList.updateUI();   
+
+                            PreviewCellDTO preview=new PreviewCellDTO(cell.getCell(), "", "");
+
+                            modelReplace.addElement(preview);
+                            
+                            if(modelReplace.getSize()>0){
+                               replaceList.setSelectedIndex(0);
+                            }
+
+                            replaceList.updateUI();    
+                        }
+                    });
+                }
+        }
+           if(arg instanceof CellInfoDTO && arg==null) {
             JOptionPane.showMessageDialog(null,
                             "No results!",
                             "No results",
                             JOptionPane.ERROR_MESSAGE);
-            }
+        }
     }
-    
 }
