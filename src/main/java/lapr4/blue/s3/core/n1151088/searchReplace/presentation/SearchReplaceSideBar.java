@@ -188,21 +188,8 @@ public class SearchReplaceSideBar extends JPanel implements Observer {
                 int index = list.locationToIndex(evt.getPoint());
                 if (evt.getClickCount() == 1 && index >= 0) {
                     PreviewCellDTO prev=(PreviewCellDTO) replaceList.getSelectedValue();
-                    modelReplace.setSelectedItem(prev.getBeforeCell().toString());
-                    if(previewLabel.getText().length()>0){
-                        try {
-                            preview();
-                        } catch (CloneNotSupportedException ex) {
-                             JOptionPane.showMessageDialog(null,
-                                            "It wasn´t possible to preview.",
-                                            "Invalid fieds",
-                                            JOptionPane.ERROR_MESSAGE);
-                            
-                        }
-                    }
-                   
+                 
                 }
-
             }
         }); 
         JScrollPane scroll = new JScrollPane(replaceList);
@@ -226,7 +213,70 @@ public class SearchReplaceSideBar extends JPanel implements Observer {
         btReplace.addActionListener((new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                
+                ctrl.stopReplaceThread();
+                 PreviewCellDTO prev= (PreviewCellDTO) replaceList.getSelectedValue();
+
+            if(prev.getAfterCell().getContent() == null ? prev.getBeforeCell().getContent() != null : !prev.getAfterCell().getContent().equals(prev.getBeforeCell().getContent())){
+                if(replaceField.getText().length()>0 && toField.getText().length()>0){              
+                    try {
+                          
+                        if(replaceList.getSelectedIndex()>=0){
+                            
+                           modelReplace.setSelectedItem(prev.getBeforeCell().toString());
+
+                          
+                            PreviewCellDTO selected=(PreviewCellDTO)  modelReplace.getSelectedItem();
+
+                            if (ctrl.checkIfPreviewValid(selected.getBeforeCell(),
+                                    replaceField.getText(), toField.getText(), extension)!=null ){
+
+                                ctrl.startPreviewThread(selected.getBeforeCell(),
+                                        replaceField.getText(),toField.getText());
+
+                                try {
+                                   ctrl.stopReplaceThread();
+
+
+                                   modelReplace.setSelectedItem(prev.getBeforeCell().toString());
+                                    extension.setActiveCell(modelReplace.getSelectedItem().getBeforeCell());
+
+                                    ctrl.startReplaceThread(selected.getBeforeCell(), replaceField.getText(),
+                                            toField.getText(),extension);
+                                  //  selected.getBeforeCell().setContent(selected.getAfterCell().getContent());
+                                    updateUI();
+
+                                } catch (CloneNotSupportedException ex) {
+                                    JOptionPane.showMessageDialog(null,
+                                            "It wasn´t possible to replace.",
+                                            "Replace error",
+                                            JOptionPane.ERROR_MESSAGE);
+//                                        } catch (FormulaCompilationException ex ) {
+//                                            JOptionPane.showMessageDialog(null,
+//                                                    "It wasn´t possible to replace.",
+//                                                    "Formula compilation error",
+//                                                    JOptionPane.ERROR_MESSAGE);
+                                }
+
+                            } else {
+                                JOptionPane.showMessageDialog(null,
+                                        "The inserted expression to replace is not valid. Verify if cell contains expression to replace",
+                                        "Invalid replace text",
+                                        JOptionPane.ERROR_MESSAGE);
+                            }
+
+                        }
+                    } catch (CloneNotSupportedException ex) {
+                        Logger.getLogger(SearchReplaceSideBar.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    }else{
+                         JOptionPane.showMessageDialog(null,
+                                    "Please fill the replace and expression to replace.",
+                                    "Invalid fieds",
+                                    JOptionPane.ERROR_MESSAGE);
+                    }   
+                } 
+              
             }
                 
         }));
@@ -239,8 +289,11 @@ public class SearchReplaceSideBar extends JPanel implements Observer {
         b.addActionListener((new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                paneFilters.setVisible(true);
-
+                if(replaceList.getSelectedIndex()<modelReplace.getSize()){
+                     replaceList.setSelectedIndex(replaceList.getSelectedIndex()+1);
+                }else{
+                    replaceList.setSelectedIndex(0);
+                }
             }
         }));
         return b;
@@ -252,21 +305,27 @@ public class SearchReplaceSideBar extends JPanel implements Observer {
         btReplaceAll.addActionListener((new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                PreviewCellDTO prev= (PreviewCellDTO) replaceList.getSelectedValue();
-                ctrl.stopPreviewThread();       
-                
-                try {
-                    if(prev.getAfterCell().getContent()!=prev.getBeforeCell().getContent()){
-                    prev.replace();
-                    prev.getBeforeCell().setContent(prev.getAfterCell().getContent());
-                    }
-                } catch (FormulaCompilationException ex) {
+                 PreviewCellDTO prev= (PreviewCellDTO) replaceList.getSelectedValue();
+                ctrl.stopPreviewThread(); 
+                ctrl.stopReplaceThread();
+      
+            if(prev.getAfterCell().getContent() == null ? prev.getBeforeCell().getContent() != null : !prev.getAfterCell().getContent().equals(prev.getBeforeCell().getContent())){
+                if(replaceField.getText().length()>0 && toField.getText().length()>0){              
+                 
+                    ctrl.stopReplaceThread();                                      
+                    modelReplace.setSelectedItem(prev.getBeforeCell().toString());
+                    ctrl.startReplaceAllThreads(modelReplace, replaceField.getText(), toField.getText(), extension);
+                    updateUI();
+
+                }else{
                      JOptionPane.showMessageDialog(null,
-                            "It wasn´t possible to replace.",
-                            "Replace error",
-                            JOptionPane.ERROR_MESSAGE);
-                }
-//              
+                                "Please fill the replace and expression to replace.",
+                                "Invalid fieds",
+                                JOptionPane.ERROR_MESSAGE);
+                }   
+            } 
+              
+            
             }
         }));
         return btReplaceAll;
@@ -419,30 +478,17 @@ public class SearchReplaceSideBar extends JPanel implements Observer {
             public void actionPerformed(ActionEvent e) {
                 ctrl.stopPreviewThread();            
                 try {
-                  preview();
-                } catch (CloneNotSupportedException ex) {
-                    JOptionPane.showMessageDialog(null,
-                                            "It wasn´t possible to preview.",
-                                            "Invalid fieds",
-                                            JOptionPane.ERROR_MESSAGE);
-                }
-
-        }
-    }));
-    return btPreview;
-    }
-
-    private void preview() throws CloneNotSupportedException{
-         if(replaceList.getSelectedIndex()>=0){
-                    PreviewCellDTO prev=(PreviewCellDTO) replaceList.getSelectedValue();
-                    modelReplace.setSelectedItem(prev.getBeforeCell().toString());
+                  
+                      if(replaceList.getSelectedIndex()>=0){
+                        PreviewCellDTO prev=(PreviewCellDTO) replaceList.getSelectedValue();
+                        modelReplace.setSelectedItem(prev.getBeforeCell().toString());
 
                         if(replaceField.getText().length()>0 && toField.getText().length()>0){              
                             if (modelReplace.getSelectedItem()!=null){
                                 PreviewCellDTO selected=(PreviewCellDTO)  modelReplace.getSelectedItem();
 
                                 if (ctrl.checkIfPreviewValid(selected.getBeforeCell(),
-                                        replaceField.getText(), toField.getText(), extension)!=null ){
+                                    replaceField.getText(), toField.getText(), extension)!=null ){
 
                                     ctrl.startPreviewThread(selected.getBeforeCell(),
                                             replaceField.getText(),toField.getText());
@@ -455,71 +501,84 @@ public class SearchReplaceSideBar extends JPanel implements Observer {
 
                             }
 
-                        }else{
-                             JOptionPane.showMessageDialog(null,
-                                        "Please fill the replace and expression to replace.",
-                                        "Invalid fieds",
-                                        JOptionPane.ERROR_MESSAGE);
+                            }else{
+                                 JOptionPane.showMessageDialog(null,
+                                            "Please fill the replace and expression to replace.",
+                                            "Invalid fieds",
+                                            JOptionPane.ERROR_MESSAGE);
+                            }
+
+
                         }
-
-
+                    
+                    
+                } catch (CloneNotSupportedException ex) {
+                    JOptionPane.showMessageDialog(null,
+                                            "It wasn´t possible to preview.",
+                                            "Invalid fieds",
+                                            JOptionPane.ERROR_MESSAGE);
                 }
+
+        }
+    }));
+    return btPreview;
     }
+
     @Override
     public void update(Observable o, Object arg) {
 
-    if (arg!=null && arg instanceof PreviewCellDTO) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-                @Override
-                public void run() {
+        if (arg!=null && arg instanceof PreviewCellDTO) {
+            java.awt.EventQueue.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
 
-                    PreviewCellDTO cell= (PreviewCellDTO) arg;
-                    try {
-                        previewLabel.setText(cell.buildCellPreviewDescription());                    
-                        previewLabel.updateUI(); 
+                        PreviewCellDTO cell= (PreviewCellDTO) arg;
+                        try {
+                            previewLabel.setText(cell.buildCellPreviewDescription());    
+                            previewLabel.updateUI(); 
 
-                    } catch (IllegalValueTypeException | FormulaCompilationException ex) {
-                           JOptionPane.showMessageDialog(null,
-                        "It wasn´t possible to preview! ",
-                        "Preview error",
-                        JOptionPane.ERROR_MESSAGE);
-                    }
-
-                }
-            });
-
-        }
-       
-        
-    
-        if(arg!=null && arg instanceof CellInfoDTO) {
-                if (!((CellInfoDTO) arg).getCell().toString().equals("0")) {// ignore the null CELL
-                    java.awt.EventQueue.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-
-                            CellInfoDTO cell= (CellInfoDTO) arg;
-                            model.addElement(cell);
-                            searchList.updateUI();   
-
-                            PreviewCellDTO preview=new PreviewCellDTO(cell.getCell(), "", "");
-
-                            modelReplace.addElement(preview);
-                            
-                            if(modelReplace.getSize()>0){
-                               replaceList.setSelectedIndex(0);
-                            }
-
-                            replaceList.updateUI();    
-                        }
-                    });
-                }
-        }
-           if(arg instanceof CellInfoDTO && arg==null) {
-            JOptionPane.showMessageDialog(null,
-                            "No results!",
-                            "No results",
+                        } catch (IllegalValueTypeException | FormulaCompilationException ex) {
+                               JOptionPane.showMessageDialog(null,
+                            "It wasn´t possible to preview! ",
+                            "Preview error",
                             JOptionPane.ERROR_MESSAGE);
+                        }
+
+                    }
+                });
+
+            }
+
+
+
+            if(arg!=null && arg instanceof CellInfoDTO) {
+                    if (!((CellInfoDTO) arg).getCell().toString().equals("0")) {// ignore the null CELL
+                        java.awt.EventQueue.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                CellInfoDTO cell= (CellInfoDTO) arg;
+                                model.addElement(cell);
+                                searchList.updateUI();   
+
+                                PreviewCellDTO preview=new PreviewCellDTO(cell.getCell(), "", "");
+
+                                modelReplace.addElement(preview);
+
+                                if(modelReplace.getSize()>0){
+                                   replaceList.setSelectedIndex(0);
+                                }
+
+                                replaceList.updateUI();    
+                            }
+                        });
+                    }
+            }
+               if(arg instanceof CellInfoDTO && arg==null) {
+                JOptionPane.showMessageDialog(null,
+                                "No results!",
+                                "No results",
+                                JOptionPane.ERROR_MESSAGE);
+            }
         }
-    }
 }

@@ -3,12 +3,12 @@ package lapr4.blue.s3.core.n1151088.searchReplace.application;
 import csheets.core.Cell;
 import csheets.ui.ctrl.UIController;
 import lapr4.blue.s3.core.n1151088.searchReplace.domain.Previewer;
+import lapr4.blue.s3.core.n1151088.searchReplace.domain.PreviewerList;
+import lapr4.blue.s3.core.n1151088.searchReplace.domain.Replacer;
 import lapr4.green.s2.core.n1150838.GlobalSearch.application.GlobalSearchController;
-import lapr4.green.s2.core.n1150838.GlobalSearch.presentation.CellInfoDTO;
-import lapr4.green.s2.core.n1150838.GlobalSearch.presentation.CellList;
 
 /**
- *
+ * Represents the controller of search and replace feature
  * @author Diana Silva [1151088@isep.ipp.pt]
  */
 
@@ -41,22 +41,29 @@ public class SearchReplaceController extends GlobalSearchController{
         }
     }
     
+    public void startReplaceAllThreads(PreviewerList list, String expR, String to, UIController uiCtrl){
+         threadReplace = new Thread(new Replacer(list, expR, to, uiCtrl));
+         threadReplace.start();
+    }
+    
      /**
      * Starts the thread to search 
-     * @param cellList list of cell which will be replaced
-     * @param content content to replace
+     * @param cellBefore
+     * @param expR
+     * @param to
+     * @param uiCtrl
      */
-     public void  startReplaceThread(CellList cellList, String content){
-//         threadReplace = new Thread(new Previewer(cellList, content, ctrl));
-//         threadReplace.start();
+     public void  startReplaceThread(Cell cellBefore, String expR, String to, UIController uiCtrl){
+         threadReplace = new Thread(new Replacer(cellBefore,expR,to,uiCtrl));
+         threadReplace.start();
     }
     /**
      * Stop the search thread
      */
     public void stopReplaceThread(){
-//        if(threadReplace!=null){
-//            threadReplace.stop();
-//        }
+        if(threadReplace!=null){
+            threadReplace.stop();
+        }
     }
     
        /**
