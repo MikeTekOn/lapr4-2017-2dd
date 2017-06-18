@@ -10,6 +10,7 @@ class NotesEditionUI{
 class NotesEditionController{
     +getContacts()
     +notesOfContact(Contact c)
+    +notesContentOfNote(n)
     +addNote(String title, String content) 
     +editNote(Note n, String content)
     +removeNote(Note n)
@@ -20,7 +21,7 @@ class ContactRepository{
 class Contact{
 }
 class NoteList{
-    -List : noteList
+    +List : getNoteList()
     +boolean : add(title, content)
     +boolean : edit(title, content)
     +boolean : remove(title)
@@ -28,7 +29,7 @@ class NoteList{
 class Note{
     -String : title
     -boolean : removed
-    -List : noteContentList
+    +List : getNoteContentList()
     +boolean : add(content)
     +boolean : remove()
     +boolean : isRemoved()

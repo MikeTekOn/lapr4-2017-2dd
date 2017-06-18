@@ -58,7 +58,11 @@ public class DatabaseExportOperations {
             }
         }
         statement = connection.createStatement();
-        statement.executeUpdate(createTable);
+        try{
+            statement.executeUpdate(createTable);
+        }catch(SQLException e){
+            throw new SQLException("The table already exists!");
+        }
     }
 
     public void fillTable(List<Cell> cellsBetweenRange, int numberOfColumns, int numberLines) throws SQLException {

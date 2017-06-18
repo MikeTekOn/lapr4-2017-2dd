@@ -1,15 +1,9 @@
 package lapr4.green.s1.ipc.n1150532.comm;
 
+import csheets.core.*;
 import lapr4.blue.s2.ipc.n1060503.chat.connection.UserChatDTO;
 import lapr4.blue.s2.ipc.n1060503.chat.connection.HandlerUserChatDTO;
-import csheets.core.Cell;
-import csheets.core.CellImpl;
-import csheets.core.Spreadsheet;
-import csheets.core.Workbook;
-import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.ext.Extension;
-import csheets.ext.style.StylableCell;
-import csheets.ext.style.StyleExtension;
 import csheets.ui.ctrl.UIController;
 import csheets.ui.ext.UIExtension;
 import java.net.InetAddress;
@@ -19,13 +13,10 @@ import java.util.Map;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.CellDTO;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.RequestSharedCellsDTO;
 import lapr4.black.s1.ipc.n2345678.comm.sharecells.ResponseSharedCellsDTO;
-import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.ShareContentCellListener;
-import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.StyleListener;
 import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.comm.CellContentDTO;
 import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.comm.CellStyleDTO;
 import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.comm.HandlerCellContentDTO;
 import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.comm.HandlerCellStyleDTO;
-import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.util.Styles;
 import lapr4.green.s1.ipc.n1150532.comm.connection.*;
 import lapr4.green.s1.ipc.n1150532.comm.ui.UICommExtension;
 import lapr4.green.s1.ipc.n1150532.comm.ui.UICommExtensionSideBar;
@@ -39,7 +30,8 @@ import java.util.Observer;
 import java.util.SortedSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
+import javax.swing.*;
+
 import lapr4.blue.s2.ipc.n1140822.fileShare.FileDTO;
 import lapr4.blue.s2.ipc.n1140822.fileShare.FileNameDTO;
 import lapr4.blue.s2.ipc.n1140822.fileShare.FileNameListDTO;
@@ -56,6 +48,9 @@ import lapr4.green.s1.ipc.n1150901.search.workbook.HandlerResponseWorkbookDTO;
 import lapr4.green.s1.ipc.n1150901.search.workbook.RequestWorkbookDTO;
 import lapr4.green.s1.ipc.n1150901.search.workbook.ResponseWorkbookDTO;
 import lapr4.green.s1.ipc.n1150901.search.workbook.SearchWorkbookEvent;
+import lapr4.red.s3.ipc.n1150623.MultipleSharing.CellHandler;
+import lapr4.red.s3.ipc.n1150623.MultipleSharing.LocationOfSharesFrame;
+import lapr4.red.s3.ipc.n1150623.MultipleSharing.ShareOptionsController;
 import lapr4.red.s3.ipc.n1150613.NetworkSearchByFile.SearchWorkbookRequestDTO;
 
 /**
@@ -65,6 +60,7 @@ import lapr4.red.s3.ipc.n1150613.NetworkSearchByFile.SearchWorkbookRequestDTO;
  * maintained for other uses like cells sharing. This class listens to the
  * events launched by the handlers and deals with them using the UI Controller.
  *
+ * @author Guilherme Ferreira 1150623 -> Added Share Name & share's range selection for client
  * @author Manuel Meireles (1150532@isep.ipp.pt)
  */
 public class CommExtension extends Extension implements Observer {
@@ -305,6 +301,9 @@ public class CommExtension extends Extension implements Observer {
         }
     }
 
+    private boolean share = false;
+    private CellHandler handler;
+    ShareOptionsController ctrl;
     /**
      * It deals with the events launched by the handlers.
      *
@@ -327,29 +326,35 @@ public class CommExtension extends Extension implements Observer {
                 NewConnectionMadeEvent event = (NewConnectionMadeEvent) arg;
                 tcpClientsManager.requestConnectionTo(event.getConnectionID(), event.isSecure());
             }
-            if (arg instanceof SharedCellsEvent) {
+            if (arg instanceof SharedCellsEvent) { //transferred cells notification
                 SharedCellsEvent event = (SharedCellsEvent) arg;
-                Spreadsheet aSpreadSheet = uiController.getActiveSpreadsheet();
-                SortedSet<CellDTO> cellsDTO = event.getCells();
-                ConnectionID connection = event.getConnection();
-                for (CellDTO cellDTO : cellsDTO) {
+                String name = event.getConnection().getAddress().getHostName();
+                if (JOptionPane.showConfirmDialog(null, "Do you want to share cells with " + name + "?", "Cell Share", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    share = true;
+                    SortedSet<CellDTO> cellsDTO = event.getCells();
+                    ConnectionID connection = event.getConnection();
+                    Spreadsheet spreadsheet = uiController.getSpreadSheetForSharedCells(event.getShareName(), cellsDTO.first().getAddress(), cellsDTO.last().getAddress());
+                    handler = new CellHandler(cellsDTO, spreadsheet, connection);
+                    ctrl = new ShareOptionsController(handler, cellsDTO);
+
+                    Thread t = new Thread() {
+                        public void run() {
+
+                            //open UI because of DTO arrival -> Choose where to put the share's cells
+                            new LocationOfSharesFrame(ctrl);
+                        }
+                    };
+                    t.start();
                     try {
-                        Cell cell = aSpreadSheet.getCell(cellDTO.getAddress());
-                        cell.setContent(cellDTO.getContent());
-                        StylableCell stylableCell = (StylableCell) cell.getExtension(StyleExtension.NAME);
-                        if (stylableCell != null && cellDTO.getStyleDTO() != null) {
-                            Styles.setStyleFromDTO(stylableCell, cellDTO.getStyleDTO());
-                        }
-                        cell.addCellListener(new ShareContentCellListener(connection));
-                        if (cell instanceof CellImpl) {
-                            ((CellImpl)cell).addStyleListener(new StyleListener(connection));
-                        }
-                    } catch (FormulaCompilationException ex) {
-                        Logger.getLogger(CommExtension.class.getName()).log(Level.SEVERE, null, ex);
+                        t.join(); //so content and styles aren't applied before range selection and addresses redefinition
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
+
+                }else{
+                    share = false;
                 }
-            }
-            if (arg instanceof SearchWorkbookEvent) {
+            }if (arg instanceof SearchWorkbookEvent) {
                 SearchWorkbookEvent event = (SearchWorkbookEvent) arg;
                 Workbook w = uiController.getActiveWorkbook();
                 Iterator<Spreadsheet> ss = w.iterator();
@@ -393,31 +398,19 @@ public class CommExtension extends Extension implements Observer {
                 }
 
             }
-            if (arg instanceof CellStyleDTO) {
+            if (arg instanceof CellStyleDTO && share) { //transferred style
                 CellStyleDTO dto = (CellStyleDTO) arg;
-                Spreadsheet aSpreadSheet = uiController.getActiveSpreadsheet();
-                Cell cell = aSpreadSheet.getCell(dto.getAddress());
-                StylableCell stylableCell = (StylableCell)cell.getExtension(StyleExtension.NAME);
-                if (stylableCell != null && dto.getStyleDTO() != null) {
-                    Styles.setStyleFromDTO(stylableCell, dto.getStyleDTO());
-                    if (cell instanceof CellImpl) {
-                        ((CellImpl) cell).updateCellStyle();
-                    }
-                }
+                handler.applyStyle(dto);
+
             }
-            if (arg instanceof CellContentDTO) {
+            if (arg instanceof CellContentDTO && share) { //transferred content
                 CellContentDTO dto = (CellContentDTO) arg;
-                Spreadsheet aSpreadSheet = uiController.getActiveSpreadsheet();
-                Cell cell = aSpreadSheet.getCell(dto.getAddress());
-                try {
-                    cell.setContent(dto.getContent());
-                } catch (Exception ex) {
-                    Logger.getLogger(CommExtension.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                handler.setContent(dto);
             }
         }
     }
-    
+
+
     @Override
     public String metadata() {
         return String.format("This is %s with version %d\n"

@@ -21,7 +21,7 @@ public class NetworkSearchAction extends BaseAction {
     /**
      * The reply time out.
      */
-    private static final int TIMEOUT = 120;
+    private static final int TIMEOUT = 50000;
 
     /**
      * The server's port number.
