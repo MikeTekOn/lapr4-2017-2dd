@@ -1,11 +1,16 @@
 package lapr4.blue.s3.core.n1151452.pdfexport.domain;
 
 import com.itextpdf.text.*;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.*;
+import com.itextpdf.text.pdf.draw.DottedLineSeparator;
 import csheets.core.Address;
 import csheets.core.Cell;
+import lapr4.blue.s3.core.n1151452.pdfexport.util.PdfUtil;
 import lapr4.s1.export.ExportStrategy;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -33,17 +38,22 @@ public class PdfExport implements ExportStrategy {
     /**
      * Contains the active cells
      */
-    private List<Cell> activeCells;
+    private final List<Cell> activeCells;
 
     /**
      * The selected grid type
      */
-    private GridType gridType;
+    private final GridType gridType;
+
+    /**
+     * The selected grid color
+     */
+    private final BaseColor gridBaseColor;
 
     /**
      * The selected print area
      */
-    private PrintArea printArea;
+    private final PrintArea printArea;
 
     /**
      * No sections (bitwise operations)
@@ -73,17 +83,22 @@ public class PdfExport implements ExportStrategy {
     /**
      * The page size
      */
-    private Rectangle pageSize = PageSize.A4; // DEFAULT VALUE
+    private final Rectangle pageSize;
 
     /**
      * The page orientation
      */
-    private PageOrientation pageOrientation = PageOrientation.PORTRAIT;
+    private final PageOrientation pageOrientation;
 
     /**
      * The path for the file
      */
-    private String path;
+    private final String path;
+
+    /**
+     * If true include headers
+     */
+    private final boolean headers;
 
     /**
      * Constructs a PDF export
@@ -91,25 +106,29 @@ public class PdfExport implements ExportStrategy {
      * @param theActiveCells the active cells
      * @param theSections    integer to represent the desired sections {use bitwise OR for more than one section}
      * @param aGridType      the selected grid type
+     * @param gridColor      the grid's color (can be nullable)
+     * @param withHeaders    include headers
      * @param aPrintArea     the selected print type
      * @param aPageSize      the selected page size (ex. A4, A3, letter, etc.)
      * @param anOrientation  the selected orientation (portrait or landscape)
      */
-    public PdfExport(List<Cell> theActiveCells, int theSections,
-                     GridType aGridType, PrintArea aPrintArea, Rectangle aPageSize, PageOrientation anOrientation, String aPath) {
+    public PdfExport(List<Cell> theActiveCells, int theSections, boolean withHeaders,
+                     GridType aGridType, Color gridColor, PrintArea aPrintArea, Rectangle aPageSize,
+                     PageOrientation anOrientation, String aPath) {
 
         if (theActiveCells == null || theActiveCells.isEmpty())
             throw new IllegalStateException("The active cells can't be null or empty.");
         if (aGridType == null) throw new IllegalStateException("The grid type can't be null.");
         if (aPrintArea == null) throw new IllegalStateException("The print area can't be null.");
-        if (aPath == null) throw new IllegalStateException("The path for the FDP file can't be null");
+        if (aPath == null) throw new IllegalStateException("The path for the PDF file can't be null");
         path = aPath;
-        pageSize = (aPageSize != null) ? aPageSize : PageSize.A4;
-        pageOrientation = (anOrientation != null) ? anOrientation : PageOrientation.PORTRAIT;
+        pageSize = (aPageSize != null) ? aPageSize : PageSize.A4; // DEFAULT VALUE
+        pageOrientation = (anOrientation != null) ? anOrientation : PageOrientation.PORTRAIT; // DEFAULT VALUE
 
         sections = theSections;
-
+        headers = withHeaders;
         gridType = aGridType;
+        gridBaseColor = PdfUtil.convertToBaseColor(gridColor);
         printArea = aPrintArea;
         exportableWorkbook = new PdfExportableWorkbook(theActiveCells.get(0).getSpreadsheet().getWorkbook());
         exportableSpreadsheet = new PdfExportableSpreadsheet(theActiveCells.get(0).getSpreadsheet());
@@ -129,10 +148,10 @@ public class PdfExport implements ExportStrategy {
             // Creates the index root structure
             PdfIndexCreation event = new PdfIndexCreation();
             writer.setPageEvent(event);
+            // Sets the margins
+            document.setMargins(10, 10, 20, 10);
             document.open();
             event.setRoot(writer.getRootOutline());
-            // Sets the margins
-            document.setMargins(5, 5, 10, 10);
 
             // Export Spreadsheets
             Map<PdfExportableSpreadsheet, Iterable<PdfExportableCell>> map = getExportableCells();
@@ -142,51 +161,162 @@ public class PdfExport implements ExportStrategy {
                 PdfExportableSpreadsheet pdfSpreadsheet = entry.getKey();
                 Iterable<PdfExportableCell> cells = entry.getValue();
 
-                // Add spreadsheet Title
-                Chunk title = pdfSpreadsheet.title();
-                title.setFont(new Font(Font.FontFamily.COURIER, 6, Font.BOLD | Font.UNDERLINE));
-                title.setGenericTag(title.getContent());
-                // Table settings
-                float[] columnWidths = pdfSpreadsheet.columnWidths();
-                float[] rowHeights = pdfSpreadsheet.rowHeights();
-                PdfPTable table = new PdfPTable(columnWidths);
-                table.setWidthPercentage(100);
-                // Sets the grid layout
-                setGrid(table);
-                // Create Header
-                // TODO : make optional
-                createHeader((List<PdfExportableCell>) cells, table);
-                // Loops cells
-                Iterator<PdfExportableCell> iterator = cells.iterator();
-                int numColumns = columnWidths.length - 1; // Header already included
-                int numRows = rowHeights.length - 1; // Header already included
-                for (int i = 0; i < numRows; i++) {
+                if (cells.iterator().hasNext()) {
 
-                    // Add row header
-                    table.addCell(new PdfPCell(new Phrase(String.valueOf(i + 1))));
+                    // List of sections
+                    Map<Anchor, Phrase> formulaAnchors = new HashMap<>();
+                    Map<Anchor, Paragraph> commentAnchors = new HashMap<>();
 
+                    // Add spreadsheet Title
+                    Chunk title = pdfSpreadsheet.title();
+                    title.setFont(new Font(Font.FontFamily.COURIER, 12, Font.BOLD | Font.UNDERLINE, BaseColor.BLUE));
+                    title.setGenericTag(title.getContent());
+                    // Table settings
+                    float[] columnWidths = pdfSpreadsheet.columnWidths(headers);
+
+                    float[] rowHeights = pdfSpreadsheet.rowHeights(headers);
+                    PdfPTable table = new PdfPTable(columnWidths.length);
+                    table.setTotalWidth(columnWidths);
+                    table.setSplitRows(true);
+
+                    int tableWidth = 0;
+                    for (int i = 0; i < columnWidths.length; i++) {
+                        tableWidth += columnWidths[i];
+                    }
+
+                    if (tableWidth > pageOrientation.orientation(pageSize).getWidth()) table.setWidthPercentage(100);
+                    // Sets the grid layout
+//                setGrid(table);
+                    // Create Header
+                    int numColumns = columnWidths.length - 1; // Header already included
+                    int numRows = rowHeights.length - 1; // Header already included
+                    if (headers) createHeader((List<PdfExportableCell>) cells, table, numColumns);
+                    // Loops cells
+                    Iterator<PdfExportableCell> iterator = cells.iterator();
                     // Next non-empty cell
                     PdfExportableCell next = (iterator.hasNext()) ? iterator.next() : null;
+                    for (int i = 0; i < numRows; i++) {
 
-                    for (int j = 0; j < numColumns; j++) {
+                        // Add row header
+                        if (headers) table.addCell(new PdfPCell(new Phrase(String.valueOf(i + 1))));
 
-                        Address cellAddress = new Address(j, i);
-                        if (next != null && cellAddress.equals(next.address())) {
+                        for (int j = 0; j < numColumns; j++) {
 
-                            table.addCell(next.exportCell());
-                            next = (iterator.hasNext()) ? iterator.next() : null;
+                            Address cellAddress = new Address(j, i);
+                            Address nextAddress = next.address();
+                            if (next != null && cellAddress.equals(nextAddress)) {
 
-                            // TODO : Add sections
+                                PdfPCell pdfPCell = next.exportCell();
+
+                                if ((sections & FORMULAS) == FORMULAS) {
+
+                                    if (next.cell().getFormula() != null) {
+                                        formulaAnchors.put(next.exportFormula(), next.exportFormulaText());
+                                    }
+                                }
+
+                                if ((sections & COMMENTS) == COMMENTS) {
+
+                                    if (next.hasComments()) {
+                                        commentAnchors.put(next.exportCommentsAnchor(), next.exportComments());
+                                    }
+                                }
+
+                                if (next.hasDefaultBorder()) setBorder(pdfPCell);
+
+                                table.addCell(pdfPCell);
+                                next = (iterator.hasNext()) ? iterator.next() : null;
+
+                            } else {
+
+                                PdfPCell cell = new PdfPCell();
+                                setBorder(cell);
+
+                                table.addCell(cell);
+                            }
                         }
                     }
+
+                    document.add(new Paragraph(title));
+                    document.add(new Paragraph("\n\n\n"));
+                    document.add(table);
+                    document.newPage();
+
+                    if ((sections & FORMULAS) == FORMULAS) {
+
+                        Chunk formulasTitle = new Chunk("Formulas " + pdfSpreadsheet.title().getContent());
+                        formulasTitle.setFont(new Font(Font.FontFamily.COURIER, 12, Font.BOLD | Font.UNDERLINE, BaseColor.BLUE));
+                        formulasTitle.setGenericTag(formulasTitle.getContent());
+                        document.add(new Paragraph(formulasTitle));
+                        document.add(new Paragraph());
+
+                        for (Map.Entry<Anchor, Phrase> formula :
+                                formulaAnchors.entrySet()) {
+                            document.add(formula.getKey());
+                            document.add(formula.getValue());
+                        }
+
+                        document.newPage();
+                    }
+                    if ((sections & COMMENTS) == COMMENTS) {
+
+                        Chunk commentsTitle = new Chunk("Comments " + pdfSpreadsheet.title().getContent());
+                        commentsTitle.setFont(new Font(Font.FontFamily.COURIER, 12, Font.BOLD | Font.UNDERLINE, BaseColor.BLUE));
+                        commentsTitle.setGenericTag(commentsTitle.getContent());
+                        document.add(new Paragraph(commentsTitle));
+                        document.add(new Paragraph());
+
+                        for (Map.Entry<Anchor, Paragraph> comment :
+                                commentAnchors.entrySet()) {
+                            document.add(comment.getKey());
+                            document.add(comment.getValue());
+                        }
+
+                        document.newPage();
+                    }
+
+                }
+            }
+
+            if ((sections & MACROS) == MACROS) {
+
+                Chunk macrosTitle = new Chunk("Macros");
+                macrosTitle.setFont(new Font(Font.FontFamily.COURIER, 12, Font.BOLD | Font.UNDERLINE, BaseColor.BLUE));
+                macrosTitle.setGenericTag(macrosTitle.getContent());
+                document.add(new Paragraph(macrosTitle));
+                document.add(new Paragraph());
+
+                for (PdfExportableMacro pdfMacro :
+                        exportableWorkbook.exportMacros()) {
+                    document.add(pdfMacro.exportMacro());
                 }
 
-                document.add(table);
+                document.newPage();
+            }
+
+            if (sections > 0) {
+
+                Chunk commentsTitle = new Chunk("Table of Contents");
+                commentsTitle.setFont(new Font(Font.FontFamily.COURIER, 12, Font.BOLD | Font.UNDERLINE, BaseColor.BLUE));
+                document.add(new Paragraph(commentsTitle));
+
+                Chunk dottedLine = new Chunk(new DottedLineSeparator());
+                for (PdfIndexCreation.IndexEntry indexEntry : event.getIndex()) {
+                    Chunk c = new Chunk(indexEntry.title);
+                    c.setAction(indexEntry.action);
+
+                    Paragraph paragraph = new Paragraph(c);
+                    paragraph.add(dottedLine);
+                    paragraph.add(String.valueOf(indexEntry.pageNumber));
+                    document.add(paragraph);
+                }
+
             }
 
 
         } catch (DocumentException | IOException e) {
-            throw new RuntimeException("File could not be created.");
+
+            throw new RuntimeException(e.getMessage());
         } finally {
             if (document != null) document.close();
             if (writer != null) writer.close();
@@ -257,17 +387,34 @@ public class PdfExport implements ExportStrategy {
         return cellMap;
     }
 
-    private void createHeader(List<PdfExportableCell> cells, PdfPTable table) {
+    private void createHeader(List<PdfExportableCell> cells, PdfPTable table, int numColumns) {
 
         // Add first empty cell
-        table.addCell(new PdfPCell());
+        PdfPCell emptyCell = new PdfPCell();
+        setBorder(emptyCell);
+        table.addCell(emptyCell);
 
         Collections.sort(cells); // Sort cells
 
-        char column = (char) ('A' + cells.get(0).address().getColumn());
-        for (int i = 0; i < cells.size(); i++) {
+        char column1 = (char) ('A' + cells.get(0).address().getColumn());
+        char column2 = '\0';
 
-            table.addCell(new PdfPCell(new Phrase(String.valueOf(column++))));
+        for (int i = 0; i < numColumns; i++) {
+
+            if (column1 < 'Z' && column2 == '\0') {
+                column1++;
+            } else {
+                column1 = 'A';
+                if (column2 == '\0') {
+                    column2 = 'A';
+                } else {
+                    column2++;
+                }
+            }
+
+            String header = String.valueOf(column1).concat(String.valueOf(column2));
+            PdfPCell headerCell = new PdfPCell(new Phrase(header));
+            table.addCell(headerCell);
         }
     }
 
@@ -284,14 +431,32 @@ public class PdfExport implements ExportStrategy {
                 break;
             case SOLID:
                 table.getDefaultCell().setUseBorderPadding(true);
-                table.getDefaultCell().setBorderColor(BaseColor.BLACK); // TODO
+                table.getDefaultCell().setBorderColor(gridBaseColor);
                 break;
             case DOTTED:
-                table.getDefaultCell().setCellEvent(new DottedBorderCellEvent(BaseColor.BLUE)); // TODO
+                table.getDefaultCell().setCellEvent(new DottedBorderCellEvent(gridBaseColor));
         }
     }
 
-    // TODO : Color in constructor
+    /**
+     * Sets the default grid type
+     *
+     * @param cell table to set border
+     */
+    private void setBorder(PdfPCell cell) {
+
+        switch (gridType) {
+            case NO_GRID:
+                cell.setBorder(PdfPCell.NO_BORDER);
+                break;
+            case SOLID:
+                cell.setUseBorderPadding(true);
+                cell.setBorderColor(gridBaseColor);
+                break;
+            case DOTTED:
+                cell.setCellEvent(new DottedBorderCellEvent(gridBaseColor));
+        }
+    }
 
     /**
      * Nested class event necessary for making the dotted lines of a border

@@ -8,8 +8,9 @@ package lapr4.green.s3.lang.n1150901.evalAndWhileLoops.lang;
 import csheets.core.IllegalValueTypeException;
 import csheets.core.Value;
 import csheets.core.formula.Expression;
-import csheets.core.formula.Function;
-import csheets.core.formula.FunctionParameter;
+import java.util.Arrays;
+import java.util.LinkedList;
+import lapr4.gray.s1.lang.n3456789.formula.NaryOperator;
 
 /**
  * A function that compiles the formula contained in the only parameter and
@@ -17,57 +18,27 @@ import csheets.core.formula.FunctionParameter;
  *
  * @author Miguel Silva - 1150901
  */
-public class Eval implements Function {
+public class Eval implements NaryOperator {
 
-    /**
-     * Parameters: function, function range, condition and condition range
-     */
-    public static final FunctionParameter[] parameters = new FunctionParameter[]{
-        new FunctionParameter(Value.Type.TEXT, "String", false,
-        "The text to be evaluated and executed."),};
+    @Override
+    public Value applyTo(Expression[] operands) throws IllegalValueTypeException {
 
-    /**
-     * Creates a new instance of the Eval function.
-     */
-    public Eval() {
+        LinkedList<Expression> expressions = new LinkedList<>(Arrays.asList(operands));
+
+        // Get executed condition
+        Expression executed = expressions.poll();
+        Value result = executed.evaluate();
+
+        return result;
     }
 
     @Override
     public String getIdentifier() {
-        return "EVAL";
+        return "eval";
     }
 
     @Override
-    public Value applyTo(Expression[] arguments) throws IllegalValueTypeException {
-
-        for (Expression expression : arguments) {
-            Value value = expression.evaluate();
-            if (value.getType() == Value.Type.NUMERIC) {
-//                sum += value.toDouble();
-            } else if (value.getType() == Value.Type.MATRIX) {
-                for (Value[] vector : value.toMatrix()) {
-                    for (Value item : vector) {
-                        if (item.getType() == Value.Type.NUMERIC) {
-//                            sum += item.toDouble();
-                        } else {
-                            throw new IllegalValueTypeException(item, Value.Type.NUMERIC);
-                        }
-                    }
-                }
-            } else {
-                throw new IllegalValueTypeException(value, Value.Type.NUMERIC);
-            }
-        }
-        return new Value(/*sum*/);
-    }
-
-    @Override
-    public FunctionParameter[] getParameters() {
-        return parameters;
-    }
-
-    @Override
-    public boolean isVarArg() {
-        return false;
+    public Value.Type getOperandValueType() {
+        return Value.Type.UNDEFINED;
     }
 }

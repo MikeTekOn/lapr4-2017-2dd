@@ -121,10 +121,11 @@
  * see:
  * <code>lapr4.blue.s3.core.n1141570.insertImage.ImageableCellTest</code><p>
  * <ol>
- * <li>testEnsureCellHasImagesWhenAdded()
+ * <li>testHasAnyImage()
+ * <li>testSetGetUserImages()
+ * <li>testRemoveImageFromImages()
  * <li>testEnsureCellDoesNotHaveImageWhichWasRemoved()
- * <li>testEnsureCellHasTheImageThatWasAdded()
- * <li>testImageableCellListener()
+ * <li>testCommentableCellListenner()
  * </ol>
  * <h3>4.2. UC Realization</h3>
  * To realize this user story we will need to create a subclass of Extension. We
@@ -186,7 +187,7 @@
  * <p>
  * <b>Sunday 18/06/2017</b>
  * <p>
- * Implementation
+ * Finishes implementation and updates documentation.
  * <p>
  *
  * @author Eric Amaral 1141570@isep.ipp.pt

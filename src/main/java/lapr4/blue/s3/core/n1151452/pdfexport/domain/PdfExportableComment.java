@@ -45,13 +45,14 @@ public class PdfExportableComment implements ValueObject {
         Map<User, List<String>> userComments = cell.comments();
         userComments.forEach((user, comments) -> {
 
-            Paragraph username = new Paragraph(user.name());
+            Paragraph username = new Paragraph("USER: " + user.name());
             Font usernameFont = username.getFont();
             usernameFont.setStyle(Font.BOLD);
             username.setFont(usernameFont);
             username.setSpacingAfter(1.5f);
 
-            Paragraph pdfUserComments = new Paragraph(username);
+            Paragraph pdfUserComments = new Paragraph();
+            pdfComments.add(username);
 
             comments.forEach((comment) -> {
 

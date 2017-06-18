@@ -38,7 +38,8 @@ import lapr4.green.s3.lang.n1150838.TablesAndFilters.util.StringUtil;
  *
  * @author Diana Silva {1151088@isep.ipp.pt]} on 03/06/17
  * @author Daniel Gonçalves [1151452@isep.ipp.pt] on 01/06/17.
- * @author Guilherme Ferreira 1150623 corrected to work with 'Variable' class and VarContentor
+ * @author Guilherme Ferreira 1150623 corrected to work with 'Variable' class
+ * and VarContentor
  * @author Ricardo Catalão (1150385) on 08/06/2017
  * @author Miguel Silva (1150901) on 15/06/2017
  * @author jrt
@@ -265,7 +266,7 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
                     return new CellReference(referenceCell.getSpreadsheet(), referenceCell.getAddress().toString());
                 } else {
                     String number = StringUtil.removeStartEndSpecialChars(ctx.getChild(0).getChild(1).getText());
-                    Cell referenceCell = ((DataRow) tableCtx.getRowByCell(cell)).getCellAt(Integer.parseInt(number)-1);
+                    Cell referenceCell = ((DataRow) tableCtx.getRowByCell(cell)).getCellAt(Integer.parseInt(number) - 1);
 
                     return new CellReference(referenceCell.getSpreadsheet(), referenceCell.getAddress().toString());
                 }
@@ -399,7 +400,7 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
         }
         return visitChildren(ctx);
     }
-    
+
     @Override
     public Expression visitDo_while_loop(BlueFormulaParser.Do_while_loopContext ctx) {
 
@@ -425,8 +426,8 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
         }
         return visitChildren(ctx);
     }
-    
-        @Override
+
+    @Override
     public Expression visitWhile_do_loop(BlueFormulaParser.While_do_loopContext ctx) {
 
         if (ctx.WHILEDO() != null) {
@@ -443,6 +444,29 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
 
                     expressions[i] = visit(ctx.getChild(nChild));
                 }
+
+                return new NaryOperation(operator, expressions);
+
+            } catch (UnknownElementException ex) {
+                addVisitError(ex.getMessage());
+            }
+        }
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Expression visitEval(BlueFormulaParser.EvalContext ctx) {
+
+        if (ctx.EVAL() != null) {
+            try {
+                // Get n-ary operator that identifies a eval function
+                String operatorID = ctx.EVAL().getText().toLowerCase();
+                NaryOperator operator = Language.getInstance().getNaryOperator(operatorID);
+
+                // Only has 1 expresion
+                Expression expressions[] = new Expression[1];
+
+                expressions[0] = visit(ctx.getChild(3));
 
                 return new NaryOperation(operator, expressions);
 
