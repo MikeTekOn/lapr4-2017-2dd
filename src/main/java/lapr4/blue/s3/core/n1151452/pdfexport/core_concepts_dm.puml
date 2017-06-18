@@ -1,0 +1,29 @@
+@startuml core_concepts_dm.png
+
+class Workbook
+class Macro
+class Spreadsheet
+interface Cell
+class CellImpl
+class Formula
+class Value
+interface SpreadsheetExtension
+interface CellExtension
+class StylableCell
+class CommentableCell
+class StylableSpreadsheet
+
+Workbook "1" o-- "*" Spreadsheet
+Workbook "1" o-- "*" Macro
+Spreadsheet "1" o-- "*" SpreadsheetExtension
+SpreadsheetExtension <|-- StylableSpreadsheet
+Spreadsheet "1" o-- "*" Cell
+Cell <|-- CellImpl
+CellImpl "1" o-- "*" CellExtension
+CellImpl "1" o-- "1" Formula
+CellImpl "1" o-- "1" Value
+CellExtension <|-- StylableCell
+CellExtension <|-- CommentableCell
+
+
+@enduml

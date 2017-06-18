@@ -52,14 +52,14 @@ public class HandlerSearchWorkbookRequestDTO implements CommHandler, Serializabl
         List<SearchResults> results = new ArrayList();
         String namePattern = request.getNamePattern();
         String content = request.getContent();
-        Directory dic = new Directory(new File(System.getProperty("user.home") + "/Desktop"));  // change to C:/ ----------------
+        Directory dic = new Directory(new File(System.getProperty("user.home")));  // change to C:/ ----------------
         RegexUtil reg = new RegexUtil(namePattern, content);
 
         try {
             dic.searchFiles();
             for (FileDTO f : dic.getDTO()) {
                 Workbook w = dic.load(new File(f.getFilePath()));//
-                if ((reg.checkIfContentMatches(w)) || (reg.checkIfNameMatches(f.getFileName()))) {
+                if ((reg.checkIfContentMatches(w)) && (reg.checkIfNameMatches(f.getFileName()))) {
                     List<Spreadsheet> spreadsheetList = new ArrayList();
                     int numSpreadsheets = w.getSpreadsheetCount();
                     for (int i = 0; i < numSpreadsheets; i++) {
@@ -75,25 +75,15 @@ public class HandlerSearchWorkbookRequestDTO implements CommHandler, Serializabl
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(HandlerSearchWorkbookRequestDTO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         //searches for active workbooks with received name pattern
         //returns a list of workbooks found with the name and spreadsheet list
-        Stack<Workbook> activeWorkbooks = uiController.getActiveWorkbooks();
-        for (Workbook workbook : activeWorkbooks) {
-            if (uiController.getFile(workbook) != null) {
-                String name = uiController.getFile(workbook).getName();
-                List<Spreadsheet> spreadsheetList = new ArrayList();
-                if ((reg.checkIfContentMatches(workbook)) || (reg.checkIfNameMatches(name))) {
-                    int numSpreadsheets = workbook.getSpreadsheetCount();
-                    for (int i = 0; i < numSpreadsheets; i++) {
-                        spreadsheetList.add(workbook.getSpreadsheet(i));
-                    }
-                    SearchResults searchResult = new SearchResults(name, spreadsheetList, null);
-                    results.add(searchResult);
-                }
-            }
-        }
+        activeWorkbooks(results, reg);
 
+        for (SearchResults sr : results) {
+            System.out.println(sr.getWorkbookName());
+        }
+        
         SearchWorkbookResponseDTO reply = new SearchWorkbookResponseDTO(results);
         try {
             outStream.write(reply);
@@ -101,6 +91,31 @@ public class HandlerSearchWorkbookRequestDTO implements CommHandler, Serializabl
         } catch (IOException ex) {
             Logger.getLogger(HandlerConnectionDetailsRequestDTO.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    //searches for active workbooks with received name pattern
+    //returns a list of workbooks found with the name and spreadsheet list
+    private List<SearchResults> activeWorkbooks(List<SearchResults> sr, RegexUtil reg) {
+
+        Stack<Workbook> activeWorkbooks = uiController.getActiveWorkbooks();
+        for (Workbook workbook : activeWorkbooks) {
+            if (uiController.getFile(workbook) != null) {
+                String name = uiController.getFile(workbook).getName();
+                List<Spreadsheet> spreadsheetList = new ArrayList();
+                if ((reg.checkIfContentMatches(workbook)) && (reg.checkIfNameMatches(name))) {
+                    int numSpreadsheets = workbook.getSpreadsheetCount();
+                    for (int i = 0; i < numSpreadsheets; i++) {
+                        spreadsheetList.add(workbook.getSpreadsheet(i));
+                    }
+                    SearchResults searchResult = new SearchResults(name, spreadsheetList, null);
+                    if (!sr.contains(searchResult)) {
+                        sr.add(searchResult);
+                    }
+                }
+            }
+        }
+
+        return sr;
     }
 
     /**

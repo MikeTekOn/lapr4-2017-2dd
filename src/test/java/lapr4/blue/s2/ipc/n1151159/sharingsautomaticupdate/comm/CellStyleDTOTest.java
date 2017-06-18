@@ -13,6 +13,7 @@ import static org.junit.Assert.assertEquals;
 /**
  * Tests the class CellStyleDTO.
  *
+ * @author Guilherme Ferreira 1150623 added spreadsheet to cellDTO
  * @author Ivo Ferro [1151159]
  */
 public class CellStyleDTOTest {
@@ -31,7 +32,7 @@ public class CellStyleDTOTest {
                 new StyleDTO(new DecimalFormat(),
                         new Font("Garamond", Font.BOLD, 11),
                         0, 1, Color.GREEN, Color.BLUE,
-                        BorderFactory.createLineBorder(Color.black)));
+                        BorderFactory.createLineBorder(Color.black)),  null);
     }
 
     /**

@@ -1,15 +1,15 @@
 @startuml PdfExportBuilder_SD.png
 
-participant "b : PdfExportBuilder" as builder <<Factory>>
+collections "b : PdfExportBuilder" as builder <<Factory>>
 participant PdfExport as pdf <<<Entity>>
 
 create builder
 -> builder : create()
-builder -> builder : withColumns(int n) : b
-builder -> builder : withRange(Cell[] cells) : b
-builder -> builder : withGrid(gridType) : b
+ -> builder : withPrintArea(printArea) : b
+ -> builder : withCells(Cell[] cells) : b
+ -> builder : withGrid(gridType) : b
 ...
-builder -> builder : withSection(sectionType) : b
+ -> builder : withSection(int sections) : b
 -> builder : build() : PdfExport
 create pdf
 builder -> pdf : create()

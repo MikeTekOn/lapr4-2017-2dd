@@ -27,8 +27,8 @@ public class ControllerFindWorkbooks implements Controller {
     private PreviewWorkbookBuilder previewBuilder;
     private Thread files;
 
-    public ControllerFindWorkbooks(String rootPath, String regex) {
-        this.rootPath = new Directory(new File(rootPath),regex);
+    public ControllerFindWorkbooks(String rootPath, String regex, boolean isThreadActive) {
+        this.rootPath = new Directory(new File(rootPath),regex, isThreadActive);
     }
 
     /**

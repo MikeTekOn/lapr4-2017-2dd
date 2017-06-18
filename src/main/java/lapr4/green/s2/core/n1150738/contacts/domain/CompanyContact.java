@@ -2,6 +2,7 @@ package lapr4.green.s2.core.n1150738.contacts.domain;
 
 
 import eapli.framework.domain.AggregateRoot;
+import lapr4.blue.s3.core.n1151159.contactswithtags.domain.Contactable;
 import lapr4.blue.s3.core.n1151159.contactswithtags.domain.Tag;
 import lapr4.blue.s3.core.n1151159.contactswithtags.domain.Taggable;
 
@@ -15,7 +16,7 @@ import java.util.TreeSet;
  * @author Henrique Oliveira [1150738@isep.ipp.pt]
  */
 @Entity
-public class CompanyContact implements AggregateRoot<CompanyName>, Taggable {
+public class CompanyContact implements AggregateRoot<CompanyName>, Contactable {
 
     @Id
     @GeneratedValue
@@ -178,5 +179,15 @@ public class CompanyContact implements AggregateRoot<CompanyName>, Taggable {
     @Override
     public Set<Tag> getTags() {
         return tags;
+    }
+
+    @Override
+    public String contactName() {
+        return companyName.name();
+    }
+
+    @Override
+    public String contactType() {
+        return "Company Contact";
     }
 }
