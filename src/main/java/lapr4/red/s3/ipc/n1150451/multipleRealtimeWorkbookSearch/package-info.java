@@ -63,6 +63,8 @@
  *
  *
  * <h3>4.1. Functional Tests</h3>
+ * Test plan to test the UDP communication:
+ *
  *
  * <h3>4.2. UC Realization</h3>
  *
@@ -79,12 +81,23 @@
  * <h3>4.3. Classes</h3>
  *
  * <h3>4.4. Design Patterns and Best Practices</h3>
+ * Since there is the need to send multiple information over the network the DTO
+ * pattern was used so that only one request can bring all the required data, in
+ * this case, the file name and path.
+ *
  * <p>
  * <h2>5. Implementation</h2>
+ * As stated in the design, a communication by UDP was developed. When saving a
+ * file, and UDP broadcast is made and the applications that are running the
+ * "find workbooks" functionality, have a thread listening to those packets. In
+ * order to improve performance, each thread should check if the file data
+ * received in the packet is in the JList. If not, the packet is ignored.
  *
  * <h2>6. Integration/Demonstration</h2>
  *
  * <h2>7. Final Remarks</h2>
+ *
+ *
  * <h2>8. Work Log</h2>
  * <p>
  * <b>Tuesday 06/06/2017</b>
@@ -103,23 +116,23 @@
  * Today: Finish the design, tests and if possible the implementation for the
  * first part
  * <p>
- * Blocking:
+ * Blocking: None
  * <p>
  * <b>Thursday 1/06/2017 </b>
  * <p>
- * Yesterday:
+ * Yesterday: Finshed base design.
  * <p>
- * Today:
+ * Today: Start the implementation
  * <p>
- * Blocking:
+ * Blocking: None
  * <p>
  * <b>Friday 2/06/2017</b>
  * <p>
- * Yesterday:
+ * Yesterday: Implementation partially completed.
  * <p>
- * Today:
+ * Today: Try to finish the implementation.
  * <p>
- * Blocking:
+ * Blocking: None
  * <p>
  * <b>Monday 5/06/2017</b>
  * <p>
