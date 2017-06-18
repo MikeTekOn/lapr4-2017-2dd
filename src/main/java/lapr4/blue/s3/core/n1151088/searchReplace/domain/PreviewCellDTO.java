@@ -19,13 +19,13 @@ public class PreviewCellDTO implements DTO {
     private String insertedExp;
     private final String replaceContent;
     
-    public PreviewCellDTO(Cell beforeCell, String insertedExp, String replace){
+    public PreviewCellDTO(Cell beforeCell, String insertedExp, String to){
         if(beforeCell==null){
             throw new IllegalArgumentException();
         }
         if(beforeCell.getContent().contains(insertedExp)){
             this.beforeCell=beforeCell;
-            this.replaceContent=replace;  
+            this.replaceContent=to;  
             this.insertedExp=insertedExp;
         }else{
             throw new IllegalArgumentException();  
@@ -64,11 +64,17 @@ public class PreviewCellDTO implements DTO {
             }
         }
     }
+    
 
     public String replaceContent(){
         String text=beforeCell.getContent();
         String replaced=text.replace(insertedExp, replaceContent);
         return replaced;
+    }
+    
+    
+    public void replace() throws FormulaCompilationException{
+        beforeCell.setContent(afterCell.getContent());
     }
         
     public void validateReplace(String replacedText) throws FormulaCompilationException{
@@ -91,7 +97,24 @@ public class PreviewCellDTO implements DTO {
     public PreviewCellDTO clone() throws CloneNotSupportedException {
         return new PreviewCellDTO(beforeCell, insertedExp, replaceContent);
     }
-
     
+    @Override
+    public String toString(){
+        return "Cell " + this.beforeCell.getAddress().toString() + 
+                "| Content: " + this.beforeCell.getContent() + 
+                "| Value: " + this.beforeCell.getValue().toString();
+    }
+    
+      public String buildCellPreviewDescription() throws
+              IllegalValueTypeException, FormulaCompilationException{
+        StringBuilder sb = new StringBuilder();
+
+        previewReplace();
+        sb.append(afterCell.getValue());
+        sb.append(" | Content" + "\"");
+        sb.append(afterCell.getContent());
+          sb.append("\"");
+        return sb.toString();
+    }
 
 }

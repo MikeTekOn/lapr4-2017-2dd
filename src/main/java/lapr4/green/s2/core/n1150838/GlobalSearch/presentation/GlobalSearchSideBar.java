@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.Semaphore;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -98,7 +100,14 @@ public class GlobalSearchSideBar extends JPanel implements Observer {
                 int index = list.locationToIndex(evt.getPoint());
                 if (evt.getClickCount() == 1 && index >= 0) {
                     model.setSelectedItem((String) model.getElementAt(index));
-                    extension.setActiveCell(model.getSelectedItem().getCell());
+                    try {
+                        extension.setActiveCell(model.getSelectedItem().getCell());
+                    } catch (CloneNotSupportedException ex) {
+                            JOptionPane.showMessageDialog(null,
+                            "It was not possible to focus the cell.",
+                            "Clone error",
+                            JOptionPane.ERROR_MESSAGE);
+                    }
                 }
 
             }

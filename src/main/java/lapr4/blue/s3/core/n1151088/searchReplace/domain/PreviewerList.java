@@ -40,7 +40,7 @@ public class PreviewerList extends AbstractListModel {
      */
     public void setSelectedItem(String item) {
         for (PreviewCellDTO f : previewList) {
-            if (f.getAfterCell().equals(item)) {
+            if (f.getBeforeCell().toString().equals(item)) {
                selected = f;
             }
         }
@@ -82,22 +82,4 @@ public class PreviewerList extends AbstractListModel {
         previewList.clear();
         fireIntervalRemoved(this,min,max);
     }
-    
-    public String buildCellPreview(PreviewCellDTO cell) throws IllegalValueTypeException, FormulaCompilationException{
-        StringBuilder sb = new StringBuilder();
-  
-        sb.append("Now: ");
-        sb.append(cell.getBeforeCell().getContent());
-        sb.append("Value: ");
-        sb.append(cell.getBeforeCell().getValue());
-        
-        cell.previewReplace();
-        sb.append("After: ");
-        sb.append(cell.getAfterCell().getContent());
-        sb.append("Value: ");
-        sb.append(cell.getAfterCell().getValue());
-
-        return sb.toString();
-    }
-        
 }
