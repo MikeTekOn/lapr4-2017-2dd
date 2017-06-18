@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 
 /**
  * An handler to deal with the sharing cells request.
- * @author Guilherme Ferreira 1150623 -> Added Share Name
+ * @author Guilherme Ferreira 1150623 Added Share Name
  * @author Manuel Meireles (1150532@isep.ipp.pt)
  */
 public class HandlerRequestSharedCellsDTO extends Observable implements CommHandler {

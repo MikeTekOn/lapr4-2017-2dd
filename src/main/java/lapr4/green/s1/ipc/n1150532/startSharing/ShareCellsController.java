@@ -6,7 +6,7 @@ import lapr4.green.s1.ipc.n1150532.comm.CommTCPClientsManager;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
 
 /**
- * @author Guilherme Ferreira 1150623 -> Added Share Name
+ * @author Guilherme Ferreira 1150623  Added Share Name
  * @author Meireles
  */
 public class ShareCellsController {

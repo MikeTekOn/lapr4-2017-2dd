@@ -20,7 +20,7 @@ import lapr4.green.s3.lang.n1150800.AdvancedFunctionWizard.presentation.Advanced
  * @author Diogo Guedes
  * 
  * Changed by:
- * @editor Pedro Chilro
+ * Pedro Chilro
  */
 public class IntermediateFunctionWizardAction extends FocusOwnerAction {
 

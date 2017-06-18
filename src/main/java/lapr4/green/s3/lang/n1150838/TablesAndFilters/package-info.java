@@ -126,49 +126,45 @@
  * <h2>Acceptance Tests</h2>
  *
  * <p>
- * <b>Sum Arrays</b>: A global variable must be declared and different values
- * must be inserted at random indexes. Then, on a specific cell, a temporary
- * variable must be declared and it must be defined the same number of values at
- * random indexes. Afterwards, all values must be added and the result shown be
- * equal to the expected value.
+ * <b>Ensure Data Row is valid</b>: A data row should be initialized with a
+ * valid cell set. A valid cell set must have at least 1 cell.
  * </p>
  * <p>
- * <b>Build Sentence</b>: A global variable must be declared and a word of a
- * sentence must be inserted in the array in order to form a sentence. Then,
- * select the cells to show the whole sentence (a word for a cell). At last,
- * change the word in the spreadsheet and see the side bar being updated.
+ * <b>Ensure Header Row is valid</b>: A data row should be initialized with a
+ * valid cell set. A valid cell set must have at least 1 cell.
+ * </p>
+ * <p>
+ * <b>Ensure Table is valid</b>: A table show be initialized with a valid row
+ * set. A valid row set must have at least 2 rows.
  * </p>
  *
  * <h2>Other</h2>
  *
  * <p>
- * <b>Ensure lower indexes than the default are not allowed</b>: The client
- * states that the default index (the first element of the array) is 1. It makes
- * sense not to allow any lower index than the default one. In case it tries to
- * insert at a lower index, an exception should be launched.
+ * <b>Define table test</b>: This test ensure that a table is created with no
+ * issues and all his possible returns are also tested.
  * </p>
  * <p>
- * <b>Ensure non sequential indexes are allowed</b>: The client states that the
- * array is dynamic and the indexes used may not be sequential, i.e. the user
- * may use index number 2 and then number 5. This should be performed without
- * any issue.
+ * <b>Is available to define test</b>: Test the method that checks if a given
+ * set of cells do not belong to any table.
  * </p>
  * <p>
- * <b>Ensure variables hold different types of values</b>: The same variable may
- * have different types of values within its array, i.e. the index number 1
- * contains a number and index number 2 contains a string. This should be
- * performed without any issue.
+ * <b>Is defined test</b>: Tests the method that verifys if a given cell belongs
+ * to a table
  * </p>
  * <p>
- * <b>Ensure default value is returned for non assigned indexes</b>: The client
- * requested that the default value should be provided when the index the user
- * is trying to get has not been set. This should be performed without any
- * issue.
+ * <b>Active tables test</b>:Tests the method that gets all the tables in the
+ * active spreadsheet
  * </p>
  * <p>
- * <b>Unit Testing</b>: The main methods created must be unit tested.
+ * <b>Remove table test</b>:Tests the method that removes a given table
  * </p>
+ * <p>
+ * <b>Verify formula test</b>:Tests the method that checks if the filter entered
+ * by the user is valid and if it is valid returns the rows of the table that do
+ * not respect the filter
  *
+ * </p>
  * <h1>Design</h1>
  *
  * <h2>Grammar</h2>
@@ -244,14 +240,14 @@
  * <h2>Update</h2>
  * <p>
  * It is necessary to implement the editlistenner in order to know when a cell
- * is modified and after that check if new cell value verifys the filter .
- * Also it is necessary to implement the selectionlistenner to know when the
- * spreadsheet is changed in order to refresh the table list.
- * The {@link csheets.ui.ctrl.FocusOwnerAction} will be extended to get the selected cells to define a table.
+ * is modified and after that check if new cell value verifys the filter . Also
+ * it is necessary to implement the selectionlistenner to know when the
+ * spreadsheet is changed in order to refresh the table list. The
+ * {@link csheets.ui.ctrl.FocusOwnerAction} will be extended to get the selected
+ * cells to define a table.
  * </p>
  * <p>
- * Implemented listeners:
- * {@link csheets.ui.ctrl.EditListener}, as well as the
+ * Implemented listeners: {@link csheets.ui.ctrl.EditListener}, as well as the
  * {@link csheets.ui.ctrl.SelectionListener}, in order to monitor the workbook
  * activity to update the side bar.
  * </p>

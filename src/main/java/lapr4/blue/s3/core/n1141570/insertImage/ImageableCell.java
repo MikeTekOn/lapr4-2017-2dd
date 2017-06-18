@@ -159,7 +159,6 @@ public class ImageableCell extends CellExtension {
      * Customizes serialization, by recreating the listener list.
      *
      * @param stream the object input stream from which the object is to be read
-     * @throws IOException If any of the usual Input/Output related exceptions
      * occur
      * @throws ClassNotFoundException If the class of a serialized object cannot
      * be found.

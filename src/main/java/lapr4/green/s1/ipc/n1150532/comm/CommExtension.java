@@ -60,7 +60,7 @@ import lapr4.red.s3.ipc.n1150613.NetworkSearchByFile.SearchWorkbookRequestDTO;
  * maintained for other uses like cells sharing. This class listens to the
  * events launched by the handlers and deals with them using the UI Controller.
  *
- * @author Guilherme Ferreira 1150623 -> Added Share Name & share's range selection for client
+ * @author Guilherme Ferreira 1150623  Added Share Name &amp; share's range selection for client
  * @author Manuel Meireles (1150532@isep.ipp.pt)
  */
 public class CommExtension extends Extension implements Observer {
