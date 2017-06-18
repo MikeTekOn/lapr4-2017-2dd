@@ -1,6 +1,5 @@
 package lapr4.red.s3.ipc.n1150943.automaticDownload.ui;
 
-import oracle.jrockit.jfr.JFR;
 import ui.Notification;
 
 import javax.swing.*;

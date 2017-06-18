@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr4.green.s3.lang.n1150901.evalAndWhileLoops.lang;
+package lapr4.green.s3.lang.n1150901.evalAndWhileLoops;
 
 import csheets.core.IllegalValueTypeException;
 import csheets.core.Value;
@@ -13,11 +13,11 @@ import java.util.LinkedList;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperator;
 
 /**
- * This class represents a DoWhile loop.
+ * This class represents a WhileDo loop.
  *
  * @author Miguel Silva - 1150901
  */
-public class DoWhileLoop implements NaryOperator {
+public class WhileDoLoop implements NaryOperator {
 
     @Override
     public Value applyTo(Expression[] operands) throws IllegalValueTypeException {
@@ -25,10 +25,10 @@ public class DoWhileLoop implements NaryOperator {
         LinkedList<Expression> expressions = new LinkedList<>(Arrays.asList(operands));
 
         // Get boundary condition
-        Expression boundary = expressions.pollLast();
+        Expression boundary = expressions.poll();
 
         // Get executed condition
-        Expression executed = expressions.poll();
+        Expression executed = expressions.pollLast();
 
         // Loop
         Value result = null;
@@ -40,7 +40,7 @@ public class DoWhileLoop implements NaryOperator {
 
     @Override
     public String getIdentifier() {
-        return "dowhile";
+        return "whiledo";
     }
 
     @Override

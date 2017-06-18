@@ -19,7 +19,7 @@ import lapr4.red.s3.ipc.n1150690.ImportExportDatabase.ImportDatabase.presentatio
  *
  * @author Sofia Silva [1150690@isep.ipp.pt]
  */
-public class ThreadImport implements Runnable {
+public class ThreadImport extends Thread implements Runnable {
 
     /**
      * The table name.
@@ -30,11 +30,6 @@ public class ThreadImport implements Runnable {
      * The current spreadsheet.
      */
     private Spreadsheet spreadsheet;
-
-    /**
-     * The writer thread.
-     */
-    private Thread importThread;
 
     /**
      * The database url.
@@ -60,8 +55,6 @@ public class ThreadImport implements Runnable {
         this.db_url = db_url;
         this.range = range;
         this.driver = driver;
-        this.importThread = new Thread(this);
-        this.importThread.start();
     }
 
     /**
@@ -86,12 +79,5 @@ public class ThreadImport implements Runnable {
         } catch (Exception ex) {
             ImportFromDatabaseUI.printException(ex.getMessage());
         }
-    }
-
-    /**
-     * Kills the current thread.
-     */
-    public void kill() throws InterruptedException {
-        this.importThread.join();
     }
 }

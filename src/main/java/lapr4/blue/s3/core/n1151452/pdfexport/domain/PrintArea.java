@@ -21,7 +21,7 @@ public enum PrintArea {
     /**
      * Print the selection
      */
-    SELECTION("Selection"),
+//    SELECTION("Selection"),
 
     /**
      * Print a range of cells

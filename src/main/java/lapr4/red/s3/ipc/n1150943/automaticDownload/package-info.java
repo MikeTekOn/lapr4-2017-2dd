@@ -64,9 +64,6 @@
  *
  * <img src="design.png" alt="sd">
  *
- * <b>Class Diagram</b>
- *
- * <img src="class_diag.png" alt="class diagram">
  *
  * <h2>5. Work Log</h2>
  *
@@ -85,6 +82,39 @@
  * <p>1. Start use case design and implementation</p>
  * <p>Blocking:</p>
  * <p>1. -nothing-</p>
+ *
+ * <p><b>Day 3 - 15/06/2017</b></p>
+ * <p>Yesterday I worked on:</p>
+ * <p>1. Started use case design and implementation</p>
+ * <p>Today</p>
+ * <p>1. Continue implementation</p>
+ * <p>Blocking:</p>
+ * <p>1. -nothing-</p>
+ *
+ * <p><b>Day 4 - 16/06/2017</b></p>
+ * <p>Yesterday I worked on:</p>
+ * <p>1. Use case implementation</p>
+ * <p>Today</p>
+ * <p>1. Continue implementation</p>
+ * <p>Blocking:</p>
+ * <p>1. -nothing-</p>
+ *
+ * <p><b>Day 5 - 17/06/2017</b></p>
+ * <p>Yesterday I worked on:</p>
+ * <p>1. Use case implementation</p>
+ * <p>Today</p>
+ * <p>1. Continue implementation</p>
+ * <p>Blocking:</p>
+ * <p>1. -nothing-</p>
+ *
+ * <p><b>Day 6 - 18/06/2017</b></p>
+ * <p>Yesterday I worked on:</p>
+ * <p>1. Use case implementation</p>
+ * <p>Today</p>
+ * <p>1. Finish implementation and complete use case design and analysis</p>
+ * <p>Blocking:</p>
+ * <p>1. -nothing-</p>
+ *
  *
  * <h2>6. Self Assessment</h2>
 

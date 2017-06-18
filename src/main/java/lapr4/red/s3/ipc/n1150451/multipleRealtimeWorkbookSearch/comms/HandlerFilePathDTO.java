@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch;
+package lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch.comms;
 
 import java.io.Serializable;
 import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;

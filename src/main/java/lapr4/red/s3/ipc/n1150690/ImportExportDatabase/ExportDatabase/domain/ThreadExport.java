@@ -22,7 +22,7 @@ import lapr4.red.s3.ipc.n1150690.ImportExportDatabase.ExportDatabase.presentatio
  *
  * @author Sofia Silva [1150690@isep.ipp.pt]
  */
-public class ThreadExport implements Runnable {
+public class ThreadExport extends Thread implements Runnable {
 
     /**
      * The range of cells.
@@ -43,11 +43,6 @@ public class ThreadExport implements Runnable {
      * The current spreadsheet.
      */
     private Spreadsheet spreadsheet;
-
-    /**
-     * The writer thread.
-     */
-    private Thread exportThread;
 
     /**
      * The database url.
@@ -74,8 +69,6 @@ public class ThreadExport implements Runnable {
         this.spreadsheet = spreadsheet;
         this.db_url = db_url;
         this.driver = driver;
-        this.exportThread = new Thread(this);
-        this.exportThread.start();
     }
 
     /**
@@ -98,16 +91,10 @@ public class ThreadExport implements Runnable {
             dbOperations.createTable(cellsBetweenRange, columns);
             dbOperations.fillTable(cellsBetweenRange, columns, rows);
             dbConnection.closeConnection();
+            ExportToDatabaseUI.printSucess = true;
         } catch (Exception ex) {
             ExportToDatabaseUI.printException(ex.getMessage());
         }
    }
-
-    /**
-     * Kills the current thread.
-     */
-    public void kill() throws InterruptedException {
-        this.exportThread.join();
-    }
 
 }

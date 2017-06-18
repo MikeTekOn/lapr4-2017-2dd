@@ -79,12 +79,10 @@ public class PdfExportableCellTest {
 
         PdfExportableCell pdfCell = new PdfExportableCell(cellA1);
 
-        String result = pdfCell.exportFormula().getContent();
+        String result = pdfCell.exportFormulaText().getContent();
         String expResult1 = "2+2";
-        String expResult2 = "A1";
 
         assert result.contains(expResult1);
-        assert result.contains(expResult2);
     }
 
     @Test
@@ -102,11 +100,9 @@ public class PdfExportableCellTest {
         String expResult1 = user.name();
         String expResult2 = "test1";
         String expResult3 = "test2";
-        String expResult4 = "A1";
 
         assert result.contains(expResult1);
         assert result.contains(expResult2);
         assert result.contains(expResult3);
-        assert result.contains(expResult4);
     }
 }

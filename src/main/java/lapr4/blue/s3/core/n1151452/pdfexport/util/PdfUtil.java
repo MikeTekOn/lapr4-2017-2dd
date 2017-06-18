@@ -1,4 +1,4 @@
-package lapr4.blue.s3.core.n1151452.pdfexport;
+package lapr4.blue.s3.core.n1151452.pdfexport.util;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Element;
@@ -23,6 +23,8 @@ public class PdfUtil {
      * @return the {@link BaseColor}
      */
     public static BaseColor convertToBaseColor(Color color) {
+
+        if (color == null) return BaseColor.BLACK;
 
         return new BaseColor(color.getRed(), color.getGreen(), color.getBlue());
     }

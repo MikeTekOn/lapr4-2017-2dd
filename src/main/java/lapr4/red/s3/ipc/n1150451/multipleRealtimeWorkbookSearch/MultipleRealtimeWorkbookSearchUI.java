@@ -120,9 +120,9 @@ public class MultipleRealtimeWorkbookSearchUI extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 FindWorkbookSideBar f = panels.get(tabs.getTitleAt(tabs.getSelectedIndex()));
-                System.out.println((tabs.getTitleAt(tabs.getSelectedIndex())));
                 if (cBox.isSelected()) {
 
+                    f.isThreadActive = true;
                     if (f.checkFindControllerNull()) {
 
                         f.searchButton.doClick();

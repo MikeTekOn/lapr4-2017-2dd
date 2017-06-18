@@ -31,29 +31,6 @@ public class InsertImageController {
     }
 
     /**
-     * Attempts to create a new image from the given string. If successful, adds
-     * the image to the given cell. If the input string is empty or null, the
-     * image is set to null.
-     *
-     * @param imageableCell the cell for which the image should be set
-     * @param imagePath the image, as entered by the user
-     * @return true if the cell's image was changed
-     */
-    public boolean setImage(ImageableCell imageableCell, String imagePath) {
-        // Clears imagePath, if insufficient input
-        if (imagePath == null || imagePath.equals("")) {
-            imageableCell.setImage(null);
-            return true;
-        }
-
-        // Stores the image
-        imageableCell.setImage(imagePath);
-        uiController.setWorkbookModified(imageableCell.getSpreadsheet().getWorkbook());
-
-        return true;
-    }
-
-    /**
      * Adds the image to the image list.
      *
      * @param imageableCell the imageable cell
