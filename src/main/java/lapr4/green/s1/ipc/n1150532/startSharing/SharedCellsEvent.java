@@ -7,7 +7,7 @@ import java.util.SortedSet;
 
 /**
  * An event that contains the shared cells received and the connection.
- * @author Guilherme Ferreira 1150623 -> Added Share Name
+ * @author Guilherme Ferreira 1150623 Added Share Name
  * @author Manuel Meireles (1150532@isep.ipp.pt)
  */
 public class SharedCellsEvent {
