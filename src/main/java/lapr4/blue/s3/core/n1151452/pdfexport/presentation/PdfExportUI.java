@@ -138,7 +138,7 @@ public class PdfExportUI extends JDialog {
         portraitPanel.add(radioBtnPortrait);
         portraitPanel.add(new JLabel(portraitIcon));
 
-        Icon landscapeIcon = new ImageIcon(PdfExportUI.class.getResource("landscape.png"));
+        Icon landscapeIcon = new ImageIcon(PdfExportUI.class.getResource("landscap.png"));
         radioBtnLanscape = new JRadioButton("Landscape", false);
         radioBtnLanscape.setAlignmentX(Component.RIGHT_ALIGNMENT);
         JPanel landscapePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
