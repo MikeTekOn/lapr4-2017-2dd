@@ -42,6 +42,7 @@
  * network, adding them to the stack of workbooks to be checked,so the RegexUtil
  * class can check if they are the pretended ones or not.
  *
+ * <p>
  * Note: The path selected in Directory class will be the user folder,which is
  * almost the root of the file systems,given by system properties from Java.
  * FileDTO will contain the name and the path of the file.
