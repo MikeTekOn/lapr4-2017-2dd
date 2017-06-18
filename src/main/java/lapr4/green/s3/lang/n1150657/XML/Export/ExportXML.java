@@ -33,7 +33,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable;
+import lapr4.green.s3.lang.n1150532.variables.Variable;
 import lapr4.red.s1.core.n1150690.comments.CommentableCellWithMultipleUsers;
 import lapr4.red.s1.core.n1150690.comments.domain.User;
 import lapr4.red.s2.lang.n1150451.multipleMacros.domain.MacroList;
