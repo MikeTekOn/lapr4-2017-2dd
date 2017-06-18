@@ -1,0 +1,18 @@
+@startuml design_2.png
+box "User and UI" #LightBlue
+	participant User
+	participant UI
+end box
+box "Thread Interaction" #Yellow
+	participant UIController
+	participant AutoSortingThread
+end box
+User -> UI : select another column as pivot
+UI -> UIController : setLastClickedColumn(eventSource)
+UIController -> UIController : fireHeaderSelectionChanged(lastClickedColumn)
+note left : notifiesListeners
+UIController ->  AutoSortingThread :headerValueChanged(lastClickedColumn)
+note right : translates absolute column index into range column index checks
+note right of AutoSortingThread: if focused cell range is within this threads cell range,
+note right of AutoSortingThread: if it is checks column index, if its the same, changes order, else changes pivot column, paints cells and sorts
+@enduml
