@@ -23,6 +23,10 @@ public class HeaderRow extends Row implements Serializable {
     private List<Header> row;
 
     public HeaderRow(List<Header> row) {
+        if (row.size() == 0) {
+            throw new IllegalStateException();
+        }
+
         this.row = row;
     }
 
