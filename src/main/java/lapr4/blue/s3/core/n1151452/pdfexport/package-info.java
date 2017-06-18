@@ -152,6 +152,22 @@
  * <p>
  * <h2>5. Design</h2>
  * <p>
+ * <h3>5.1. Export PDF Action SD</h3>
+ * <img src="pdf_export_ui_sd.png" alt="Export PDF Action SD">
+ * <p>
+ * <h3>5.2. Export PDF Controller &amp; Domain SD</h3>
+ * <img src="pdf_export_controller_sd.png" alt="Export PDF Controller &amp; Domain SD">
+ * <p>
+ * <h3>5.3. Design Patterns and Best Practices</h3>
+ * <p><ol>
+ * <li>I used the <b>factory pattern</b> to build the pdf export, to prevent creation exposure. More specifically,
+ * due to the complex construction of the <b>PdfExport</b> we will use a builder, with a fluent interface,
+ * to build "step-by-step" the PdfExport object..</li>
+ * <li>I used a DTO to handle the export options between UI &amp; Domain, making the communication between them independent.</li>
+ * <li>We used the <b>strategy pattern</b> to abstract the export context responsibility.</li>
+ * </ol>
+ * <p>
+ * <p>
  * <h2>6. Integration/Demonstration</h2>
  * <p>
  * <p>
