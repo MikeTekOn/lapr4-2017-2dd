@@ -45,8 +45,8 @@ Agenda *-->        "*" Event
 
 Tag "*" <- PersonContact : associated with
 Tag "*" <- CompanyContact : associated with
-Taggable <|- PersonContact
-Taggable <|- CompanyContact
+Taggable <|. PersonContact
+Taggable <|. CompanyContact
 
 note as N1
   This value object is contained on
