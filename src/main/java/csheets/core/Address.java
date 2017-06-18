@@ -179,4 +179,12 @@ public class Address implements Comparable<Address>, Serializable {
 		}
 		return new String(string);
 	}
+
+    public int ColumnDistanceTo(Address last) {
+		return Math.abs(this.getColumn()-last.getColumn());
+    }
+
+	public int RowDistanceTo(Address last) {
+		return Math.abs(this.getRow()-last.getRow());
+	}
 }

@@ -12,6 +12,7 @@ package lapr4.white.s1.core.n4567890.contacts.domain;
 
 import eapli.framework.domain.AggregateRoot;
 import lapr4.blue.s3.core.n1060503.notes.domain.NotesList;
+import lapr4.blue.s3.core.n1151159.contactswithtags.domain.Contactable;
 import lapr4.blue.s3.core.n1151159.contactswithtags.domain.Tag;
 import lapr4.blue.s3.core.n1151159.contactswithtags.domain.Taggable;
 import lapr4.green.s2.core.n1150738.contacts.domain.CompanyContact;
@@ -28,7 +29,7 @@ import java.util.TreeSet;
  * @author ATB
  */
 @Entity
-public class Contact implements AggregateRoot<Long>, Serializable, Taggable {
+public class Contact implements AggregateRoot<Long>, Serializable, Contactable {
 
     // ORM primary key
     @Id
@@ -263,5 +264,15 @@ public class Contact implements AggregateRoot<Long>, Serializable, Taggable {
             }
         }
         return false;
+    }
+
+    @Override
+    public String contactName() {
+        return name;
+    }
+
+    @Override
+    public String contactType() {
+        return "Personal Contact";
     }
 }

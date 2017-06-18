@@ -30,6 +30,9 @@ public class Table implements Serializable {
     private String filter;
 
     public Table(CellRange range, List<Row> cells, String filters) {
+        if(cells.size()<2){
+            throw new IllegalStateException();
+        }
         this.range = range;
         this.cells = cells;
         this.filter = filters;

@@ -139,6 +139,7 @@ public class ImportFromDatabaseUI extends JDialog {
         b.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                labelErrors.setText("");
                 CellRange cellRange = null;
                 if (!(txtFieldFirstCell.getText().equals("") && txtFieldLastCell.getText().equals(""))) {
                     String addressStrFirstCell = txtFieldFirstCell.getText();
@@ -148,6 +149,7 @@ public class ImportFromDatabaseUI extends JDialog {
                 controller = new ImportFromDatabaseController(uiController, txtTableName.getText(), txtDatabaseConnection.getText(), cellRange, driver);
                 try {
                     controller.importFromDatabase();
+                    printSucess = true;
                 } catch (Exception ex) {
                     ImportFromDatabaseUI.printException(ex.getMessage());
                 }
@@ -178,6 +180,9 @@ public class ImportFromDatabaseUI extends JDialog {
         grid.gridy = 6;
         success = new JLabel();
         panel.add(success, grid);
+        grid.gridy = 7;
+        labelErrors = new JLabel();
+        panel.add(labelErrors, grid);
 
         return panel;
     }

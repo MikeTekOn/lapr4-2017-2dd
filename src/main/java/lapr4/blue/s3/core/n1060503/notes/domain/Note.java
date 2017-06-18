@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
@@ -25,11 +23,7 @@ import javax.persistence.OneToMany;
 @Entity
 public final class Note implements Serializable {
 
-    // ORM primary key
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
-    private Long pk;
-
     private String title;
 
     /**
@@ -134,7 +128,7 @@ public final class Note implements Serializable {
         }
 
         final Note other = (Note) o;
-        return this.title.equals(other.title) && (Objects.equals(this.pk, other.pk));
+        return this.title.equals(other.title);
     }
 
     /**

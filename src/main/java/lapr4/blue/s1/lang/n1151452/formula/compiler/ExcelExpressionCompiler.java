@@ -23,7 +23,6 @@
  */
 package lapr4.blue.s1.lang.n1151452.formula.compiler;
 
-
 import csheets.core.Cell;
 import csheets.core.formula.Expression;
 import csheets.core.formula.compiler.ExpressionCompiler;
@@ -34,12 +33,14 @@ import org.antlr.v4.runtime.tree.ParseTree;
 
 import java.util.Collections;
 import java.util.List;
+import javax.swing.JTextField;
+import lapr4.green.s3.lang.n1150800.AdvancedFunctionWizard.domain.AbstractSyntaxTree;
 
 /**
  * A compiler that generates Excel-style formulas from strings.
  *
- * @author Daniel Gonçalves [1151452@isep.ipp.pt]
- *         on 01/06/17.
+ * @author Pedro Chilro [1150800@isep.ipp.pt] on 17/06/17.
+ * @author Daniel Gonçalves [1151452@isep.ipp.pt] on 01/06/17.
  * @author Einar Pehrson
  */
 @SuppressWarnings("Duplicates")
@@ -49,6 +50,19 @@ public class ExcelExpressionCompiler implements ExpressionCompiler {
      * The character that signals that a cell's content is a formula ('=')
      */
     private static final char FORMULA_STARTER = '=';
+
+    /* This is a change made by 1150800@isep.ipp.pt */
+    
+    /**
+     * The abstract syntax tree.
+     */
+    private AbstractSyntaxTree abstractSyntaxTree;
+
+    /**
+     * The updatable edit box.
+     */
+    private JTextField editBox;
+    /* -------------------------------------------- */
 
     /**
      * Creates the Excel expression compiler.
@@ -83,6 +97,10 @@ public class ExcelExpressionCompiler implements ExpressionCompiler {
             throw new FormulaCompilationException(formulaErrorListener.getErrorMessage());
         }
 
+        /* This is a change made by 1150800@isep.ipp.pt */
+        abstractSyntaxTree = new AbstractSyntaxTree(parser, tree, editBox);
+        /* -------------------------------------------- */
+
         // Visit the expression and returns it
         FormulaEvalVisitor eval = new FormulaEvalVisitor(cell, uiController);
         Expression result = eval.visit(tree);
@@ -103,15 +121,34 @@ public class ExcelExpressionCompiler implements ExpressionCompiler {
 
         @Override
         public void syntaxError(Recognizer<?, ?> recognizer,
-                                Object offendingSymbol,
-                                int line, int charPositionInLine,
-                                String msg,
-                                RecognitionException e) {
+                Object offendingSymbol,
+                int line, int charPositionInLine,
+                String msg,
+                RecognitionException e) {
             List<String> stack = ((Parser) recognizer).getRuleInvocationStack();
             Collections.reverse(stack);
 
             buf = new StringBuilder();
             buf.append("line ").append(line).append(":").append(charPositionInLine).append(": ").append(msg);
         }
+    }
+
+    /**
+     * Returns the abstract syntax tree generated from the given expression
+     *
+     * @return the abstract syntax tree instance
+     */
+    public AbstractSyntaxTree abstractSyntaxTree() {
+        return abstractSyntaxTree;
+    }
+
+    /**
+     * Adds the updatable box to the abstract syntax tree in order to coordinate
+     * both instances
+     *
+     * @param editBox - the updatable box
+     */
+    public void setUpdatableBox(JTextField editBox) {
+        this.editBox = editBox;
     }
 }

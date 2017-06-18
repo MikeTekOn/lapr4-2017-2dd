@@ -96,14 +96,14 @@ public class PdfExport implements ExportStrategy {
      * @param anOrientation  the selected orientation (portrait or landscape)
      */
     public PdfExport(List<Cell> theActiveCells, int theSections,
-                     GridType aGridType, PrintArea aPrintArea, Rectangle aPageSize, PageOrientation anOrientation, String path) {
+                     GridType aGridType, PrintArea aPrintArea, Rectangle aPageSize, PageOrientation anOrientation, String aPath) {
 
         if (theActiveCells == null || theActiveCells.isEmpty())
             throw new IllegalStateException("The active cells can't be null or empty.");
         if (aGridType == null) throw new IllegalStateException("The grid type can't be null.");
         if (aPrintArea == null) throw new IllegalStateException("The print area can't be null.");
-        if (path == null) throw new IllegalStateException("The path for the FDP file can't be null");
-
+        if (aPath == null) throw new IllegalStateException("The path for the FDP file can't be null");
+        path = aPath;
         pageSize = (aPageSize != null) ? aPageSize : PageSize.A4;
         pageOrientation = (anOrientation != null) ? anOrientation : PageOrientation.PORTRAIT;
 

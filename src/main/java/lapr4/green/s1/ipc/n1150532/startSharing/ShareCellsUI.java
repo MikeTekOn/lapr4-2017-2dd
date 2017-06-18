@@ -6,16 +6,15 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import java.util.Set;
+import javax.swing.*;
+
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
+import lapr4.red.s3.ipc.n1150623.MultipleSharing.ReceivedShareInfo;
 
 /**
- *
+ * @author Guilherme Ferreira 1150623  Added Share Name
  * @author Meireles
  */
 public class ShareCellsUI extends JDialog {
@@ -27,9 +26,12 @@ public class ShareCellsUI extends JDialog {
     private JTextField inFirstCellColumn;
     private JTextField inLastCellRow;
     private JTextField inLastCellColumn;
+    private JTextField shareText;
     private JButton btShare;
     private JButton btCancel;
     private JLabel outInformation;
+    private final String DEFAULT_NAME = "Shared Block";
+
 
     public ShareCellsUI(String theTitle, UIController theUIController, ConnectionID connection){
         uiController = theUIController;
@@ -46,14 +48,33 @@ public class ShareCellsUI extends JDialog {
      */
     private void createUserInterface() {
         setLayout(new BorderLayout());
+
+        add(shareNamePanel(), BorderLayout.NORTH);
+        JPanel range = new JPanel();
+        range.setLayout(new BorderLayout());
         add(createHeaderPanel(), BorderLayout.NORTH);
-        add(createCellsRangePanel(), BorderLayout.CENTER);
+        range.add(createCellsRangePanel(), BorderLayout.SOUTH);
         add(createBottomPanel(), BorderLayout.SOUTH);
         setTitle(title);
         pack();
         setLocationRelativeTo(null);
         setModal(true);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+    }
+
+    private JLabel share;
+
+    private JPanel shareNamePanel() {
+        JPanel p = new JPanel();
+        p.setLayout(new FlowLayout());
+        final String shareName = "Share Name";
+        share = new JLabel(shareName);
+        shareText = new JTextField(20);
+
+        p.add(share);
+        p.add(shareText);
+
+        return p;
     }
 
     private JPanel createHeaderPanel(){
@@ -63,7 +84,10 @@ public class ShareCellsUI extends JDialog {
         return panel;
     }
 
+
     private JPanel createCellsRangePanel(){
+
+
         final String firstColumnHeader = "Cell";
         final String secondColumnHeader = "Row";
         final String thirdColumnHeader = "Column";
@@ -71,7 +95,7 @@ public class ShareCellsUI extends JDialog {
         final String lastCellHeader = "Last";
         final int size = 5;
         final int allignment = FlowLayout.CENTER;
-        final JPanel panel = new JPanel(new GridLayout(3,3));
+        final JPanel panel = new JPanel(new GridLayout(4,3));
         final JPanel p11 = new JPanel(new FlowLayout(allignment));
         final JPanel p12 = new JPanel(new FlowLayout(allignment));
         final JPanel p13 = new JPanel(new FlowLayout(allignment));
@@ -118,13 +142,14 @@ public class ShareCellsUI extends JDialog {
         outInformation = new JLabel(" ");
         btCancel = new JButton(cancelBtText);
         btShare = new JButton(shareBtText);
+
         p2left.add(btCancel);
         p2right.add(btShare);
         p1.add(outInformation);
         p2.add(p2left);
         p2.add(p2right);
-        panel.add(p1, BorderLayout.CENTER);
-        panel.add(p2, BorderLayout.SOUTH);
+        panel.add(p1, BorderLayout.NORTH);
+        panel.add(p2, BorderLayout.CENTER);
         return panel;
     }
 
@@ -172,7 +197,7 @@ public class ShareCellsUI extends JDialog {
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
-                controller.shareCells(uiController.getActiveSpreadsheet(), inFirstCellRow.getText(), inFirstCellColumn.getText(), inLastCellRow.getText(), inLastCellColumn.getText());
+                controller.shareCells(uiController.getActiveSpreadsheet(), inFirstCellRow.getText(), inFirstCellColumn.getText(), inLastCellRow.getText(), inLastCellColumn.getText(), shareText.getText().trim().length()==0? DEFAULT_NAME:shareText.getText().trim());
                 dispose();
             } catch (IllegalArgumentException ex) {
                 outInformation.setText(ex.getMessage());

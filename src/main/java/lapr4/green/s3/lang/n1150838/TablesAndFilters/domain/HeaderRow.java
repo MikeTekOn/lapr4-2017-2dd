@@ -23,6 +23,7 @@ public class HeaderRow extends Row implements Serializable {
     private List<Header> row;
 
     public HeaderRow(List<Header> row) {
+
         this.row = row;
     }
 
