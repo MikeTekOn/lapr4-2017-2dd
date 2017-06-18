@@ -87,6 +87,8 @@ public class TagManagerPanel extends JPanel {
         });
 
         JScrollPane scrollPane = new JScrollPane(elementsList);
+        scrollPane.setPreferredSize(new Dimension(300, 120));
+
         listPanel.add(scrollPane);
 
         return listPanel;
@@ -98,7 +100,7 @@ public class TagManagerPanel extends JPanel {
      * @return buttons panel
      */
     private JPanel createButtonsPanel() {
-        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
 
         buttonsPanel.add(createAddButton());
         buttonsPanel.add(createRemoveButton());

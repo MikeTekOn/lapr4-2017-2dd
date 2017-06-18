@@ -272,6 +272,11 @@ public class Contact implements AggregateRoot<Long>, Serializable, Contactable {
     }
 
     @Override
+    public String contactNumber() {
+        return this.phone;
+    }
+
+    @Override
     public String contactType() {
         return "Personal Contact";
     }

@@ -58,8 +58,14 @@ public class ImportFromDatabaseController {
      *
      * @throws SQLException
      */
-    public void importFromDatabase() throws SQLException, InterruptedException {
-        ThreadImport thread = new ThreadImport(tableName, uiController.getActiveSpreadsheet(), db_url, range, driver);
-        thread.kill();
+    public void importFromDatabase() throws Exception {
+        ThreadImport thread = null;
+        try{
+            thread = new ThreadImport(tableName, uiController.getActiveSpreadsheet(), db_url, range, driver);
+            thread.start();
+        }catch (Exception ex){
+             thread.interrupt();
+            throw new Exception(ex.getMessage());  
+        }
     }
 }

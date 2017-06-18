@@ -1,7 +1,7 @@
 package lapr4.blue.s3.core.n1151159.contactswithtags.ui;
 
 import csheets.ui.ctrl.UIController;
-import lapr4.blue.s3.core.n1151159.contactswithtags.application.SearchContactByTagController;
+import lapr4.blue.s3.core.n1151159.contactswithtags.application.TagController;
 import lapr4.blue.s3.core.n1151159.contactswithtags.domain.Contactable;
 import lapr4.green.s2.core.n1150738.contacts.application.CompanyContactController;
 import lapr4.green.s2.core.n1150738.contacts.domain.CompanyContact;
@@ -11,6 +11,9 @@ import lapr4.white.s1.core.n4567890.contacts.domain.Contact;
 import lapr4.white.s1.core.n4567890.contacts.ui.ContactDialog;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,7 +33,12 @@ public class SearchContactsByTagDialog extends JDialog {
     /**
      * The search by contact controller.
      */
-    private final SearchContactByTagController controller;
+    private final TagController controller;
+
+    /**
+     * The user interface controller.
+     */
+    private final UIController uiController;
 
     /**
      * The tag regex text field.
@@ -47,10 +55,9 @@ public class SearchContactsByTagDialog extends JDialog {
      */
     private List<Contactable> contacts;
 
-    /**
-     * The user interface controller.
-     */
-    private final UIController uiController;
+    private JRadioButton allContactsRadioButton;
+    private JRadioButton personalContactsRadioButton;
+    private JRadioButton companyContactsRadioButton;
 
     /**
      * Creates a new instance of search contacts by tag dialog.
@@ -60,7 +67,7 @@ public class SearchContactsByTagDialog extends JDialog {
      */
     public SearchContactsByTagDialog(Window parentWindow, UIController uiController) {
         this.uiController = uiController;
-        controller = new SearchContactByTagController(uiController.getUserProperties());
+        controller = new TagController(uiController.getUserProperties());
         createComponents();
         pack();
         setLocationRelativeTo(parentWindow);
@@ -90,9 +97,23 @@ public class SearchContactsByTagDialog extends JDialog {
         JLabel regexLabel = new JLabel("Please enter a regular expression for the tag to search:", SwingConstants.CENTER);
 
         regexPanel.add(regexLabel, BorderLayout.NORTH);
-        regexPanel.add(createSearchPanel(), BorderLayout.CENTER);
+        regexPanel.add(createSearchAndFilterPanel(), BorderLayout.CENTER);
 
         return regexPanel;
+    }
+
+    /**
+     * Creates the search and filter panel.
+     *
+     * @return search and filter panel
+     */
+    private JPanel createSearchAndFilterPanel() {
+        JPanel searchAndFilterPanel = new JPanel(new BorderLayout());
+
+        searchAndFilterPanel.add(createSearchPanel(), BorderLayout.NORTH);
+        searchAndFilterPanel.add(createFilterPanel(), BorderLayout.CENTER);
+
+        return searchAndFilterPanel;
     }
 
     /**
@@ -109,7 +130,10 @@ public class SearchContactsByTagDialog extends JDialog {
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                contacts = new ArrayList<>(controller.findContactsByTag(regexField.getText()));
+                contacts = new ArrayList<>(controller.findContactsByTag(regexField.getText(),
+                        allContactsRadioButton.isSelected() ? TagController.NO_FILTER :
+                                companyContactsRadioButton.isSelected() ? TagController.COMPANY_CONTACTS_FILTER :
+                                        TagController.PERSONAL_CONTACTS_FILTER));
                 updateTable();
             }
         });
@@ -118,6 +142,35 @@ public class SearchContactsByTagDialog extends JDialog {
         searchPanel.add(searchButton);
 
         return searchPanel;
+    }
+
+    /**
+     * Creates the filter panel.
+     *
+     * @return filter panel
+     */
+    private JPanel createFilterPanel() {
+        JPanel filterPanel = new JPanel();
+        TitledBorder titledBorder = BorderFactory.createTitledBorder("Filters");
+        titledBorder.setTitleJustification(TitledBorder.CENTER);
+        filterPanel.setBorder(titledBorder);
+
+        allContactsRadioButton = new JRadioButton("All Contacts");
+        personalContactsRadioButton = new JRadioButton("Personal Contacts");
+        companyContactsRadioButton = new JRadioButton("Company Contacts");
+
+        ButtonGroup group = new ButtonGroup();
+        group.add(allContactsRadioButton);
+        group.add(personalContactsRadioButton);
+        group.add(companyContactsRadioButton);
+
+        allContactsRadioButton.setSelected(true);
+
+        filterPanel.add(allContactsRadioButton);
+        filterPanel.add(personalContactsRadioButton);
+        filterPanel.add(companyContactsRadioButton);
+
+        return filterPanel;
     }
 
     /**
@@ -143,6 +196,7 @@ public class SearchContactsByTagDialog extends JDialog {
         JPanel tablePanel = new JPanel();
 
         contactsTable = new JTable(new ContactableTableModel(new ArrayList<>()));
+        centerTableCells();
         contactsTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
@@ -158,6 +212,7 @@ public class SearchContactsByTagDialog extends JDialog {
                     CompanyContactDialog.showDialog(null, null, ctrl,
                             CompanyContactDialog.CompanyContactDialogMode.EDIT, "Edit Contact", companyContact);
                 }
+                TagsChangesWatchDog.getInstance().notifyListeners();
             }
         });
 
@@ -193,5 +248,19 @@ public class SearchContactsByTagDialog extends JDialog {
      */
     private void updateTable() {
         contactsTable.setModel(new ContactableTableModel(new LinkedList<>(contacts)));
+        centerTableCells();
+    }
+
+    /**
+     * Centers the table cells.
+     */
+    private void centerTableCells() {
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+
+        TableModel tableModel = contactsTable.getModel();
+        for (int i = 0; i < tableModel.getColumnCount(); i++) {
+            contactsTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
     }
 }

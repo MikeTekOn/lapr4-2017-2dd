@@ -1,9 +1,9 @@
-package lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch;
+package lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch.comms;
 
-import lapr4.blue.s2.ipc.n1140822.fileShare.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -11,8 +11,6 @@ import java.net.InetAddress;
 import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,14 +19,14 @@ import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
 import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.transmission.OpenTransmission;
 import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
 import lapr4.green.s1.ipc.n1150532.comm.connection.PacketEncapsulatorDTO;
+import lapr4.green.s1.ipc.n1150838.findworkbooks.FindWorkbooksPublisher;
 
 /**
  * A UDP client to send a broadcast and wait for replies.
  *
- * @author Manuel Meireles (1150532@isep.ipp.pt) and Renato Oliveira
- * (1140822@isep.ipp.pt) and Diogo Santos (1150451@isep.ipp.pt)
+ * @author Manuel Meireles (1150532@isep.ipp.pt)
  */
-public class CommUDPClient extends Thread implements Observer {
+public class CommUDPServer extends Thread {
 
     /**
      * The broadcast address.
@@ -61,30 +59,21 @@ public class CommUDPClient extends Thread implements Observer {
     private TrafficInputStream in = null;
 
     /**
-     * The port number in which to send the broadcast.
+     * The port number in which to receive the broadcast.
      */
-    private final int portNumber;
-
-    /**
-     * The request DTO.
-     */
-    private Object dto;
-
+    private static int portNumber = 15309;
 
     /**
      * The handlers of the client.
      */
     private final Map<Class, CommHandler> handlers;
+    private Object lastRcvDTO;
 
     /**
      * The UDP client constructor.
      *
-     * @param dtoToSend The request DTO.
-     * @param thePortNumber The port number in which to send the broadcast.
      */
-    public CommUDPClient(Object dtoToSend, int thePortNumber) {
-        dto = dtoToSend;
-        portNumber = thePortNumber;
+    public CommUDPServer() {
         handlers = new HashMap<>();
     }
 
@@ -109,23 +98,31 @@ public class CommUDPClient extends Thread implements Observer {
     }
 
     /**
-     * It sends a broadcast with the request and it doesn't wait for replies.
+     * It sends a broadcast with the request and then waits for replies. It will
+     * remain receiving replies until it times out.
      */
     @Override
     public void run() {
         try {
-                sock = new DatagramSocket();
-                sock.setBroadcast(true);
-                bos = new ByteArrayOutputStream();
-                out = new TrafficOutputStream(bos, InetAddress.getLocalHost(), sock.getLocalPort(), new OpenTransmission());
-                out.write(dto);
-                byte[] data = bos.toByteArray();
-                DatagramPacket udpPacket = new DatagramPacket(data, data.length, InetAddress.getByName(BROADCAST_ADDRESS), portNumber);
-                sock.send(udpPacket);
-                System.out.println("Enviei broadcast");
+            sock = new DatagramSocket(++portNumber, null);
+            sock.setBroadcast(true);
+            byte[] data;
+            DatagramPacket udpPacket;
+            while (true) {
+                data = new byte[sock.getReceiveBufferSize()];
+                byte[] data1 = new byte[512];
+                udpPacket = new DatagramPacket(data1, data1.length);
+                udpPacket.setData(data1);
+                udpPacket.setLength(data1.length);
+                sock.receive(udpPacket);
+                data=udpPacket.getData();
+                bis = new ByteArrayInputStream(data);
+                in = new TrafficInputStream(bis, udpPacket.getAddress(), 15310, new OpenTransmission());
+                processIncommingDTO(in.readObjectOvveride(), udpPacket);
+            }
         } catch (SocketTimeoutException ex) {
             // There are no more replies, the client should finish its execution
-        } catch (IOException ex) {
+        } catch (IOException | ClassNotFoundException ex) {
             Logger.getLogger(CommUDPClient.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             terminateExecution();
@@ -162,10 +159,22 @@ public class CommUDPClient extends Thread implements Observer {
         }
     }
 
-    @Override
-    public void update(Observable o, Object o1) {
-        this.dto = o1;
+    /**
+     * It handles the received DTO. It gets the right handler. It encapsulates
+     * the DTO in a PacketEncapsulationDTO in order to provide the
+     * DatagramPacket to the handler.
+     *
+     * @param inDTO The object to handler.
+     */
+    private void processIncommingDTO(Object inDTO, DatagramPacket inPacket) {
+        CommHandler handler = getHandler(inDTO.getClass());
+        if (handler != null) {
+            PacketEncapsulatorDTO dto = new PacketEncapsulatorDTO(inPacket, handler, inDTO);
+            handler.handleDTO(dto, out);
+            lastRcvDTO = handler.getLastReceivedDTO();
+            FindWorkbooksPublisher.getInstance().notifyObservers(lastRcvDTO);
+        }
+        lastRcvDTO = null;
     }
-
 
 }

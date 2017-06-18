@@ -13,8 +13,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import javax.swing.JOptionPane;
+import lapr4.red.s3.ipc.n1150690.ImportExportDatabase.ExportDatabase.presentation.ExportToDatabaseUI;
 
 /**
  *
@@ -58,10 +58,30 @@ public class DatabaseExportOperations {
             }
         }
         statement = connection.createStatement();
-        try{
+        boolean deleteTable = false;
+        boolean tableSameName = false;
+        try {
             statement.executeUpdate(createTable);
-        }catch(SQLException e){
-            throw new SQLException("The table already exists!");
+        } catch (SQLException e) {
+            ExportToDatabaseUI.printException("");
+            ExportToDatabaseUI.printSucess = false;
+            ExportToDatabaseUI.showJOptionPane = true;
+            int op = JOptionPane.showConfirmDialog(null, "A table with the name already exists! Do you want to delete the existing table?", "Warning", JOptionPane.YES_NO_OPTION);
+            if (op == 0) {
+                deleteTable = true;
+            }
+            tableSameName = true;     
+        } finally {
+            if (tableSameName) {
+                if (deleteTable) {
+                    String sql = "DROP TABLE " + tableName;
+                    statement.executeUpdate(sql);
+                    statement.executeUpdate(createTable);
+                    ExportToDatabaseUI.printSucess = true;
+                } else {
+                    ExportToDatabaseUI.printException("Please change the table name");
+                }
+            }
         }
     }
 

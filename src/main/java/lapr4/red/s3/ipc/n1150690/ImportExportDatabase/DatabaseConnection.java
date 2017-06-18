@@ -58,6 +58,7 @@ public class DatabaseConnection {
             connection = DriverManager.getConnection(db_url);
 
         } catch (SQLException se) {
+            se.printStackTrace();
             throw new SQLException("Is not possible to connect to the database!");
         } catch (ClassNotFoundException ex) {
             throw new ClassNotFoundException("Unable to load driver class!");

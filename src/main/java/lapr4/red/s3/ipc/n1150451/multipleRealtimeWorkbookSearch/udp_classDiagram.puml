@@ -1,0 +1,13 @@
+@startuml
+class CommUDPClient
+class CommUDPServer
+class FilePathDTO
+class HandlerFilePathDTO
+
+CommUDPClient - FilePathDTO : sends >
+left to right direction
+CommUDPServer - FilePathDTO : receives >
+HandlerFilePathDTO - FilePathDTO : Handles >
+CommUDPServer - HandlerFilePathDTO : Uses >
+
+@enduml

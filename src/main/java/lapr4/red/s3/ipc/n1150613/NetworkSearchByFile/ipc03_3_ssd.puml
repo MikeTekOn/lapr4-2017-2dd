@@ -5,7 +5,7 @@ skinparam shadowing false
 
 actor User 
 participant "System" as S
-User -> S : selects the network search option and inserts the name of the workbook to search
+User -> S : selects the network search option and inserts the name/content pattern of the workbook to search
 S --> User : displays the list with the instances (instance identification, name and summary)\nof the workbook that were found remotely
 @enduml
 @enduml

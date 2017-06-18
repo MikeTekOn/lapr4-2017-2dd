@@ -36,7 +36,7 @@
  *
  * <h2>3. Tests</h2>
  *
- * <h3>3.1 Functional Tests:</h3></p>
+ * <h3>3.1 Functional Tests:</h3>
  * 
  * <h3>3.2 Unit Tests:</h3>
  *
@@ -45,4 +45,4 @@
  * <h2>5. Code</h2>
  * 
  */
-package lapr4.green.s3.lang.n1150657.XML;
+package lapr4.green.s3.lang.n1150657.XML.Export;

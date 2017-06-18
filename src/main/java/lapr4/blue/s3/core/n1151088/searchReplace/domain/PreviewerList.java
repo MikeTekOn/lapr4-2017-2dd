@@ -1,12 +1,10 @@
 package lapr4.blue.s3.core.n1151088.searchReplace.domain;
 
-import csheets.core.IllegalValueTypeException;
-import csheets.core.formula.compiler.FormulaCompilationException;
 import java.util.ArrayList;
 import javax.swing.AbstractListModel;
 
 /**
- *
+ * Represents the list of cell preview´s before the replace
  * @author Diana Silva {1151088 [isep.ipp.pt]
  */
 public class PreviewerList extends AbstractListModel {
@@ -39,11 +37,9 @@ public class PreviewerList extends AbstractListModel {
      * @param item
      */
     public void setSelectedItem(String item) {
-        for (PreviewCellDTO f : previewList) {
-            if (f.getAfterCell().equals(item)) {
-               selected = f;
-            }
-        }
+        previewList.stream().filter((f) -> (f.getBeforeCell().toString().equals(item))).forEachOrdered((f) -> {
+            selected = f;
+        });
     }
     
     /**
@@ -82,22 +78,4 @@ public class PreviewerList extends AbstractListModel {
         previewList.clear();
         fireIntervalRemoved(this,min,max);
     }
-    
-    public String buildCellPreview(PreviewCellDTO cell) throws IllegalValueTypeException, FormulaCompilationException{
-        StringBuilder sb = new StringBuilder();
-  
-        sb.append("Now: ");
-        sb.append(cell.getBeforeCell().getContent());
-        sb.append("Value: ");
-        sb.append(cell.getBeforeCell().getValue());
-        
-        cell.previewReplace();
-        sb.append("After: ");
-        sb.append(cell.getAfterCell().getContent());
-        sb.append("Value: ");
-        sb.append(cell.getAfterCell().getValue());
-
-        return sb.toString();
-    }
-        
 }

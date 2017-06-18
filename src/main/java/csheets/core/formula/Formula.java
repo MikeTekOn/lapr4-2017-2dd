@@ -71,6 +71,7 @@ public class Formula implements Expression {
         this.expression = expression;
     }
 
+    @Override
     public Value evaluate() throws IllegalValueTypeException {
         if (!hasCircularReference())
             return expression.evaluate();
