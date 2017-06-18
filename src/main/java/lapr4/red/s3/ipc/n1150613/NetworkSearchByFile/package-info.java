@@ -41,29 +41,29 @@
  * which will return all the workbooks in the remote file systems in the
  * network, adding them to the stack of workbooks to be checked,so the RegexUtil
  * class can check if they are the pretended ones or not.
- *
+ * <p>
  * <p>
  * Note: The path selected in Directory class will be the user folder,which is
  * almost the root of the file systems,given by system properties from Java.
  * FileDTO will contain the name and the path of the file.
  * <p>
  *
- *
+ * <p>
  * <h2>4. Design</h2>
  * So far, the design classes are:
  * <ul>
- * <li>NetworkSearchExtension - the extension we are adding to CleanSheets</li>
- * <li>SearchWorkbookRequestDTO - data transfer object for the UDP
+ * <li>NetworkSearchExtension  -  the extension we are adding to CleanSheets</li>
+ * <li>SearchWorkbookRequestDTO  -  data transfer object for the UDP
  * broadcast</li>
- * <li>SearchWorkbookResponseDTO - data transfer object for the reply</li>
- * <li>HandlerSearchWorkbookRequestDTO - processes the request DTO</li>
- * <li>HandlerSearchWorkbookResponseDTO - processes the response DTO</li>
- * <li>SearchWorkbookNetworkAction - creates the UDPClient thread that will
+ * <li>SearchWorkbookResponseDTO  -  data transfer object for the reply</li>
+ * <li>HandlerSearchWorkbookRequestDTO  -  processes the request DTO</li>
+ * <li>HandlerSearchWorkbookResponseDTO  -  processes the response DTO</li>
+ * <li>SearchWorkbookNetworkAction  -  creates the UDPClient thread that will
  * handle the broadcast</li>
- * <li>SearchWorkbookNetworkPanel - sidebar panel for the feature</li>
- * <li>Directory - Used to search the file systems.</li>
- * <li>FileDTO - contains the file information </li>
- * <li>RegexUtil - to search the given patterns </li>
+ * <li>SearchWorkbookNetworkPanel  -  sidebar panel for the feature</li>
+ * <li>Directory  -  Used to search the file systems.</li>
+ * <li>FileDTO  -  contains the file information </li>
+ * <li>RegexUtil  -  to search the given patterns </li>
  * </ul>
  *
  * <h3>4.1 How to send the UDP broadcast with the workbook name/content

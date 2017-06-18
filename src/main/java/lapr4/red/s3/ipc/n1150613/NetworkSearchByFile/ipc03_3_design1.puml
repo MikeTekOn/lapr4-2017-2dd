@@ -4,8 +4,8 @@ skinparam defaultFontName FG Virgil
 skinparam shadowing false
 
 actor User 
-participant "SearchWorkbookNetworkPanel" as panel
-participant "SearchWorkbookNetworkAction" as action
+participant "NetworkSearchPanel" as panel
+participant "NetworkSearchAction" as action
 participant "SearchWorkbookRequestDTO" as reqDTO
 participant "CommUDPClient" as udpClient
 participant "HandlerSearchWorkbookResponseDTO" as handlerResponse
