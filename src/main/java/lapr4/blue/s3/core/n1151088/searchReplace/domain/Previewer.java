@@ -6,11 +6,7 @@ import csheets.core.formula.Formula;
 import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.core.formula.compiler.FormulaCompiler;
 import csheets.ui.ctrl.UIController;
-import java.util.ArrayList;
-import java.util.List;
 import lapr4.blue.s3.core.n1151088.searchReplace.SearchReplacePublisher;
-import lapr4.green.s2.core.n1150838.GlobalSearch.presentation.CellInfoDTO;
-import lapr4.green.s2.core.n1150838.GlobalSearch.presentation.CellList;
 
 /**
  *
@@ -19,43 +15,46 @@ import lapr4.green.s2.core.n1150838.GlobalSearch.presentation.CellList;
  */
 public class Previewer implements Runnable {
     
-    /**The content that will replace the cell´s content**/
-    private String content;
+    /**The content that will replace the cell´s content with exp**/
+    private String to, exp;
     /**Cells that will be previewed**/
-    private CellList cellList;
+    private Cell cell;
     /**The controller that manage searchReplace user interface actions**/
     private UIController uiCtrl;
     
-    public Previewer(CellList cellList, String content, UIController uiCtrl){
-        try{
-            validateContent(content);
-        }catch(FormulaCompilationException | IllegalValueTypeException ex ){
-            ex.getMessage();
+    public Previewer(Cell cellBefore, String expR, String to, UIController uiCtrl){
+//        try{
+//            validateContent(content, cellBefore);
+//        }catch(FormulaCompilationException | IllegalValueTypeException ex ){
+//            ex.getMessage();
+//        }
+        if(!validateContainsExp(cellBefore, expR)){
+           throw new IllegalStateException();
         }
-        this.content=content;
-        
-        this.cellList=cellList;
+        this.exp=expR;
+        this.to=to;      
+        this.cell=cellBefore;
         this.uiCtrl=uiCtrl;
     }
-    
-   /**
-    * Update the list with new cell
-    * @param cell cell to replace
-    * @return true if added, false if not
-    */
-    public boolean addCell(CellInfoDTO cell){
-        try{
-            validateContent(cell.getCell().getContent());
-        }catch(FormulaCompilationException | IllegalValueTypeException ex ){
-            ex.getMessage();
-        }
-//        if(cellList.containsElement(cell)){
-//            return false;
-//        } else {
-//            cellList.addElement(cell);
+//    
+//   /**
+//    * Update the list with new cell
+//    * @param cell cell to replace
+//    * @return true if added, false if not
+//    */
+//    public boolean addCell(CellInfoDTO cell){
+//        try{
+//            validateContent(cell.getCell().getContent());
+//        }catch(FormulaCompilationException | IllegalValueTypeException ex ){
+//            ex.getMessage();
 //        }
-        return true;
-    }
+////        if(cellList.containsElement(cell)){
+////            return false;
+////        } else {
+////            cellList.addElement(cell);
+////        }
+//        return true;
+//    }
     
     /**
      * Validate if content is compilable by Formula
@@ -64,9 +63,9 @@ public class Previewer implements Runnable {
      * @throws FormulaCompilationException
      * @throws IllegalValueTypeException 
      */
-    public boolean validateContent(String content) throws FormulaCompilationException, IllegalValueTypeException{
+    public boolean validateContent(String content, Cell cell1) throws FormulaCompilationException, IllegalValueTypeException{
         FormulaCompiler instance = FormulaCompiler.getInstance();
-        Formula f = instance.compile(null, content, uiCtrl);
+        Formula f = instance.compile(cell1, content, uiCtrl);
         f.evaluate();
         return true;
     }
@@ -78,12 +77,15 @@ public class Previewer implements Runnable {
         previewContent();
  
     }
+    
+    private boolean validateContainsExp(Cell cell,String expInserted){
+        return cell.getContent().contains(expInserted);
+    }
 
     private void previewContent() {
-        ArrayList<CellInfoDTO> clone= cellList.clone();
-        for(CellInfoDTO cell: clone){
-            SearchReplacePublisher.getInstance().notifyObservers(new PreviewCellDTO(cell.getCell(), content));
-        }
+       
+       SearchReplacePublisher.getInstance().notifyObservers(new PreviewCellDTO(cell, exp,to));
+        
     }
     
 }

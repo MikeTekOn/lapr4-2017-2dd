@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 
 /**
  * An handler to deal with the sharing cells request.
- *
+ * @author Guilherme Ferreira 1150623 Added Share Name
  * @author Manuel Meireles (1150532@isep.ipp.pt)
  */
 public class HandlerRequestSharedCellsDTO extends Observable implements CommHandler {
@@ -42,9 +42,9 @@ public class HandlerRequestSharedCellsDTO extends Observable implements CommHand
 
         Socket socket = receivedDTO.getSocket();
         ConnectionID connection = new ConnectionIDImpl(socket.getInetAddress(), socket.getPort());
-
+        String shareName = request.getShareName();
         setChanged();
-        notifyObservers(new SharedCellsEvent(request.getSpreadsheetName(), request.getCells(), connection));
+        notifyObservers(new SharedCellsEvent(request.getSpreadsheetName(), request.getCells(), connection, shareName));
         ResponseSharedCellsDTO reply = new ResponseSharedCellsDTO(request.getSpreadsheetName(), request.getAddress1(), request.getAddress2(), ResponseSharedCellsDTO.SharedCellsStatusResponse.OK);
         try {
             outStream.write(reply);

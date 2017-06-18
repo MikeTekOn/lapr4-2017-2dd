@@ -47,7 +47,6 @@
  * ({@link lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable#name} and
  * {@link lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable#expression})</li>
  * <li>The assignment operations must be done within curly brackets.</li>
- * <li>The .</li>
  * <li>The compiler uses the BlueFormula grammar.</li>
  * <li>Global variables are held in a special container
  * ({@link lapr4.red.s2.lang.n1150623.globalVariables.VarContentor}).</li>
@@ -128,7 +127,7 @@
  * <p>
  * <b>Side Bar Updates</b>: The side bar must show all global variables values
  * and allow the user to edit them. Every time a value is updated at the side
- * bar, all the cells using that same global variable's value must be updated.
+ * bar, all the cells using that same global variable's value should be updated.
  * The contrary is also true, every time a global variable's value is updated at
  * the spreadsheet, the side bar value must be updated. This raises concurrency
  * issues examined in the next topic. Although this makes sense, the client
@@ -187,10 +186,8 @@
  * <p>
  * <b>Build Sentence</b>: A global variable must be declared and a word of a
  * sentence must be inserted in the array in order to form a sentence. Then,
- * select the cells to show the whole sentence (a word for a cell). Afterwards,
- * in the side bar, change a word and see the sentence in the spreadsheet
- * change. At last, change the word in the spreadsheet and see the side bar
- * being updated.
+ * select the cells to show the whole sentence (a word for a cell). At last,
+ * change the word in the spreadsheet and see the side bar being updated.
  * </p>
  *
  * <h2>Other</h2>
@@ -353,6 +350,12 @@
  * implementation and concepts. Regardless, since the client does not explicitly
  * require the cells to be updated on this Feature Increment, this solution will
  * not be implemented neither.
+ * </p>
+ * <p>
+ * Plus, the side bar should also implement the
+ * {@link csheets.SpreadsheetAppListener}, as well as the
+ * {@link csheets.ui.ctrl.SelectionListener}, in order to monitor the workbook
+ * activity to update the side bar.
  * </p>
  *
  * <h2>Alternatives</h2>

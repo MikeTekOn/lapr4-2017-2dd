@@ -12,6 +12,7 @@ import eapli.framework.persistence.DataIntegrityViolationException;
 import java.io.IOException;
 import java.util.*;
 
+import lapr4.blue.s3.core.n1151159.contactswithtags.domain.Tag;
 import lapr4.green.s2.core.n1150738.contacts.application.ProfessionImporterService;
 import lapr4.green.s2.core.n1150738.contacts.domain.CompanyContact;
 import lapr4.green.s2.core.n1150738.contacts.domain.Profession;
@@ -74,8 +75,8 @@ public class ContactController implements Controller {
         return list;
     }
 
-    public Contact addContact(String name, String firstName, String lastName, String photo, String address, String email, String phone, CompanyContact companyContact, Profession profession) throws DataConcurrencyException, DataIntegrityViolationException {
-        return this.contactsRepository.save(new Contact(name, firstName, lastName, photo, address, email, phone, profession, companyContact));
+    public Contact addContact(String name, String firstName, String lastName, String photo, String address, String email, String phone, CompanyContact companyContact, Profession profession, Set<Tag> tags) throws DataConcurrencyException, DataIntegrityViolationException {
+        return this.contactsRepository.save(new Contact(name, firstName, lastName, photo, address, email, phone, profession, companyContact, tags));
     }
 
     public boolean removeContact(Contact contact) throws DataConcurrencyException, DataIntegrityViolationException, IllegalAccessException {
@@ -88,7 +89,7 @@ public class ContactController implements Controller {
         return this.contactsRepository.removeContact(contact);
     }
     
-    public Contact updateContact(Contact contact, String fullName, String firstName, String lastName, String photo, String address, String email, String phone,CompanyContact companyContact, Profession profession ) throws DataConcurrencyException, DataIntegrityViolationException, IllegalAccessException {
+    public Contact updateContact(Contact contact, String fullName, String firstName, String lastName, String photo, String address, String email, String phone,CompanyContact companyContact, Profession profession, Set<Tag> tags) throws DataConcurrencyException, DataIntegrityViolationException, IllegalAccessException {
         if(contact.name().equals(OWN_NAME)){
             throw new IllegalAccessException();
         }
@@ -101,6 +102,7 @@ public class ContactController implements Controller {
         contact.setPhone(phone);
         contact.setCompanyContact(companyContact);
         contact.setProfession(profession);
+        contact.setTags(tags);
         return this.contactsRepository.save(contact);
     }    
 

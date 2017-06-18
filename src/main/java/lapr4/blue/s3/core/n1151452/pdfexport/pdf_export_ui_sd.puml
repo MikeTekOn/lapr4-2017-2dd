@@ -1,0 +1,36 @@
+@startuml pdf_export_ui_sd.png
+actor User as u
+participant PdfExportAction as action <<FocusOwnerAction>>
+participant PdfExportUI as ui <<Presentation>>
+participant "dto : PdfExportDTO" as dto <<DTO>>
+
+u -> action : Selects PDF Export
+
+action -> action : getSelectedCells()
+note right of action
+From a selected cell we can obtain
+the active workbook and
+spreadsheet, if needed.
+end note
+create ui
+action -> ui : create(selectedCells)
+ui --> u : show export options
+u -> ui : selects options and exports
+create dto
+ui -> dto : create(options)
+ui -> ui : dispose()
+box "Export Thread" #ADC6FD
+participant PdfExportCtrl as controller <<Controller>>
+participant PdfExportThread as thread <<Runnable>>
+create thread
+ui -> thread : create(dto)
+create controller
+thread -> controller : create()
+thread -> controller : export(dto)
+ref over controller
+  5.2. EXPORT PDF
+end ref
+controller --> thread : success
+thread --> u : inform success
+end box
+@enduml

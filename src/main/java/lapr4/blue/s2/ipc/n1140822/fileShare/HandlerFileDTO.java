@@ -20,6 +20,8 @@ import lapr4.green.s1.ipc.n1150532.comm.connection.SocketEncapsulatorDTO;
 import lapr4.red.s3.ipc.n1150943.automaticDownload.DownloadInfo;
 import lapr4.red.s3.ipc.n1150943.automaticDownload.persistence.DownloadsListPersistence;
 
+import javax.swing.*;
+
 /**
  *
  * @author Renato Oliveira 1140822@isep.ipp.pt
@@ -65,8 +67,8 @@ public class HandlerFileDTO extends Observable implements CommHandler {
             if(found){
                 if(di.updateType()==DownloadInfo.UpdateType.RENAME){
                     Map<String,DownloadInfo> downloadInfoMap = DownloadsListPersistence.getDownloads();
-                    String[]aux = filename.split("."); // separate extension from file name
-                    String[]aux2 = aux[1].split("-"); // if already has a version separates de filename from the version
+                    String[]aux = filename.split("\\."); // separate extension from file name
+                    String[]aux2 = aux[0].split("-"); // if already has a version separates de filename from the version
                     String newName = aux2[0]+"-"+"V"+downloadInfoMap.get(filename).version() + "." + aux[1];
                     filename = newName;
                 }
@@ -75,6 +77,7 @@ public class HandlerFileDTO extends Observable implements CommHandler {
             File file = new File(ShareConfiguration.getDownloadFolder() + "/" + filename);
             fileOut = new FileOutputStream(file);
             fileOut.write(fileDTO.getFileData());
+            fileOut.flush();
             fileOut.flush();
             UserDefinedFileAttributeView view = Files.getFileAttributeView(file.toPath(), UserDefinedFileAttributeView.class);
             view.write("host", Charset.defaultCharset().encode(((SocketEncapsulatorDTO) dto).getSocket().getInetAddress().toString()));

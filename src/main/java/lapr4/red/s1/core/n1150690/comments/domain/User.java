@@ -26,6 +26,10 @@ public class User implements Serializable {
     public User() {
         this.usersName = System.getProperty("user.name");
     }
+    
+    public User(String name){
+        this.usersName = name;
+    }
 
     /**
      * Returns the name of the user.

@@ -16,12 +16,12 @@ public class NetworkSearchAction extends BaseAction {
     /**
      * The action's name.
      */
-    private static final String NAME = "Search Workbooks in the Network";
+    private static final String NAME = "Search Network Workbooks";
 
     /**
      * The reply time out.
      */
-    private static final int TIMEOUT = 120;
+    private static final int TIMEOUT = 50000;
 
     /**
      * The server's port number.
@@ -37,7 +37,8 @@ public class NetworkSearchAction extends BaseAction {
      * The name of the workbook to search.
      */
     private final String namePattern;
-
+    
+    private final String contentPattern;
     
 
     /**
@@ -48,10 +49,11 @@ public class NetworkSearchAction extends BaseAction {
      * @param workbookName the workbook name
      * @param content
      */
-    public NetworkSearchAction(Observer table, int portNumber, String workbookName) {
+    public NetworkSearchAction(Observer table, int portNumber, String workbookName,String content) {
         this.table = table;
         this.portNumber = portNumber;
         this.namePattern = workbookName;
+        this.contentPattern=content;
       
     }
 
@@ -62,12 +64,12 @@ public class NetworkSearchAction extends BaseAction {
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        SearchWorkbookRequestDTO searchRequest = new SearchWorkbookRequestDTO(namePattern);
-        CommUDPClient worker = new CommUDPClient(searchRequest, portNumber, TIMEOUT);
+        SearchWorkbookRequestDTO searchRequest = new SearchWorkbookRequestDTO(namePattern,contentPattern);
+        CommUDPClient workers = new CommUDPClient(searchRequest, portNumber, TIMEOUT);
         HandlerSearchWorkbookResponseDTO handler = new HandlerSearchWorkbookResponseDTO();
         handler.addObserver(table);
-        worker.addHandler(SearchWorkbookResponseDTO.class, handler);
-        worker.start();
+        workers.addHandler(SearchWorkbookResponseDTO.class, handler);
+        workers.start();
     }
 
 }

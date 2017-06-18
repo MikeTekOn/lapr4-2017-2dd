@@ -32,7 +32,7 @@
  * <h4>Clarifications with the product owner</h4>
  * <p><b>Q: </b>What does it mean that "Each of the shares should have a unique name."? Each range of shared cells have a name or each share of a cell(each modification) has a name?</p>
  * <p><b>A: </b>[Asked by hip-chat, had no answer.]</p>
- * <p><b>PRESUMPTION: </b>Each of the shared range of cells have a unique name</p>
+ * <p><b>ASSUMPTION:</b> Each of the shared range of cells have a unique name</p>
  *
  * <h4>Brainstorming</h4>
  * <p> We have two fundamental preoccupations in this use case:</p>
