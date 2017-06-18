@@ -1,4 +1,4 @@
-package lapr4.blue.s3.core.n1151159.contactswithtags.ui;
+package lapr4.blue.s3.core.n1151159.contactswithtags.presentation;
 
 import lapr4.blue.s3.core.n1151159.contactswithtags.domain.Contactable;
 import lapr4.blue.s3.core.n1151159.contactswithtags.domain.Tag;
@@ -6,7 +6,6 @@ import lapr4.blue.s3.core.n1151159.contactswithtags.domain.Tag;
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * A table model for contactable collections.
