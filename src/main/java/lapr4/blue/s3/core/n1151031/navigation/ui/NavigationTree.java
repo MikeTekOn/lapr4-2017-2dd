@@ -11,6 +11,7 @@ import lapr4.blue.s3.core.n1151031.navigation.CustomDoubleClickNavigator;
 import lapr4.blue.s3.core.n1151031.navigation.NavigationExpansionPopulator;
 import lapr4.blue.s3.core.n1151031.navigation.NavigationTreeCellRenderer;
 import lapr4.blue.s3.core.n1151031.navigation.RootNode;
+import lapr4.blue.s3.core.n1151031.navigation.util.TreeState;
 
 /**
  * A base-class for a navigation window.
@@ -28,6 +29,8 @@ public class NavigationTree extends JTree implements SelectionListener {
      * The data model that defines the tree
      */
     protected DefaultTreeModel treeModel;
+    
+    private TreeState treeState = TreeState.getInstance();
 
     /**
      * Creates a mew navigation tree.
@@ -60,9 +63,11 @@ public class NavigationTree extends JTree implements SelectionListener {
      * @param event the selection event that was fired
      */
     public void selectionChanged(SelectionEvent event) {
+        String state = treeState.getExpansionState(this);
         RootNode node = new RootNode(uiController, treeModel);
         node.populate();
         treeModel.setRoot(node);
+        treeState.setExpansionState(this, state);
 //        for (int i = 0; i < this.getRowCount(); i++) {
 //            this.expandRow(i);
 //        }
