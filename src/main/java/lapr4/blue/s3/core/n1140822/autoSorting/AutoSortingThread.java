@@ -30,14 +30,35 @@ import javax.swing.border.MatteBorder;
 /**
  * @author Renato Oliveira 1140822@isep.ipp.pt
  */
-public class AutoSortingThread extends Thread implements CellListener, Observer, HeaderCellListener {
+public class AutoSortingThread extends Thread implements CellListener, HeaderCellListener {
 
+    /**
+     * The array of rows.
+     */
     private RangeRowDTO[] rowArray;
+    /**
+     * The row comparator
+     */
     private RangeRowDTOComparator comparator;
+    /**
+     * The sorting algorithm
+     */
     private SortingAlgorithm algorithm;
+    /**
+     * The relative sorting column index
+     */
     private int sortingColumnIndex;
+    /**
+     * The focus owner instance
+     */
     private final SortingFocusOwner focusOwner = new SortingFocusOwner();
+    /**
+     * The absolute sorting column index
+     */
     private int realSortingColumnIndex;
+    /**
+     * Auxiliar sorting column index
+     */
     int auxSortingIndex;
 
     public AutoSortingThread(RangeRowDTO[] rowArray, RangeRowDTOComparator comparator, SortingAlgorithm algorithm, int sortingColumnIndex, int realSortingColumnIndex) {
@@ -46,13 +67,6 @@ public class AutoSortingThread extends Thread implements CellListener, Observer,
         this.algorithm = algorithm;
         this.realSortingColumnIndex = realSortingColumnIndex;
         this.sortingColumnIndex = sortingColumnIndex;
-
-        if (algorithm instanceof BubbleSort) {
-            ((BubbleSort) algorithm).addObserver(this);
-
-        } else {
-            ((QuickSort) algorithm).addObserver(this);
-        }
         auxSortingIndex = sortingColumnIndex;
         runInitial();
     }
@@ -95,13 +109,7 @@ public class AutoSortingThread extends Thread implements CellListener, Observer,
 
     }
 
-    @Override
-    public void update(Observable o, Object o1) {
-        if (!o1.equals(algorithm)) {
-            algorithm.sort(rowArray, comparator);
 
-        }
-    }
 
     @Override
     public void headerValueChanged(int colIndex) {
@@ -149,6 +157,12 @@ public class AutoSortingThread extends Thread implements CellListener, Observer,
         }
     }
 
+    /**
+     * Paints the sorting column.
+     * @param stCell the stylable cell to change background
+     * @param indexToCheck to see if this is pivot column
+     * @param isAscending to change color accordingly
+     */
     private void paintSortingColumn(StylableCell stCell, int indexToCheck, boolean isAscending) {
         if (indexToCheck == this.sortingColumnIndex) {
             if (!isAscending)
@@ -161,6 +175,12 @@ public class AutoSortingThread extends Thread implements CellListener, Observer,
         }
     }
 
+    /**
+     * Paints a range of cells.
+     * @param selectedCells the cell matrix
+     * @param sortingColumnIndex the sorting column index
+     * @param isAscending to change color accordingly
+     */
     private void paintSortingRange(Cell[][] selectedCells, int sortingColumnIndex, boolean isAscending) {
         for (int i = 0; i < selectedCells.length; i++) {
 
@@ -201,6 +221,9 @@ public class AutoSortingThread extends Thread implements CellListener, Observer,
 
     }
 
+    /**
+     * Initial method to paint and sort once.
+     */
     private void runInitial() {
         Cell[][] cells = new Cell[rowArray.length][rowArray[0].getRow().length];
         for (int i = 0; i < rowArray.length; i++) {
@@ -212,6 +235,9 @@ public class AutoSortingThread extends Thread implements CellListener, Observer,
         algorithm.sort(rowArray, comparator);
     }
 
+    /**
+     * Class that extends focus owner action, to get the select cell range.
+     */
     private class SortingFocusOwner extends FocusOwnerAction implements ActionListener {
         Cell[][] selectedCells;
         int columnIndex;
