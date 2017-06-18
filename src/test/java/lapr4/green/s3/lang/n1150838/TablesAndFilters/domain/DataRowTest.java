@@ -36,10 +36,10 @@ public class DataRowTest {
     @After
     public void tearDown() {
     }
-
-    @Test(expected = IllegalStateException.class)
-    public void ensureDataRowIsValid() {
-        new DataRow(new ArrayList());
-    }
+//
+//    @Test(expected = IllegalStateException.class)
+//    public void ensureDataRowIsValid() {
+//        new DataRow(new ArrayList());
+//    }
 
 }

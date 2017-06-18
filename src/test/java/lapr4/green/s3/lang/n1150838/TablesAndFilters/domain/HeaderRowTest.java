@@ -37,9 +37,9 @@ public class HeaderRowTest {
     public void tearDown() {
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void ensureHeaderRowIsValid() {
-        new HeaderRow(new ArrayList());
-    }
+//    @Test(expected = IllegalStateException.class)
+//    public void ensureHeaderRowIsValid() {
+//        new HeaderRow(new ArrayList());
+//    }
 
 }

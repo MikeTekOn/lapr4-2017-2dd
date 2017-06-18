@@ -21,9 +21,6 @@ public class DataRow extends Row implements Serializable  {
     private List<Cell> row;
 
     public DataRow(List<Cell> row) {
-        if(row.size()==0){
-            throw new IllegalStateException();
-        }
         this.row = row;
     }
 
