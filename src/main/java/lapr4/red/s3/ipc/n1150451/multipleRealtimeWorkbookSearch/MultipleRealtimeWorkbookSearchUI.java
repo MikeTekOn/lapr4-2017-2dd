@@ -10,6 +10,7 @@ import csheets.ui.ctrl.UIController;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -51,21 +52,47 @@ public class MultipleRealtimeWorkbookSearchUI extends JPanel {
     }
 
     private void createComponents() {
+        GridBagConstraints grid = new GridBagConstraints();
+        grid.fill = GridBagConstraints.VERTICAL;
+        grid.gridx = 0;
+        grid.gridy = 0;
 
         tabs = new JTabbedPane(JTabbedPane.TOP);
-        JButton b = new JButton("New search");
-        b.addActionListener(new ActionListener() {
+
+        tabs.addTab("search" + auxTabCount, createMainPanel());
+        setLayout(new GridBagLayout());
+        add(tabs, grid);
+        grid.gridy = 1;
+        add(createButtonsPanel(), grid);
+
+    }
+
+    private JPanel createButtonsPanel() {
+        JPanel panel = new JPanel(new FlowLayout());
+        JButton add = new JButton("New search");
+        add.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 auxTabCount++;
                 tabs.addTab("search" + auxTabCount, createMainPanel());
             }
         });
+        panel.add(add);
 
-        tabs.addTab("search" + auxTabCount, createMainPanel());
-        setLayout(new BorderLayout());
-        add(tabs, BorderLayout.NORTH);
-        add(b, BorderLayout.CENTER);
+        JButton delete = new JButton("Remove search");
+        delete.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (auxTabCount == 1) {
+                    JOptionPane.showMessageDialog(getRootPane(), "It is not possible to delete the only search.");
+                } else {
+                    tabs.remove(tabs.getSelectedIndex());
+                    auxTabCount--;
+                }
+            }
+        });
+        panel.add(delete);
+        return panel;
 
     }
 
@@ -101,7 +128,7 @@ public class MultipleRealtimeWorkbookSearchUI extends JPanel {
                         f.searchButton.doClick();
                         if (!f.flagSucessClick) {
                             f.isThreadActive = false;
-                            
+
                             cBox.setSelected(false);
                             return;
                         }

@@ -1,7 +1,7 @@
 package lapr4.blue.s3.core.n1151159.contactswithtags.ui;
 
 import csheets.ui.ctrl.UIController;
-import lapr4.blue.s3.core.n1151159.contactswithtags.application.SearchContactByTagController;
+import lapr4.blue.s3.core.n1151159.contactswithtags.application.TagController;
 import lapr4.blue.s3.core.n1151159.contactswithtags.domain.Contactable;
 import lapr4.green.s2.core.n1150738.contacts.application.CompanyContactController;
 import lapr4.green.s2.core.n1150738.contacts.domain.CompanyContact;
@@ -30,7 +30,7 @@ public class SearchContactsByTagDialog extends JDialog {
     /**
      * The search by contact controller.
      */
-    private final SearchContactByTagController controller;
+    private final TagController controller;
 
     /**
      * The tag regex text field.
@@ -60,7 +60,7 @@ public class SearchContactsByTagDialog extends JDialog {
      */
     public SearchContactsByTagDialog(Window parentWindow, UIController uiController) {
         this.uiController = uiController;
-        controller = new SearchContactByTagController(uiController.getUserProperties());
+        controller = new TagController(uiController.getUserProperties());
         createComponents();
         pack();
         setLocationRelativeTo(parentWindow);

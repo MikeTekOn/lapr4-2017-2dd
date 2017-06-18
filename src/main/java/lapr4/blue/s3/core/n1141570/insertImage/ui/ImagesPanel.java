@@ -8,6 +8,7 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Frame;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -19,6 +20,7 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -33,7 +35,7 @@ public class ImagesPanel extends JPanel implements SelectionListener,
     /**
      * The assertion controller
      */
-    private InsertImageController controller;
+    private final InsertImageController controller;
 
     /**
      * The imageable cell currently being displayed in the panel
@@ -45,15 +47,30 @@ public class ImagesPanel extends JPanel implements SelectionListener,
      */
     private JLabel imageLabel = new JLabel();
 
+    /**
+     * The card layout.
+     */
     private final CardLayout cardLayout = new CardLayout();
 
+    /**
+     * The card layout panel.
+     */
     private final JPanel cardLayoutPanel = new JPanel();
 
+    /**
+     * The user interface controller.
+     */
     private final UIController uiController;
 
+    /**
+     * The image path.
+     */
     private String imagePath = "";
 
-    private final Dimension BUTTON_SIZE = new Dimension(115, 30);
+    /**
+     * The default button size.
+     */
+    private final Dimension BUTTON_SIZE = new Dimension(100, 30);
 
     /**
      * Creates a new images panel.
@@ -70,6 +87,7 @@ public class ImagesPanel extends JPanel implements SelectionListener,
         uiController.addSelectionListener(this);
         this.uiController = uiController;
 
+        // calls the user interface components
         createComponents();
     }
 
@@ -98,10 +116,12 @@ public class ImagesPanel extends JPanel implements SelectionListener,
         return cardLayoutPanelMain;
     }
 
+    /**
+     * Creates the card layout panel.
+     *
+     * @return the card layout panel.
+     */
     private JPanel cardLayoutPanel() {
-
-        //FOR TESTING
-        System.out.println("ATUALIZASTE_ME!!!");
 
         if (cell != null) {
             if (!cell.getImages().isEmpty()) {
@@ -110,32 +130,14 @@ public class ImagesPanel extends JPanel implements SelectionListener,
 
                     icon = new ImageIcon(imgStr);
                     Image img = icon.getImage();
-                    Image newimg = img.getScaledInstance(200, 200, java.awt.Image.SCALE_SMOOTH);
+                    Image newimg = img.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
 
                     imageLabel = new JLabel(new ImageIcon(newimg));
+                    imageLabel.setName(imgStr);
                     cardLayoutPanel.add(imageLabel);
                 }
             }
-
         }
-
-        ImageIcon icon = new ImageIcon(imagePath);
-        if (cell != null) {
-
-            icon = new ImageIcon(cell.getImage());
-        }
-        System.out.println("IMAGE PATH no cardLayoutPanel: " + imagePath);
-
-        Image img = icon.getImage();
-        Image newimg = img.getScaledInstance(200, 200, java.awt.Image.SCALE_SMOOTH);
-
-        imageLabel = new JLabel();
-        imageLabel.setText(imagePath);
-        imageLabel.setName(imagePath);
-        imageLabel.setIcon(icon);
-        
-        cardLayoutPanel.add(imageLabel);
-
         //creates layout
         cardLayoutPanel.setLayout(cardLayout);
 
@@ -150,6 +152,7 @@ public class ImagesPanel extends JPanel implements SelectionListener,
     private JPanel createButtonsPanel() {
         JPanel buttonsPanel = new JPanel();
 
+        buttonsPanel.add(openImageButton());
         buttonsPanel.add(addImageButton());
         buttonsPanel.add(removeImageButton());
 
@@ -171,9 +174,9 @@ public class ImagesPanel extends JPanel implements SelectionListener,
     }
 
     /**
-     * Creates the save button.
+     * Creates the add button.
      *
-     * @return save button
+     * @return add button
      */
     private JButton addImageButton() {
         JButton addImageButton = new JButton("Add");
@@ -189,22 +192,34 @@ public class ImagesPanel extends JPanel implements SelectionListener,
 
                 if (returnName == JFileChooser.APPROVE_OPTION) {
                     File f = chooser.getSelectedFile();
+                    boolean notFound = true;
                     if (f != null) {
 
                         path = f.getAbsolutePath();
 
                         Cell activeCell = uiController.getActiveCell();
                         ImageableCell imageableCell = (ImageableCell) activeCell.getExtension(ImagesExtension.NAME);
-                        //imageableCell.setImage(path);
-                        ////////////////////////////////////////////////////
-                        imageableCell.setImageToImages(path);
+
+                        for (String currentImage : imageableCell.getImages()) {
+                            if (currentImage.equalsIgnoreCase(path)) {
+                                notFound = false;
+                            }
+                        }
+
+                        if (notFound) {
+                            imageableCell.setImageToImages(path);
+                        }
                         imagePath = path;
-                        System.out.println("Image changed to " + imagePath);
+
+                        if (!notFound) {
+                            JOptionPane.showMessageDialog(chooser, "Cannot add the same image!", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+
                     } else {
                         JOptionPane.showMessageDialog(chooser, "Chosen file is not valid!", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
-                    JOptionPane.showMessageDialog(chooser, "Canceled", "Cancel", JOptionPane.CANCEL_OPTION);
+                    JOptionPane.showMessageDialog(chooser, "Canceled the image choosing", "Cancel", JOptionPane.CANCEL_OPTION);
                 }
 
             }
@@ -214,9 +229,9 @@ public class ImagesPanel extends JPanel implements SelectionListener,
     }
 
     /**
-     * Creates the cancel button.
+     * Creates the remove image button.
      *
-     * @return cancel button
+     * @return remove button
      */
     private JButton removeImageButton() {
         JButton removeImageButton = new JButton("Remove");
@@ -225,23 +240,73 @@ public class ImagesPanel extends JPanel implements SelectionListener,
         removeImageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
+                boolean removed = false;
 
-                Component visibleComponentName = getCurrentCard();
-                String nameTest = visibleComponentName.getName();
-
-                ((JLabel) visibleComponentName).setIcon(null);
-                String name = ((JLabel) visibleComponentName).getText();
-                String name2 = ((JLabel) visibleComponentName).getName();
-                
+                Component visibleComponent = getCurrentCard();
+                String imgPath = ((JLabel) visibleComponent).getName();
 
                 //cardLayout.removeLayoutComponent(visibleComponentName.);
-                cell.removeImageFromImages(name);
+                if (cell.removeImageFromImages(imgPath)) {
+                    removed = true;
+                }
+                //refresh the card layout
+                ImageableCell activeCell
+                        = (ImageableCell) cell.getExtension(ImagesExtension.NAME);
+                imageChanged(activeCell);
+
+                if (removed) {
+                    JOptionPane.showMessageDialog(cardLayoutPanel, "Removed the current image.", "Remove image", JOptionPane.PLAIN_MESSAGE);
+                } else {
+                    JOptionPane.showMessageDialog(cardLayoutPanel, "Removing the current image failed.", "Removed failed", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        return removeImageButton;
+    }
+
+    /**
+     * Creates the open image button.
+     *
+     * @return open button
+     */
+    private JButton openImageButton() {
+        JButton removeImageButton = new JButton("Open");
+        removeImageButton.setPreferredSize(BUTTON_SIZE);
+
+        removeImageButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+
+                JDialog dialog = new JDialog((Frame) null, "Image selected to open");
+                dialog.setUndecorated(true);
+
+                Component visibleComponent = getCurrentCard();
+                String imgStr = ((JLabel) visibleComponent).getName();
+
+                ImageIcon icon = new ImageIcon(imgStr);
+
+                icon = new ImageIcon(imgStr);
+                Image img = icon.getImage();
+
+                JLabel imageLabel = new JLabel(new ImageIcon(img));
+                imageLabel.setName(imgStr);
+
+                dialog.add(imageLabel);
+                dialog.setLocationRelativeTo(cardLayoutPanel);
+                dialog.pack();
+                dialog.setVisible(true);
 
             }
         });
         return removeImageButton;
     }
 
+    /**
+     * Creates the next image button
+     *
+     * @return the next button
+     */
     private JButton nextImageButton() {
         JButton nextImageButton = new JButton("Next");
         nextImageButton.setPreferredSize(BUTTON_SIZE);
@@ -249,13 +314,17 @@ public class ImagesPanel extends JPanel implements SelectionListener,
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 cardLayout.next(cardLayoutPanel);
-
             }
         });
 
         return nextImageButton;
     }
 
+    /**
+     * Creates the previous image button.
+     *
+     * @return the previous button
+     */
     private JButton previousImageButton() {
         JButton previousImageButton = new JButton("Previous");
         previousImageButton.setPreferredSize(BUTTON_SIZE);
@@ -291,8 +360,6 @@ public class ImagesPanel extends JPanel implements SelectionListener,
             imageChanged(activeCell);
 
             imagePath = activeCell.getImage();
-            System.out.println("The image path for this cell is " + imagePath);
-            
         } else {
             imagePath = "";
         }
@@ -305,9 +372,9 @@ public class ImagesPanel extends JPanel implements SelectionListener,
     }
 
     /**
-     * Updates the image
+     * Updates the image path
      *
-     * @param imagePath
+     * @param imagePath the new image path
      */
     public void setUserImage(String imagePath) {
 
@@ -319,9 +386,6 @@ public class ImagesPanel extends JPanel implements SelectionListener,
             icon = new ImageIcon(cell.getImage());
         }
 
-        //PARA TESTAR
-        System.out.println("Image path no setUserImage: " + imagePath);
-
         Image img = icon.getImage();
         Image newimg = img.getScaledInstance(200, 200, java.awt.Image.SCALE_SMOOTH);
 
@@ -330,7 +394,6 @@ public class ImagesPanel extends JPanel implements SelectionListener,
         //Refreshes the cardLayoutPanel
         cardLayoutPanel().validate();
         cardLayoutPanel().repaint();
-
     }
 
     @Override
@@ -338,12 +401,14 @@ public class ImagesPanel extends JPanel implements SelectionListener,
         // Stores the cell for use when applying images
         this.cell = cell;
 
-//        // The controller must decide what to do...
-//        controller.cellSelected(cell);
-        ////////////////////////////////////////////////
-        controller.cellSelected2(cell);
+        controller.cellSelected(cell);
     }
 
+    /**
+     * Obtains the active component of the cardLayoutPanel
+     *
+     * @return the active component of the cardLayoutPanel
+     */
     public Component getCurrentCard() {
         // String activeImageStr = null;
         Component activeComponent = new Component() {
@@ -351,16 +416,12 @@ public class ImagesPanel extends JPanel implements SelectionListener,
 
         for (Component comp : cardLayoutPanel.getComponents()) {
             if (comp.isVisible() == true) {
-
                 if (comp instanceof JLabel) {
-                    //((JLabel) component).toString();
                     activeComponent = comp;
                 }
-
             }
         }
 
-        //return activeImageStr;
         return activeComponent;
     }
 

@@ -14,8 +14,9 @@ import lapr4.blue.s3.core.n1141570.insertImage.ImagesExtension;
  *
  * @author Eric
  */
-public class ImagedCellDecorator extends CellDecorator{
-        /**
+public class ImagedCellDecorator extends CellDecorator {
+
+    /**
      * The font used to render the '+'
      */
     private static final Font font = new Font("Dialog", Font.PLAIN, 10);
@@ -27,16 +28,17 @@ public class ImagedCellDecorator extends CellDecorator{
     }
 
     /**
-     * Decorates the given graphics context if the cell being rendered has an image.
+     * Decorates the given graphics context if the cell being rendered has an
+     * image.
      *
      * @param component the cell renderer component
-     * @param g         the graphics context on which drawing should be done
-     * @param cell      the cell being rendered
-     * @param selected  whether the cell is selected
-     * @param hasFocus  whether the cell has focus
+     * @param g the graphics context on which drawing should be done
+     * @param cell the cell being rendered
+     * @param selected whether the cell is selected
+     * @param hasFocus whether the cell has focus
      */
     public void decorate(JComponent component, Graphics g, Cell cell,
-                         boolean selected, boolean hasFocus) {
+            boolean selected, boolean hasFocus) {
         if (enabled) {
             ImageableCell imageableCell = (ImageableCell) cell.getExtension(ImagesExtension.NAME);
             if (imageableCell.hasAnyImage()) {
