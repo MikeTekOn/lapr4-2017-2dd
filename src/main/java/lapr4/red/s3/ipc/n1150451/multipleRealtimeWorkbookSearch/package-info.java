@@ -79,7 +79,7 @@
  * <img src="udp_rcv.png" alt="image">
  *
  * <h3>4.3. Classes</h3>
- *
+ * <img src="udp_classDiagram.png" alt="image">
  * <h3>4.4. Design Patterns and Best Practices</h3>
  * Since there is the need to send multiple information over the network the DTO
  * pattern was used so that only one request can bring all the required data, in
