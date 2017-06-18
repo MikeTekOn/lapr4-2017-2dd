@@ -60,9 +60,9 @@
  * <li>SearchWorkbookNetworkAction - creates the UDPClient thread that will
  * handle the broadcast</li>
  * <li>SearchWorkbookNetworkPanel - sidebar panel for the feature</li>
- * <li> Directory - Used to search the file systems.</li>
- * <li> FileDTO - contains the file information </li>
- * <li> RegexUtil - to search the given patterns </li>
+ * <li>Directory - Used to search the file systems.</li>
+ * <li>FileDTO - contains the file information </li>
+ * <li>RegexUtil - to search the given patterns </li>
  * </ul>
  *
  * <h3>4.1 How to send the UDP broadcast with the workbook name/content
