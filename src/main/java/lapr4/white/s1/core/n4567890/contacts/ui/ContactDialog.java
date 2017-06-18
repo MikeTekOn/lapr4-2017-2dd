@@ -8,7 +8,7 @@ package lapr4.white.s1.core.n4567890.contacts.ui;
 import csheets.CleanSheets;
 import eapli.framework.persistence.DataConcurrencyException;
 import eapli.framework.persistence.DataIntegrityViolationException;
-import lapr4.blue.s3.core.n1151159.contactswithtags.ui.TagManagerPanel;
+import lapr4.blue.s3.core.n1151159.contactswithtags.presentation.TagManagerPanel;
 import lapr4.green.s2.core.n1150738.contacts.domain.CompanyContact;
 import lapr4.green.s2.core.n1150738.contacts.domain.Profession;
 import lapr4.white.s1.core.n4567890.contacts.application.ContactController;
@@ -240,6 +240,10 @@ public class ContactDialog extends JDialog implements ActionListener {
         // Final Pane: The status label for messages
         statusLabel = new JLabel();
 
+        // Creates the tags panel
+        tagsPanel = new TagManagerPanel(this);
+        tagsPanel.setBorder(BorderFactory.createTitledBorder("Associated Tags"));
+
 
         switch (this.mode) {
             case ADD:
@@ -257,15 +261,12 @@ public class ContactDialog extends JDialog implements ActionListener {
                 this.addressField.setEditable(false);
                 this.companyButton.setEnabled(false);
                 this.professionButton.setEnabled(false);
+                this.tagsPanel.hideButtons();
                 break;
             case EDIT:
                 statusLabel.setText(CleanSheets.getString("status_please_update_data_of_contcat"));
                 break;
         }
-
-        // Creates the tags panel
-        tagsPanel = new TagManagerPanel(this);
-        tagsPanel.setBorder(BorderFactory.createTitledBorder("Associated Tags"));
 
         // Creates the fields panel
         JPanel fieldsPanel = new JPanel(new BorderLayout());

@@ -5,34 +5,23 @@
  */
 package lapr4.green.s2.core.n1150738.contacts.ui;
 
-import csheets.CleanSheets;
 import csheets.ui.ctrl.UIController;
-import eapli.framework.persistence.DataConcurrencyException;
-import eapli.framework.persistence.DataIntegrityViolationException;
-import lapr4.blue.s3.core.n1151159.contactswithtags.ui.SearchContactsByTagButton;
-import lapr4.blue.s3.core.n1151159.contactswithtags.ui.TagFrequencyPanel;
-import lapr4.blue.s3.core.n1151159.contactswithtags.ui.TagsChangesWatchDog;
+import lapr4.blue.s3.core.n1151159.contactswithtags.presentation.SearchContactsByTagButton;
+import lapr4.blue.s3.core.n1151159.contactswithtags.presentation.TagFrequencyPanel;
+import lapr4.blue.s3.core.n1151159.contactswithtags.presentation.TagsChangesWatchDog;
 import lapr4.green.s2.core.n1150738.contacts.application.CompanyContactController;
 import lapr4.green.s2.core.n1150738.contacts.domain.*;
 import lapr4.red.s1.core.n1150623.labelsForContacts.application.LabelsForContactsController;
-import lapr4.red.s1.core.n1150623.labelsForContacts.presentation.LabelsForContactsUI;
 import lapr4.red.s1.core.n1150943.contacts.application.EventController;
-import lapr4.red.s1.core.n1150943.contacts.ui.AddEventDialog;
-import lapr4.red.s1.core.n1150943.contacts.ui.EditEventDialog;
 import lapr4.white.s1.core.n4567890.contacts.ContactsExtension;
-import lapr4.white.s1.core.n4567890.contacts.application.ContactController;
 import lapr4.white.s1.core.n4567890.contacts.domain.Contact;
 import lapr4.white.s1.core.n4567890.contacts.domain.Event;
-import lapr4.white.s1.core.n4567890.contacts.ui.ContactDialog;
-import ui.ImageUtils;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.Image;
 import java.awt.event.*;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**

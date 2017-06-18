@@ -7,13 +7,13 @@ skinparam shadowing false
 
 actor User as U
 participant "SearchContactByTagDialog" as dialog <<Presentation>>
-participant "SearchContactByTagController" as ctrl <<Application>>
-participant "contacts : List<Taggable>" as contacts
+participant "TagController" as ctrl <<Application>>
+participant "contacts : List<Contactable>" as contacts
 database PersonContactRepository as pRepo <<Repository>>
 database CompanyContactRepository as cRepo <<repository>>
 participant TagService as serv <<Domain>>
-participant "taggablesThatMatch : List<Taggable>" as ts
-participant "t : Taggable" as t
+participant "contactablesThatMatch : List<Contactable>" as ts
+participant "c : Contactable" as t
 
 activate U
 
@@ -42,17 +42,17 @@ deactivate cRepo
 ctrl -> contacts : addAll(companyContacts)
 activate contacts
 deactivate contacts
-ctrl -> serv : contactsWithTag = getTaggablesByTagRegex(contacts, regex)
+ctrl -> serv : contactsWithTag = filterTaggablesByTagRegex(contacts, regex)
 activate serv
 
 create ts
 serv -> ts : create()
-loop foreach t in contacts
-    serv -> t : b = containsTag()
+loop foreach c in contacts
+    serv -> t : b = containsTag(regex)
     activate t
     deactivate t
     alt b is true
-        serv -> ts : add(t)
+        serv -> ts : add(c)
         activate ts
         deactivate ts
     end
