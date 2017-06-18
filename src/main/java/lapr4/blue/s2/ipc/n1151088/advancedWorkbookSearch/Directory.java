@@ -17,15 +17,16 @@ import lapr4.green.s1.ipc.n1150838.findworkbooks.FindWorkbooksPublisher;
 /**
  *
  * @author nunopinto
- * @author Diana Silva [1151088@isep.ipp.pt] 
- *         update due to pattern search criteria
+ * @author Diana Silva [1151088@isep.ipp.pt] update due to pattern search
+ * criteria
  */
-public class Directory implements Runnable{
+public class Directory implements Runnable {
 
     private File rootPath;
-    private static final String PATTERN="*.cls";
+    private static final String PATTERN = "*.cls";
     private SearchPattern searchPattern;
     private String regex;
+    private boolean threadIsActive=false;
 
     /**
      * Acceptable extensions
@@ -34,16 +35,17 @@ public class Directory implements Runnable{
         cls
     };
 
-    public Directory(File rootPath, String regex) {
+    public Directory(File rootPath, String regex, boolean isActive) {
         if (validatePath(rootPath) == false) {
             throw new IllegalStateException();
         }
-        if (validateRegex(regex)==false){
+        if (validateRegex(regex) == false) {
             throw new IllegalStateException();
         }
         this.rootPath = rootPath.getAbsoluteFile();
-        this.searchPattern= new SearchPattern(regex);
-        this.regex=regex;
+        this.searchPattern = new SearchPattern(regex);
+        this.regex = regex;
+        this.threadIsActive=isActive;
     }
 
     /**
@@ -55,8 +57,8 @@ public class Directory implements Runnable{
     public boolean validatePath(File rootPath) {
         return rootPath.isDirectory();
     }
-    
-    public boolean validateRegex(String regex){
+
+    public boolean validateRegex(String regex) {
         boolean test = true;
         try {
             Pattern.compile(regex);
@@ -81,30 +83,30 @@ public class Directory implements Runnable{
     private void search(File file) {
 
         //do you have permission to read this directory?
-        if (file.canRead()){
-            try{
-            for (File temp : file.listFiles()) {
-                if (temp.isDirectory()) {
-                    search(temp);
-                } else {
-                  
-                    if (searchPattern.acceptExp(temp.getName()) ) {
-                        if( searchPattern.checkIfMatches(temp.getName())){
-                        FileDTO dto = new FileDTO(temp.getName(), temp.getAbsolutePath());
-                        FindWorkbooksPublisher.getInstance().notifyObservers(dto);
-                        }
-                    }
+        if (file.canRead()) {
+            try {
+                for (File temp : file.listFiles()) {
+                    if (temp.isDirectory()) {
+                        search(temp);
+                    } else {
 
+                        if (searchPattern.acceptExp(temp.getName())) {
+                            if (searchPattern.checkIfMatches(temp.getName())) {
+                                FileDTO dto = new FileDTO(temp.getName(), temp.getAbsolutePath());
+                                FindWorkbooksPublisher.getInstance().notifyObservers(dto);
+                            }
+                        }
+
+                    }
                 }
-            }
-            }catch(NullPointerException ex){
+            } catch (NullPointerException ex) {
                 //THIS SHOULD NOT HAPPEN
                 //File.listFiles() returns null when a path is not acessible
             }
 
         }
     }
-    
+
 //    /**
 //     * the algorithm to search for files
 //     *
@@ -122,7 +124,6 @@ public class Directory implements Runnable{
 //        }
 //    }
 //    
-
     /**
      * Loads a workbook from the given file.
      *
@@ -153,11 +154,16 @@ public class Directory implements Runnable{
         }
 
     }
-    
-        @Override
-    public void run() {
-        searchFiles();
-    }
 
+    @Override
+    public void run() {
+        if (threadIsActive) {
+            while (true) {
+                searchFiles();
+            }
+        } else {
+            searchFiles();
+        }
+    }
 
 }

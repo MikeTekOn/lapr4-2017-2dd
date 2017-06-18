@@ -9,6 +9,7 @@ import java.awt.Graphics;
 import javax.swing.JComponent;
 import javax.swing.JToolBar;
 import lapr4.blue.s2.ipc.n1151088.advancedWorkbookSearch.ui.FindWorkbookSideBar;
+import lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch.MultipleRealtimeWorkbookSearchUI;
 
 /**
  *
@@ -37,7 +38,8 @@ public class UIFindWorkbooksExtension extends UIExtension {
 	 */
     @Override
 	public JComponent getSideBar() {
-		return new FindWorkbookSideBar(super.uiController);
+		//return new FindWorkbookSideBar(super.uiController);
+		return new MultipleRealtimeWorkbookSearchUI(super.uiController);
 	}
         
     @Override

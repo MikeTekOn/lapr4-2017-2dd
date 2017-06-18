@@ -8,7 +8,6 @@ package lapr4.red.s3.ipc.n1150690.ImportExportDatabase.ImportDatabase.applicatio
 import csheets.ui.ctrl.UIController;
 import java.sql.SQLException;
 import lapr4.green.s1.ipc.n1150800.importexportTXT.CellRange;
-import lapr4.red.s1.core.n1150451.exportPDF.WorkbookHandler;
 import lapr4.red.s3.ipc.n1150690.ImportExportDatabase.ImportDatabase.domain.ThreadImport;
 
 /**
@@ -32,6 +31,8 @@ public class ImportFromDatabaseController {
      */
     private String db_url;
     
+    private String driver;
+    
     /**
      * The range of cells selected by the user
      */
@@ -44,11 +45,12 @@ public class ImportFromDatabaseController {
      * @param tableName the table name
      * @param db_url the database url
      */
-    public ImportFromDatabaseController(UIController uiController, String tableName, String db_url, CellRange range) {
+    public ImportFromDatabaseController(UIController uiController, String tableName, String db_url, CellRange range, String driver) {
         this.uiController = uiController;
         this.tableName = tableName;
         this.db_url = db_url;
         this.range = range;
+        this.driver = driver;
     }
 
     /**
@@ -57,7 +59,7 @@ public class ImportFromDatabaseController {
      * @throws SQLException
      */
     public void importFromDatabase() throws SQLException, InterruptedException {
-        ThreadImport thread = new ThreadImport(tableName, uiController.getActiveSpreadsheet(), db_url, range);
+        ThreadImport thread = new ThreadImport(tableName, uiController.getActiveSpreadsheet(), db_url, range, driver);
         thread.kill();
     }
 }
