@@ -460,7 +460,7 @@ public class NotesEditionPanel extends JPanel {
     private void add() throws DataConcurrencyException, DataIntegrityViolationException {
         String name = (String) comboContacts.getSelectedItem();
         final AddNoteDialog a = new AddNoteDialog(controller, new DefaultStyledDocument(sc), name);
-        clear();
+        rebuild(name);
     }
 
     /**
@@ -473,7 +473,7 @@ public class NotesEditionPanel extends JPanel {
         String name = (String) comboContacts.getSelectedItem();
         Note n = (Note) noteList.getSelectedValue();
         final EditNoteDialog e = new EditNoteDialog(controller, new DefaultStyledDocument(sc), name, n);
-        clear();
+        rebuild(name);
     }
 
     /**
@@ -510,8 +510,8 @@ public class NotesEditionPanel extends JPanel {
     /**
      * update combobox (clear related components)
      */
-    private void clear() {
-        comboContacts.setSelectedIndex(-1);
+    private void rebuild(String name) {
+        comboContacts.setSelectedItem(name);
     }
 
 }

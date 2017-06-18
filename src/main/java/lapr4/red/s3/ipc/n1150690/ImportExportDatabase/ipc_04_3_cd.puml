@@ -1,0 +1,67 @@
+@startuml
+
+'http://plantuml.com/skinparam.html'
+
+class ExportDatabaseUI{
+}
+class ExportDatabaseController{
+    +export()
+}
+class ThreadExport{
+    +run()
+}
+class DatabaseExportOperations{
+    +createTable()
+    +fillTable()
+}
+class DatabaseConnection{
+    +openConnection(String url, String driver)
+    -closeConnection()
+}
+class DatabaseDriver<< enum >>{
+    -String name;
+    -String driver;
+    -String defaultURL;
+}
+class DatabaseImportOperations{
+    +importTableContent()
+}
+class ThreadImport{
+    +run()
+}
+class ImportDatabaseController{
+    +import()
+}
+class ImportDatabaseUI{
+}
+class CellRange{
+    +getColumns()
+    +getRows()
+}
+class WorkbookHandler{
+    +getListCellsBetweenRange(spreadsheet, range);
+}
+
+ExportDatabaseUI ..|> ExportDatabaseController
+ExportDatabaseUI ..|> CellRange
+ExportDatabaseUI ..|> DatabaseDriver
+ExportDatabaseController ..|> ThreadExport
+ExportDatabaseController ..|> WorkbookHandler
+ExportDatabaseController ..|> CellRange
+ThreadExport --> DatabaseExportOperations
+DatabaseConnection --> DatabaseDriver
+ThreadExport --> DatabaseConnection
+
+ImportDatabaseUI ..|> ImportDatabaseController
+ImportDatabaseUI ..|> DatabaseDriver
+ImportDatabaseUI ..|> CellRange
+ImportDatabaseController ..|> ThreadImport
+ImportDatabaseController ..|> WorkbookHandler
+ImportDatabaseController ..|> CellRange
+ThreadImport --> DatabaseImportOperations
+DatabaseConnection --> DatabaseDriver
+ThreadImport --> DatabaseConnection
+
+
+
+@enduml

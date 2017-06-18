@@ -85,17 +85,7 @@ public class CellImpl implements Cell {
 	private transient Map<String, CellExtension> extensions =
 		new HashMap<String, CellExtension>();
 
-        /**
-	 * Creates a new cell at the given address in the given spreadsheet.
-	 * (not intended to be used directly).
-	 * @see Spreadsheet#getCell(Address)
-	 * @param spreadsheet the spreadsheet
-	 * @param address the address of the cell
-	 */
-	CellImpl(Spreadsheet spreadsheet, Address address) {
-		this.spreadsheet = spreadsheet;
-		this.address = address;
-	}
+      
 
         /**
 	 * Creates a new cell at the given address in the given spreadsheet,
@@ -140,6 +130,17 @@ public class CellImpl implements Cell {
 		storeContent(content);
 		reevaluate();
 	}
+
+        /**
+	 * Creates a new cell at the given address in the given spreadsheet.
+	 * (not intended to be used directly).
+	 * @see Spreadsheet#getCell(Address)
+	 * @param spreadsheet the spreadsheet
+	 * @param address the address of the cell
+	 */
+        public CellImpl(Spreadsheet spreadsheet, Address address) {
+            this.spreadsheet = spreadsheet;
+		this.address = address;  }
 
 /*
  * LOCATION

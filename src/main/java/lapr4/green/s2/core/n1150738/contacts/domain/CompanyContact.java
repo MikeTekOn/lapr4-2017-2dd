@@ -187,6 +187,11 @@ public class CompanyContact implements AggregateRoot<CompanyName>, Contactable {
     }
 
     @Override
+    public String contactNumber() {
+        return phoneNumber.toString();
+    }
+
+    @Override
     public String contactType() {
         return "Company Contact";
     }

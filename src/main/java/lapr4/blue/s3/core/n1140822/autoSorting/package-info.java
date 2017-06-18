@@ -82,15 +82,21 @@
  * column and this column is within the given range of any sorting threads, this
  * column should become the new pivot. For this, we have to add an action
  * listener to the table header of cleansheets. When this is clicked, it should
- * notify observers, an event which should be caught by the active sorting
- * threads and changing the sorting column.
+ * it should notify the sorting thread. For this, we will implement another listener
+ * and register it in the uiController. This listener will only be dedicated to header
+ * table actions.
  * <p>
+ * - Classes added -
  * <p>
  * AutoSortingThread
  * <p>
  * <p>
+ * SortingFocusOwner
+ * <p>
+ * <p>
  *
  * <h2>4. Design</h2>
+ *
  * After the initial analysis and research, it was understood that we dont need
  * to use the observer pattern, at least for cells. We already have a interface
  * called CellListener. By implementing this and registering this on a
@@ -99,108 +105,83 @@
  * is the same as using the observer pattern, except it is already implemented
  * and structured. But with this approach, another problem exists. The current
  * sorting method itself, when changing the cells, also fires the value changed
- * event (when a cells content is changed). If this doesnt cause a stack
+ * event (when a cells content is changed). If this doesn't cause a stack
  * overflow exception, the sorting will surely fail anyway. In order to prevent
  * this cycle, we need to implement a method that sets content but doesnt fire
  * this event. This event must only be called within the sorting method which is
  * already implemented. This method is not without its flaws. If there is any
  * formulas depending on these cells values, since some events might not be
- * broadcasted, these formulas results might be unreliable. To implement this
+ * broadcast, these formulas results might be unreliable. To implement this
  * fully, more time is needed to change the core application - we should be able
  * to tell from ui interaction cell changed events and other types of cell
  * changing events. In this case, the events we're interested are the ui
  * interaction cell changed events, since these are the ones in which we would
  * use to call the sort method.
- *
+ * <p>
+ * We also need to ensure , since it should be able to have more than one sorting areas active,
+ * that each thread only operates within the selected range. This means that each operation of this FI
+ * - clicking on the column to change order, clicking on other column to change pivot - will only do this
+ * if the selected range is the one which was initialized in the dedicated thread.
+ * To achieve this objective, we need to know in runtime, which cells are selected. For this we will create
+ * an inner class which implements FocusOwner. This interface, gives us access to the selected cells
+ * within cleansheets. We need only to match these cells with our own cell structures, and should it match,
+ * perform the required operations.
+ * <p>
+ * <p>
+ * After all these operations, we will need to provide visual cues to ensure the user knows
+ * which column is the pivot one, which area (or areas ) are being sorted, and the sorting order.
+ * I have made the decision to not use the decorator pattern, and instead use the stylable cell extension.
+ * We will paint borders around the sorting area, and paint the pivot column with different colors, depending
+ * on the sorting order.
+ * <p>
  * <h3>4.1. Functional Tests</h3>
  *
  * <p>
- * Unit test 1 - testHandlerFileList
+ * Unit test 1 -
  * <p>
  * <h3>4.2. UC Realization</h3>
  * To realize this functional increment, we will need the classes referred in
- * the analysis section and the already implemented ones. The already existing
- * infrastructure documentation can be found in - The sequence diagram below
+ * the analysis section and the already implemented ones. The sequence diagram below
  * will depict the transactions showed in the SSD in the analysis section
  * containing all needed classes for the implementation.
  * <p>
- * Sequence Diagram 1 - File sharing between two instances
+ * Sequence Diagram 1 - Creating a automatic sorting area
  * <p>
  * <p>
  * <img src="design.png" alt="image">
  * <p>
- * From this sequence diagram it can be seen that we need a method to update the
- * list of shared files (we get the dto, but how can we use the packet we read
- * to update our user interface?). Other problem we have is putting the source
- * of the file in the input list. The method to reconstruct a file, is
- * retrieving an array of bytes and writing those bytes into a path. Now, how
- * can we, when we download a file, know who sent it? To achieve this, we will
- * need to add metadata to the downloaded file. Java already offers data
- * structures to do this. Note that when reading the file (for instance , when
- * we launch the application and see our downloaded files) we will also need to
- * read that metadata.
+ *
  * <p>
- * About the persisted download and shared folder settings, cleansheets already
- * has some kind of local file settings persistence, the properties class and
- * implementation. It has some default properties which are loaded when opening
- * cleansheets. There is also an implementation of a class called
- * NamedProperties. We will need to add our configuration settings to these data
- * structures and save them when we exit a running instance, so they persist
- * when opening. Properties has a map which we put the key (the name of the
- * setting) and the value. After we update these values, when we close the
- * instance it will automatically save them. The loading is quite easy too. It
- * loads the defaults first, and then it overwrites the settings with the user
- * saved ones.
+ * Sequence Diagram 2 - Changing pivot Column
  * <p>
- * It was also necessary to see if a downloaded file is outdated or up to date.
- * Normally, this would just be more metadata added to the file and read while
- * we fill the download folder. The tricky part is, we'd need to send this data
- * not when the user downloads a file, but when instance one broadcasts its file
- * names. This doesnt work because we only send the file names, we dont even
- * have the file structure constructed yet. Since the download of files was not
- * expected to be implemented in this sprint (although it will be implemented),
- * the details of this functionality are a bit fuzzy. As such, and since the
- * downloads will be implemented, the file state will be compared using the size
- * of the file (exactly to the bit, its sure to work in most cases). If a file
- * you have downloaded is also being broadcast, if their sizes differ, your
- * downloaded file will be out of date.
  * <p>
+ * <img src="design_2.png" alt="image">
  * <p>
  * <h3>4.3. Classes</h3>
  *
  * <p>
- * <img src="class_diagram.png" alt="image">
+ * <img src="cd.png" alt="image">
  * <p>
  *
  * <h3>4.4. Design Patterns and Best Practices</h3>
- * In this use case, we use the observer pattern. Everytime we receive a file
- * list from another client's broadcast, we notify the observers (which in this
- * case is a list of available files). Note that observer must be implemented
- * and observable extended in respective data structures. We also use the
- * Singleton pattern, for the configuration of the download and shared folders
- * and to acess tcp and udp servers.
+ *
  *
  * <h2>5. Implementation</h2>
  *
  * Added the planned classes. Added junit testing to guarantee domain rules are
- * enforced. Implemented the dto classes Implemented the dto handlers Added
- * handlers into the needed servers Added ui implementation
+ * enforced.
  *
  * <p>
  *
  *
  * <h2>6. Integration/Demonstration</h2>
  *
- * Integration with the current networking structure was very harsh, there was a
- * need to study this structure and respect the domain rules imposed by it, as
- * such, when implementing this FI we tried to ensure these rules were enforced.
+ * Integration with the previous functional increment was easy, since it was well developed and documented
  *
  * <h2>7. Final Remarks</h2>
- * Future possible changes and improvements: Like depicted in the second FI.
- * Progress bar, permanent downloads
+ *
  * <p>
- * As an extra this use case already allows for downloads. It already tells the
- * user if the file is up to date or outdated.
+ *
  *
  *
  * <h2>8. Work Log</h2>

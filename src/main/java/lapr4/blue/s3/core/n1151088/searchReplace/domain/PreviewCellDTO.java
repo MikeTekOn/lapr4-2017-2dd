@@ -1,6 +1,7 @@
 package lapr4.blue.s3.core.n1151088.searchReplace.domain;
 
 import csheets.core.Cell;
+import csheets.core.CellImpl;
 import csheets.core.IllegalValueTypeException;
 import csheets.core.formula.compiler.FormulaCompilationException;
 import eapli.framework.dto.DTO;
@@ -14,18 +15,19 @@ import lapr4.white.s1.core.n1234567.comments.CommentsExtension;
  */
 public class PreviewCellDTO implements DTO {
     
-    private final Cell beforeCell;
+    private Cell beforeCell;
     private Cell afterCell;
     private String insertedExp;
-    private final String replaceContent;
+    private final String to;
     
-    public PreviewCellDTO(Cell beforeCell, String insertedExp, String replace){
+    public PreviewCellDTO(Cell beforeCell, String insertedExp, String to){
         if(beforeCell==null){
             throw new IllegalArgumentException();
         }
         if(beforeCell.getContent().contains(insertedExp)){
             this.beforeCell=beforeCell;
-            this.replaceContent=replace;  
+            this.afterCell=cloneCell();
+            this.to=to;  
             this.insertedExp=insertedExp;
         }else{
             throw new IllegalArgumentException();  
@@ -43,31 +45,30 @@ public class PreviewCellDTO implements DTO {
     }
     
     public String getReplaceContent(){
-        return replaceContent;
+        return to;
     }
     
     public void previewReplace() throws IllegalValueTypeException, FormulaCompilationException{
-        afterCell=beforeCell;
         
-        String replacedContent=replaceContent();
-        validateReplace(replaceContent);
+        afterCell.copyFrom(beforeCell);
       
-        afterCell.setContent(replacedContent);
-        
+        String replacedContent=replaceContent();
+        validateReplace(replacedContent);
+      
         if( ((CommentableCellWithMultipleUsers) beforeCell.getExtension(CommentsExtension.NAME)).hasComment()) {
                 
-            for (List<String> comments : ((CommentableCellWithMultipleUsers) afterCell.getExtension(CommentsExtension.NAME)).comments().values()) {
-                for (String comment : comments) {
-                    String contain=comment.replace(insertedExp, replaceContent);
+            ((CommentableCellWithMultipleUsers) afterCell.getExtension(CommentsExtension.NAME)).comments().values().forEach((List<String> comments) -> {
+                comments.forEach((comment) -> {
+                    String contain=comment.replace(insertedExp, to);
                     comment=contain;
-                }
-            }
+                });
+            });
         }
     }
-
-    public String replaceContent(){
+    
+    private String replaceContent(){
         String text=beforeCell.getContent();
-        String replaced=text.replace(insertedExp, replaceContent);
+        String replaced=text.replace(insertedExp, to);
         return replaced;
     }
         
@@ -75,6 +76,7 @@ public class PreviewCellDTO implements DTO {
         
         try{
             afterCell.setContent(replacedText);
+            
         }catch (FormulaCompilationException ex){
             ex.getMessage();
            throw new FormulaCompilationException();
@@ -89,9 +91,31 @@ public class PreviewCellDTO implements DTO {
      */
     @Override
     public PreviewCellDTO clone() throws CloneNotSupportedException {
-        return new PreviewCellDTO(beforeCell, insertedExp, replaceContent);
+        return new PreviewCellDTO(beforeCell, insertedExp, to);
     }
-
     
+    @Override
+    public String toString(){
+        return "Cell " + this.beforeCell.getAddress().toString() + 
+                "| Content: " + this.beforeCell.getContent() + 
+                "| Value: " + this.beforeCell.getValue().toString();
+    }
+    
+      public String buildCellPreviewDescription() throws
+              IllegalValueTypeException, FormulaCompilationException{
+        StringBuilder sb = new StringBuilder();
+
+        previewReplace();
+        sb.append(afterCell.getValue());
+        sb.append(" | Content" + "\"");
+        sb.append(afterCell.getContent());
+          sb.append("\"");
+        return sb.toString();
+    }
+      
+    private Cell cloneCell(){
+ 
+        return new CellImpl(beforeCell.getSpreadsheet(), beforeCell.getAddress());
+    }
 
 }

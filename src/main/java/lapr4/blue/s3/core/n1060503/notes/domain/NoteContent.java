@@ -70,24 +70,6 @@ public class NoteContent implements ValueObject, Serializable {
     }
 
     /**
-     * gets the timestamp
-     *
-     * @return the timestamp
-     */
-    private Calendar timestamp() {
-        return this.timestamp;
-    }
-
-    /**
-     * the content of note
-     *
-     * @return the content of note
-     */
-    private String contentNote() {
-        return this.getContentNote();
-    }
-
-    /**
      * compare if other object is equal
      *
      * @param o other object

@@ -154,10 +154,11 @@ public class CommTCPServerWorker extends Thread {
      */
     private void processIncommingDTO(Object inDTO) {
         System.out.println(inDTO.getClass());
-        CommHandler handler = server.getHandler(inDTO.getClass());
-        if (handler != null) {
-            SocketEncapsulatorDTO dto = new SocketEncapsulatorDTO(socket, handler, inDTO);
-            handler.handleDTO(dto, outStream);
+        for(CommHandler handler : server.getHandler(inDTO.getClass())){
+            if (handler != null) {
+                SocketEncapsulatorDTO dto = new SocketEncapsulatorDTO(socket, handler, inDTO);
+                handler.handleDTO(dto, outStream);
+            }
         }
     }
 

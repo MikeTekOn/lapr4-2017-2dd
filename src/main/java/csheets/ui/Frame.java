@@ -32,6 +32,23 @@ import lapr4.blue.s3.core.n1151452.pdfexport.PdfExportAction;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionEvent;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionStateListener;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ManageExtensionsAction;
+import lapr4.red.s1.core.n1150451.exportPDF.presentation.ExportToPDFAction;
+
+import javax.swing.*;
+import java.awt.*;
+import lapr4.green.s3.lang.n1150657.XML.Export.Action.ExportSelectedCellsActionUI;
+import lapr4.green.s3.lang.n1150657.XML.Export.Action.ExportSelectedColumnActionUI;
+import lapr4.green.s3.lang.n1150657.XML.Export.Action.ExportSelectedRowActionUI;
+import lapr4.green.s3.lang.n1150657.XML.Export.Action.ExportSelectedSpreadsheetActionUI;
+import lapr4.green.s3.lang.n1150657.XML.Export.Action.ExportWorkBookActionUI;
+import lapr4.green.s3.lang.n1150657.XML.Import.Action.ImportSelectedCellsActionUI;
+import lapr4.green.s3.lang.n1150657.XML.Import.Action.ImportSelectedSpreadsheetActionUI;
+import lapr4.green.s3.lang.n1150657.XML.Import.Action.ImportSelectedWorkbookActionUI;
+//import lapr4.blue.s1.lang.n1141570.XML.ui.ExportSelectedCellsActionUI;
+//import lapr4.blue.s1.lang.n1141570.XML.ui.ExportSelectedColumnActionUI;
+//import lapr4.blue.s1.lang.n1141570.XML.ui.ExportSelectedRowActionUI;
+//import lapr4.blue.s1.lang.n1141570.XML.ui.ExportSelectedSpreadsheetActionUI;
+//import lapr4.blue.s1.lang.n1141570.XML.ui.ExportWorkBookActionUI;
 import lapr4.red.s2.lang.n1150613.FunctionWizard.ui.IntermediateFunctionWizard;
 import lapr4.red.s2.lang.n1150690.formula.configurations.ConfigureExchangeRatesAction;
 
@@ -95,11 +112,23 @@ public class Frame extends JFrame implements SelectionListener, ExtensionStateLi
         actionManager.registerAction("print", new PrintAction());
 
         // Register actions of XML exportation submenu
-        actionManager.registerAction("exportworkbook", new ExportWorkBookActionUI(uiController));
+//        actionManager.registerAction("exportworkbook", new ExportWorkBookActionUI(uiController));
+//        actionManager.registerAction("exportspreadsheet", new ExportSelectedSpreadsheetActionUI(uiController));
+//        actionManager.registerAction("exportselectedrow", new ExportSelectedRowActionUI(uiController));
+//        actionManager.registerAction("exportselectedcolumn", new ExportSelectedColumnActionUI(uiController));
+//        actionManager.registerAction("exportselectedcells", new ExportSelectedCellsActionUI(uiController));
+//        actionManager.registerAction("exportworkbook", new ExportWorkBookActionUI(uiController));
+        //new XML exportation
         actionManager.registerAction("exportspreadsheet", new ExportSelectedSpreadsheetActionUI(uiController));
         actionManager.registerAction("exportselectedrow", new ExportSelectedRowActionUI(uiController));
         actionManager.registerAction("exportselectedcolumn", new ExportSelectedColumnActionUI(uiController));
         actionManager.registerAction("exportselectedcells", new ExportSelectedCellsActionUI(uiController));
+        actionManager.registerAction("exportworkbook", new ExportWorkBookActionUI(uiController));
+
+        //new XML importation
+        actionManager.registerAction("importworkbook", new ImportSelectedWorkbookActionUI(uiController));
+        actionManager.registerAction("importspreadsheet", new ImportSelectedSpreadsheetActionUI(uiController));
+        actionManager.registerAction("importselectedcells", new ImportSelectedCellsActionUI(uiController));
 
         // Registers edit actions
         actionManager.registerAction("undo", new UndoAction());
