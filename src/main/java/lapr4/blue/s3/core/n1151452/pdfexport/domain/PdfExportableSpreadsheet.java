@@ -70,9 +70,14 @@ public class PdfExportableSpreadsheet {
 
         List<PdfExportableCell> pdfCells = new LinkedList<>();
 
+//        spreadsheet.getCells(new Address(0, 0), new Address(52, 127)).forEach((cell -> {
+
         spreadsheet.iterator().forEachRemaining((cell -> {
 
-            pdfCells.add(new PdfExportableCell(cell));
+            boolean columnCheck = cell.getAddress().getColumn() >= 0 && cell.getAddress().getColumn() < 53;
+            boolean rowCheck = cell.getAddress().getRow() >= 0 && cell.getAddress().getRow() < 127;
+
+            if (columnCheck && rowCheck) pdfCells.add(new PdfExportableCell(cell));
         }));
 
         Collections.sort(pdfCells); // Order cells
@@ -121,17 +126,19 @@ public class PdfExportableSpreadsheet {
     /**
      * Obtains the widths of all columns of the spreadsheet
      *
+     * @param withHeaders include headers
      * @return the widths of all columns of the spreadsheet
      */
-    public float[] columnWidths() {
+    public float[] columnWidths(boolean withHeaders) {
 
         StylableSpreadsheet stylableSpreadsheet = ((StylableSpreadsheet) spreadsheet.getExtension(StyleExtension.NAME));
 
-        float[] widths = new float[stylableSpreadsheet.getColumnCount() + 2]; // Plus Header (ex. A, B, C...)
-        widths[0] = DEFAULT_ROW_HEADER_WIDTH;
-        for (int i = 1; i < widths.length; i++) {
+        float[] widths = new float[stylableSpreadsheet.getColumnCount() + ((withHeaders) ? 2 : 1)]; // Plus Header (ex. A, B, C...)
+        if (withHeaders) widths[0] = DEFAULT_ROW_HEADER_WIDTH;
+        for (int i = (withHeaders) ? 1 : 0; i < widths.length; i++) {
 
-            float width = stylableSpreadsheet.getColumnWidth(i);
+            int index = i - ((withHeaders) ? 1 : 0);
+            float width = stylableSpreadsheet.getColumnWidth(index);
 
             widths[i] = (width < 0) ? DEFAULT_COLUMN_WIDTH : width;
         }
@@ -142,17 +149,19 @@ public class PdfExportableSpreadsheet {
     /**
      * Obtains the heights of all rows of the spreadsheet
      *
+     * @param withHeaders include headers
      * @return the heights of all rows of the spreadsheet
      */
-    public float[] rowHeights() {
+    public float[] rowHeights(boolean withHeaders) {
 
         StylableSpreadsheet stylableSpreadsheet = ((StylableSpreadsheet) spreadsheet.getExtension(StyleExtension.NAME));
 
-        float[] heights = new float[stylableSpreadsheet.getRowCount() + 2]; // Plus Header (ex. 1, 2, 3...)
-        heights[0] = DEFAULT_ROW_HEIGHT;
-        for (int i = 1; i < heights.length; i++) {
+        float[] heights = new float[stylableSpreadsheet.getRowCount() + ((withHeaders) ? 2 : 1)]; // Plus Header (ex. 1, 2, 3...)
+        if (withHeaders) heights[0] = DEFAULT_ROW_HEIGHT;
+        for (int i = (withHeaders) ? 1 : 0; i < heights.length; i++) {
 
-            int height = stylableSpreadsheet.getRowHeight(i);
+            int index = i - ((withHeaders) ? 1 : 0);
+            int height = stylableSpreadsheet.getRowHeight(index);
 
             heights[i] = (height < 0) ? DEFAULT_ROW_HEIGHT : height;
         }

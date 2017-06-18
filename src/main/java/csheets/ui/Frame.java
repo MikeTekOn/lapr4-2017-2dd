@@ -27,20 +27,16 @@ import csheets.ui.ext.UIExtension;
 import csheets.ui.sheet.AddressBox;
 import csheets.ui.sheet.CellEditor;
 import csheets.ui.sheet.WorkbookPane;
+import lapr4.blue.s1.lang.n1141570.XML.ui.*;
+import lapr4.blue.s3.core.n1151452.pdfexport.PdfExportAction;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionEvent;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionStateListener;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ManageExtensionsAction;
-import lapr4.red.s1.core.n1150451.exportPDF.presentation.ExportToPDFAction;
+import lapr4.red.s2.lang.n1150613.FunctionWizard.ui.IntermediateFunctionWizard;
+import lapr4.red.s2.lang.n1150690.formula.configurations.ConfigureExchangeRatesAction;
 
 import javax.swing.*;
 import java.awt.*;
-import lapr4.blue.s1.lang.n1141570.XML.ui.ExportSelectedCellsActionUI;
-import lapr4.blue.s1.lang.n1141570.XML.ui.ExportSelectedColumnActionUI;
-import lapr4.blue.s1.lang.n1141570.XML.ui.ExportSelectedRowActionUI;
-import lapr4.blue.s1.lang.n1141570.XML.ui.ExportSelectedSpreadsheetActionUI;
-import lapr4.blue.s1.lang.n1141570.XML.ui.ExportWorkBookActionUI;
-import lapr4.red.s2.lang.n1150613.FunctionWizard.ui.IntermediateFunctionWizard;
-import lapr4.red.s2.lang.n1150690.formula.configurations.ConfigureExchangeRatesAction;
 
 /**
  * The main frame of the GUI.
@@ -94,7 +90,7 @@ public class Frame extends JFrame implements SelectionListener, ExtensionStateLi
         actionManager.registerAction("closeall", new CloseAllAction(app, uiController, chooser));
         actionManager.registerAction("save", new SaveAction(app, uiController, chooser));
         actionManager.registerAction("saveas", new SaveAsAction(app, uiController, chooser));
-        actionManager.registerAction("PDF", new ExportToPDFAction(app, uiController, chooser));
+        actionManager.registerAction("PDF", new PdfExportAction(this));
         actionManager.registerAction("exit", new ExitAction(app, uiController, chooser));
         actionManager.registerAction("print", new PrintAction());
 
