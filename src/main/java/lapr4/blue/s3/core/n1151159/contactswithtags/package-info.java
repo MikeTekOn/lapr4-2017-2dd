@@ -85,26 +85,155 @@
  *
  * <h3>3.4.3. Display tags with occurrences</h3>
  * <img src="display_tags_with_occurrences_ssd.png" alt="Display tags with occurrences placeholder.">
+ * <br>
+ *
+ *
+ *
+ *
+ * <h2>4. Tests</h2>
+ *
+ * <h3>4.1. Unit Tests</h3>
+ * <ul>
+ *     <li>ensureTagNameIsAlphanumeric</li>
+ *     <li>ensureTagNameIsEqualToAnotherTagWithTheSameName</li>
+ * </ul>
+ *
+ * <h3>4.2. Functional Tests</h3>
+ *
+ * <h4>4.2.1. ensureTagIsAddedToContact</h4>
+ * <ol>
+ *     <li>
+ *         Create a new contact
+ *         <ul>
+ *             <li>On the tags field, add the tag ISEP</li>
+ *             <li>All other fields can be filled with any valid information</li>
+ *         </ul>
+ *     </li>
+ *     <li>
+ *         Edit the contact
+ *         <ul>
+ *             <li>On the editing window, check if the tag ISEP is associated with the contact.</li>
+ *         </ul>
+ *     </li>
+ * </ol>
+ *
+ * <h4>4.2.2. ensureTagsAreFoundWithTagSearch</h4>
+ * <ol>
+ *     <li>
+ *         Create 3 contacts with the names Contact1, Contact2 and Contact3
+ *         <ol>
+ *             <li>Assign the tag Student2014 to the Contact1</li>
+ *             <li>Assign the tag Student2015 to the Contact2</li>
+ *             <li>Assign the tag Student2016 to the Contact3</li>
+ *         </ol>
+ *     </li>
+ *     <li>Press the "Search by tag" button</li>
+ *     <li>
+ *         In the search field enter the text "Student201[46]" and press search
+ *         <ul>
+ *             <li>Make sure it appears the Contact1 and Contact3 in the results list</li>
+ *         </ul>
+ *     </li>
+ *     <li>
+ *         Change the search text by "Student2015" and press the "Search by tag" button again
+ *         <ul>
+ *             <li>Make sure it appears the Contact2 in the results list</li>
+ *         </ul>
+ *     </li>
+ * </ol>
+ *
+ * <h4>4.2.3. ensureOccurrencesAreUpdated</h4>
+ * <ol>
+ *     <li>Create one contact with the tags ISEP and DEI</li>
+ *     <li>Check in the tags frequency window that both tags appear with one occurrence</li>
+ *     <li>Create another contact with the tag ISEP</li>
+ *     <li>Check that the tags frequency window that the tag ISEP appear in first place with two occurrences</li>
+ *     <li>Remove the tag ISEP from the first contact</li>
+ *     <li>Check that the tag frequency for ISEP updated for 1 occurrence</li>
+ * </ol>
+ * <br>
+ *
+ *
+ *
+ *
+ * <h2>5. Design</h2>
+ *
+ * <h3>5.1. Associate tags to contacts</h3>
+ * <p>Refer to {@link lapr4.white.s1.core.n4567890.contacts} for adding/editing tags to contacts.</p>
+ * <p>The only change is that the CRM user will insert the tag designation.</p>
+ *
+ * <h3>5.2. Search contacts by tags</h3>
+ * <img src="search_contacts_by_tag_sd.png" alt="Search contacts by tag placeholder">
+ *
+ * <h3>5.3. Display tags with occurrences</h3>
+ * <img src="display_tags_with_occurrences_sd.png" alt="Display tags with occurrences placeholder">
+ * <br>
+ *
+ *
  *
  *
  * <h2>9. Work Log</h2>
  *
  * <h3>Tuesday 13/06/2017</h3>
- *
  * <p>Yesterday I've worked on:</p>
  * <ol>
- *     <li>Closing the sprint</li>
- *     <li>Presentation of the IPC functional area</li>
+ *     <li>Closing the sprint.</li>
+ *     <li>Presentation of the IPC functional area.</li>
  *     <li>Analysis of previous core use cases implementations.</li>
  *     <li>Division and brainstorming about common points of the functional increments for this sprint.</li>
  *     <li>Studying the requirements of this use case.</li>
  * </ol>
- *
  * <p><b>Today</b></p>
  * <ol>
- *     <li>Functional increment analysis.</li>
+ *     <li>Spring review &amp; retrospective.</li>
+ *     <li>Brainstorming about what was done in core.</li>
+ *     <li>Start the functional increment analysis.</li>
+ * </ol>
+ * <p><b>Blocking:</b></p>
+ * <ol>
+ *     <li>Nothing.</li>
  * </ol>
  *
+ * <h3>Wednesday 14/06/2017</h3>
+ * <p>Yesterday I've worked on:</p>
+ * <ol>
+ *     <li>Started the functional increment analysis</li>
+ * </ol>
+ * <p><b>Today</b></p>
+ * <ol>
+ *     <li>Finish the functional increment analysis</li>
+ * </ol>
+ * <p><b>Blocking:</b></p>
+ * <ol>
+ *     <li>Nothing.</li>
+ * </ol>
+ *
+ * <h3>Thursday 15/06/2017</h3>
+ * <p>Yesterday I've worked on:</p>
+ * <ol>
+ *     <li>Finished the functional increment analysis</li>
+ * </ol>
+ * <p><b>Today</b></p>
+ * <ol>
+ *     <li>Functional increment tests.</li>
+ *     <li>Functional increment design.</li>
+ *     <li>Start the implementation.</li>
+ * </ol>
+ * <p><b>Blocking:</b></p>
+ * <ol>
+ *     <li>Nothing.</li>
+ * </ol>
+ *
+ * <h3>Friday 16/06/2017</h3>
+ * <p>Yesterday I've worked on:</p>
+ * <ol>
+ *     <li>Tests</li>
+ *     <li>Design</li>
+ * </ol>
+ * <p><b>Today</b></p>
+ * <ol>
+ *     <li>Implementation</li>
+ * </ol>
  * <p><b>Blocking:</b></p>
  * <ol>
  *     <li>Nothing.</li>

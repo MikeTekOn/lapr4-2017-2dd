@@ -75,17 +75,6 @@ public class Grid extends JTable {
         getTableHeader().setReorderingAllowed(false);
         getTableHeader().setFocusable(true);
         getTableHeader().setResizingAllowed(true);
-        getTableHeader().addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent mouseEvent) {
-                int index = convertColumnIndexToModel(columnAtPoint(mouseEvent.getPoint()));
-                if (index >= 0) {
-                    //notify Observers
-                    System.out.println("Clicked on column " + index);
-                }
-            }
-        ;
-        });
        
 		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 

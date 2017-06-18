@@ -2,6 +2,7 @@ package lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.comm;
 
 import csheets.core.Address;
 import csheets.core.Cell;
+import csheets.core.Spreadsheet;
 import csheets.ext.style.StylableCell;
 import csheets.ext.style.StyleExtension;
 import eapli.framework.dto.DTO;
@@ -23,6 +24,11 @@ public class CellStyleDTO implements DTO, Serializable {
 
 
     /**
+     * The spreadsheet where the cell is located
+     */
+    private Spreadsheet spreadsheet;
+
+    /**
      * A style DTO with the style to be applied to the cell.
      */
     private StyleDTO styleDTO;
@@ -33,9 +39,10 @@ public class CellStyleDTO implements DTO, Serializable {
      * @param address  the address of the cell
      * @param styleDTO the style DTO
      */
-    public CellStyleDTO(Address address, StyleDTO styleDTO) {
+    public CellStyleDTO(Address address, StyleDTO styleDTO, Spreadsheet spreadsheet) {
         this.address = address;
         this.styleDTO = styleDTO;
+        this.spreadsheet = spreadsheet;
     }
 
     /**
@@ -47,7 +54,7 @@ public class CellStyleDTO implements DTO, Serializable {
     public static CellStyleDTO createFromCell(Cell aCell) {
         StylableCell stylableCell = (StylableCell) aCell.getExtension(StyleExtension.NAME);
         StyleDTO styleDTO = Styles.createStyleDtoFromCell(stylableCell);
-        return new CellStyleDTO(aCell.getAddress(), styleDTO);
+        return new CellStyleDTO(aCell.getAddress(), styleDTO, aCell.getSpreadsheet());
     }
 
     /**
@@ -66,5 +73,9 @@ public class CellStyleDTO implements DTO, Serializable {
      */
     public Address getAddress() {
         return address;
+    }
+
+    public Spreadsheet spreadsheet() {
+        return spreadsheet;
     }
 }

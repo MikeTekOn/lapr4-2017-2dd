@@ -25,12 +25,15 @@ public class RequestSharedCellsDTO implements Serializable {
     private Address address1;
     
     private Address address2;
-    
-    public RequestSharedCellsDTO(String dstName, Spreadsheet srcSheet, Address addr1, Address addr2) {
+
+    private String shareName;
+
+    public RequestSharedCellsDTO(String dstName, Spreadsheet srcSheet, Address addr1, Address addr2, String shareName) {
         spreadsheetName=dstName;
         address1=addr1;
         address2=addr2;
-        
+        this.shareName = shareName;
+
         // build the serializable set of cells
         sharedcells=new TreeSet<CellDTO>(); 
         
@@ -55,8 +58,12 @@ public class RequestSharedCellsDTO implements Serializable {
     public String getSpreadsheetName() {
         return spreadsheetName;
     }
+
+    public String getShareName(){
+        return shareName;
+    }
     
-    public static RequestSharedCellsDTO createFromRange(String dstName, Spreadsheet sheet, Address addr1, Address addr2) {
-        return new RequestSharedCellsDTO(dstName, sheet, addr1, addr2);
+    public static RequestSharedCellsDTO createFromRange(String dstName, Spreadsheet sheet, Address addr1, Address addr2, String shareName) {
+        return new RequestSharedCellsDTO(dstName, sheet, addr1, addr2, shareName);
     }
 }
