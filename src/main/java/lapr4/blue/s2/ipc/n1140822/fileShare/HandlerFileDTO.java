@@ -78,6 +78,7 @@ public class HandlerFileDTO extends Observable implements CommHandler {
             fileOut = new FileOutputStream(file);
             fileOut.write(fileDTO.getFileData());
             fileOut.flush();
+            fileOut.flush();
             UserDefinedFileAttributeView view = Files.getFileAttributeView(file.toPath(), UserDefinedFileAttributeView.class);
             view.write("host", Charset.defaultCharset().encode(((SocketEncapsulatorDTO) dto).getSocket().getInetAddress().toString()));
             setChanged();
