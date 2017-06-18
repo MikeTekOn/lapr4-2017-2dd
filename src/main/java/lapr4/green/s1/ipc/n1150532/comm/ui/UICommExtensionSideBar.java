@@ -366,6 +366,8 @@ public class UICommExtensionSideBar extends JPanel {
             ConnectionID connection = networkTable.getSelectedRowFile();
             if (connection != null) {
                 (new ConnectToPeerAction(connection)).actionPerformed(e);
+            }else{
+                JOptionPane.showMessageDialog(null, "First select who you want to connect with.", "ERROR", JOptionPane.WARNING_MESSAGE);
             }
         }
 
@@ -379,8 +381,11 @@ public class UICommExtensionSideBar extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             ConnectionID connection = peersTable.getSelectedRowFile();
+
             if (connection != null) {
                 (new ShareCellsAction(connection, theController)).actionPerformed(e);
+            }else{
+                JOptionPane.showMessageDialog(null, "First select who you want share cells with with.", "ERROR", JOptionPane.WARNING_MESSAGE);
             }
 
         }
