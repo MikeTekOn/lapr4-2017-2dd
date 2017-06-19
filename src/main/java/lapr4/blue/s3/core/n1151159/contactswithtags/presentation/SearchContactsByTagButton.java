@@ -1,4 +1,4 @@
-package lapr4.blue.s3.core.n1151159.contactswithtags.ui;
+package lapr4.blue.s3.core.n1151159.contactswithtags.presentation;
 
 import csheets.ui.ctrl.UIController;
 

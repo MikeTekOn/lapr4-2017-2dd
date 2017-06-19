@@ -1,0 +1,43 @@
+@startuml cd_hierarchy.png
+skinparam handwritten false
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+class FunctionWizardUI {
+
+}
+
+class IntermediateFunctionWizardUI {
+
+}
+
+class AdvancedFunctionWizardUI {
+
+}
+
+class FunctionWizardController {
+
+}
+
+class IntermediateFunctionWizardController {
+
+}
+
+class AdvancedFunctionWizardController {
+
+}
+
+FunctionWizardUI --> FunctionWizardController
+IntermediateFunctionWizardUI --> IntermediateFunctionWizardController
+AdvancedFunctionWizardUI --> AdvancedFunctionWizardController
+
+FunctionWizardUI <|-- IntermediateFunctionWizardUI
+IntermediateFunctionWizardUI <|-- AdvancedFunctionWizardUI
+
+FunctionWizardController <|-- IntermediateFunctionWizardController
+IntermediateFunctionWizardController <|-- AdvancedFunctionWizardController
+
+
+@enduml
