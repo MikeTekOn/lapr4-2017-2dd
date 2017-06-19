@@ -11,7 +11,7 @@ import lapr4.green.s2.core.n1150532.sort.sortingDTOs.SortableDTO;
  * @param <T> Any class that extends the SortableDTO and can, therefore, be
  * sorted by the algorithm.
  */
-public class QuickSort<T extends SortableDTO>  extends Observable implements SortingAlgorithm<T> {
+public class QuickSort<T extends SortableDTO>   implements SortingAlgorithm<T> {
 
     /**
      * The algorithm's name.
@@ -36,8 +36,7 @@ public class QuickSort<T extends SortableDTO>  extends Observable implements Sor
         if (array.length > 1) {
             executeSort(array, comparator, 0, array.length - 1);
         }
-         setChanged();
-         notifyObservers();
+
     }
 
     /**

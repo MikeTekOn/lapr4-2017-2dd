@@ -1,4 +1,4 @@
-package lapr4.blue.s3.core.n1151159.contactswithtags.ui;
+package lapr4.blue.s3.core.n1151159.contactswithtags.presentation;
 
 import lapr4.blue.s3.core.n1151159.contactswithtags.domain.Tag;
 
@@ -32,6 +32,11 @@ public class TagManagerPanel extends JPanel {
      * The list of elements.
      */
     private JList<Tag> elementsList;
+
+    /**
+     * The add button.
+     */
+    private JButton addButton;
 
     /**
      * The remove button.
@@ -114,7 +119,7 @@ public class TagManagerPanel extends JPanel {
      * @return add button
      */
     private JButton createAddButton() {
-        JButton addButton = new JButton("Add");
+        addButton = new JButton("Add");
 
         addButton.setPreferredSize(DEFAULT_BUTTONS_SIZE);
         addButton.addActionListener(new ActionListener() {
@@ -218,5 +223,13 @@ public class TagManagerPanel extends JPanel {
     public void setTags(Set<Tag> tags) {
         elements = new TreeSet<>(tags);
         refreshList();
+    }
+
+    /**
+     * Hides the buttons.
+     */
+    public void hideButtons() {
+        addButton.setVisible(false);
+        removeButton.setVisible(false);
     }
 }

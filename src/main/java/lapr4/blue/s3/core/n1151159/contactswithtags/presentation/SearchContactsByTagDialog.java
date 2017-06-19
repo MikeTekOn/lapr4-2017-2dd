@@ -1,4 +1,4 @@
-package lapr4.blue.s3.core.n1151159.contactswithtags.ui;
+package lapr4.blue.s3.core.n1151159.contactswithtags.presentation;
 
 import csheets.ui.ctrl.UIController;
 import lapr4.blue.s3.core.n1151159.contactswithtags.application.TagController;
@@ -55,8 +55,19 @@ public class SearchContactsByTagDialog extends JDialog {
      */
     private List<Contactable> contacts;
 
+    /**
+     * The all contacts radio button.
+     */
     private JRadioButton allContactsRadioButton;
+
+    /**
+     * The personal contacts radio button.
+     */
     private JRadioButton personalContactsRadioButton;
+
+    /**
+     * The company contacts radio button.
+     */
     private JRadioButton companyContactsRadioButton;
 
     /**
