@@ -25,8 +25,9 @@ public class Eval implements NaryOperator {
 
         LinkedList<Expression> expressions = new LinkedList<>(Arrays.asList(operands));
 
-        // Get executed condition
+        // Gets expression
         Expression executed = expressions.poll();
+        
         Value result = executed.evaluate();
 
         return result;
