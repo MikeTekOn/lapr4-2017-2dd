@@ -1,7 +1,5 @@
 package lapr4.red.s3.ipc.n1150943.automaticDownload;
 
-import sun.security.util.ObjectIdentifier;
-
 import java.io.Serializable;
 
 /**

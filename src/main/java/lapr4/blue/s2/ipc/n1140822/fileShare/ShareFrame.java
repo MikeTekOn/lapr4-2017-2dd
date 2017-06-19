@@ -253,15 +253,16 @@ public class ShareFrame extends JFrame implements Observer {
                         // verify the update type
                         DownloadInfo newInfo = new DownloadInfo(fileName,latestVersionInfo.downloadType(),latestVersionInfo.updateType());
                         newInfo.setVersion(latestVersionInfo.version()+1);
+                        int fileNewSize = dto.filesMap().get(fileName);
+                        DownloadingPanel.startDownloadingPanel(latestVersionName,fileNewSize,false);
                         if(isRenameFile){
-                            shareController.addToDownloadsList(fileName,newInfo);
+                            shareController.addToDownloadsList(latestVersionName,newInfo);
                             shareController.requestFile(fileName);
 
                         }else{
                             shareController.addToDownloadsList(fileName,newInfo);
                             shareController.requestFile(fileName);
                         }
-                            Notification.notifyHost(new DownloadingPanel((String) tableModel.getValueAt(table.getSelectedRow(), 0)),"Updating file "+(String) tableModel.getValueAt(table.getSelectedRow(), 0));
                     }
                     update = true;
                 }
@@ -271,8 +272,7 @@ public class ShareFrame extends JFrame implements Observer {
         }
 
         if (o instanceof HandlerFileDTO) {
-            Notification.notifyHost(null,"Download Successfully");
-            //JOptionPane.showMessageDialog(ShareFrame.this, "File " + (String) tableModel.getValueAt(table.getSelectedRow(), 0) + " downloaded with success.");
+            Notification.notifyHost(null,"File Downloaded Successfully");
             try {
                 fillDownloadTable();
             } catch (IOException e) {
@@ -297,26 +297,29 @@ public class ShareFrame extends JFrame implements Observer {
                     try {
                         shareController = new FileSharingController((ConnectionID) tableModel.getValueAt(table.getSelectedRow(), 1));
                         String fileName = (String) tableModel.getValueAt(table.getSelectedRow(), 0);
+                        String fileSizeStr = (String) table.getValueAt(table.getSelectedRow(),2);
+                        String[]aux = fileSizeStr.split(" ");
+                        int fileSize = Integer.parseInt(aux[0]);
                         DownloadInfo downloadInfo = null;
                         int op = JOptionPane.showOptionDialog(getContentPane(),"Do you want this download to be updated automatically?",
                                 "Permanent Download?", JOptionPane.YES_NO_OPTION,JOptionPane.PLAIN_MESSAGE,null,null,null);
                         if (op==JOptionPane.NO_OPTION){
                             downloadInfo = new DownloadInfo(fileName, DownloadInfo.DownloadType.ONE_TIME_DOWNLOAD,null);
-                        }else{
+                        }else if(op==JOptionPane.YES_OPTION){
                             String[] options = new String[] {"Replace", "Rename"};
                             int response = JOptionPane.showOptionDialog(getContentPane(), "Do you want the updates to replace the current file or to rename it?", "Update method",
                                     JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE,
                                     null, options, options[0]);
                             if (response==0){
                                 downloadInfo = new DownloadInfo(fileName, DownloadInfo.DownloadType.PERMANENT, DownloadInfo.UpdateType.REPLACE);
-                            }else{
+                            }else if (response==1){
                                 downloadInfo = new DownloadInfo(fileName, DownloadInfo.DownloadType.PERMANENT, DownloadInfo.UpdateType.RENAME);
                             }
                         }
                         if(downloadInfo==null) return;
                         shareController.addToDownloadsList(fileName,downloadInfo);
-                        DownloadingPanel dp = new DownloadingPanel(fileName);
-                        dp.setVisible(true);
+
+                        DownloadingPanel.startDownloadingPanel(fileName, fileSize, true);
                         shareController.requestFile(fileName);
 
                     } catch (Exception ex) {

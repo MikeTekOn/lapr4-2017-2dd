@@ -44,6 +44,10 @@ import java.util.List;
  */
 public class MacroCompiler {
 
+    protected MacroCompiler(){
+
+    }
+
     /**
      * The singleton instance
      */
@@ -111,7 +115,7 @@ public class MacroCompiler {
     /**
      * Listener for the macro errors.
      */
-    private static class MacroErrorListener extends BaseErrorListener {
+    public static class MacroErrorListener extends BaseErrorListener {
 
         /**
          * Buffer for the macro error message.

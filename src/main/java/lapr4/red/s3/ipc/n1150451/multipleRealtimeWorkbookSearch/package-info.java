@@ -63,6 +63,15 @@
  *
  *
  * <h3>4.1. Functional Tests</h3>
+ * Test plan to test the UDP communication:
+ * <ol>
+ * <li>Start the instances of Cleansheets</li>
+ * <li>In the first one, save a workbook with the first cells filled.</li>
+ * <li>The the second one, open the Find Workbook functionality, select the file
+ * path and regex, and click search. Check that the preview is correct.</li>
+ * <li>In the first instance, change a cell and click save.</li>
+ * <li>Verify that the preview in the second instances updates automaticly.</li>
+ * </ol>
  *
  * <h3>4.2. UC Realization</h3>
  *
@@ -77,14 +86,29 @@
  * <img src="udp_rcv.png" alt="image">
  *
  * <h3>4.3. Classes</h3>
- *
+ * <img src="udp_classDiagram.png" alt="image">
  * <h3>4.4. Design Patterns and Best Practices</h3>
+ * Since there is the need to send multiple information over the network the DTO
+ * pattern was used so that only one request can bring all the required data, in
+ * this case, the file name and path.
+ *
  * <p>
  * <h2>5. Implementation</h2>
+ * As stated in the design, a communication by UDP was developed. When saving a
+ * file, and UDP broadcast is made and the applications that are running the
+ * "find workbooks" functionality, have a thread listening to those packets. In
+ * order to improve performance, each thread should check if the file data
+ * received in the packet is in the JList. If not, the packet is ignored.
+ * <p>
+ * Since it was not possible to extends the previously made ui, change were made
+ * in order to support the inovcation of the CommServer thread, in the Action
+ * Listener of the "Search Button".
  *
  * <h2>6. Integration/Demonstration</h2>
  *
  * <h2>7. Final Remarks</h2>
+ *
+ *
  * <h2>8. Work Log</h2>
  * <p>
  * <b>Tuesday 06/06/2017</b>
@@ -103,23 +127,23 @@
  * Today: Finish the design, tests and if possible the implementation for the
  * first part
  * <p>
- * Blocking:
+ * Blocking: None
  * <p>
  * <b>Thursday 1/06/2017 </b>
  * <p>
- * Yesterday:
+ * Yesterday: Finshed base design.
  * <p>
- * Today:
+ * Today: Start the implementation
  * <p>
- * Blocking:
+ * Blocking: None
  * <p>
  * <b>Friday 2/06/2017</b>
  * <p>
- * Yesterday:
+ * Yesterday: Implementation partially completed.
  * <p>
- * Today:
+ * Today: Try to finish the implementation.
  * <p>
- * Blocking:
+ * Blocking: None
  * <p>
  * <b>Monday 5/06/2017</b>
  * <p>

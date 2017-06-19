@@ -3,23 +3,33 @@
 actor User
 participant "ImportDataUI" as ui
 participant "ImportDataController" as ctrl
+participant "CellRange" as range
 participant "DatabaseConnection" as db
-participant "DatabaseOperations" as op
+participant "DatabaseImportOperations" as op
 
 User -> ui : starts the process of importation from database
+User -> ui : inserts the database connection, the table name and can also insert the range of cells
+
+alt 
+create range
+ui -> range : create(firstCell, lastCell)
+end 
 create ctrl
-ui -> ctrl : create()
+ui -> ctrl : create(range, databaseConnection, driver, tableName)
 
-User -> ui : inserts the database connection and the table name
-
-ui -> ctrl : connect(databaseConnection, tableName)
+ui -> ctrl : import()
 
 create db
-ctrl -> db : create(databaseConnection)
+ctrl -> db : create(databaseConnection, driver)
+ctrl -> db : openConnection()
 
-ui -> ctrl : import(tableName)
 create op
 ctrl -> op  : create()
-ctrl -> op : import(tableName)
+alt
+ctrl -> op : importTableContent()
+else
+ctrl -> op : importTableContent(range)
+end
+ctrl -> db : closeConnection()
 
 @enduml

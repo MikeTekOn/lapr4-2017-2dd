@@ -64,6 +64,7 @@ public class ModifyMacroUI extends JDialog {
         createComponents();
         setFocusable(true);
         setTitle("Edit Macros");
+        setLocationRelativeTo(null);
         super.setVisible(true);
     }
 

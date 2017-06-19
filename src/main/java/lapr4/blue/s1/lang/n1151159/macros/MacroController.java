@@ -36,6 +36,8 @@ public class MacroController {
      */
     public String getDefaultMacro() {
         StringBuilder defaultMacro = new StringBuilder();
+        defaultMacro.append("macro default()");
+        defaultMacro.append(System.lineSeparator());
         defaultMacro.append(";Default Macro to calculate the average of 3 grades");
         defaultMacro.append(System.lineSeparator());
         defaultMacro.append(System.lineSeparator());

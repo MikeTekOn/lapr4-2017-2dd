@@ -8,8 +8,9 @@ expression
 	;
 
 comparison
-	: concatenation
+        : concatenation
 		(  ( EQ | NEQ | LTEQ | GTEQ | GT | LT ) concatenation )?
+//        | eval
 	| for_loop
         | do_while_loop
         | while_do_loop
@@ -22,6 +23,17 @@ concatenation
         | concatenation ( MULTI | DIV ) concatenation
         | concatenation ( PLUS | MINUS ) concatenation
         | concatenation AMP concatenation
+        ;
+
+concatenation_eval
+        :   QUOT atom_eval QUOT
+        |   QUOT LETTER QUOT AMP ( VARIABLE_NAME | G_VARIABLE_NAME )
+        ;
+
+atom_eval
+        :   NUMBER PERCENT
+        |   NUMBER ( MULTI | DIV ) NUMBER
+        |   NUMBER ( PLUS | MINUS ) NUMBER
         ;
 
 script
@@ -54,6 +66,10 @@ do_while_loop
 
 while_do_loop
     : WHILEDO LPAR comparison SEMI comparison RPAR
+    ;
+
+eval
+    : EVAL LPAR concatenation_eval RPAR
     ;
 
 block
@@ -94,6 +110,8 @@ DOWHILE : 'DOWHILE' | 'dowhile' | 'DoWhile';
 
 WHILEDO : 'WHILEDO' | 'whiledo' | 'WhileDo';
 
+EVAL : 'EVAL' | 'eval' | 'Eval';
+
 FUNCTION :
 	  ( LETTER )+
 	;
@@ -127,7 +145,7 @@ STRING  : QUOT ('\\"' | ~'"')* QUOT
         ;
 
 QUOT: '"'
-	;
+        ;
 
 /* Numeric literals */
 NUMBER: ( DIGIT )+ ( COMMA ( DIGIT )+ )? ;

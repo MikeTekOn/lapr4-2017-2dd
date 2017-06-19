@@ -85,17 +85,7 @@ public class CellImpl implements Cell {
 	private transient Map<String, CellExtension> extensions =
 		new HashMap<String, CellExtension>();
 
-        /**
-	 * Creates a new cell at the given address in the given spreadsheet.
-	 * (not intended to be used directly).
-	 * @see Spreadsheet#getCell(Address)
-	 * @param spreadsheet the spreadsheet
-	 * @param address the address of the cell
-	 */
-	CellImpl(Spreadsheet spreadsheet, Address address) {
-		this.spreadsheet = spreadsheet;
-		this.address = address;
-	}
+      
 
         /**
 	 * Creates a new cell at the given address in the given spreadsheet,
@@ -140,6 +130,17 @@ public class CellImpl implements Cell {
 		storeContent(content);
 		reevaluate();
 	}
+
+        /**
+	 * Creates a new cell at the given address in the given spreadsheet.
+	 * (not intended to be used directly).
+	 * @see Spreadsheet#getCell(Address)
+	 * @param spreadsheet the spreadsheet
+	 * @param address the address of the cell
+	 */
+        public CellImpl(Spreadsheet spreadsheet, Address address) {
+            this.spreadsheet = spreadsheet;
+		this.address = address;  }
 
 /*
  * LOCATION
@@ -272,7 +273,7 @@ public class CellImpl implements Cell {
         @Override
 	public void setContent(String content) throws FormulaCompilationException {
 		if (!this.content.equals(content)) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       			storeContent(content);
+                        storeContent(content);
 			fireContentChanged();
 			reevaluate();
 		}
@@ -293,15 +294,31 @@ public class CellImpl implements Cell {
 	 */
 	private void storeContent(String content) throws FormulaCompilationException {
 		// Parses formula
-		Formula formula = null;
+		Formula formula = null;    
+                String newContent;
+                
+                newContent = checkContent(content);
+                
 		if (content.length() > 1)
-			formula = FormulaCompiler.getInstance().compile(this, content, uiController);
+			formula = FormulaCompiler.getInstance().compile(this, newContent, uiController);
 
 		// Stores content and formula
 		this.content = content;
 		this.formula = formula;
 		updateDependencies();
 	}
+        
+        private String checkContent(String contentToBeChecked){
+            String newContent, expression;
+                
+                if (contentToBeChecked.contains("eval") || contentToBeChecked.contains("EVAL") || contentToBeChecked.contains("Eval")){
+                    expression = contentToBeChecked.substring(7, contentToBeChecked.length()-2);
+                    newContent = '=' + expression;
+                } else {
+                    newContent = contentToBeChecked;
+                }
+                return newContent;
+        }
 
 	/**
 	 * Updates the cell's dependencies.

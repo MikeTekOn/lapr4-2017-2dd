@@ -8,6 +8,7 @@ skinparam shadowing false
 hide methods
 
 class Tag << Value Object >>
+interface Contactable
 interface Taggable
 
 package "Person Contact Aggregate" <<Cloud>> {
@@ -45,8 +46,9 @@ Agenda *-->        "*" Event
 
 Tag "*" <- PersonContact : associated with
 Tag "*" <- CompanyContact : associated with
-Taggable <|- PersonContact
-Taggable <|- CompanyContact
+Contactable <|. PersonContact
+Contactable <|. CompanyContact
+Contactable .|> Taggable
 
 note as N1
   This value object is contained on

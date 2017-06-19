@@ -3,47 +3,31 @@
     participant "uiExtension : UIExtensionImages" as UIExt
     participant "Cell" as cell
     participant "ImagesPanel : JPanel" as ip
-    participant "ImagesController" as ctrl
+    participant "InsertImageController" as ctrl
     participant "imageLabel: JLabel" as imageLabel
-    participant "applyAction: ApplyAction" as applyAction
 
     create ip
     UIExt -> ip :  new(uic) 
 
-    ip -> uic : addSelectionListener(this)
-    
-    create imageLabel
-    ip -> imageLabel: new()
-
     create ctrl
     ip -> ctrl : new(uic)
 
-    create applyAction
-    ip -> applyAction : new()
+    loop
 
-    note right of applyAction
-        ApplyAction is a innerclass 
-        of ImagesPanel.
-        As such, it can access the 
-        members of ImagesPanel,
-        for instance, the
-        current cell.
-    end note
-
-    ip -> imageLabel : addFocusListener(applyAction)
+    create imageLabel
+    ip -> imageLabel : new()
 
     == meanwhile a cell is selected...the user adds image (adds imagePath to "imageLabel") and loses the focus ==
 
 
-    imageLabel -> applyAction : focusLost(FocusEvent e)
-    activate applyAction
-    applyAction -> imageLabel : imagePath=getImagePath()
-    applyAction -> ctrl : setImage(cell, imagePath)
-    deactivate applyAction
+    imageLabel -> ip : add(this)
+    
+    ip -> ctrl : setImageToImages(cell, imagePath)
 
-    activate ctrl
-    ctrl -> cell : setUserImage(imagePath)
+    ctrl -> cell : setImageToImages(imagePath)
+    
     ctrl -> uic : setWorkbookModified(...)
-    deactivate ctrl
+    
+    end
 
 @enduml

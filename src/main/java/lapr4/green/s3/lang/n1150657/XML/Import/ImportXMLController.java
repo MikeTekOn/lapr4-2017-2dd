@@ -5,9 +5,16 @@
  */
 package lapr4.green.s3.lang.n1150657.XML.Import;
 
+import csheets.core.Cell;
 import csheets.ui.ctrl.UIController;
 import eapli.framework.application.Controller;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.xml.parsers.ParserConfigurationException;
+import lapr4.green.s3.lang.n1150657.XML.Export.ExportComponent;
 import lapr4.red.s2.lang.n1151094.ImportXML.ImportContext;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -20,11 +27,12 @@ public class ImportXMLController implements Controller {
     /**
      * 
      * @param uiController uiController
+     * @param selectedPath
+     * @param isReplace
      */
-    public ImportXMLController(UIController uiController,String selectedPath) {
-        this.xml = new ImportXML(uiController,selectedPath);
+    public ImportXMLController(UIController uiController,String selectedPath, boolean isReplace) {
+        this.xml = new ImportXML(uiController,selectedPath,isReplace);
         this.importContext = new ImportContext(xml);
-
     }
 
     /**
@@ -34,8 +42,24 @@ public class ImportXMLController implements Controller {
      * @return true or false
      */
     public boolean importXml() {
-
         return this.importContext.executeStrategy();
+    }
+    
+    public boolean importSelectedXml(Cell selectedCells[][]){
+        this.xml.selectRange(selectedCells);
+        return this.xml.importData();
+    }
+    
+    public int countNumberSpreadSheet(String path){
+        try {
+            return this.xml.countNumberSpreadSheet(path);
+        } catch (ParserConfigurationException | SAXException | IOException ex) {
+            throw new IllegalArgumentException();
+        } 
+    }
+    
+    public void setIsReplace(boolean isReplace){
+        this.xml.setIsReplace(isReplace);
     }
 
 }

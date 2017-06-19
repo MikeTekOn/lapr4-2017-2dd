@@ -8,7 +8,7 @@ package lapr4.green.s1.ipc.n1150838.findworkbooks.ui;
 import java.util.ArrayList;
 import javax.swing.AbstractListModel;
 import lapr4.green.s1.ipc.n1150838.findworkbooks.FileDTO;
-import lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch.FilePathDTO;
+import lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch.comms.FilePathDTO;
 
 /**
  *

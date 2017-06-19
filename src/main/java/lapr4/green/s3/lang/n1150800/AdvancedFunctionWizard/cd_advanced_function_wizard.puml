@@ -1,0 +1,63 @@
+@startuml cd_advanced_function_wizard.png
+skinparam handwritten false
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false  
+
+interface Function {
+    +getParameters()    
+}
+
+class FunctionWizardAction{    
+}
+
+class FunctionWizardUI{
+}
+
+class FunctionWizardController {
+    +calculateResult()
+    +calculateFunction()
+    +getFunctions()
+    +getDescription(String identifier)
+    +getSyntax(String identifier)
+    +insertSyntaxFormulaBar(String syntax)
+    +compile()
+    +syntaxTree()
+}
+
+class ExcelExpressionCompiler {
+    - AbstractSyntaxTree tree
+    +abstractSyntaxTree()
+}
+
+class AbstractSyntaxTree {
+    +buildSyntaxTree()
+}
+
+class Language{
+    +getFunctions()
+    +getFunction(String identifier)
+}
+
+class FunctionParameter{
+    +getDescription()
+}
+
+class FunctionUtils{
+    +calculateResult()
+    +getSyntax()
+    +getFunctions()
+}
+
+FunctionWizardAction -> FunctionWizardUI 
+FunctionWizardUI --> FunctionWizardController 
+FunctionWizardController -> Language 
+FunctionWizardController -> FunctionUtils
+FunctionWizardController --> ExcelExpressionCompiler
+ExcelExpressionCompiler --* AbstractSyntaxTree
+Language --> Function 
+
+Function -> FunctionParameter
+@enduml
+
