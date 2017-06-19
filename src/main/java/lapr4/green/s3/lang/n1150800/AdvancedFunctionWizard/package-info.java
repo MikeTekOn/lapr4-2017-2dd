@@ -99,18 +99,18 @@ should appear highlighted.
  * Following this, there will be a brief description of each unit test 
  * developed: <p>
  * 
- * <h4>Number of occurrences of a character in a string:</h4>
+ * <h3>Number of occurrences of a character in a string:</h3>
  * This test was developed because when the abstract syntax tree is built in a 
  * Java Swing JTree type, the elements from the tree need to be inserted in the 
  * right way in the tree.
  * <p>
  * 
- * <h4>Management of leaf nodes:</h4>
+ * <h3>Management of leaf nodes:</h3>
  * This test was developed because there might be repeated characters in a 
  * formula, and as so, there must be a way to guarantee that when the user 
  * selects the tree element, the correct text element is highlighted.
  * 
- * <h4>Highlight position:</h>
+ * <h3>Highlight position:</h3>
  * This test was developed to ensure that the correct element from the edit 
  * box is highlighted, as well as the previous described test.
  * <p>
