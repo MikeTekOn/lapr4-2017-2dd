@@ -57,6 +57,8 @@ import lapr4.green.s1.ipc.n1150901.search.workbook.HandlerResponseWorkbookDTO;
 import lapr4.green.s1.ipc.n1150901.search.workbook.RequestWorkbookDTO;
 import lapr4.green.s1.ipc.n1150901.search.workbook.ResponseWorkbookDTO;
 import lapr4.green.s1.ipc.n1150901.search.workbook.SearchWorkbookEvent;
+import lapr4.red.s3.ipc.n1151094.networkExplorer.CleansheetRequestDTO;
+import lapr4.red.s3.ipc.n1151094.networkExplorer.HandlerCleansheetRequestDTO;
 
 /**
  * The Communication extension. It manages all the servers and clients of the
@@ -235,6 +237,8 @@ public class CommExtension extends Extension implements Observer {
         udpServer.addHandler(UserChatDTO.class, hucp);
         HandlerSearchWorkbookRequestDTO h3 = new HandlerSearchWorkbookRequestDTO(uiController);
         udpServer.addHandler(SearchWorkbookRequestDTO.class, h3);
+        HandlerCleansheetRequestDTO h4 = new HandlerCleansheetRequestDTO(uiController);
+        udpServer.addHandler(CleansheetRequestDTO.class, h4);
         //TODO
     }
 
@@ -259,6 +263,7 @@ public class CommExtension extends Extension implements Observer {
         //tcpClientsManager.addHandler(ResponseMessageDTO.class,h4);
         //tcpServer.addHandler(RequestMessageDTO.class, h4);
         //TODO
+        
     }
 
     /**

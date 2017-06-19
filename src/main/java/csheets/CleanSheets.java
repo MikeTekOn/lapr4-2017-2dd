@@ -41,6 +41,7 @@ import javax.swing.SwingUtilities;
 import csheets.core.*;
 import csheets.core.formula.compiler.FormulaCompiler;
 import csheets.core.formula.lang.Language;
+import csheets.ext.Extension;
 import csheets.ext.ExtensionManager;
 import csheets.io.Codec;
 import csheets.io.CodecFactory;
@@ -60,6 +61,7 @@ import java.util.Observer;
 import java.util.ResourceBundle;
 import lapr4.blue.s2.ipc.n1140822.fileShare.ShareConfiguration;
 import lapr4.green.s2.core.n1150657.extensions.ui.ExtensionLoadFrame;
+import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionEvent;
 
 /**
  * CleanSheets - the main class of the application. The class manages workbooks,
