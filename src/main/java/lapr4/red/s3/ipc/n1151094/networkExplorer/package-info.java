@@ -31,7 +31,7 @@
  *      <li>The user starts the CleanSheets Instance Search.</li>
  *      <li>The system sends UDP broadcast.</li>
  *      <li>The other instances answer, sending TCP data.</li>
- * <ul>
+ * </ul>
  *
  * <h3>3. Analysis</h3>
  *
