@@ -123,12 +123,14 @@ public class Frame extends JFrame implements SelectionListener, ExtensionStateLi
         actionManager.registerAction("exportselectedrow", new ExportSelectedRowActionUI(uiController));
         actionManager.registerAction("exportselectedcolumn", new ExportSelectedColumnActionUI(uiController));
         actionManager.registerAction("exportselectedcells", new ExportSelectedCellsActionUI(uiController));
+
         actionManager.registerAction("exportworkbook", new ExportWorkBookActionUI(uiController));
 
         //new XML importation
         actionManager.registerAction("importworkbook", new ImportSelectedWorkbookActionUI(uiController));
         actionManager.registerAction("importspreadsheet", new ImportSelectedSpreadsheetActionUI(uiController));
         actionManager.registerAction("importselectedcells", new ImportSelectedCellsActionUI(uiController));
+
 
         // Registers edit actions
         actionManager.registerAction("undo", new UndoAction());

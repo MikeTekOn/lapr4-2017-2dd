@@ -1,0 +1,63 @@
+@startuml core07_03_cd.png
+
+class SearchReplaceSideBar {
+    showInfo()
+}
+class ConfigPane {
+    showInfo()
+}
+class UIController{
+    getActiveWorkbooks()
+}
+class SearchReplaceController{
+    validateFormula(String formula)
+    start(Filter filter,String regex)
+    stop()
+}
+class Cell{
+    getValue()
+    getContent()
+}
+class RegexUtilExtended {
+    searchWorkbooks()
+    checkIfMatches(Cell cell)
+    containsFormulas(Cell cell, List<String> formulas)
+    validateFilters(Cell cell, List<String> types, List<String> formulas)
+    validateType(Cell cell, List<String> types)
+    validateFormulas(Cell cell, List<String> formulas)
+
+}
+
+class Previewer {
+    previewContent()
+    validateContent(String content, Cell cell)
+    validateContainsExp()
+    validateContainsComment()
+}
+
+class Replacer {
+    replaceContent()
+    validateContent(String content, Cell cell)
+    validateContainsExp()
+    validateContainsComment()
+}
+
+class Filter{
+    getTypesToInclude()
+    getFormulasToInclude()
+    isIncludeComments()
+}
+SearchReplaceSideBar ..>ConfigPane
+ConfigPane..>UIController
+ConfigPane..>GlobalSearchController
+SearchReplaceSideBar ..> UIController
+SearchReplaceSideBar ..> SearchReplaceController
+SearchReplaceController ..> RegexUtilExtended
+SearchReplaceController ..> Filter
+RegexUtilExtended ..> Cell
+SearchReplaceController..-> Previewer
+SearchReplaceController..-> Replacer
+Previewer ..->PreviewCellDTO
+
+
+@enduml

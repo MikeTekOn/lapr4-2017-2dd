@@ -1,0 +1,21 @@
+@startuml us05.3_eval_visitor_locals2.png
+
+hide footbox
+
+participant Macro2EvalVisitor as visitor
+participant "locals: VarContentor" as locals
+
+-> visitor:visitAssignment(Ctx)
+activate visitor
+    visitor->visitor: if has local_variable call \nsetExpressionOfVariable(name, visit(ctx.comparison()), locals)
+    <--visitor: Expression
+deactivate visitor
+... ...
+->visitor: setExpressionOfVariable(name, value, locals)
+activate visitor
+    visitor->locals: update(name, value)
+    activate locals
+    visitor<--locals: Expression
+    deactivate locals
+deactivate visitor
+@enduml

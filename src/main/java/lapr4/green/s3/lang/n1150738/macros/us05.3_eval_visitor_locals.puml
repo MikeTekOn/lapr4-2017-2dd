@@ -1,0 +1,21 @@
+@startuml us05.3_eval_visitor_locals.png
+
+hide footbox
+
+participant Macro2EvalVisitor as visitor
+participant "locals: VarContentor" as locals
+
+-> visitor:visitAtom(Ctx)
+activate visitor
+    visitor->visitor: if has local_variable call \ngetExpressionOfVariable(name, locals)
+    <--visitor: Expression
+deactivate visitor
+... ...
+->visitor: getExpressionOfVariable(name, locals)
+activate visitor
+    visitor->locals: getExpressionOfVariable(name)
+    activate locals
+    visitor<--locals: Exppression
+    deactivate locals
+deactivate visitor
+@enduml

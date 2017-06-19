@@ -1,0 +1,35 @@
+@startuml export_xml_sd.png
+actor User
+User -> ExportXMLUI : Initiates Functionality
+create ExportXMLController
+ExportXMLUI->ExportXMLController: create()
+create ExportXML
+ExportXMLController->ExportXML : create()
+create ExportComponent
+ExportXMLController->ExportComponent : create()
+create ExportContext
+ExportXMLController->ExportContext : create(exportXML)
+User -> ExportXMLUI : Selects Range
+ExportXMLUI->ExportXMLController: exportChosenRange(r)
+note right
+this export represents the export spreadsheet, workbook or selected cells
+end note
+ExportXMLController->ExportComponent: m = getMap()
+note right
+this getMap represents the map with the spreadsheet and cells selected
+end note
+ExportXMLController->ExportXML: selectRange(m)
+User -> ExportXMLUI : Choose the tag names
+loop 
+ExportXMLUI->ExportXMLController: addTagName(tag,name)
+ExportXMLController->TagsName: addTagName(tag,name)
+end loop
+User -> ExportXMLUI : Chooses the path where to save
+ExportXMLUI->ExportXMLController: selectPath(path)
+ExportXMLController->ExportXML: selectPath(path)
+
+User -> ExportXMLUI : Confirms data
+ExportXMLUI -> ExportXMLController : export()
+
+ExportXMLController -> ExportContext : executeStrategy()
+@enduml

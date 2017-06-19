@@ -10,16 +10,8 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
+import javax.swing.*;
+
 import lapr4.green.s2.core.n1150532.sort.algorithms.SortingAlgorithm;
 import lapr4.green.s2.core.n1150532.sort.comparators.RangeRowDTOComparator;
 
@@ -85,8 +77,14 @@ public class SortCellRangeUI extends JDialog {
      * The button to perform the sorting.
      */
     private JButton btSort;
-
+    /**
+     * The real column index
+     */
     private int realColumnIndex;
+    /**
+     * The checkbox for persisting the changes
+     */
+    private   JCheckBox check;
 
     /**
      * The full constructor of the user interface.
@@ -178,6 +176,8 @@ public class SortCellRangeUI extends JDialog {
         outAlgorithms = new JComboBox();
         panel.add(outAlgorithms);
         panel.setBorder(BorderFactory.createTitledBorder(panelTitle));
+        check = new JCheckBox("persist sorting");
+        panel.add(check);
         return panel;
     }
 
@@ -329,8 +329,10 @@ public class SortCellRangeUI extends JDialog {
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
-                controller.sort(selectedCells, getSortingColumnIndex(),SortCellRangeUI.this
-                .realColumnIndex,(SortingAlgorithm) outAlgorithms.getSelectedItem(), (RangeRowDTOComparator) outComparators.getSelectedItem(), btDescending.isSelected());
+                if(check.isSelected()) {
+                    controller.sort(selectedCells, getSortingColumnIndex(), SortCellRangeUI.this
+                            .realColumnIndex, (SortingAlgorithm) outAlgorithms.getSelectedItem(), (RangeRowDTOComparator) outComparators.getSelectedItem(), btDescending.isSelected());
+                }
                 dispose();
             } catch (IllegalArgumentException ex) {
                 outInformation.setText(ex.getMessage());
