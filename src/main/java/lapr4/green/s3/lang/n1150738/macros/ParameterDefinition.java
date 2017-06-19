@@ -2,8 +2,6 @@ package lapr4.green.s3.lang.n1150738.macros;
 
 import eapli.framework.domain.ValueObject;
 
-import java.util.ArrayList;
-import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -53,14 +51,25 @@ public class ParameterDefinition implements ValueObject {
         return params.contains(name);
     }
 
-    public void validateParameterList(ParameterList list) throws InvalidParameterList {
+    public void validateParameterList(ParameterList list) throws InvalidParameterListException {
         if(this.params.size() != list.size()){
-            throw new InvalidParameterList("Invalid parameter list size");
+            throw new InvalidParameterListException("Invalid parameter list size");
         }
         for(int i= 0; i < list.size(); i++){
             if(!params.contains(list.get(i).id())){
-                throw new InvalidParameterList("Invalid parameter "+list.get(i).id());
+                throw new InvalidParameterListException("Invalid parameter "+list.get(i).id());
             }
         }
+    }
+
+    public String summary(){
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < params.size(); i++) {
+            sb.append(params.get(i));
+            if(i!=params.size()-1){
+                sb.append(", ");
+            }
+        }
+        return sb.toString();
     }
 }

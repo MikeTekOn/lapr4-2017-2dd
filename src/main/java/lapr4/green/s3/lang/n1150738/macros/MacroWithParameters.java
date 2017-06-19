@@ -1,13 +1,10 @@
 package lapr4.green.s3.lang.n1150738.macros;
 
-import csheets.core.Spreadsheet;
 import csheets.core.Value;
 import csheets.core.formula.Expression;
-import csheets.ui.ctrl.UIController;
 import lapr4.blue.s1.lang.n1151159.macros.Macro;
-import lapr4.red.s2.lang.n1150451.multipleMacros.domain.MacroWithName;
+import lapr4.green.s3.lang.n1150738.macros.compiler.MacroInterpreter;
 
-import java.text.ParseException;
 import java.util.List;
 
 /**
@@ -42,7 +39,7 @@ public class MacroWithParameters extends Macro {
     }
 
 
-    public Value executeMacro(ParameterList list) throws InvalidParameterList {
+    public Value executeMacro(ParameterList list) throws InvalidParameterListException {
         this.parameterDefinition.validateParameterList(list); //throws exception
         MacroInterpreter interpreter = new MacroInterpreter(this, list);
         return (Value)this.accept(interpreter);

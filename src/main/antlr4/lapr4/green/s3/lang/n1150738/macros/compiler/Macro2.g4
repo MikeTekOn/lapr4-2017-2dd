@@ -17,6 +17,13 @@ parameters
     | parameters COMMA IDENTIFIER
     ;
 
+parameters_val_list
+    :
+    | literal
+    | parameters_val_list COMMA literal
+    ;
+
+
 expression
 	: EQ? comparison NEWLINE+
 	;
@@ -60,7 +67,7 @@ atom
 	|   LOCAL_VARIABLE
 	;
 
-macro_invoked : LPAR_SQ (~(LPAR_SQ | RPAR_SQ))+ RPAR_SQ;
+macro_invoked : LPAR_SQ IDENTIFIER LPAR parameters_val_list RPAR RPAR_SQ;
 
 assignment
 	:  LPAR (reference | LOCAL_VARIABLE) ASSIGN comparison RPAR
