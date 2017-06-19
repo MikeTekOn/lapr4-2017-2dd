@@ -1,0 +1,22 @@
+@startuml
+
+note left of CommExtension
+    listens to changes in cells
+    (content and style included)
+end note
+
+note left of CellHandler
+    handles changes in cells
+end note
+
+
+class CommExtension{
+}
+
+class CellHandler{
+}
+
+CommExtension --> CellHandler : calls
+
+
+@enduml

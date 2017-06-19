@@ -69,11 +69,12 @@ public class ShareOptionsController {
                 && row == startAddress.RowDistanceTo(finalAddress);
     }
 
-    public Address getStartAddress() {
-        return startAddress;
+    public void applyStyleAndContent() {
+        handler.applyStyle();
+        handler.applyContent();
     }
 
-    public Address getFinalAddress() {
-        return finalAddress;
+    public String getRange() {
+        return "(" + getRows() + "x" + getColumns() + ") - [ROWxCOLUMN]";
     }
 }

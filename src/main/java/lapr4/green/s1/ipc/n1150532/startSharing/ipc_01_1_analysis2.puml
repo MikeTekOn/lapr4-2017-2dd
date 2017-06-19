@@ -14,7 +14,7 @@ class ServerHandler
 
 CommClientWorker "1" - "*" ClientHandler : uses >
 CommClientWorker "1" -- "1" DataTransferObject : sends >
-DataTransferObject "1" -- "1" CommClientWorker : are received by >
+DataTransferObject "1"  -- "1" CommClientWorker : are received by >
 DataTransferObject "1" -- "1" CommServerWorker : are received by >
 CommServerWorker "1" -- "1" DataTransferObject : sends >
 CommServer "1" - "*" CommServerWorker : creates >

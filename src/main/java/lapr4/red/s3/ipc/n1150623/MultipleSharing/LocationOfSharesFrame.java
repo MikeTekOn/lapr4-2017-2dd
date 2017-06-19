@@ -38,7 +38,10 @@ public class LocationOfSharesFrame extends JFrame implements ActionListener {
         JPanel main = createMainPanel();
         JPanel endButtons = createEndButtons();
         this.setLayout(new BorderLayout());
-        add(main, BorderLayout.NORTH);
+        controller.getRange();
+        JLabel lab = new JLabel("Must be a matrix of: "+controller.getRange());
+        add(lab, BorderLayout.NORTH);
+        add(main, BorderLayout.CENTER);
         add(endButtons, BorderLayout.PAGE_END);
         pack();
     }
@@ -113,7 +116,6 @@ public class LocationOfSharesFrame extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         switch(e.getActionCommand()){
             case LocationOfSharesFrame.ok_action:
-
                 if(controller.setStartAddress(start_Column_text.getText().trim(), start_row_text.getText().trim())){
                     if(controller.setFinalAddress(final_Column_text.getText().trim(), final_row_text.getText().trim())){
                         if(controller.doAlterations()){

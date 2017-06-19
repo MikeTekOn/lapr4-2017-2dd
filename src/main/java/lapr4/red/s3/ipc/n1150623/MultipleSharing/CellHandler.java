@@ -14,6 +14,8 @@ import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.comm.CellContentDTO;
 import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.comm.CellStyleDTO;
 import lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.util.Styles;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
+
+import java.util.Set;
 import java.util.SortedSet;
 
 /**
@@ -25,6 +27,9 @@ public class CellHandler {
     private Spreadsheet spreadsheet;
     private ConnectionID connection;
     private Address start_Address;
+
+    private Set<CellStyleDTO> styleDTO;
+    private Set<CellContentDTO> contentDTO;
 
     public CellHandler(SortedSet<CellDTO> cellsDTO, Spreadsheet spreadsheet, ConnectionID connection){
         this.cellsDTO = cellsDTO;
@@ -77,27 +82,41 @@ public class CellHandler {
     }
 
 
-    public void applyStyle(CellStyleDTO dto) {
+    public void applyStyle() {
 
-
-        Cell cell = getCellfromSpreadSheet(dto.getAddress());
-        StylableCell stylableCell = (StylableCell)cell.getExtension(StyleExtension.NAME);
-        if (stylableCell != null && dto.getStyleDTO() != null) {
-            Styles.setStyleFromDTO(stylableCell, dto.getStyleDTO());
-            if (cell instanceof CellImpl) {
-                ((CellImpl) cell).updateCellStyle();
+        System.out.println("--------------> Applying Styles");
+        for(CellStyleDTO dto : styleDTO) {
+            Cell cell = getCellfromSpreadSheet(dto.getAddress());
+            StylableCell stylableCell = (StylableCell) cell.getExtension(StyleExtension.NAME);
+            if (stylableCell != null && dto.getStyleDTO() != null) {
+                Styles.setStyleFromDTO(stylableCell, dto.getStyleDTO());
+                if (cell instanceof CellImpl) {
+                    ((CellImpl) cell).updateCellStyle();
+                }
             }
-
-
         }
+    }
+
+    public void applyContent() {
+        System.out.println("--------------> Applying Content");
+
+        for(CellContentDTO dto : contentDTO) {
+
+            Cell cell = getCellfromSpreadSheet(dto.getAddress());
+            try {
+                cell.setContent(dto.getContent());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+    public void setStyle(CellStyleDTO dto) {
+        styleDTO.add(dto);
     }
 
     public void setContent(CellContentDTO dto) {
-        Cell cell = getCellfromSpreadSheet(dto.getAddress());
-        try {
-            cell.setContent(dto.getContent());
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        contentDTO.add(dto);
     }
+
 }

@@ -327,19 +327,20 @@ public class CommExtension extends Extension implements Observer {
                 tcpClientsManager.requestConnectionTo(event.getConnectionID(), event.isSecure());
             }
             if (arg instanceof SharedCellsEvent) { //transferred cells notification
+                    System.out.println("------------> SharedCellEvent activated");
                 SharedCellsEvent event = (SharedCellsEvent) arg;
                 String name = event.getConnection().getAddress().getHostName();
                 if (JOptionPane.showConfirmDialog(null, "Do you want to share cells with " + name + "?", "Cell Share", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    System.out.println("------------> SharedCellEvent: Want to share cells.");
                     share = true;
                     SortedSet<CellDTO> cellsDTO = event.getCells();
                     ConnectionID connection = event.getConnection();
-                    Spreadsheet spreadsheet = uiController.getSpreadSheetForSharedCells(event.getShareName(), cellsDTO.first().getAddress(), cellsDTO.last().getAddress());
+                    Spreadsheet spreadsheet = uiController.getSpreadSheetForSharedCells(event.getShareName(), cellsDTO.first().getAddress(), cellsDTO.last().getAddress(), name);
                     handler = new CellHandler(cellsDTO, spreadsheet, connection);
                     ctrl = new ShareOptionsController(handler, cellsDTO);
-
+                    System.out.println("------------> SharedCellEvent: Will start to choose new range.");
                     Thread t = new Thread() {
                         public void run() {
-
                             //open UI because of DTO arrival -> Choose where to put the share's cells
                             new LocationOfSharesFrame(ctrl);
                         }
@@ -347,12 +348,11 @@ public class CommExtension extends Extension implements Observer {
                     t.start();
                     try {
                         t.join(); //so content and styles aren't applied before range selection and addresses redefinition
-                    } catch (InterruptedException e) {
+                        System.out.println("------------> SharedCellEvent: ApplyStyleAndContent.");
+                        ctrl.applyStyleAndContent();
+                    } catch (/*Interrupted*/Exception e) {
                         e.printStackTrace();
                     }
-
-                }else{
-                    share = false;
                 }
             }if (arg instanceof SearchWorkbookEvent) {
                 SearchWorkbookEvent event = (SearchWorkbookEvent) arg;
@@ -398,12 +398,11 @@ public class CommExtension extends Extension implements Observer {
                 }
 
             }
-            if (arg instanceof CellStyleDTO && share) { //transferred style
+            if (arg instanceof CellStyleDTO) { //transferred style
                 CellStyleDTO dto = (CellStyleDTO) arg;
-                handler.applyStyle(dto);
-
+                handler.setStyle(dto);
             }
-            if (arg instanceof CellContentDTO && share) { //transferred content
+            if (arg instanceof CellContentDTO) { //transferred content
                 CellContentDTO dto = (CellContentDTO) arg;
                 handler.setContent(dto);
             }

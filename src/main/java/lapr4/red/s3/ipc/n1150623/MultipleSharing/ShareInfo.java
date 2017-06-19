@@ -6,22 +6,24 @@ import csheets.core.Spreadsheet;
 /**
  * Created by Guilherme Ferreira 1150623 on 18/06/2017.
  */
-public class ReceivedShareInfo {
+public class ShareInfo {
 
     private String shareName;
     private Address inicial_address_range;
     private Address last_address_range;
     private Spreadsheet spreadsheet;
+    private String otherParty;
 
-    protected ReceivedShareInfo(String name, Address ini, Address end, Spreadsheet spread){
+    protected ShareInfo(String name, Address ini, Address end, Spreadsheet spread, String otherParty){
         this.shareName = name;
         this.inicial_address_range = ini;
         this.last_address_range = end;
         this.spreadsheet = spread;
+        this.otherParty = otherParty;
     }
 
-    public static ReceivedShareInfo createShareInfo(String name, Address ini, Address end, Spreadsheet spread){
-        return new ReceivedShareInfo(name, ini, end, spread);
+    public static ShareInfo createShareInfo(String name, Address ini, Address end, Spreadsheet spread, String otherParty){
+        return new ShareInfo(name, ini, end, spread, otherParty);
     }
 
     public Spreadsheet spreadsheet(){
@@ -41,7 +43,9 @@ public class ReceivedShareInfo {
                 .append(inicial_address_range.toString())
                 .append(" ,")
                 .append(last_address_range.toString())
-                .append("];\n");
+                .append("];\n")
+                .append(" -> ")
+                .append(otherParty);
 
         return s.toString();
     }

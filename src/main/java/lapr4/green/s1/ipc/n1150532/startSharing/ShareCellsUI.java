@@ -6,13 +6,9 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Set;
 import javax.swing.*;
-import javax.swing.border.Border;
 
-import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
-import lapr4.red.s3.ipc.n1150623.MultipleSharing.ReceivedShareInfo;
 
 /**
  * @author Guilherme Ferreira 1150623  Added Share Name
