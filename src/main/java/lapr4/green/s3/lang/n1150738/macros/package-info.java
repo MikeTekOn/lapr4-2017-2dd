@@ -19,30 +19,83 @@
  * <p>
  * <p>
  * <b>Analysis</b><p>
- * <img src="us10.1.2_concept_classes.png" alt="image">
  * <p>
  *      This user story is divided into 2 parts. Macros with parameters and Macros with Local Variables.
  * <i><b>Part I: Macros with Local Variables</b></i><p>
  * &nbsp;&nbsp;&nbsp;&nbsp;<i><u>What already exists:</u></i><p>
- *     Similar to this problem we have user story Lang02.1 Temporary Vars
+ *     Similar to this problem we have user story Lang02.1 Temporary Vars in which the formula compiler has a list of
+ *     temporary variables and pushes its value accordingly
  * <p>
+ * &nbsp;&nbsp;&nbsp;&nbsp;<i><u>What needs to be done:</u></i><p>
+ *     Add grammar for the local variables that are in the form '_'IDENTIFIER, and add the given visitation action to
+ *     get and set its value.
+ *
  * <p>
+ *  &nbsp;&nbsp;&nbsp;&nbsp;<i><u>Existing Classes:</u></i><p>
+ *     {@link lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable}<p>
+ *     {@link lapr4.blue.s1.lang.n1151159.macros.Macro}<p>
+ *     {@link lapr4.blue.s1.lang.n1151159.macros.compiler.MacroCompiler}<p>
+ *     {@link lapr4.blue.s1.lang.n1151159.macros.compiler.MacroEvalVisitor}<p>
+ *     {@link lapr4.blue.s1.lang.n1151452.formula.compiler.ExcelExpressionCompiler}<p>
+ *     {@link lapr4.blue.s1.lang.n1151452.formula.compiler.FormulaEvalVisitor}<p>
+ *     {@link lapr4.red.s2.lang.n1150623.globalVariables.VarContentor}<p>
+ *
+ *  &nbsp;&nbsp;&nbsp;&nbsp;<i><u>Concept Classes:</u></i><p>
+ *      A new version of the Macro grammar and compiler (MacroCompiler, MacroEvalVisitor)
+ *
+ * <p>
+ * <img src="us05.3_concept_classes.png" alt="image">
  * <p>
  * <p>
  * <b>Tests</b>
  * <p>
+ * <i><b>Part I: Macros with Local Variables</b></i><p>
  * <ul>
- *     <li>ensureLocalVariableIsDetected()</li>
+ *     <li>LocalVariableTest::ensureNonDeclaredVariableCannotBeReferenced()</li>
+ *     <li>LocalVariableTest::ensureLocalVariableIsAssignable()</li>
+ *     <li>LocalVariableTest::ensureLocalVariableHoldsValue()</li>
+ *     <li>LocalVariableTest::ensureLocalVariableWorksOnNestedExpressions()</li>
+ * </ul>
+ * <p>
+ * <ul>
+ *     <li>LocalVariableTest::ensureNonDeclaredVariableCannotBeReferenced()</li>
+ *     <li>LocalVariableTest::ensureLocalVariableIsAssignable()</li>
+ *     <li>LocalVariableTest::ensureLocalVariableHoldsValue()</li>
+ *     <li>LocalVariableTest::ensureLocalVariableWorksOnNestedExpressions()</li>
  * </ul>
  * <p>
  * <p>
  * <p>
- * <p>
  * <b>Design</b><p>
+ * <i><b>Part I: Macros with Local Variables</b></i><p>
+ * Changes on Grammar: Add token for local variable name on rule atom and assignment <p>
+ * Changes on Evaluator: <p>
+ * &nbsp;&nbsp; On visitAssignement create or update localVar on VarContentor of locals <p>
+ * &nbsp;&nbsp; On visitAtom return value of the variable <p>
  *
- * Changes on Grammar: Add token for local variable name on rule atom and assignment
- * Changes on Evaluator: On visitAssignement create or update localVar on VarContentor of locals
- *                      On visitAtom return value of the variable
+ * <pre>
+ * {@code
+ *      atom
+            : macro_invoked
+            |	function_call
+            |	reference
+            |	literal
+            |	LPAR comparison RPAR
+            |	block
+            |	assignment
+            |   shellscript
+            |   LOCAL_VARIABLE
+            ;
+
+        LOCAL_VARIABLE
+            : UNDERSCORE LETTER (DIGIT|LETTER)*
+            ;
+ * }
+ * </pre>
+ *
+ * <img src="us05.3_eval_visitor_locals.png" alt="image">
+ * <img src="us05.3_eval_visitor_locals2.png" alt="image">
+ *
  *
  *
  * @author Henrique Oliveira [1150738@isep.ipp.pt]
