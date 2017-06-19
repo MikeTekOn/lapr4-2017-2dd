@@ -33,11 +33,12 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import lapr4.red.s2.lang.n1150613.FunctionWizard.application.IntermediateFunctionWizardController;
+import lapr4.green.s3.lang.n1150800.AdvancedFunctionWizard.application.AdvancedFunctionWizardController;
 
 /**
  * Class that is user interface for Function Wizard
  *
+ * @author Pedro Chilro [1150800@isep.ipp.pt] on 17/06/17.
  * @author Diogo Guedes
  */
 public class IntermediateFunctionWizardUI extends JDialog {
@@ -50,24 +51,24 @@ public class IntermediateFunctionWizardUI extends JDialog {
     /**
      * The function wizard controller
      */
-    private final IntermediateFunctionWizardController controller;
+    protected final AdvancedFunctionWizardController controller;
 
-    private JButton applyBtn;
+    protected JButton applyBtn;
     private JButton cancelBtn;
-    private JComboBox comboIdentifiers;
-    private JTextField txtSyntax;
-    private JTable tableHelpText;
-    private DefaultTableModel defaultTableModel;
-    private JTextField resultField;
+    protected JComboBox comboIdentifiers;
+    protected JTextField txtSyntax;
+    protected JTable tableHelpText;
+    protected DefaultTableModel defaultTableModel;
+    protected JTextField resultField;
 
-    private static final int WIDTHW = 300, LENGTH = 200;
-    private static final int WIDTH_TABLE = 600, LENGTH_TABLE = 150;
-    private static final int SIZE_TXT_FIELD = 40;
-    private static final String IDENTIFIER = "Function:";
-    private static final String SYNTAX = "Syntax:";
-    private static final String HELPTEXT = "Help Test:";
-    private static final String OPTIONS = "Options:";
-    private static final String[] HEADER = {"Parameter", "Description"};
+    protected static final int WIDTHW = 700, LENGTH = 650;
+    protected static final int WIDTH_TABLE = 600, LENGTH_TABLE = 150;
+    protected static final int SIZE_TXT_FIELD = 40;
+    protected static final String IDENTIFIER = "Function:";
+    protected static final String SYNTAX = "Syntax:";
+    protected static final String HELPTEXT = "Help Text:";
+    protected static final String OPTIONS = "Options:";
+    protected static final String[] HEADER = {"Parameter", "Description"};
 
     /**
      * Build the Function Wizard window
@@ -81,31 +82,16 @@ public class IntermediateFunctionWizardUI extends JDialog {
 
         this.uiController = uIController;
 
-        controller = new IntermediateFunctionWizardController(uIController);
-
-        add(createComponents());
-
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                cancel();
-            }
-        });
-        pack();
-        setResizable(false);
-        setMinimumSize(new Dimension(WIDTHW, LENGTH));
-        setLocationRelativeTo(null);
-        setVisible(true);
-
+        controller = new AdvancedFunctionWizardController(uIController);
     }
-
+    
     /**
      * create all ui panels
      *
      * @return all ui panels
      * @throws UnknownElementException to be caught
      */
-    private JPanel createComponents() throws UnknownElementException {
+    protected JPanel createComponents() throws UnknownElementException {
         JPanel panel = new JPanel(new BorderLayout());
 
         panel.add(createPanelNorth(), BorderLayout.NORTH);
@@ -119,7 +105,7 @@ public class IntermediateFunctionWizardUI extends JDialog {
      *
      * @return panel with the combox function identifiers
      */
-    private JPanel createPanelComboIdentifiers() {
+    protected JPanel createPanelComboIdentifiers() {
         JPanel p = new JPanel();
         comboIdentifiers = new JComboBox(controller.getFunctions().toArray());
         comboIdentifiers.setSelectedIndex(-1);
@@ -149,10 +135,10 @@ public class IntermediateFunctionWizardUI extends JDialog {
                             
                             txtSyntax.setText(controller.getSyntax(auxIdentifier, 0));
 
-                        } catch (UnknownElementException u) {      
+                        } catch (UnknownElementException u) {
                             defaultTableModel.addRow(new Object[]{"Parameter1", "1st Value"});
                             defaultTableModel.addRow(new Object[]{"Parameter2", "2nd Value"});
-                           
+                            
                             txtSyntax.setText(controller.getSyntax(auxIdentifier, 1));
                         }
 
@@ -202,7 +188,7 @@ public class IntermediateFunctionWizardUI extends JDialog {
      *
      * @return panel with the edit box function syntax
      */
-    private JPanel createPanelSyntax() {
+    protected JPanel createPanelSyntax() {
         JPanel p = new JPanel();
         txtSyntax = new JTextField(SIZE_TXT_FIELD);
         p.add(txtSyntax);
@@ -215,7 +201,7 @@ public class IntermediateFunctionWizardUI extends JDialog {
      *
      * @return panel with the table function parameters
      */
-    private JPanel createPanelCenter() {
+    protected JPanel createPanelCenter() {
         JPanel p = new JPanel();
 
         p.setBorder(BorderFactory.createTitledBorder(HELPTEXT));
@@ -228,7 +214,7 @@ public class IntermediateFunctionWizardUI extends JDialog {
      *
      * @return table for function parameters
      */
-    private JScrollPane createTable() {
+    protected JScrollPane createTable() {
 
         DefaultTableCellRenderer dtcr = new DefaultTableCellRenderer();
         dtcr.setHorizontalAlignment(JLabel.LEFT);
@@ -264,7 +250,7 @@ public class IntermediateFunctionWizardUI extends JDialog {
      *
      * @return create panel with a combobox and edit box
      */
-    private JPanel createPanelNorth() {
+    protected JPanel createPanelNorth() {
         JPanel north = new JPanel(new BorderLayout());
 
         north.add(createPanelComboIdentifiers(), BorderLayout.WEST);
@@ -278,7 +264,7 @@ public class IntermediateFunctionWizardUI extends JDialog {
      *
      * @return panel for the buttons
      */
-    private JPanel createPanelButons() {
+    protected JPanel createPanelButons() {
 
         resultField = new JTextField();
         resultField.setPreferredSize(new Dimension(200, 20));
@@ -311,7 +297,7 @@ public class IntermediateFunctionWizardUI extends JDialog {
      *
      * @return Apply Button
      */
-    private JButton createButtonApply() {
+    protected JButton createButtonApply() {
         applyBtn = new JButton("Apply");
         applyBtn.setToolTipText("Insert syntax in formula bar");
         applyBtn.setEnabled(false);
@@ -334,7 +320,7 @@ public class IntermediateFunctionWizardUI extends JDialog {
      *
      * @return Cancel Button
      */
-    private JButton createButtonCancel() {
+    protected JButton createButtonCancel() {
         cancelBtn = new JButton("Cancel");
         cancelBtn.setToolTipText("Back to previous screen");
         cancelBtn.addActionListener(new ActionListener() {
@@ -350,7 +336,7 @@ public class IntermediateFunctionWizardUI extends JDialog {
     /**
      * execute when Apply Button is cliked
      */
-    private void apply() throws FormulaCompilationException {
+    protected void apply() throws FormulaCompilationException {
         try {
             String aux = resultField.getText();
             if (!aux.isEmpty()) {

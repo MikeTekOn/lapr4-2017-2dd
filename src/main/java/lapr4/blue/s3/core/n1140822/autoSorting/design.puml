@@ -1,0 +1,13 @@
+@startuml design.png
+User -> SortCellRangeUI : Insert sorting data
+SortCellRangeUI  ->  SortCellRangeController : new(UIController)
+SortCellRangeUI  ->  SortCellRangeController : sort(cells,sortingColumnIndex,absoluteColIndex,algorithm,comparator,isDesc)
+SortCellRangeController -> SortCellRangeController : dto = createDTOs(cells,sortingColumnIndex)
+SortCellRangeController -> AutoSortingThread : a = new(dto, comparator, algorithm, sortingColumnIndex,realColumnIndex)
+loop all cells
+SortCellRangeController -> SortCellRangeController : addCellListener(a)
+end
+SortCellRangeController -> AutoSortingThread : a.start()
+AutoSortingThread ->  AutoSortingThread : paintSortingRange(cells, sortingColumnIndex, comparator.currentOrder)
+AutoSortingThread ->  AutoSortingThread : algorithm.sort(dto,comparator)
+@enduml

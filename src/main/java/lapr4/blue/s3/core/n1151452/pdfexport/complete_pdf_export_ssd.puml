@@ -1,0 +1,16 @@
+@startuml complete_pdf_export_ssd.png
+actor User
+User -> System: Starts the PDF export
+System --> User: Shows the export options
+note right of System
+these options being:
+range, sections, page
+size, etc.
+end note
+
+User -> System: Selects the desired options
+User <-- System: Asks for the pdf output file path
+
+User -> System: Selects the output path
+User <-- System: Informs of the sucess of the operation
+@enduml

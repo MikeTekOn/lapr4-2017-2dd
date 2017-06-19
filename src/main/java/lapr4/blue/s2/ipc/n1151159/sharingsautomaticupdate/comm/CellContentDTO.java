@@ -2,6 +2,7 @@ package lapr4.blue.s2.ipc.n1151159.sharingsautomaticupdate.comm;
 
 import csheets.core.Address;
 import csheets.core.Cell;
+import csheets.core.Spreadsheet;
 import eapli.framework.dto.DTO;
 
 import java.io.Serializable;
@@ -24,14 +25,20 @@ public class CellContentDTO implements DTO, Serializable {
     private String content;
 
     /**
+     * The spreadsheet where the cell is located
+     */
+    private Spreadsheet spreadsheet;
+
+    /**
      * Creates a cell content DTO.
      *
      * @param address the address of the cell
      * @param content the content of the cell
      */
-    public CellContentDTO(Address address, String content) {
+    public CellContentDTO(Address address, String content, Spreadsheet spreadsheet) {
         this.address = address;
         this.content = content;
+        this.spreadsheet = spreadsheet;
     }
 
     /**
@@ -41,7 +48,7 @@ public class CellContentDTO implements DTO, Serializable {
      * @return the created DTO
      */
     public static CellContentDTO createFromCell(Cell aCell) {
-        return new CellContentDTO(aCell.getAddress(), aCell.getContent());
+        return new CellContentDTO(aCell.getAddress(), aCell.getContent(), aCell.getSpreadsheet());
     }
 
     /**
@@ -60,5 +67,12 @@ public class CellContentDTO implements DTO, Serializable {
      */
     public String getContent() {
         return content;
+    }
+
+    /**
+     * Gets the spreadsheet of the cell
+     */
+    public Spreadsheet spreadsheet(){
+        return spreadsheet;
     }
 }

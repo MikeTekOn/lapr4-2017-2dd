@@ -1,0 +1,33 @@
+@startuml core02_01_design3.png
+    participant "uic: UIController" as uic
+    participant "uiExtension : UIExtensionImages" as UIExt
+    participant "Cell" as cell
+    participant "ImagesPanel : JPanel" as ip
+    participant "InsertImageController" as ctrl
+    participant "imageLabel: JLabel" as imageLabel
+
+    create ip
+    UIExt -> ip :  new(uic) 
+
+    create ctrl
+    ip -> ctrl : new(uic)
+
+    loop
+
+    create imageLabel
+    ip -> imageLabel : new()
+
+    == meanwhile a cell is selected...the user adds image (adds imagePath to "imageLabel") and loses the focus ==
+
+
+    imageLabel -> ip : add(this)
+    
+    ip -> ctrl : setImageToImages(cell, imagePath)
+
+    ctrl -> cell : setImageToImages(imagePath)
+    
+    ctrl -> uic : setWorkbookModified(...)
+    
+    end
+
+@enduml

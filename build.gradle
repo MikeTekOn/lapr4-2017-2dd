@@ -5,16 +5,16 @@
 
 /*
 buildscript {
-    repositories {
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'net.sourceforge.plantuml:plantuml:8051'
-        classpath 'commons-io:commons-io:2.4'
-    }
+repositories {
+mavenCentral()
 }
-*/
+
+dependencies {
+classpath 'net.sourceforge.plantuml:plantuml:8051'
+classpath 'commons-io:commons-io:2.4'
+}
+}
+ */
 
 plugins {
     id "org.sonarqube" version "2.3"
@@ -59,31 +59,40 @@ configurations {
 }
 
 dependencies {
-//	antlr "org.antlr:antlr:3.4" // use ANTLR version 3
- 	antlr "org.antlr:antlr4:4.7" // use ANTLR version 4
-	testCompile 'junit:junit:4.12'
+    //	antlr "org.antlr:antlr:3.4" // use ANTLR version 3
+    antlr "org.antlr:antlr4:4.7" // use ANTLR version 4
+    testCompile 'junit:junit:4.12'
 
-//	compile 'org.antlr:antlr-runtime:3.4'
+    //	compile 'org.antlr:antlr-runtime:3.4'
 
-  //https://mvnrepository.com/artifact/com.itextpdf/root
-  compile group: 'com.itextpdf', name: 'root', version: '7.0.2'
+    //https://mvnrepository.com/artifact/com.itextpdf/root
+    compile group: 'com.itextpdf', name: 'root', version: '7.0.2'
     // https://mvnrepository.com/artifact/commons-io/commons-io
     compile group: 'commons-io', name: 'commons-io', version: '2.5'
+    
+    // https://mvnrepository.com/artifact/org.apache.derby/derby
+    compile group: 'org.apache.derby', name: 'derby', version: '10.13.1.1'
+    
 
+    // https://mvnrepository.com/artifact/mysql/mysql-connector-java
+    compile group: 'mysql', name: 'mysql-connector-java', version: '6.0.6'
+    
+    // https://mvnrepository.com/artifact/org.postgresql/postgresql
+    compile group: 'org.postgresql', name: 'postgresql', version: '42.1.1'
 
-        compile 'org.eclipse.persistence:eclipselink:2.6.1'
-	compile 'org.eclipse.persistence:org.eclipse.persistence.jpa.modelgen.processor:2.6.1'
-	compile 'com.h2database:h2:1.4.191'
-	compile 'org.beanshell:bsh:2.0b5'
-	compile 'jfree:jfreechart:1.0.13'
-	compile 'org.bouncycastle:bcprov-jdk15on:1.54'
-	compile 'org.bouncycastle:bcpkix-jdk15on:1.54'
-	compile 'com.itextpdf.tool:xmlworker:5.5.9'
-	compile 'javax.mail:javax.mail-api:1.5.2'
-	compile 'javax.mail:mail:1.4.7'
-	compile 'com.itextpdf:itextpdf:5.5.9'
+    compile 'org.eclipse.persistence:eclipselink:2.6.1'
+    compile 'org.eclipse.persistence:org.eclipse.persistence.jpa.modelgen.processor:2.6.1'
+    compile 'com.h2database:h2:1.4.191'
+    compile 'org.beanshell:bsh:2.0b5'
+    compile 'jfree:jfreechart:1.0.13'
+    compile 'org.bouncycastle:bcprov-jdk15on:1.54'
+    compile 'org.bouncycastle:bcpkix-jdk15on:1.54'
+    compile 'com.itextpdf.tool:xmlworker:5.5.9'
+    compile 'javax.mail:javax.mail-api:1.5.2'
+    compile 'javax.mail:mail:1.4.7'
+    compile 'com.itextpdf:itextpdf:5.5.9'
 	
-	compile project(':framework')
+    compile project(':framework')
 }
 
 sourceSets.main.output.resourcesDir = sourceSets.main.output.classesDir
@@ -103,7 +112,7 @@ generateGrammarSource {
     
     //maxHeapSize = "64m"
     arguments += ["-visitor"]
-//    arguments = ["-visitor", "-long-messages"]
+    //    arguments = ["-visitor", "-long-messages"]
 }
 
 task renderPlantUml (type: RenderPlantUmlTask);
@@ -115,34 +124,34 @@ def paths = [:]
 def listOfPaths = []
 
 def access = {d, path ->
-    if (d[path] == null) {
-        d[path] = [:]
-    } 
-    return d[path]        
+if (d[path] == null) {
+d[path] = [:]
+} 
+return d[path]        
 }
 
 task listar  {
-    new File('./src/main/java').eachFileRecurse( FileType.DIRECTORIES, 
-        { file ->
-            file.eachFileMatch(~/.*.puml/) 
-            { pumlFile ->
-                listOfPaths << pumlFile.toString().tokenize('/') 
-            }
-        }
-    )
+new File('./src/main/java').eachFileRecurse( FileType.DIRECTORIES, 
+{ file ->
+file.eachFileMatch(~/.*.puml/) 
+{ pumlFile ->
+listOfPaths << pumlFile.toString().tokenize('/') 
+}
+}
+)
 
-    println listOfPaths
+println listOfPaths
     
-    /*
-    listOfPaths.each{ path ->
-            def currentPath = paths
-            path.each { step ->
-                currentPath = access(currentPath, step)
-            }
-    }
+/*
+listOfPaths.each{ path ->
+def currentPath = paths
+path.each { step ->
+currentPath = access(currentPath, step)
+}
+}
     
 }
-*/
+ */
 
 javadoc { 
     source = sourceSets.main.allJava
@@ -152,7 +161,7 @@ javadoc {
     options.groups.put ('Extension Mechanism', ['csheets.ext', 'csheets.ui.ext*'])
     options.groups.put ('Extensions', ['csheets.ext*'])
 
-	// Black    
+    // Black    
     options.groups.put ('Black Team/Sprint 1/IPC', ['lapr4.black.s1.ipc.*'])
     
     // Gray
@@ -218,8 +227,8 @@ tasks.withType(Test) {
 //-------
 // JACOCO
 jacoco {
-	applyTo run
-	// applyTo acceptanceTest 
+    applyTo run
+    // applyTo acceptanceTest 
 }
 
 //task runCoverageReport(type:JacocoReport){
@@ -234,14 +243,14 @@ jacoco {
 //}
 
 task acceptanceTestCoverageReport(type:JacocoReport){
-	executionData acceptanceTest
-	sourceSets sourceSets.main
+    executionData acceptanceTest
+    sourceSets sourceSets.main
 
-//	afterEvaluate {
-//		classDirectories = files(classDirectories.files.collect {
-//			fileTree(dir: it, exclude: '**/test/**')
-//		})
-//	}
+    //	afterEvaluate {
+    //		classDirectories = files(classDirectories.files.collect {
+    //			fileTree(dir: it, exclude: '**/test/**')
+    //		})
+    //	}
 }
 
 // run.finalizedBy runCoverageReport
@@ -270,9 +279,9 @@ sonarqube {
     properties {
         property "sonar.host.url",  "http://sonarqube.dei.isep.ipp.pt:9000"   // The url of the sonarqube server
         property "sonar.jacoco.reportPaths", "$buildDir/jacoco/test.exec, $buildDir/jacoco/acceptanceTest.exec"
-// Deprecated from sonar 6.2        
-//        property "sonar.jacoco.reportPath", "$buildDir/jacoco/test.exec"
-//        property "sonar.jacoco.itReportPath", "$buildDir/jacoco/acceptanceTest.exec"
+        // Deprecated from sonar 6.2        
+        //        property "sonar.jacoco.reportPath", "$buildDir/jacoco/test.exec"
+        //        property "sonar.jacoco.itReportPath", "$buildDir/jacoco/acceptanceTest.exec"
     }
 }
 

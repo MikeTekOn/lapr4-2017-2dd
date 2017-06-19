@@ -30,7 +30,7 @@ public class CommentableCell extends CellExtension {
         private String commentHistory;
 
 	/** The listeners registered to receive events from the comentable cell */
-	private transient List<CommentableCellListener> listeners
+	protected transient List<CommentableCellListener> listeners
 		= new ArrayList<CommentableCellListener>();
         
         /** The listeners registered to receive events from the comentable cell */
@@ -141,7 +141,7 @@ public class CommentableCell extends CellExtension {
 	/**
 	 * Notifies all registered listeners that the cell's comments changed.
 	 */
-	protected void fireCommentsChanged() {
+	public void fireCommentsChanged() {
 		for (CommentableCellListener listener : listeners)
 			listener.commentChanged(this);
 	}

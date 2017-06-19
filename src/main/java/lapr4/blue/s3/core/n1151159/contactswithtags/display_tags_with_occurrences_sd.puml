@@ -1,0 +1,69 @@
+@startuml display_tags_with_occurrences_sd.png
+
+'http://plantuml.com/skinparam.html'
+skinparam handwritten true
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+participant "TagsFrequencyActionListener" as action
+participant "TagController" as ctrl <<Application>>
+participant "contacts : List<Contactable>" as contacts
+database PersonContactRepository as pRepo <<Repository>>
+database CompanyContactRepository as cRepo <<repository>>
+participant TagService as serv <<Domain>>
+participant "tagsFreq : Map<Tag, Integer>" as tf
+participant "c : Contactable" as t
+
+activate action
+action -> ctrl : getTagsFrequency()
+activate ctrl
+create contacts
+ctrl -> contacts : create()
+ctrl -> pRepo : personContacts = findAll()
+activate pRepo
+deactivate pRepo
+ctrl -> contacts : addAll(personContacts)
+activate contacts
+deactivate contacts
+ctrl -> cRepo : companyContacts = findAll()
+activate cRepo
+deactivate cRepo
+ctrl -> contacts : addAll(companyContacts)
+activate contacts
+deactivate contacts
+
+ctrl -> serv : tagsFreq = getTagsFrequency(contacts)
+activate serv
+
+create tf
+serv -> tf : create()
+loop foreach c in contacts
+    serv -> t : tags = getTags()
+    activate t
+    deactivate t
+    loop foreach tag in tags
+        serv -> tf : b = containsKey(tag)
+        activate tf
+        deactivate tf
+        alt b is true
+            serv -> tf : count = get(tag)
+            activate tf
+            deactivate tf
+            serv -> tf : put(tag, count+1)
+            activate tf
+            deactivate tf
+        else b is false
+            serv -> tf : put(tag, 1)
+            activate tf
+            deactivate tf
+        end
+    end
+end
+deactivate serv
+
+
+action <-- ctrl : return tagsFreq
+deactivate ctrl
+deactivate action
+
+@enduml

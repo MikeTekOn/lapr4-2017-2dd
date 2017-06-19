@@ -10,6 +10,8 @@ import lapr4.blue.s1.lang.n1151452.formula.lang.Assigner;
 
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import lapr4.green.s3.lang.n1150738.macros.ParameterReference;
 import lapr4.red.s2.lang.n1150690.formula.MonetaryValue;
 
 /**
@@ -97,5 +99,11 @@ public class AssignableFetcher extends AbstractExpressionVisitor {
     @Override
     public Object visitMonetaryValue(MonetaryValue money) {
         return money;
+    }
+
+
+    @Override
+    public Object visitParameterReference(ParameterReference parameterReference) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

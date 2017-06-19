@@ -1,0 +1,11 @@
+@startuml
+actor User
+User -> Cleansheets : save
+create DTO
+Cleansheets -> DTO : new(file name, file path)
+create CommUDPClient
+Cleansheets -> CommUDPClient : start()
+note right of CommUDPClient
+this should be a thread
+end note
+@enduml

@@ -8,6 +8,7 @@ package lapr4.white.s1.core.n4567890.contacts.ui;
 import csheets.CleanSheets;
 import eapli.framework.persistence.DataConcurrencyException;
 import eapli.framework.persistence.DataIntegrityViolationException;
+import lapr4.blue.s3.core.n1151159.contactswithtags.presentation.TagManagerPanel;
 import lapr4.green.s2.core.n1150738.contacts.domain.CompanyContact;
 import lapr4.green.s2.core.n1150738.contacts.domain.Profession;
 import lapr4.white.s1.core.n4567890.contacts.application.ContactController;
@@ -119,6 +120,8 @@ public class ContactDialog extends JDialog implements ActionListener {
 
     private Object profession = null;
     private Object companyContact = null;
+
+    private TagManagerPanel tagsPanel = null;
 
     private void setupContactsWidgets() {
 
@@ -237,6 +240,10 @@ public class ContactDialog extends JDialog implements ActionListener {
         // Final Pane: The status label for messages
         statusLabel = new JLabel();
 
+        // Creates the tags panel
+        tagsPanel = new TagManagerPanel(this);
+        tagsPanel.setBorder(BorderFactory.createTitledBorder("Associated Tags"));
+
 
         switch (this.mode) {
             case ADD:
@@ -254,19 +261,25 @@ public class ContactDialog extends JDialog implements ActionListener {
                 this.addressField.setEditable(false);
                 this.companyButton.setEnabled(false);
                 this.professionButton.setEnabled(false);
+                this.tagsPanel.hideButtons();
                 break;
             case EDIT:
                 statusLabel.setText(CleanSheets.getString("status_please_update_data_of_contcat"));
                 break;
         }
 
+        // Creates the fields panel
+        JPanel fieldsPanel = new JPanel(new BorderLayout());
+        fieldsPanel.add(formPanel, BorderLayout.NORTH);
+        fieldsPanel.add(tagsPanel, BorderLayout.CENTER);
 
         //Put everything together, using the content pane's BorderLayout.
         Container contentPane = getContentPane();
         //contentPane.add(picPanel, BorderLayout.BEFORE_FIRST_LINE);
-        contentPane.add(formPanel, BorderLayout.PAGE_START);
+        contentPane.add(fieldsPanel, BorderLayout.PAGE_START);
         contentPane.add(buttonPanel, BorderLayout.CENTER);
         contentPane.add(statusLabel, BorderLayout.PAGE_END);
+
     }
 
     private void setupData() {
@@ -279,7 +292,7 @@ public class ContactDialog extends JDialog implements ActionListener {
             this.addressField.setText(_contact.address());
             this.companyField.setText(_contact.getCompanyContact() == null ? "" : _contact.getCompanyContact().toString());
             this.professionField.setText(_contact.getProfession()  == null ? "" : _contact.getProfession().toString());
-
+            this.tagsPanel.setTags(_contact.getTags());
         }
     }
 
@@ -328,7 +341,17 @@ public class ContactDialog extends JDialog implements ActionListener {
                                     photo_path = chooser.getSelectedFile().getAbsolutePath();
                                 }
                             }
-                            _contact = this.ctrl.addContact(this.fullNameField.getText(), this.firstNameField.getText(), this.lastNameField.getText(), photo_path, this.addressField.getText(), this.emailField.getText(), this.phoneField.getText(), (CompanyContact)this.companyContact, (Profession) this.profession);
+                            _contact = this.ctrl.addContact(
+                                    this.fullNameField.getText(),
+                                    this.firstNameField.getText(),
+                                    this.lastNameField.getText(),
+                                    photo_path,
+                                    this.addressField.getText(),
+                                    this.emailField.getText(),
+                                    this.phoneField.getText(),
+                                    (CompanyContact)this.companyContact,
+                                    (Profession) this.profession,
+                                    tagsPanel.getTags());
                             _success = true;
                             // Exit the dialog
                             ContactDialog.dialog.setVisible(false);
@@ -387,7 +410,7 @@ public class ContactDialog extends JDialog implements ActionListener {
                                 }
                             }
                             try {
-                                _contact = this.ctrl.updateContact(_contact, this.fullNameField.getText(), this.firstNameField.getText(), this.lastNameField.getText(), photo_path, this.addressField.getText(), this.emailField.getText(), this.phoneField.getText(), (CompanyContact)this.companyContact, (Profession) this.profession);
+                                _contact = this.ctrl.updateContact(_contact, this.fullNameField.getText(), this.firstNameField.getText(), this.lastNameField.getText(), photo_path, this.addressField.getText(), this.emailField.getText(), this.phoneField.getText(), (CompanyContact)this.companyContact, (Profession) this.profession, tagsPanel.getTags());
                             } catch (IllegalAccessException e1) {
                                 JOptionPane.showMessageDialog(getContentPane(), "You can't edit this contact", "Warning", JOptionPane.ERROR_MESSAGE);
                                 break;

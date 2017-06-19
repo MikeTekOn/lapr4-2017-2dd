@@ -1,0 +1,27 @@
+@startuml display_tags_with_occurrences_cd.png
+
+class TagsFrequencyActionListener {
+}
+class TagController {
+    getTagsFrequency()
+}
+interface Contactable {
+    getTags()
+}
+class PersonContactRepository {
+    findAll()
+}
+class CompanyContactRepository {
+    findAll()
+}
+class TagService {
+    getTagsFrequency(contacts)
+}
+
+TagsFrequencyActionListener .> TagController
+TagController ..> Contactable
+TagController ..> PersonContactRepository
+TagController ..> CompanyContactRepository
+TagController .> TagService
+TagService ..> Contactable
+@enduml

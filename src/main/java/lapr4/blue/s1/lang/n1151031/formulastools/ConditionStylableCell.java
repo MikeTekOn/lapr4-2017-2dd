@@ -36,7 +36,7 @@ public class ConditionStylableCell extends StylableCell {
 
     private UserStyle userStyle;
 
-    private SortedSet<Cell> dependents;
+    protected SortedSet<Cell> dependents;
 
     private UIController uiController;
     

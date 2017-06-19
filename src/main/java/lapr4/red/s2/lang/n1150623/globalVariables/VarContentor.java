@@ -5,6 +5,7 @@ import csheets.core.formula.Expression;
 import java.io.Serializable;
 import java.util.*;
 import lapr4.green.s3.lang.n1150532.variables.Variable;
+import lapr4.green.s3.lang.n1150532.variables.globalVariablesExtension.GlobalVariableInformationDTO;
 
 
 /**
@@ -14,7 +15,7 @@ import lapr4.green.s3.lang.n1150532.variables.Variable;
  * 
  * @author Manuel Meireles (1150532):
  * <ul>
- * <li>I've removed the unused BlueFormulaBaseVisitor<Expression>
+ * <li>I've removed the unused BlueFormulaBaseVisitor&lt;Expression&gt;
  * extension.</li>
  * <li>I've added the Observable extension.</li>
  * <li>I've created new methods for "getExpressionOfVariable" and "update" in
@@ -83,10 +84,12 @@ public class VarContentor extends Observable implements Serializable {
     /**
      * It stores the expression at the variable's index. If the variable does
      * not exist yet, it creates a new variable and adds it to the container.
+     * It notifies the listeners with the variable information.
      * 
      * @param tempVarName The name of the variable.
      * @param index The index in which to store the expression.
      * @param theExpression The expression to be stored.
+     * @see GlobalVariableInformationDTO
      */
     public void update(String tempVarName, int index, Expression theExpression){
         Variable theVariable = null;
@@ -100,6 +103,8 @@ public class VarContentor extends Observable implements Serializable {
             variables.add(theVariable);
         }
         theVariable.setExpressionAt(index, theExpression);
+        setChanged();
+        notifyObservers(new GlobalVariableInformationDTO(tempVarName, index, theExpression));
     }
 
 }

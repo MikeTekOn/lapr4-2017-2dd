@@ -8,6 +8,8 @@ skinparam shadowing false
 hide methods
 
 class Tag << Value Object >>
+interface Contactable
+interface Taggable
 
 package "Person Contact Aggregate" <<Cloud>> {
     class PersonContact <<aggregate root>> {
@@ -42,8 +44,11 @@ PersonContact *--> "1" Profession
 PersonContact *--> "1" Agenda
 Agenda *-->        "*" Event
 
-PersonContact  --> "*" Tag : associated with
-CompanyContact --> "*" Tag : associated with
+Tag "*" <- PersonContact : associated with
+Tag "*" <- CompanyContact : associated with
+Contactable <|. PersonContact
+Contactable <|. CompanyContact
+Contactable .|> Taggable
 
 note as N1
   This value object is contained on
@@ -53,6 +58,6 @@ note as N1
   aggregates.
 end note
 
-Tag .. N1
+Tag . N1
 
 @enduml

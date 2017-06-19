@@ -3,6 +3,7 @@ package lapr4.green.s2.core.n1150532.sort;
 import static csheets.core.Address.HIGHEST_CHAR;
 import static csheets.core.Address.LOWEST_CHAR;
 import csheets.core.Cell;
+import csheets.ui.ctrl.UIController;
 import eapli.util.Strings;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -85,15 +86,17 @@ public class SortCellRangeUI extends JDialog {
      */
     private JButton btSort;
 
+    private int realColumnIndex;
+
     /**
      * The full constructor of the user interface.
      *
      * @param theSelectedCells The cell range to sort.
      */
-    public SortCellRangeUI(Cell[][] theSelectedCells) {
+    public SortCellRangeUI(Cell[][] theSelectedCells, UIController controller) {
         super();
         selectedCells = theSelectedCells;
-        controller = new SortCellRangeController();
+        this.controller = new SortCellRangeController(controller);
         createUserInterface();
         createInteractions();
         setInitialState();
@@ -250,7 +253,9 @@ public class SortCellRangeUI extends JDialog {
      * @return It returns the sorting column index.
      */
     private int getSortingColumnIndex() {
+
         int columnIndex = translateColumn(inSortingColumn.getText());
+        this.realColumnIndex =  translateColumn(inSortingColumn.getText());
         return changeToCellRangeIndex(columnIndex);
     }
 
@@ -324,7 +329,8 @@ public class SortCellRangeUI extends JDialog {
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
-                controller.sort(selectedCells, getSortingColumnIndex(), (SortingAlgorithm) outAlgorithms.getSelectedItem(), (RangeRowDTOComparator) outComparators.getSelectedItem(), btDescending.isSelected());
+                controller.sort(selectedCells, getSortingColumnIndex(),SortCellRangeUI.this
+                .realColumnIndex,(SortingAlgorithm) outAlgorithms.getSelectedItem(), (RangeRowDTOComparator) outComparators.getSelectedItem(), btDescending.isSelected());
                 dispose();
             } catch (IllegalArgumentException ex) {
                 outInformation.setText(ex.getMessage());

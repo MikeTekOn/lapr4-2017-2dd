@@ -292,6 +292,13 @@ public class Value implements Comparable<Value>, Serializable {
 		   && (nulls || (!nulls && value.equals(otherValue.value)));
 	}
 
+	@Override
+	public int hashCode() {
+		int result = value != null ? value.hashCode() : 0;
+		result = 31 * result + (type != null ? type.hashCode() : 0);
+		return result;
+	}
+
 	/**
 	 * Returns a string representation of the value.
 	 * @return a string representation of the value

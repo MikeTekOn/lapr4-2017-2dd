@@ -59,6 +59,12 @@ public class AddCommentsWithUserController {
         uiController.setWorkbookModified(cell.getSpreadsheet().getWorkbook());
         return currentUser;
     }
+    
+    public void addComment(String comment, String user) {
+        User currentUser = new User(user);
+        cell.addUsersComment(comment, currentUser);
+        //uiController.setWorkbookModified(cell.getSpreadsheet().getWorkbook());
+    }
 
     /**
      * Changes a comment of an author.

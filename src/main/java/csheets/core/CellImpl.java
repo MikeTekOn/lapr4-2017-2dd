@@ -85,17 +85,7 @@ public class CellImpl implements Cell {
 	private transient Map<String, CellExtension> extensions =
 		new HashMap<String, CellExtension>();
 
-        /**
-	 * Creates a new cell at the given address in the given spreadsheet.
-	 * (not intended to be used directly).
-	 * @see Spreadsheet#getCell(Address)
-	 * @param spreadsheet the spreadsheet
-	 * @param address the address of the cell
-	 */
-	CellImpl(Spreadsheet spreadsheet, Address address) {
-		this.spreadsheet = spreadsheet;
-		this.address = address;
-	}
+      
 
         /**
 	 * Creates a new cell at the given address in the given spreadsheet,
@@ -141,6 +131,17 @@ public class CellImpl implements Cell {
 		reevaluate();
 	}
 
+        /**
+	 * Creates a new cell at the given address in the given spreadsheet.
+	 * (not intended to be used directly).
+	 * @see Spreadsheet#getCell(Address)
+	 * @param spreadsheet the spreadsheet
+	 * @param address the address of the cell
+	 */
+        public CellImpl(Spreadsheet spreadsheet, Address address) {
+            this.spreadsheet = spreadsheet;
+		this.address = address;  }
+
 /*
  * LOCATION
  */
@@ -185,6 +186,27 @@ public class CellImpl implements Cell {
 		if (!newValue.equals(oldValue))
 			fireValueChanged();
 	}
+        /**
+	 * Updates the cell's value, and fires an event if it changed.
+	 */
+	private void reevaluateWithoutFiringEvent() {
+		Value oldValue = value;
+
+		// Fetches the new value
+		Value newValue;
+		if (formula != null)
+			try {
+				newValue = formula.evaluate();
+			} catch (IllegalValueTypeException e) {
+				newValue = new Value(e);
+			}
+		else
+			newValue = Value.parseValue(content);
+
+		// Stores value
+		value = newValue;
+	}
+
 
     /**
      * Sets the style changed.
@@ -248,11 +270,20 @@ public class CellImpl implements Cell {
 		fireCellCleared();
 	}
 
+        @Override
 	public void setContent(String content) throws FormulaCompilationException {
+		if (!this.content.equals(content)) {
+                        storeContent(content);
+			fireContentChanged();
+			reevaluate();
+		}
+	}
+        @Override
+        public void setContentWithoutFiringEvents(String content) throws FormulaCompilationException {
 		if (!this.content.equals(content)) {
 			storeContent(content);
 			fireContentChanged();
-			reevaluate();
+                                                     reevaluateWithoutFiringEvent();
 		}
 	}
 
@@ -263,7 +294,7 @@ public class CellImpl implements Cell {
 	 */
 	private void storeContent(String content) throws FormulaCompilationException {
 		// Parses formula
-		Formula formula = null;
+		Formula formula = null;    
 		if (content.length() > 1)
 			formula = FormulaCompiler.getInstance().compile(this, content, uiController);
 

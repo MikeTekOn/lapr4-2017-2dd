@@ -102,7 +102,7 @@
  * 
  * <h3>fireConditionChanged() method</h3>
  * <img src="lang03_1_design_fireConditionChanged.png" alt="image">
- * <h3>valueChanged() method</h3>
+ * <h3>headerValueChanged() method</h3>
  * <img src="lang03_1_design_valueChanged.png" alt="image">
  * <h2>5. Tests</h2>
  * <ol>

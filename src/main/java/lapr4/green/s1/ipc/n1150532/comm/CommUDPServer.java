@@ -10,6 +10,8 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -64,7 +66,7 @@ public class CommUDPServer extends Thread {
     /**
      * The UDP server handlers.
      */
-    private static Map<Class, CommHandler> handlers;
+    private static Map<Class, List<CommHandler>> handlers;
 
     /**
      * Private constructor to ensure the singleton.
@@ -105,7 +107,22 @@ public class CommUDPServer extends Thread {
      * @param handler The handler itself.
      */
     public void addHandler(Class dto, CommHandler handler) {
-        handlers.put(dto, handler);
+        if(!handlers.containsKey(dto)) {
+            handlers.put(dto, new LinkedList<>());
+        }
+        handlers.get(dto).add(handler);
+    }
+
+    /**
+     * Removes a handler from the server.
+     *
+     * @param dto The class handled
+     * @param handler The handler to be removed
+     */
+    public void removeHandler(Class dto, CommHandler handler) {
+        if(handlers.containsKey(dto)){
+            handlers.get(dto).remove(handler);
+        }
     }
 
     /**
@@ -114,7 +131,7 @@ public class CommUDPServer extends Thread {
      * @param dto The class to handle.
      * @return It returns the handler or null if no capable handler is found.
      */
-    public CommHandler getHandler(Class dto) {
+    public Iterable<CommHandler> getHandler(Class dto) {
         return handlers.get(dto);
     }
 
@@ -190,10 +207,13 @@ public class CommUDPServer extends Thread {
      * @param inDTO The object to handler.
      */
     private void processIncommingDTO(Object inDTO, DatagramPacket inPacket) {
-        CommHandler handler = getHandler(inDTO.getClass());
-        if (handler != null) {
-            PacketEncapsulatorDTO dto = new PacketEncapsulatorDTO(inPacket, handler, inDTO);
-            handler.handleDTO(dto, out);
+        if(getHandler(inDTO.getClass()) != null){
+            for(CommHandler handler : getHandler(inDTO.getClass())){
+                if (handler != null) {
+                    PacketEncapsulatorDTO dto = new PacketEncapsulatorDTO(inPacket, handler, inDTO);
+                    handler.handleDTO(dto, out);
+                }
+            }
         }
     }
 

@@ -34,6 +34,7 @@ import javax.swing.border.Border;
 
 import csheets.core.Cell;
 import csheets.core.Value;
+import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.ext.CellExtension;
 
 /**

@@ -1,6 +1,7 @@
 package lapr4.green.s2.core.n1150532.sort.algorithms;
 
 import java.util.Comparator;
+import java.util.Observable;
 import lapr4.green.s2.core.n1150532.sort.sortingDTOs.SortableDTO;
 
 /**
@@ -10,7 +11,7 @@ import lapr4.green.s2.core.n1150532.sort.sortingDTOs.SortableDTO;
  * @param <T> Any class that extends the SortableDTO and can, therefore, be
  * sorted by the algorithm.
  */
-public class QuickSort<T extends SortableDTO> implements SortingAlgorithm<T> {
+public class QuickSort<T extends SortableDTO>   implements SortingAlgorithm<T> {
 
     /**
      * The algorithm's name.
@@ -35,6 +36,7 @@ public class QuickSort<T extends SortableDTO> implements SortingAlgorithm<T> {
         if (array.length > 1) {
             executeSort(array, comparator, 0, array.length - 1);
         }
+
     }
 
     /**
@@ -69,6 +71,7 @@ public class QuickSort<T extends SortableDTO> implements SortingAlgorithm<T> {
         if (right > i) {
             executeSort(array, comparator, i, right);
         }
+         
     }
 
     /**

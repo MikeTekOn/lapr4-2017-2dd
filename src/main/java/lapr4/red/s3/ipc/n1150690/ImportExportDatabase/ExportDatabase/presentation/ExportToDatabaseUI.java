@@ -11,20 +11,16 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import lapr4.green.s1.ipc.n1150800.importexportTXT.CellRange;
+import lapr4.red.s3.ipc.n1150690.ImportExportDatabase.DatabaseDriver;
 import lapr4.red.s3.ipc.n1150690.ImportExportDatabase.ExportDatabase.application.ExportToDatabaseController;
 
 /**
@@ -53,6 +49,8 @@ public class ExportToDatabaseUI extends JDialog {
      */
     private UIController uiController;
 
+    private JComboBox<String> drivers;
+
     private JTextField txtFieldFirstCell;
 
     private JTextField txtFieldLastCell;
@@ -61,9 +59,17 @@ public class ExportToDatabaseUI extends JDialog {
 
     private JTextField txtDatabaseConnection;
 
+    private static JLabel labelErrors;
+
     private JLabel success;
 
     private JPanel panel;
+
+    private String driver;
+
+    public static boolean printSucess = false;
+    
+    public static boolean showJOptionPane = false;
 
     public ExportToDatabaseUI(UIController uiController) {
         this.uiController = uiController;
@@ -93,34 +99,55 @@ public class ExportToDatabaseUI extends JDialog {
         txtTableName = new JTextField(15);
         panelTableName.add(txtTableName);
 
+        JPanel panelDriver = new JPanel();
+        JLabel labeDriver = new JLabel("Database Driver:");
+
+        panelDriver.add(labeDriver);
+
+        panelDriver.add(createCombobox());
+
         JPanel panelConnection = new JPanel();
         JLabel labelDatabaseConnection = new JLabel("Database Connection:");
+
         panelConnection.add(labelDatabaseConnection);
         txtDatabaseConnection = new JTextField(20);
+
+        txtDatabaseConnection.setText(DatabaseDriver.H2.defaultURL());
         panelConnection.add(txtDatabaseConnection);
+        driver = DatabaseDriver.H2.value();
 
         JButton b = new JButton("Export");
-        b.addActionListener(new ActionListener() {
+
+        b.addActionListener(
+                new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                success.setVisible(false);
+                labelErrors.setText("");
+                success.setText(" ");
                 String addressStrFirstCell = txtFieldFirstCell.getText();
                 String addressStrLastCell = txtFieldLastCell.getText();
                 CellRange cellRange = new CellRange(addressStrFirstCell, addressStrLastCell, uiController);
-                controller = new ExportToDatabaseController(uiController, cellRange, txtTableName.getText());
+                controller = new ExportToDatabaseController(uiController, cellRange, txtTableName.getText(), txtDatabaseConnection.getText(), driver);
+
                 try {
-                    controller.export(false);
+                    controller.export();
+                    if(showJOptionPane){
+                        printSucess = false;
+                    }else{
+                        printSucess = true;
+                    }                   
+                } catch (Exception ex) {
+                    ExportToDatabaseUI.printException(ex.getMessage());
+                }
+                if (printSucess) {
                     success.setText("Exportation Successful!");
                     success.setForeground(Color.GREEN);
-                } catch (SQLException ex) {
-                   //if (ex.getErrorCode() == 42101) {
-                        System.out.println("ola");
-                        tableAlreadyExists();
-                    //}
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(ExportToDatabaseUI.class.getName()).log(Level.SEVERE, null, ex);
+                    success.setVisible(true);
                 }
             }
-        });
+        }
+        );
 
         panel = new JPanel(new GridBagLayout());
         GridBagConstraints grid = new GridBagConstraints();
@@ -128,58 +155,76 @@ public class ExportToDatabaseUI extends JDialog {
         grid.gridx = 0;
         grid.gridy = 0;
         JLabel labelRange = new JLabel("<html><b>Range of Cells</b></html>");
+
         panel.add(labelRange, grid);
         grid.gridy = 1;
+
         panel.add(panelRange, grid);
         grid.gridy = 2;
+
         panel.add(panelTableName, grid);
         grid.gridy = 3;
-        panel.add(panelConnection, grid);
+
+        panel.add(panelDriver, grid);
         grid.gridy = 4;
-        panel.add(b, grid);
+
+        panel.add(panelConnection, grid);
         grid.gridy = 5;
+
+        panel.add(b, grid);
+        grid.gridy = 6;
         success = new JLabel();
+
         panel.add(success, grid);
+        labelErrors = new JLabel();
+        grid.gridy = 7;
+
+        panel.add(labelErrors, grid);
 
         return panel;
     }
 
-    private JDialog tableAlreadyExists() {
-        Window parentWindow = SwingUtilities.windowForComponent(txtDatabaseConnection);
-        JDialog dialog = new JDialog(parentWindow);
-        dialog.setMinimumSize(new Dimension(150, 100));
+    private JComboBox createCombobox() {
+        drivers = new JComboBox<>();
+        drivers.setPreferredSize(new Dimension(200, 20));
 
-        JPanel p = new JPanel();
-        p.add(new JLabel("There is already a table with the name entered!"));
-        JButton insertNewName = new JButton("Enter a new name for the table");
-        insertNewName.addActionListener(new ActionListener() {
+        drivers.addItem(DatabaseDriver.H2.name());
+        drivers.addItem(DatabaseDriver.JavaDBEmbedded.name());
+        drivers.addItem(DatabaseDriver.MySQL.name());
+        drivers.addItem(DatabaseDriver.PostgreSQL.name());
+
+        drivers.setSelectedIndex(0);
+        drivers.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                dialog.dispose();
-            }
-        });
-        p.add(insertNewName);
-        
-        JButton deteleExistingTable = new JButton("Delete Existing Table");
-        insertNewName.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    controller.export(true);
-                } catch (SQLException ex) {
-                    Logger.getLogger(ExportToDatabaseUI.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(ExportToDatabaseUI.class.getName()).log(Level.SEVERE, null, ex);
+                if (drivers.getSelectedIndex() != -1) {
+                    if (drivers.getSelectedIndex() == 0) {
+                        txtDatabaseConnection.setText(DatabaseDriver.H2.defaultURL());
+                        driver = DatabaseDriver.H2.value();
+                    }
+                    if (drivers.getSelectedIndex() == 1) {
+                        txtDatabaseConnection.setText(DatabaseDriver.JavaDBEmbedded.defaultURL());
+                        driver = DatabaseDriver.JavaDBEmbedded.value();
+                    }
+                    if (drivers.getSelectedIndex() == 2) {
+                        txtDatabaseConnection.setText(DatabaseDriver.MySQL.defaultURL());
+                        driver = DatabaseDriver.MySQL.value();
+                    }
+                    if (drivers.getSelectedIndex() == 3) {
+                        txtDatabaseConnection.setText(DatabaseDriver.PostgreSQL.defaultURL());
+                        driver = DatabaseDriver.PostgreSQL.value();
+                    }
                 }
             }
+
         });
-        p.add(deteleExistingTable);
-        dialog.add(p);
-        dialog.setTitle("Table Already Exists");
-        dialog.pack();
-        dialog.setVisible(true);
-        
-        
-        return dialog;
+        return drivers;
     }
+
+    public static void printException(String message) {
+        printSucess = false;
+        labelErrors.setText(message);
+        labelErrors.setForeground(Color.RED);
+    }
+
 }

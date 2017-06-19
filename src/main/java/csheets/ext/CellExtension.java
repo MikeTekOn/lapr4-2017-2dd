@@ -160,4 +160,9 @@ public abstract class CellExtension implements Cell, CellListener {
 	public void cellCleared(Cell cell) {}
 
 	public void cellCopied(Cell cell, Cell source) {}
+        
+           @Override
+             public void setContentWithoutFiringEvents(String content) throws FormulaCompilationException {
+                delegate.setContentWithoutFiringEvents(content);
+            }
 }

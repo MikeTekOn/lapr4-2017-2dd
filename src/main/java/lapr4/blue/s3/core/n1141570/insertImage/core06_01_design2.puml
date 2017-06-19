@@ -1,0 +1,33 @@
+@startuml core02_01_design2.png
+    participant "uic: UIController" as uic
+    participant "uiExtension : UIExtensionImages" as UIExt
+    participant "ImagesPanel : JPanel" as ip
+    participant "InsertImageController" as ctrl
+    participant "event: SelectionEvent" as event
+    participant "cell: Cell" as cell
+    participant "activeCell: ImageableCell" as activeCell
+
+    create ip
+    UIExt -> ip :  new(uic) 
+    
+    create ctrl
+    ip -> ctrl : new(uic) 
+    ip -> uic : addSelectionListener(this)
+
+    note right of uic
+        The user selects a cell...
+    end note
+
+    uic -> ip : selectionChanged(SelectionEvent event)
+    ip -> event : cell=getCell()
+    ip -> cell : activeCell=getExtension(ImagesExtension.NAME)
+
+    ip -> ctrl : cellSelected(cell);
+    ctrl -> activeCell : imagesPaths = cell.getImages()
+    ctrl -> ip : cell.getImages()
+
+    note right of ip
+        ... the ImagesPanel displays the image(s) of the current cell.
+    end note
+
+@enduml
