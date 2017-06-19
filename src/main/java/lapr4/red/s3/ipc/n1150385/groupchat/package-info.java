@@ -59,72 +59,8 @@
  * messages. This is important in order for everyone to get everyone's messages because an user does not know the
  * current chat's members as fast as the server's owner, which could lead to inconsistencies.
  *
- * <h2>4. Design</h2>
+ * <h2>5. Work Log</h2>
  *
- * A chat room has an owner and members. Only the chat owner is responsible for responding to chat room's existence
- * requests (from someone who is trying to figure out which chat rooms are available to be joined).
- *
- * <h3>4.1. Functional Tests</h3>
- * Basically, from requirements and also analysis, we see that the core functionality of this use case is to be able to add an attribute to cells to be used to store a comment/text. We need to be able to set and get its value.
- * Following this approach we can start by coding a unit test that uses a subclass of <code>CellExtension</code> with a new attribute for user comments with the corresponding method accessors (set and get). A simple test can be to set this attribute with a simple string and to verify if the get method returns the same string.
- * As usual, in a test driven development approach tests normally fail in the beginning. The idea is that the tests will pass in the end.
- * <p>
- * see: <code>lapr4.white.s1.core.n1234567.comments.CommentableCellTest</code><p>
- *
- * <b>Attention: This test should be moved and refactored to Acceptance Tests so that it is in accordance with the 2017 edition guidelines.</b>
- *
- * <h3>4.2. UC Realization</h3>
- * To realize this user story we will need to create a subclass of Extension. We will also need to create a subclass of UIExtension. For the sidebar we need to implement a JPanel. In the code of the extension <code>csheets.ext.style</code> we can find examples that illustrate how to implement these technical requirements.
- * The following diagrams illustrate core aspects of the design of the solution for this use case.
- * <p>
- * <b>Note:</b> It is very important that in the final version of this technical documentation the elements depicted in these design diagrams exist in the code!
- *
- * <h3>Extension Setup</h3>
- * The following diagram shows the setup of the "comments" extension when cleansheets is run.
- * <p>
- * <img src="core02_01_design.png" alt="image">
- *
- *
- * <h3>User Selects a Cell</h3>
- * The following diagram illustrates what happens when the user selects a cell. The idea is that when this happens the extension must display in the sidebar the comment of that cell (if it exists).
- * <p>
- * <img src="core02_01_design2.png" alt="image">
- *
- * <h3>User Updates the Comment of a Cell</h3>
- * The following diagram illustrates what happens when the user updates the text of the comment of the current cell. To be noticed that this diagram does not depict the actual selection of a cell (that is illustrated in the previous diagram).
- * <p>
- * <img src="core02_01_design3.png" alt="image">
- *
- * <h3>4.3. Classes</h3>
- *
- * -Document the implementation with class diagrams illustrating the new and the modified classes-
- *
- * <h3>4.4. Design Patterns and Best Practices</h3>
- *
- * -Describe new or existing design patterns used in the issue-
- * <p>
- * -You can also add other artifacts to document the design, for instance, database models or updates to the domain model-
- *
- * <h2>5. Implementation</h2>
- *
- * -Reference the code elements that where updated or added-
- * <p>
- * -Also refer all other artifacts that are related to the implementation and where used in this issue. As far as possible you should use links to the commits of your work-
- *
- * <h2>6. Integration/Demonstration</h2>
- *
- * -In this section document your contribution and efforts to the integration of your work with the work of the other elements of the team and also your work regarding the demonstration (i.e., tests, updating of scripts, etc.)-
- *
- * <h2>7. Final Remarks</h2>
- *
- * -In this section present your views regarding alternatives, extra work and future work on the issue.-
- * <p>
- * As an extra this use case also implements a small cell visual decorator if the cell has a comment. This "feature" is not documented in this page.
- *
- *
- * <h2>8. Work Log</h2>
- *
- * -Insert here a log of you daily work. This is in essence the log of your daily standup meetings.-
  * <p>
  * Example
  * <p>
@@ -136,7 +72,7 @@
  * <p>
  * Today
  * <p>
- * 1. Analysis of the...
+ * 1. Analysis of the use-case
  * <p>
  * Blocking:
  * <p>
@@ -146,31 +82,43 @@
  * <p>
  * Yesterday I worked on:
  * <p>
- * 1. ...
+ * 1. Analysis of the various classes of the use-cases
  * <p>
  * Today
  * <p>
- * 1. ...
+ * 1. Started implementation of the use-case
  * <p>
  * Blocking:
  * <p>
- * 1. ...
- *
- * <h2>9. Self Assessment</h2>
- *
- * -Insert here your self-assessment of the work during this sprint regarding Rubrics R3, R6 and R7.-
- *
- * <h3>R3. Rubric Requirements Fulfilment: 3</h3>
- *
- * 3- some defects. The student did fulfil all the requirements and also did justify the eventual options related to the interpretation/analysis of the problem.
- *
- * <h3>R6. Rubric Requirements Analysis: 4</h3>
- *
- * 4- correct. There is a robust and very complete analysis of the problem with well chosen technical artifacts (diagrams, grammars, etc.) for its documentation and without errors.
- *
- * <h3>R7. Rubric Design and Implement: 2</h3>
- *
- * 2- many defects. The code follows good practices although some design patterns should have been applied. The technical documentation covers the majority of the solution although it may have some errors. However the appropriate type of technical artifacts for documenting design are present and the ideia behind the solution is understandable. Code does not "goes against" the design options of the original code of the project. Unit tests seem to cover a significant amount of functionalities (e.g., more than 50%) but there was not test first approach.
+ * 1. -nothing
+ * <p>
+ * <b>Wednesday</b>
+ * <p>
+ * Yesterday I worked on:
+ * <p>
+ * 1. Starting the implementation of the use-case
+ * <p>
+ * Today
+ * <p>
+ * 1. Continued the implementation of the use-case
+ * <p>
+ * Blocking:
+ * <p>
+ * 1. -nothing-
+ * <p>
+ * <b>Thursday</b>
+ * <p>
+ * Yesterday I worked on:
+ * <p>
+ * 1. Continuing the implementation of the use-case
+ * <p>
+ * Today
+ * <p>
+ * 1. Finished the implementation of the use-case
+ * <p>
+ * Blocking:
+ * <p>
+ * 1. -nothing-
  *
  * @author Ricardo Catalão (1150385)
  */
