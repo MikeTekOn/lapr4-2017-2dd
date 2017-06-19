@@ -1,0 +1,8 @@
+@startuml
+actor User
+User -> UI:Starts the CleanSheets Instance Search
+activate User
+activate UI
+UI --> User:sends UDP broadcast
+UI --> User:other instances answer, sending TCP data
+@enduml

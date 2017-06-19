@@ -37,274 +37,307 @@ import javax.persistence.Embedded;
 
 /**
  * The class that manages extensions to the CleanSheets application.
+ *
  * @author Einar Pehrson
  */
 public class ExtensionManager {
 
-	/** The singleton instance */
-	private static final ExtensionManager instance = new ExtensionManager();
+    /**
+     * The singleton instance
+     */
+    private static final ExtensionManager instance = new ExtensionManager();
 
-	/** The name of the files in which extension properties are stored */
-	private static final String PROPERTIES_FILENAME = "extensions.props";
+    /**
+     * The name of the files in which extension properties are stored
+     */
+    private static final String PROPERTIES_FILENAME = "extensions.props";
 
-	/** The extension properties */
-	private Properties props = null;
+    /**
+     * The extension properties
+     */
+    private Properties props = null;
 
-	/** The extensions that have been loaded */
-	private SortedMap<String, Extension> extensionMap = new TreeMap<String, Extension>();
+    /**
+     * The extensions that have been loaded
+     */
+    private SortedMap<String, Extension> extensionMap = new TreeMap<String, Extension>();
 
-	/** The extensions that are disabled */
-	private SortedMap<String, Extension> disabledExtensionMap = new TreeMap<String, Extension>();
+    /**
+     * The extensions that are disabled
+     */
+    private SortedMap<String, Extension> disabledExtensionMap = new TreeMap<String, Extension>();
 
-	/** The extension state listeners registered to receive events */
-	private List<ExtensionStateListener> extensionStateListeners = new ArrayList<>();
+    /**
+     * The extension state listeners registered to receive events
+     */
+    private List<ExtensionStateListener> extensionStateListeners = new ArrayList<>();
 
-	/** The class loader used to load extensions */
-	private Loader loader = new Loader();
-        
-	/**
-	 * Creates the extension manager.
-	 */
-	private ExtensionManager() {
-		// Loads default extension properties
-		props = new Properties();
-		InputStream stream = CleanSheets.class.getResourceAsStream("res/" + PROPERTIES_FILENAME);
-		if (stream != null)
-			try {
-				props.load(stream);
-			} catch (IOException e) {
-				System.err.println("Could not load default extension properties from: "
-					+ PROPERTIES_FILENAME);
-			} finally {
-				try {
-					if (stream != null)
-						stream.close();
-				} catch (IOException e) {}
-			}
+    /**
+     * The class loader used to load extensions
+     */
+    private Loader loader = new Loader();
 
-		// Loads user extension properties
-		File userExtPropsFile = new File("res/" + PROPERTIES_FILENAME);
-		if (userExtPropsFile.exists())
-			stream = null;
-			try {
-				stream = new FileInputStream(userExtPropsFile);
-				props.load(stream);
-			} catch (IOException e) {
-			} finally {
-				try {
-					if (stream != null)
-						stream.close();
-				} catch (IOException e) {}
-			}
-
-                if(CleanSheets.getFlag()){        
-                    // Loads extensions
-                    for (Map.Entry<Object, Object> entry : props.entrySet()) {
-                            // Loads class
-                            String className = (String)entry.getKey();
-                            load(className);
+    /**
+     * Creates the extension manager.
+     */
+    private ExtensionManager() {
+        // Loads default extension properties
+        props = new Properties();
+        InputStream stream = CleanSheets.class.getResourceAsStream("res/" + PROPERTIES_FILENAME);
+        if (stream != null) {
+            try {
+                props.load(stream);
+            } catch (IOException e) {
+                System.err.println("Could not load default extension properties from: "
+                        + PROPERTIES_FILENAME);
+            } finally {
+                try {
+                    if (stream != null) {
+                        stream.close();
                     }
+                } catch (IOException e) {
                 }
-
-	}
-        
-        public Properties getProperties(){
-            return props;
+            }
         }
 
-	/**
-	 * Returns the singleton instance.
-	 * @return the singleton instance
-	 */
-	public static ExtensionManager getInstance() {
-		return instance;
-	}
+        // Loads user extension properties
+        File userExtPropsFile = new File("res/" + PROPERTIES_FILENAME);
+        if (userExtPropsFile.exists()) {
+            stream = null;
+        }
+        try {
+            stream = new FileInputStream(userExtPropsFile);
+            props.load(stream);
+        } catch (IOException e) {
+        } finally {
+            try {
+                if (stream != null) {
+                    stream.close();
+                }
+            } catch (IOException e) {
+            }
+        }
 
-	/**
-	 * Returns the extensions that have been loaded.
-	 * @return the extensions that have been loaded
-	 */
-	public Extension[] getExtensions() {
-		Collection<Extension> extensions = extensionMap.values();
-		return extensions.toArray(new Extension[extensions.size()]);
-	}
+        if (CleanSheets.getFlag()) {
+            // Loads extensions
+            for (Map.Entry<Object, Object> entry : props.entrySet()) {
+                // Loads class
+                String className = (String) entry.getKey();
+                load(className);
+            }
+        }
 
-	public Extension[] getDisabledExtensions() {
-		Collection<Extension> extensions = disabledExtensionMap.values();
-		return extensions.toArray(new Extension[extensions.size()]);
-	}
+    }
 
-	private boolean changeExtensionsEnabledState(List<String> extensionsName, boolean enabled){
-		boolean shouldUpdate = false;
-		for(String str : extensionsName){
-			Extension extension;
-			if(enabled){
-				extension = disabledExtensionMap.remove(str);
-			}else{
-				extension = extensionMap.remove(str);
-			}
-			if(extension != null){
-				props.setProperty(extension.getClass().getName(), String.valueOf(enabled));
-				if(enabled){
-					extensionMap.put(str, extension);
-				}else{
-					disabledExtensionMap.put(str, extension);
-				}
-				shouldUpdate = true;
-			}
-		}
-		if(shouldUpdate){
-			File propsFile = new File(PROPERTIES_FILENAME);
-			if(!propsFile.exists())
-				try {
-					propsFile.createNewFile();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			try {
-				FileOutputStream stream = new FileOutputStream(propsFile);
-				props.store(stream, "CleanSheets User Extensions Properties (" +
-						DateFormat.getDateTimeInstance().format(new Date()) + ")");
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			fireExtensionListChanged();
-		}
-		return shouldUpdate;
-	}
+    public Properties getProperties() {
+        return props;
+    }
 
-	public boolean disableExtensions(List<String> extensionsName) {
-		return changeExtensionsEnabledState(extensionsName, false);
-	}
+    /**
+     * Returns the singleton instance.
+     *
+     * @return the singleton instance
+     */
+    public static ExtensionManager getInstance() {
+        return instance;
+    }
 
-	public boolean enableExtensions(List<String> extensionsName){
-		return changeExtensionsEnabledState(extensionsName, true);
-	}
+    /**
+     * Returns the extensions that have been loaded.
+     *
+     * @return the extensions that have been loaded
+     */
+    public Extension[] getExtensions() {
+        Collection<Extension> extensions = extensionMap.values();
+        return extensions.toArray(new Extension[extensions.size()]);
+    }
 
-	/**
-	 * Returns the extension with the given name.
-         * @param name name
-	 * @return the extension with the given name or null if none was found
-	 */
-	public Extension getExtension(String name) {
-		return extensionMap.get(name);
-	}
+    public Extension[] getDisabledExtensions() {
+        Collection<Extension> extensions = disabledExtensionMap.values();
+        return extensions.toArray(new Extension[extensions.size()]);
+    }
 
-	/**
-	 * Adds the given url to the class path, and loads the extension with the
-	 * given class name.
-	 * @param className the complete class name of a class that extends
-	 * the abstract Extension class
-	 * @param url the URL of the JAR-file or directory that contains the class
-	 * @return the extension that was loaded, or null if none was found.
-	 */
-	public Extension load(String className, URL url) {
-		loader.addURL(url);
-		try {
-			Class extensionClass = Class.forName(className, true, loader);
-			return load(extensionClass);
-		} catch (Exception e) {
-			System.err.println("Failed to load extension class " + className + ".");
-			return null;
-		}
-	}
+    private boolean changeExtensionsEnabledState(List<String> extensionsName, boolean enabled) {
+        boolean shouldUpdate = false;
+        for (String str : extensionsName) {
+            Extension extension;
+            if (enabled) {
+                extension = disabledExtensionMap.remove(str);
+            } else {
+                extension = extensionMap.remove(str);
+            }
+            if (extension != null) {
+                props.setProperty(extension.getClass().getName(), String.valueOf(enabled));
+                if (enabled) {
+                    extensionMap.put(str, extension);
+                } else {
+                    disabledExtensionMap.put(str, extension);
+                }
+                shouldUpdate = true;
+            }
+        }
+        if (shouldUpdate) {
+            File propsFile = new File(PROPERTIES_FILENAME);
+            if (!propsFile.exists()) {
+                try {
+                    propsFile.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            try {
+                FileOutputStream stream = new FileOutputStream(propsFile);
+                props.store(stream, "CleanSheets User Extensions Properties ("
+                        + DateFormat.getDateTimeInstance().format(new Date()) + ")");
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            fireExtensionListChanged();
+        }
+        return shouldUpdate;
+    }
 
-	/**
-	 * Loads the extension with the given class name.
-	 * @param className the complete class name of a class that extends
-	 * the abstract Extension class
-	 * @return the extension that was loaded, or null if none was found.
-	 */
-	public Extension load(String className) {
-		try {
-			Class extensionClass = Class.forName(className);
-			return load(extensionClass);
-		} catch (Exception e) {
-			System.err.println("Failed to load extension class " + className + ".");
-			return null;
-		}
-	}
+    public boolean disableExtensions(List<String> extensionsName) {
+        return changeExtensionsEnabledState(extensionsName, false);
+    }
 
-	/**
-	 * Instantiates the given extension class.
-	 * @param extensionClass a class that extends the abstract Extension class
-	 * @return the extension that was loaded, or null if none was found.
-	 */
-	public Extension load(Class extensionClass) {
-		try {
-			Extension extension = (Extension)extensionClass.newInstance();
-			if(Boolean.valueOf(props.getProperty(extensionClass.getName()))){
-				extensionMap.put(extension.getName(), extension);
-			}else{
-				disabledExtensionMap.put(extension.getName(), extension);
-			}
-			addExtensionListener(extension);
-			return extension;
-		} catch (IllegalAccessException iae) {
-			System.err.println("Could not access extension " + extensionClass.getName() + ".");
-			return null;
-		} catch (InstantiationException ie) {
-			System.err.println("Could not load extension from " + extensionClass.getName() + ".");
-			ie.printStackTrace();
-			return null;
-		}
-	}
+    public boolean enableExtensions(List<String> extensionsName) {
+        return changeExtensionsEnabledState(extensionsName, true);
+    }
 
-	/**
-	 * Registers the given listener on the user interface controller.
-	 * @param listener the listener to be added
-	 */
-	public void addExtensionListener(ExtensionStateListener listener) {
-		extensionStateListeners.add(listener);
-	}
+    /**
+     * Returns the extension with the given name.
+     *
+     * @param name name
+     * @return the extension with the given name or null if none was found
+     */
+    public Extension getExtension(String name) {
+        return extensionMap.get(name);
+    }
 
-	/**
-	 * Removes the given listener from the user interface controller.
-	 * @param listener the listener to be removed
-	 */
-	public void removeExtensionListener(ExtensionStateListener listener) {
-		extensionStateListeners.remove(listener);
-	}
+    /**
+     * Adds the given url to the class path, and loads the extension with the
+     * given class name.
+     *
+     * @param className the complete class name of a class that extends the
+     * abstract Extension class
+     * @param url the URL of the JAR-file or directory that contains the class
+     * @return the extension that was loaded, or null if none was found.
+     */
+    public Extension load(String className, URL url) {
+        loader.addURL(url);
+        try {
+            Class extensionClass = Class.forName(className, true, loader);
+            return load(extensionClass);
+        } catch (Exception e) {
+            System.err.println("Failed to load extension class " + className + ".");
+            return null;
+        }
+    }
 
-	/**
-	 * Notifies all registered listeners that the list of extensions was modified
-	 */
-	private void fireExtensionListChanged(){
-		ExtensionEvent event = new ExtensionEvent(this);
-		for (ExtensionStateListener listener : extensionStateListeners){
-			listener.extensionStateChanged(event);
-		}
-	}
+    /**
+     * Loads the extension with the given class name.
+     *
+     * @param className the complete class name of a class that extends the
+     * abstract Extension class
+     * @return the extension that was loaded, or null if none was found.
+     */
+    public Extension load(String className) {
+        try {
+            Class extensionClass = Class.forName(className);
+            return load(extensionClass);
+        } catch (Exception e) {
+            System.err.println("Failed to load extension class " + className + ".");
+            return null;
+        }
+    }
 
-	/**
-	 * Returns the class loader used to load extensions.
-	 * @return the class loader used to load extensions
-	 */
-	public ClassLoader getLoader() {
-		return loader;
-	}
+    /**
+     * Instantiates the given extension class.
+     *
+     * @param extensionClass a class that extends the abstract Extension class
+     * @return the extension that was loaded, or null if none was found.
+     */
+    public Extension load(Class extensionClass) {
+        try {
+            Extension extension = (Extension) extensionClass.newInstance();
+            if (Boolean.valueOf(props.getProperty(extensionClass.getName()))) {
+                extensionMap.put(extension.getName(), extension);
+            } else {
+                disabledExtensionMap.put(extension.getName(), extension);
+            }
+            addExtensionListener(extension);
+            return extension;
+        } catch (IllegalAccessException iae) {
+            System.err.println("Could not access extension " + extensionClass.getName() + ".");
+            return null;
+        } catch (InstantiationException ie) {
+            System.err.println("Could not load extension from " + extensionClass.getName() + ".");
+            ie.printStackTrace();
+            return null;
+        }
+    }
 
-	/**
-	 * The class loader used to load extensions.
-	 */
-	public static class Loader extends URLClassLoader {
+    /**
+     * Registers the given listener on the user interface controller.
+     *
+     * @param listener the listener to be added
+     */
+    public void addExtensionListener(ExtensionStateListener listener) {
+        extensionStateListeners.add(listener);
+    }
 
-		/**
-		 * Creates a new extension loader.
-		 */
-		public Loader() {
-			super(new URL[]{}, Loader.class.getClassLoader());
-		}
+    /**
+     * Removes the given listener from the user interface controller.
+     *
+     * @param listener the listener to be removed
+     */
+    public void removeExtensionListener(ExtensionStateListener listener) {
+        extensionStateListeners.remove(listener);
+    }
 
-		/**
-		 * Appends the specified URL to the list of URLs to search for classes
-		 * and resources.
-		 * @param url the URL to be added to the search path of URL:s
-		 */
-		protected void addURL(URL url) {
-			super.addURL(url);
-		}
-	}
+    /**
+     * Notifies all registered listeners that the list of extensions was
+     * modified
+     */
+    private void fireExtensionListChanged() {
+        ExtensionEvent event = new ExtensionEvent(this);
+        for (ExtensionStateListener listener : extensionStateListeners) {
+            listener.extensionStateChanged(event);
+        }
+    }
+
+    /**
+     * Returns the class loader used to load extensions.
+     *
+     * @return the class loader used to load extensions
+     */
+    public ClassLoader getLoader() {
+        return loader;
+    }
+
+    /**
+     * The class loader used to load extensions.
+     */
+    public static class Loader extends URLClassLoader {
+
+        /**
+         * Creates a new extension loader.
+         */
+        public Loader() {
+            super(new URL[]{}, Loader.class.getClassLoader());
+        }
+
+        /**
+         * Appends the specified URL to the list of URLs to search for classes
+         * and resources.
+         *
+         * @param url the URL to be added to the search path of URL:s
+         */
+        protected void addURL(URL url) {
+            super.addURL(url);
+        }
+    }
 }

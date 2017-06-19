@@ -137,8 +137,21 @@
  * <h3>4.1. Functional Tests</h3>
  *
  * <p>
- * Unit test 1 -
+ * Unit test 1 - ensureThreadDoesntListenToEventsOutsideTheRange
  * <p>
+ * <p>
+ * Unit test 2 - ensureThreadListensToItsRange
+ * <p>
+ * <p>
+ * Unit test 3 - ensureSortingColumnIsPainted
+ * <p>
+ * <p>
+ * Unit test 4 - ensureOtherColumnIsNotPainted
+ * <p>
+ * <p>
+ * Unit test 4 - ensureSortingColumnIsPaintedWithCorrectColor
+ * <p>
+ *
  * <h3>4.2. UC Realization</h3>
  * To realize this functional increment, we will need the classes referred in
  * the analysis section and the already implemented ones. The sequence diagram below

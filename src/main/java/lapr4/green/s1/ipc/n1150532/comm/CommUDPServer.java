@@ -148,7 +148,7 @@ public class CommUDPServer extends Thread {
             while (true) {
                 data = new byte[socket.getReceiveBufferSize()];
                 bis = new ByteArrayInputStream(data);
-                udpPacket = new DatagramPacket(data, data.length);
+                 udpPacket = new DatagramPacket(data, data.length);
                 socket.receive(udpPacket);
                 in = new TrafficInputStream(bis, InetAddress.getLocalHost(), socket.getLocalPort(), new OpenTransmission());
                 bos = new ByteArrayOutputStream();
