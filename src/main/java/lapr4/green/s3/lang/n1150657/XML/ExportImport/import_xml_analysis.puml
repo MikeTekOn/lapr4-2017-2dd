@@ -1,0 +1,18 @@
+@startuml import_xml_analysis.png
+actor User
+User -> System: Starts the XML importation
+System --> User: Asks which range of the output
+note right 
+The range being Workbook,
+SpreadSheet or Cells
+end note
+
+User -> System: Selects the range
+User <-- System: Asks the destination path of the output file
+
+User -> System: Selects the output path
+User <-- System: Asks if is append or replace
+
+User -> System: It choose append/replace
+User <-- System: Informs about the sucess of the operation
+@enduml

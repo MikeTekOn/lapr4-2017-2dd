@@ -30,7 +30,7 @@ public class ImportXMLMenu extends JMenu {
      * @param actionManager
      */
     public ImportXMLMenu(CleanSheets app, UIController uiController, ActionManager actionManager) {
-        super("Import to");
+        super("Import from");
 
         setMnemonic(KeyEvent.VK_I);
         setIcon(new ImageIcon(CleanSheets.class.getResource("res/img/Import.png")));

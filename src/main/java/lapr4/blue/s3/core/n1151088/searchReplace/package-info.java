@@ -172,6 +172,10 @@
  * <p>showForeignerContentOfFoundString() - tests if displays only the adjacent
  * text</p>
  * 
+ * <h2>4. Design<&h2>
+ * 
+ * <img src="core_07_03_sd.png" alt="image">
+ * 
  * <h2>5. UC Realization</h2>
  * 
  * <ul>

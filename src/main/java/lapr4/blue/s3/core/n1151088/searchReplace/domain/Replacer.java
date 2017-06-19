@@ -6,7 +6,16 @@ import csheets.core.formula.Formula;
 import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.core.formula.compiler.FormulaCompiler;
 import csheets.ui.ctrl.UIController;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Spliterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
+import lapr4.red.s1.core.n1150690.comments.CommentableCellWithMultipleUsers;
+import lapr4.red.s1.core.n1150690.comments.domain.User;
+import lapr4.white.s1.core.n1234567.comments.CommentsExtension;
 
 /**
  *
@@ -27,8 +36,13 @@ public class Replacer implements Runnable {
     
     public Replacer(Cell cellBefore, String expR, String to, UIController uiCtrl){
 
-        if(!validateContainsExp(cellBefore, expR)){
-           throw new IllegalStateException();
+        String replaced="";
+        if((validateComment(cellBefore, expR).size()>0)){
+             //has comments with content
+         }else{ 
+            if(!validateContainsExp(cellBefore, expR)){
+               throw new IllegalStateException();
+            }
         }
         this.exp=expR;
         this.to=to;      
@@ -57,6 +71,22 @@ public class Replacer implements Runnable {
         Formula f = instance.compile(cell1, content, uiCtrl);
         f.evaluate();
         return true;
+    }
+    
+    public ArrayList<String> validateComment(Cell beforeCell,String exp){
+         
+        ArrayList<String> found=new ArrayList<>();
+        if(((CommentableCellWithMultipleUsers)beforeCell.getExtension(CommentsExtension.NAME)).hasComments()){
+            for (List<String> comments : ((CommentableCellWithMultipleUsers) beforeCell.getExtension(CommentsExtension.NAME)).comments().values()) {
+               for (String comment : comments) {
+                 if(comment.contains(exp)){
+                  
+                       found.add(comment);
+                   }
+               }
+           }
+        }
+         return found;
     }
   
 
@@ -90,7 +120,21 @@ public class Replacer implements Runnable {
     private void getReplacedCell() throws IllegalValueTypeException, FormulaCompilationException{
         PreviewCellDTO prev= new PreviewCellDTO(cell,exp,to);
         prev.previewReplace();
+        String replaced="";
+        for (List<String> comments : ((CommentableCellWithMultipleUsers) prev.getBeforeCell().getExtension(CommentsExtension.NAME)).comments().values()) {
+                
+            for (String comment : comments) {
+                User user;
+                if(comment.contains(this.exp)){
+                   replaced=comment.replace(this.exp,to);
+                  user=findUser(prev.getAfterCell());
+                    ((CommentableCellWithMultipleUsers)prev.getBeforeCell().getExtension(CommentsExtension.NAME)).changeUserComment(user.name(), user, comment, replaced);
+
+                }
+            }
+        }
         prev.getBeforeCell().setContent(prev.getAfterCell().getContent());
+       
     }
     
     private void getReplacedList() throws IllegalValueTypeException, FormulaCompilationException{
@@ -105,6 +149,15 @@ public class Replacer implements Runnable {
            }
 
         }
+    }
+    
+    private User findUser(Cell cellBefore){
+        Iterator<User> it =((CommentableCellWithMultipleUsers)cellBefore.getExtension(CommentsExtension.NAME)).comments().keySet().iterator();
+        User user = null;
+        if(it.hasNext()){
+            user=it.next();
+        }
+        return user;
     }
     
 }

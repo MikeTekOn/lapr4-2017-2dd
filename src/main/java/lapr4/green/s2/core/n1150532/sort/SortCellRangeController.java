@@ -80,6 +80,7 @@ class SortCellRangeController implements Controller {
      * @param sortingColumnIndex The column index. The index is relative to the
      * cell range, i.e. the column number 0 is the first column of the cell
      * range. The number must be from 0 up to cell[0].length-1.
+     * @param realColumnIndex the absolute column index
      * @param algorithm The sorting algorithm used for sorting.
      * @param comparator The comparator used within the algorithm to compare
      * both rows.

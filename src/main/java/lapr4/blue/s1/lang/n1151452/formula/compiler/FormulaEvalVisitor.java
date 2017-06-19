@@ -466,7 +466,7 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
                 // Only has 1 expresion
                 Expression expressions[] = new Expression[1];
 
-                expressions[0] = visit(ctx.getChild(3));
+                expressions[0] = visit(ctx.getChild(2));
 
                 return new NaryOperation(operator, expressions);
 

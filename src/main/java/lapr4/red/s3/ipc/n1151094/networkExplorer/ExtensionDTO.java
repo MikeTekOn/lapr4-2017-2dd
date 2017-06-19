@@ -3,4 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lapr4.green.s3.lang.n1150657.XML.Import;
+package lapr4.red.s3.ipc.n1151094.networkExplorer;
+
+import java.io.Serializable;
+
+/**
+ *
+ * @author Eduangelo Ferreira
+ */
+public class ExtensionDTO implements Serializable{
+    
+}

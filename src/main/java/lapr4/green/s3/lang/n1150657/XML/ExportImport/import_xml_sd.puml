@@ -1,0 +1,30 @@
+@startuml import_xml_sd.png
+
+actor "User" as Actor
+participant ImportXMLUI as UI
+participant ImportXMLController as Controller
+participant "xml:ImportXML" as import
+participant ImportContext as Context
+participant "uiController:UIController" as uiController
+
+Actor ->UI: Starts functionality
+create Controller
+UI->Controller:create(uiController)
+create Context
+Controller->Context:create(xml)
+create import
+Controller->import:create (uiController) 
+Actor<-UI:open a window
+Actor->UI: Select file
+UI->Controller: selectPath(path)
+Controller->import:selectPath(path)
+Actor ->UI: append/replace
+UI->Controller:importXml()
+Controller->Context:executeStrategy()
+import->Context: importData()
+import->uiController:setActiveWorkbook(work)
+UI->Controller:validateExtension(file)
+Controller->import:validateExtension(file)
+
+@enduml
+

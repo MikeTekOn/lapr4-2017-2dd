@@ -147,23 +147,7 @@ public class PreviewCellDTOTest {
         String expResult="4";
         assertEquals(expResult, result);
     }
-    /*
-    
-   
-    
- * <p>rejectReplaceContentWithInvalidExpression() - tests if the replace text inserted 
- * is valid</p>
- * <p>rejectReplaceIsNotEmpty() - tests if the replace text inserted is fullfilled</p>
- * <p>ensureReplaceCellText() - tests if replace a cell of type Text</p>
- * <p>ensureReplaceReplaceCellOperation() - tests if replace value caused by replace of formula</p>
- * <p>rejectReplaceWithInvalidFormula - test if the replace text is an invalid
- * formula</p>
- * <p>ensureReplaceWithValidFormula - tests if content of cell is updated with replace</p>
- * <p>replaceComment - tests if comment of cell is updated with replace</p>
- * <p>showForeignerContentOfFoundString() - tests if displays only the adjacent
- * text</p>
-    */
-   
+
     /**
      * Test of previewReplace method, of class PreviewCellDTO.
      * @throws java.lang.Exception in case of formula compilation error

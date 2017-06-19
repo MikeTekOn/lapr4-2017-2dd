@@ -295,14 +295,30 @@ public class CellImpl implements Cell {
 	private void storeContent(String content) throws FormulaCompilationException {
 		// Parses formula
 		Formula formula = null;    
+                String newContent;
+                
+                newContent = checkContent(content);
+                
 		if (content.length() > 1)
-			formula = FormulaCompiler.getInstance().compile(this, content, uiController);
+			formula = FormulaCompiler.getInstance().compile(this, newContent, uiController);
 
 		// Stores content and formula
 		this.content = content;
 		this.formula = formula;
 		updateDependencies();
 	}
+        
+        private String checkContent(String contentToBeChecked){
+            String newContent, expression;
+                
+                if (contentToBeChecked.contains("eval") || contentToBeChecked.contains("EVAL") || contentToBeChecked.contains("Eval")){
+                    expression = contentToBeChecked.substring(7, contentToBeChecked.length()-2);
+                    newContent = '=' + expression;
+                } else {
+                    newContent = contentToBeChecked;
+                }
+                return newContent;
+        }
 
 	/**
 	 * Updates the cell's dependencies.
