@@ -5,6 +5,9 @@ import csheets.core.formula.Expression;
 import csheets.ui.ctrl.UIController;
 import lapr4.blue.s1.lang.n1151159.macros.Macro;
 import lapr4.blue.s1.lang.n1151159.macros.compiler.MacroCompilationException;
+import lapr4.green.s3.lang.n1150738.macros.MacroWithParameters;
+import lapr4.green.s3.lang.n1150738.macros.ParameterDefinition;
+import lapr4.green.s3.lang.n1150738.macros.ParameterList;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
@@ -34,7 +37,7 @@ public class Macro2Compiler extends lapr4.blue.s1.lang.n1151159.macros.compiler.
         return instance;
     }
 
-    public Macro compile(Spreadsheet spreadsheet, UIController uiController, String source, String macroName, ArrayList<String> macrosUsed) throws MacroCompilationException {
+    public MacroWithParameters compile(Spreadsheet spreadsheet, UIController uiController, String source, String macroName, ArrayList<String> macrosUsed) throws MacroCompilationException {
         if (macrosUsed.contains(macroName)) {
             return null;
         }
@@ -43,7 +46,7 @@ public class Macro2Compiler extends lapr4.blue.s1.lang.n1151159.macros.compiler.
     }
 
     @Override
-    public Macro compile(Spreadsheet spreadsheet, UIController uiController, String source) throws MacroCompilationException {
+    public MacroWithParameters compile(Spreadsheet spreadsheet, UIController uiController, String source) throws MacroCompilationException {
         // Creates the lexer and parser
         // Although the ANTLRInputStream is deprecated, the core is
         // already using it. Mixing both makes the performance worse.
@@ -72,7 +75,10 @@ public class Macro2Compiler extends lapr4.blue.s1.lang.n1151159.macros.compiler.
         for (int i = 0; i < tree.getChildCount(); i++) {
             // ignores terminal rule
             if (!(tree.getChild(i) instanceof TerminalNode)) {
-                expressions.add(eval.visit(tree.getChild(i)));
+                Expression res = eval.visit(tree.getChild(i));
+                if(res != null){ //header returns null
+                    expressions.add(res);
+                }
             }
         }
 
@@ -81,7 +87,7 @@ public class Macro2Compiler extends lapr4.blue.s1.lang.n1151159.macros.compiler.
             throw new MacroCompilationException(eval.getErrorsMessage());
         }
 
-        return new Macro(expressions);
+        return new MacroWithParameters(expressions, eval.getMacroName(), eval.getParameterDefinition());
     }
 
 }

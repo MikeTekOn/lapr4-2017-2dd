@@ -4,7 +4,17 @@ grammar Macro2;
 }
 
 macro
-    : NEWLINE* (SEMI (~NEWLINE)* NEWLINE+| expression)* (SEMI (~NEWLINE)* NEWLINE+ | EQ? comparison) NEWLINE* EOF
+    : NEWLINE* header (SEMI (~NEWLINE)* NEWLINE+| expression)* (SEMI (~NEWLINE)* NEWLINE+ | EQ? comparison) NEWLINE* EOF
+    ;
+
+header
+    :  'macro' IDENTIFIER LPAR parameters RPAR NEWLINE+
+    ;
+
+parameters
+    :
+    | IDENTIFIER
+    | parameters COMMA IDENTIFIER
     ;
 
 expression
@@ -40,6 +50,7 @@ shellscript
 atom
     : macro_invoked
 	|	function_call
+	|   PARAMETER_REFERENCE
 	|	reference
 	|	literal
 	|	LPAR comparison RPAR
@@ -56,14 +67,14 @@ assignment
 	;
 
 function_call
-	:	FUNCTION LPAR
+	:	IDENTIFIER LPAR
 		( comparison ( SEMI comparison )* )?
 		RPAR
 	;
 
 reference
-	:	CELL_REF
-		( ( COLON ) CELL_REF )?
+	:	(  CELL_REF | IDENTIFIER  )
+		( ( COLON ) (  CELL_REF | IDENTIFIER   )    )?
 	;
 
 literal
@@ -74,20 +85,34 @@ literal
 
 fragment LETTER: ('a'..'z'|'A'..'Z') ;
 
-FUNCTION :
-	  ( LETTER )+
-	;
+IDENTIFIER
+        :IDENTIFIER_FRAG
+        ;
+
+fragment IDENTIFIER_FRAG
+        : LETTER (LETTER|DIGIT)*
+        ;
+
+//FUNCTION :
+//	  ( LETTER )+
+//	;
 
 
 CELL_REF
 	:
-		( ABS )? LETTER ( LETTER )?
+		( ABS )? IDENTIFIER_FRAG
 		( ABS )? ( DIGIT )+
+	|   ( ABS )? IDENTIFIER_FRAG
 	;
 
 LOCAL_VARIABLE
     : UNDERSCORE LETTER (DIGIT|LETTER)*
     ;
+
+PARAMETER_REFERENCE
+    :   '$''{'IDENTIFIER_FRAG'}'
+    ;
+
 /* String literals, i.e. anything inside the delimiters */
 
 STRING  : QUOT ('\\"' | ~'"')* QUOT

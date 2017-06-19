@@ -23,6 +23,8 @@ import static org.junit.Assert.*;
 
 public class LocalVariableTest {
 
+    private static final String MACRO_HEADER = "macro test1()\n";
+
     private CleanSheets app;
 
     Cell cellTest;
@@ -58,25 +60,36 @@ public class LocalVariableTest {
 
     @Test (expected = MacroCompilationException.class)
     public void ensureNonDeclareVariableCannotBeReferenced() throws MacroCompilationException{
-        String macro = "_local1";
+        String macro = MACRO_HEADER+"_local1";
         Spreadsheet sheet = app.getWorkbooks()[0].getSpreadsheet(0);
         Expression m = Macro2Compiler.getInstance().compile(sheet, null, macro);
     }
 
     @Test public void ensureLocalVariableIsAssignable() throws MacroCompilationException {
-        String macro = "(_local1 := 2)";
+        String macro = MACRO_HEADER+"(_local1 := 2)";
         Spreadsheet sheet = app.getWorkbooks()[0].getSpreadsheet(0);
         Expression m = Macro2Compiler.getInstance().compile(sheet, null, macro);
     }
 
     @Test public void ensureLocalVariableHoldsValue() throws MacroCompilationException, ParseException, IllegalValueTypeException {
-        String macro = "(_local1 := 2)\n" +
+        String macro = MACRO_HEADER+"(_local1 := 2)\n" +
                 "_local1";
         Spreadsheet sheet = app.getWorkbooks()[0].getSpreadsheet(0);
         Expression m = Macro2Compiler.getInstance().compile(sheet, null, macro);
         Value result = m.evaluate();
         Value expected = Value.parseNumericValue("2");
         assertEquals(expected, result);
+    }
+
+    @Test public void ensureLocalVariableWorksOnNestedExpressions() throws MacroCompilationException, ParseException, IllegalValueTypeException {
+        String macro = MACRO_HEADER+"(_local1 := 2)\n" +
+                "(_local2 := 5)\n"+
+                "(_local3 := _local2 * _local1)";
+        Spreadsheet sheet = app.getWorkbooks()[0].getSpreadsheet(0);
+        Expression m = Macro2Compiler.getInstance().compile(sheet, null, macro);
+        Value result = m.evaluate();
+        Value expected = Value.parseNumericValue("10");
+        assertEquals(expected.toString(), result.toString());
     }
 }
 

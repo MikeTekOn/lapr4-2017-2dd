@@ -12,11 +12,13 @@ import csheets.core.formula.lang.UnknownElementException;
 import csheets.ui.ctrl.UIController;
 import lapr4.blue.s1.lang.n1140822.beanshellwindow.BeanShellInstance;
 import lapr4.blue.s1.lang.n1140822.beanshellwindow.BeanShellLoader;
+import lapr4.blue.s1.lang.n1151159.macros.Macro;
 import lapr4.blue.s1.lang.n1151159.macros.compiler.*;
 import lapr4.blue.s1.lang.n1151452.formula.lang.Language;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperation;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperator;
 import lapr4.green.s3.lang.n1150532.variables.Variable;
+import lapr4.green.s3.lang.n1150738.macros.*;
 import lapr4.red.s2.lang.n1150623.globalVariables.VarContentor;
 import org.antlr.v4.runtime.Token;
 
@@ -55,17 +57,54 @@ public class Macro2EvalVisitor extends Macro2BaseVisitor<Expression>{
      */
     private int numberOfErrors;
 
+
+    /**
+     * The name of the macro
+     */
+    private String name;
+
+    /**
+     * The definition of parameters
+     */
+    private ParameterDefinition parameterDefinition;
+
+
     /**
      * Creates and instance of MacroEvalVisitor.
      *
      * @param spreadsheet the spreadsheet
      */
     public Macro2EvalVisitor(Spreadsheet spreadsheet, UIController uiController) {
+        this.parameterDefinition = new ParameterDefinition();
         numberOfErrors = 0;
         errorBuffer = new StringBuilder();
         this.spreadsheet = spreadsheet;
         this.uiController = uiController;
         locals = new VarContentor();
+    }
+
+    @Override
+    public Expression visitHeader(Macro2Parser.HeaderContext ctx) {
+        name = ctx.IDENTIFIER().getText();
+        return visit(ctx.parameters());
+    }
+
+    @Override
+    public Expression visitParameters(Macro2Parser.ParametersContext ctx) {
+        if(ctx.IDENTIFIER() != null){
+            try{
+                //left recursion parameters are read from right to left
+                parameterDefinition = parameterDefinition.addParameterFirst(ctx.IDENTIFIER().getText());
+            } catch(IllegalArgumentException ex){
+                addVisitError(ex.getMessage());
+            }
+        }
+        if(ctx.parameters() != null){
+            return visit(ctx.parameters());
+        }
+
+
+        return null;
     }
 
     @Override
@@ -219,13 +258,29 @@ public class Macro2EvalVisitor extends Macro2BaseVisitor<Expression>{
             } catch (IllegalArgumentException ex) {
                 addVisitError(ex.getLocalizedMessage());
             }
+        } else if(ctx.PARAMETER_REFERENCE() != null){
+            String paramName = extractParameterNameFromReferenceToken(ctx.PARAMETER_REFERENCE().getText());
+            if(parameterDefinition.contains(paramName)){
+                return new ParameterReference(paramName);
+            } else {
+                addVisitError("Invalid Parameter Reference ("+paramName+") to non existent parameter!");
+            }
         }
-
         return visitChildren(ctx);
+    }
+
+    private static String extractParameterNameFromReferenceToken(String text){
+        return text.substring(2, text.length()-1);
     }
 
     @Override
     public Expression visitFunction_call(Macro2Parser.Function_callContext ctx) {
+
+        //Semantically validate function name because is more restrict then the token (IDENTIFIER) recognized
+        if(ctx.getChild(0).getText().matches(".*\\d+.*")){
+            addVisitError("Function name cannot have digits");
+            return null;
+        }
         // Convert function call
         Function function = null;
         try {
@@ -255,6 +310,11 @@ public class Macro2EvalVisitor extends Macro2BaseVisitor<Expression>{
     public Expression visitReference(Macro2Parser.ReferenceContext ctx) {
         try {
             if (ctx.getChildCount() == 3) {
+                if(!ctx.getChild(0).getText().matches("(\\$)?[a-zA-Z]([a-zA-Z])?(\\$)?[0-9]+")
+                        || !ctx.getChild(2).getText().matches("(\\$)?[a-zA-Z]([a-zA-Z])?(\\$)?[0-9]+")){
+                    addVisitError("Invalid Cell Reference: "+ctx.getText());
+                    return null;
+                }
                 BinaryOperator operator = Language.getInstance().getBinaryOperator(ctx.getChild(1).getText());
                 return new ReferenceOperation(
                         new CellReference(spreadsheet, ctx.getChild(0).getText()),
@@ -262,6 +322,10 @@ public class Macro2EvalVisitor extends Macro2BaseVisitor<Expression>{
                         new CellReference(spreadsheet, ctx.getChild(2).getText())
                 );
             } else {
+                if(!ctx.getText().matches("(\\$)?[a-zA-Z]([a-zA-Z])?(\\$)?[0-9]+")){
+                    addVisitError("Invalid Cell Reference: "+ctx.getText());
+                    return null;
+                }
                 return new CellReference(spreadsheet, ctx.getText());
             }
             // return visitChildren(ctx); 
@@ -401,5 +465,13 @@ public class Macro2EvalVisitor extends Macro2BaseVisitor<Expression>{
             theExpression = container.getExpressionOfVariable(variableInfo[0], Variable.DEFAULT_INDEX);
         }
         return theExpression;
+    }
+
+    public String getMacroName() {
+        return name;
+    }
+
+    public ParameterDefinition getParameterDefinition() {
+        return parameterDefinition;
     }
 }

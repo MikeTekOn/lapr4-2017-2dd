@@ -8,7 +8,7 @@
  * <p>
  * <b>Requirement</b><p>
  * Statement:<p>
- * Macros sghould now have parameters. The syntax for macros should now include an header that should include the name
+ * Macros should now have parameters. The syntax for macros should now include an header that should include the name
  * of the macro and its parameters (all parameters should have a distinct name). The parameters should be considered
  * only input parameters. However, it should be possible to freely reference parameters inside the macro. That is to
  * say that, inside a macro, parameters should be used like variables. Macros should support local variables that exist
