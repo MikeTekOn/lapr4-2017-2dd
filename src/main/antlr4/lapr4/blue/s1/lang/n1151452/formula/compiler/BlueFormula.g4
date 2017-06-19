@@ -8,9 +8,9 @@ expression
 	;
 
 comparison
-        : eval
-	| concatenation
+        : concatenation
 		(  ( EQ | NEQ | LTEQ | GTEQ | GT | LT ) concatenation )?
+//        | eval
 	| for_loop
         | do_while_loop
         | while_do_loop
@@ -26,12 +26,14 @@ concatenation
         ;
 
 concatenation_eval
-        : ( MINUS )? atom_eval
-        | concatenation PERCENT
-        | <assoc=right> concatenation POWER concatenation
-        | concatenation ( MULTI | DIV ) concatenation
-        | concatenation ( PLUS | MINUS ) concatenation
-        | concatenation AMP concatenation
+        :   QUOT atom_eval QUOT
+        |   QUOT LETTER QUOT AMP ( VARIABLE_NAME | G_VARIABLE_NAME )
+        ;
+
+atom_eval
+        :   NUMBER PERCENT
+        |   NUMBER ( MULTI | DIV ) NUMBER
+        |   NUMBER ( PLUS | MINUS ) NUMBER
         ;
 
 script
@@ -54,13 +56,6 @@ atom
     |   G_VARIABLE_NAME
 	;
 
-atom_eval
-	:	reference
-	|	NUMBER
-        |       VARIABLE_NAME
-        |       G_VARIABLE_NAME
-	;
-
 for_loop
     : FOR L_CURLY_BRACKET assignment SEMI  comparison ( SEMI comparison )+ R_CURLY_BRACKET
     ;
@@ -74,7 +69,7 @@ while_do_loop
     ;
 
 eval
-    : EVAL LPAR QUOT concatenation_eval QUOT RPAR
+    : EVAL LPAR concatenation_eval RPAR
     ;
 
 block
