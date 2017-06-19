@@ -26,6 +26,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+
+import lapr4.green.s3.lang.n1150738.macros.MacroWithParameters;
+import lapr4.green.s3.lang.n1150738.macros.application.Macro2Controller;
 import lapr4.red.s2.lang.n1150451.multipleMacros.domain.MacroWithName;
 import lapr4.red.s2.lang.n1150451.multipleMacros.application.MultipleMacrosWithNameController;
 
@@ -49,6 +52,7 @@ public class MacroDialog extends JDialog {
      * The macro controller.
      */
     private MultipleMacrosWithNameController macroController = new MultipleMacrosWithNameController();
+    private Macro2Controller macro2Ctrl = new Macro2Controller();
 
     /* UI Components */
     private JRadioButton macroLanguageRadioButton;
@@ -233,9 +237,27 @@ public class MacroDialog extends JDialog {
                             Value value = null;
                             try {
                                macroController.emptyList();
-                                value = macroController.executeMacro(uiController.getActiveSpreadsheet(), uiController, macroText, name);
+                               MacroWithParameters m = macro2Ctrl.compileMacro(macroText, uiController, uiController.getActiveSpreadsheet());
+                                String params = null;
+                               if(m.getParameterDefinition().count()>0){
+                                    params = JOptionPane.showInputDialog(null,
+                                            "Please insert the folowing parameters:\n"+m.getParameterDefinition().summary(),
+                                            "Insert Parameters", JOptionPane.QUESTION_MESSAGE);
+                                }
+
+                                if(!macro2Ctrl.validateParameterList(params))
+                                {
+                                    JOptionPane.showMessageDialog(null,
+                                            "The inserted parameter list is not valid!",
+                                            "Invalid Parameters",
+                                            JOptionPane.ERROR_MESSAGE);
+                                    return;
+                                }
+
+
+                                value = macro2Ctrl.executeMacro(uiController.getActiveSpreadsheet(), uiController, macroText, name, params);
                                 if (value == null) {
-                                    JOptionPane.showMessageDialog(rootPane, "Recursivity found.");
+                                    JOptionPane.showMessageDialog(rootPane, "Error interpreting the macro.");
                                     return;
                                 }
                             } catch (NullPointerException e) {

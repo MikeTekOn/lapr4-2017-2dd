@@ -6,6 +6,7 @@ import csheets.core.formula.Expression;
 import csheets.core.formula.compiler.FormulaCompilationException;
 import lapr4.blue.s1.lang.n1151159.macros.compiler.MacroCompilationException;
 import lapr4.green.s3.lang.n1150738.macros.compiler.Macro2Compiler;
+import lapr4.green.s3.lang.n1150738.macros.compiler.MacroInterpreter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

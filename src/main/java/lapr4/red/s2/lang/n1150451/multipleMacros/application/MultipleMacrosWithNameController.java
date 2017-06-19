@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import lapr4.blue.s1.lang.n1151159.macros.MacroController;
 import lapr4.blue.s1.lang.n1151159.macros.compiler.MacroCompilationException;
 import lapr4.blue.s1.lang.n1151159.macros.compiler.MacroCompiler;
+import lapr4.green.s3.lang.n1150738.macros.compiler.Macro2Compiler;
 
 /**
  *
@@ -35,7 +36,7 @@ public class MultipleMacrosWithNameController extends MacroController {
         if (macroList == null) {
             macroList = new ArrayList<>();
         }
-        Expression macro = MacroCompiler.getInstance().compile(spreadsheet, uiController, macroText, macroName, macroList);
+        Expression macro = Macro2Compiler.getInstance().compile(spreadsheet, uiController, macroText, macroName, macroList);
         if (macro == null) {
             return null;
         }

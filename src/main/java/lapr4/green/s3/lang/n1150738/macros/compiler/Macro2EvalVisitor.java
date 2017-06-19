@@ -1,5 +1,6 @@
 package lapr4.green.s3.lang.n1150738.macros.compiler;
 
+import csheets.core.IllegalValueTypeException;
 import csheets.core.Spreadsheet;
 import csheets.core.Value;
 import csheets.core.formula.*;
@@ -24,6 +25,7 @@ import org.antlr.v4.runtime.Token;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -68,6 +70,8 @@ public class Macro2EvalVisitor extends Macro2BaseVisitor<Expression>{
      */
     private ParameterDefinition parameterDefinition;
 
+    private LinkedList<Expression> tempParameterList;
+
 
     /**
      * Creates and instance of MacroEvalVisitor.
@@ -75,6 +79,7 @@ public class Macro2EvalVisitor extends Macro2BaseVisitor<Expression>{
      * @param spreadsheet the spreadsheet
      */
     public Macro2EvalVisitor(Spreadsheet spreadsheet, UIController uiController) {
+        tempParameterList = new LinkedList<>();
         this.parameterDefinition = new ParameterDefinition();
         numberOfErrors = 0;
         errorBuffer = new StringBuilder();
@@ -89,6 +94,7 @@ public class Macro2EvalVisitor extends Macro2BaseVisitor<Expression>{
         return visit(ctx.parameters());
     }
 
+
     @Override
     public Expression visitParameters(Macro2Parser.ParametersContext ctx) {
         if(ctx.IDENTIFIER() != null){
@@ -102,20 +108,69 @@ public class Macro2EvalVisitor extends Macro2BaseVisitor<Expression>{
         if(ctx.parameters() != null){
             return visit(ctx.parameters());
         }
-
-
         return null;
     }
 
     @Override
     public Expression visitMacro_invoked(Macro2Parser.Macro_invokedContext ctx) {
-        StringBuilder s = new StringBuilder();
-        for (int i = 0; i < ctx.getChildCount(); i++) {
-            if (i != 0 && i != (ctx.getChildCount() - 1)) {
-                s.append(ctx.getChild(i));
+//        StringBuilder s = new StringBuilder();
+//        for (int i = 0; i < ctx.getChildCount(); i++) {
+//            if (i != 0 && i != (ctx.getChildCount() - 1)) {
+//                s.append(ctx.getChild(i));
+//            }
+//        }
+        if(ctx.IDENTIFIER() != null){
+            String macroName = ctx.IDENTIFIER().getText();
+
+            if(ctx.parameters_val_list() != null){
+                visit(ctx.parameters_val_list());
+            }
+
+            MacroWithParameters m = null;
+            try {
+                m = Macro2Compiler.getInstance().compile(spreadsheet, uiController, uiController.getActiveWorkbook().getMacroList().getMacroByName(macroName).getMacroCode());
+
+            } catch (MacroCompilationException e) {
+                addVisitError("Uncompilable invoked macro!");
+                return null;
+            }
+
+            if(m.getName().equals(this.name)){
+                addVisitError("Macro cannot have recursivity!");
+                return null;
+            }
+
+            if(m.getParameterDefinition().count() != tempParameterList.size()){
+                addVisitError("Invalid Parameter List on Invocation of Macro "+macroName);
+                return null;
+            } else {
+                ParameterList list = new ParameterList();
+                for(int i = 0; i < tempParameterList.size(); i++){
+                    try {
+                        Parameter p = new Parameter(m.getParameterDefinition().getParameter(i), tempParameterList.get(i).evaluate());
+                        list.addParameter(p);
+                    } catch (IllegalValueTypeException e) {
+                        addVisitError("Invalid Parameter Value!");
+                        return null;
+                    }
+                }
+                Expression res = new Literal((Value)m.accept(new MacroInterpreter(m, list)));
+                tempParameterList.clear();
+                return res;
             }
         }
-        return uiController.getActiveWorkbook().getMacroList().getMacroByName(s.toString());
+        return null;
+    }
+
+    @Override
+    public Expression visitParameters_val_list(Macro2Parser.Parameters_val_listContext ctx) {
+        if(ctx.literal() != null){
+            tempParameterList.addFirst(visit(ctx.literal()));
+        }
+        if(ctx.parameters_val_list() != null){
+            visit(ctx.parameters_val_list());
+        }
+        return null;
     }
 
     @Override
