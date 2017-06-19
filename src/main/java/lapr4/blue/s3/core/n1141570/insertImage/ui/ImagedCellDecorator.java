@@ -19,7 +19,7 @@ public class ImagedCellDecorator extends CellDecorator {
     /**
      * The font used to render the '+'
      */
-    private static final Font font = new Font("Dialog", Font.PLAIN, 10);
+    private static final Font font = new Font("Dialog", Font.PLAIN, 16);
 
     /**
      * Creates a new cell decorator.
@@ -48,9 +48,9 @@ public class ImagedCellDecorator extends CellDecorator {
                 Font oldFont = g2.getFont();
 
                 // Prints 'A' using own font, then restores the old font
-                g2.setColor(Color.red);
+                g2.setColor(Color.BLUE);
                 g2.setFont(font);
-                g2.drawString("+", 4, 12);
+                g2.drawString("*", 4, 18);
 
                 // Restores graphics context properties
                 g2.setColor(oldPaint);

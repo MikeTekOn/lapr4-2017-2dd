@@ -6,6 +6,8 @@ import csheets.core.Address;
 import csheets.core.Cell;
 import csheets.core.Workbook;
 import csheets.core.formula.compiler.FormulaCompilationException;
+import csheets.ext.style.StylableCell;
+import csheets.ext.style.StyleExtension;
 import csheets.ui.ctrl.UIController;
 import lapr4.green.s2.core.n1150532.*;
 import lapr4.green.s2.core.n1150532.sort.algorithms.BubbleSort;
@@ -17,6 +19,7 @@ import lapr4.green.s2.core.n1150532.sort.sortingDTOs.RangeRowDTO;
 import org.junit.*;
 import org.junit.Before;
 
+import java.awt.*;
 import java.io.File;
 import java.util.SortedSet;
 
@@ -84,5 +87,40 @@ public class AutoSortingThreadTest {
         cells  = workbook.getSpreadsheet(0).getCells(new Address(0,0),new Address(1,1)).toArray(cells);
         thread.interrupt();
         assertNotEquals(this.cells, cells);
+    }
+
+    @Test
+    public void ensureSortingColumnIsPainted()
+    {
+        ComparatorFactory fac = new ComparatorFactory();
+        AutoSortingThread thread = new AutoSortingThread(rowArray, (RangeRowDTOComparator)fac.buildAllRangeRowDTOComparators().toArray()[0], new BubbleSort(),0,0);
+        thread.start();
+        Cell outCell = workbook.getSpreadsheet(0).getCell(new Address(0,0));
+        StylableCell stylableCell = (StylableCell)outCell.getExtension(StyleExtension.NAME);
+        assertEquals(stylableCell.getBackgroundColor(), Color.YELLOW);
+    }
+
+    @Test
+    public void ensureOtherColumnIsNotPainted()
+    {
+        ComparatorFactory fac = new ComparatorFactory();
+        AutoSortingThread thread = new AutoSortingThread(rowArray, (RangeRowDTOComparator)fac.buildAllRangeRowDTOComparators().toArray()[0], new BubbleSort(),0,0);
+        thread.start();
+        Cell outCell = workbook.getSpreadsheet(0).getCell(new Address(1,0));
+        StylableCell stylableCell = (StylableCell)outCell.getExtension(StyleExtension.NAME);
+        assertNotEquals(stylableCell.getBackgroundColor(), Color.YELLOW);
+    }
+
+    @Test
+    public void ensureSortingColumnIsPaintedWithCorrectColor() throws FormulaCompilationException {
+        ComparatorFactory fac = new ComparatorFactory();
+        RangeRowDTOComparator com = (RangeRowDTOComparator)fac.buildAllRangeRowDTOComparators().toArray()[0];
+        com.changeOrder();
+        AutoSortingThread thread = new AutoSortingThread(rowArray, com, new BubbleSort(),0,0);
+        thread.start();
+        Cell outCell = workbook.getSpreadsheet(0).getCell(new Address(0,0));
+
+        StylableCell stylableCell = (StylableCell)outCell.getExtension(StyleExtension.NAME);
+        assertEquals(stylableCell.getBackgroundColor(), Color.ORANGE);
     }
 }

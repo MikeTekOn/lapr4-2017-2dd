@@ -14,22 +14,22 @@ import lapr4.s1.export.ExportContext;
  */
 public class ExportXMLController {
     
-    private TagsName tagsName;
-        
     private String selectedPath;
     
     private ExportComponent exportComponent;
     
     private ExportContext strategy;
+    
+    private UIController uiController;
 
     public ExportXMLController(UIController uiController,String selectedPath) {
-        this.tagsName = new TagsName();
         this.selectedPath = selectedPath;
         this.exportComponent = new ExportComponent(uiController);
+        this.uiController = uiController;
     }
     
     public void addTagName(String tag, String name){
-        tagsName.addTagUserName(tag, name);
+        uiController.addTagName(tag, name);
     }
     
     /**
@@ -38,7 +38,7 @@ public class ExportXMLController {
      * @return true if exported, false otherwise.
      */
     public boolean exportWorkbook() {
-        ExportXML exporterXML = new ExportXML(selectedPath, tagsName.getMapWithTags(), exportComponent.getMacroListByActiveworkbook(), exportComponent.getGlobalVariablesByActiveWorkbook());
+        ExportXML exporterXML = new ExportXML(selectedPath, uiController.getTagsName().getMapWithTags(), exportComponent.getMacroListByActiveworkbook(), exportComponent.getGlobalVariablesByActiveWorkbook());
         this.strategy = new ExportContext(exporterXML);
         exporterXML.selectRange(exportComponent.mapWithActiveCellsByWorkbook());
         return strategy.executeStrategy();
@@ -49,7 +49,7 @@ public class ExportXMLController {
      * @return true if exports spreadsheet, false otherwise.
      */
     public boolean exportSpreadsheet() {
-        ExportXML exporterXML = new ExportXML(selectedPath, tagsName.getMapWithTags(), exportComponent.getMacroListByActiveworkbook(), exportComponent.getGlobalVariablesByActiveWorkbook());
+        ExportXML exporterXML = new ExportXML(selectedPath, uiController.getTagsName().getMapWithTags(), exportComponent.getMacroListByActiveworkbook(), exportComponent.getGlobalVariablesByActiveWorkbook());
         this.strategy = new ExportContext(exporterXML);
         exporterXML.selectRange(exportComponent.mapWithActiveCellsBySpreadcheet());
         return strategy.executeStrategy();
@@ -61,7 +61,7 @@ public class ExportXMLController {
      * @return true if exported, false otherwise.
      */
     public boolean exportSelectedCell(Cell selectedCells[][]) {
-        ExportXML exporterXML = new ExportXML(selectedPath, tagsName.getMapWithTags(), exportComponent.getMacroListByActiveworkbook(), exportComponent.getGlobalVariablesByActiveWorkbook());
+        ExportXML exporterXML = new ExportXML(selectedPath, uiController.getTagsName().getMapWithTags(), exportComponent.getMacroListByActiveworkbook(), exportComponent.getGlobalVariablesByActiveWorkbook());
         this.strategy = new ExportContext(exporterXML);
         exporterXML.selectRange(exportComponent.mapWithActiveCell(selectedCells));
         return strategy.executeStrategy();
@@ -73,7 +73,7 @@ public class ExportXMLController {
      * @return true if exported, false otherwise.
      */
     public boolean exportSelectedColumn(int selectedColumn) {
-        ExportXML exporterXML = new ExportXML(selectedPath, tagsName.getMapWithTags(), exportComponent.getMacroListByActiveworkbook(), exportComponent.getGlobalVariablesByActiveWorkbook());
+        ExportXML exporterXML = new ExportXML(selectedPath, uiController.getTagsName().getMapWithTags(), exportComponent.getMacroListByActiveworkbook(), exportComponent.getGlobalVariablesByActiveWorkbook());
         this.strategy = new ExportContext(exporterXML);
         exporterXML.selectRange(exportComponent.mapWithActiveCellByColumn(selectedColumn));
         return strategy.executeStrategy();
@@ -85,7 +85,7 @@ public class ExportXMLController {
      * @return true if exports, false otherwise.
      */
     public boolean exportSelectedRow(int selectedRow) {
-        ExportXML exporterXML = new ExportXML(selectedPath, tagsName.getMapWithTags(), exportComponent.getMacroListByActiveworkbook(), exportComponent.getGlobalVariablesByActiveWorkbook());
+        ExportXML exporterXML = new ExportXML(selectedPath, uiController.getTagsName().getMapWithTags(), exportComponent.getMacroListByActiveworkbook(), exportComponent.getGlobalVariablesByActiveWorkbook());
         this.strategy = new ExportContext(exporterXML);
         exporterXML.selectRange(exportComponent.mapWithActiveCellByRow(selectedRow));
         return strategy.executeStrategy();

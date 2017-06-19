@@ -61,4 +61,12 @@ public class DatabaseOperationsTest {
     public void ensureTableNameCantContainSpacesOnly() throws Exception {
         DatabaseExportOperations op = new DatabaseExportOperations(connection, "  ");
     }
+    
+    /**
+     * Test for ensure that the table name can not contain only white spaces.
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void ensureTableNameCantContainNumbersOnly() throws Exception {
+        DatabaseExportOperations op = new DatabaseExportOperations(connection, "111");
+    }
 }
