@@ -1,5 +1,5 @@
 /**
- * <p>Technical documentation regarding the user story <b>Core10.1.3: Sharing's Automatic Update</b>.</p>
+ * <p>Technical documentation regarding the user story <b>Core10.1.3: Contacts with tags</b>.</p>
  *
  * <p><b>Scrum Master: No</b></p>
  * <p><b>Team Leader: Yes</b></p>

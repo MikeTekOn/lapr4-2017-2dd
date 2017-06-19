@@ -39,7 +39,7 @@
  *     {@link lapr4.blue.s1.lang.n1151452.formula.compiler.ExcelExpressionCompiler}<p>
  *     {@link lapr4.blue.s1.lang.n1151452.formula.compiler.FormulaEvalVisitor}<p>
  *     {@link lapr4.red.s2.lang.n1150623.globalVariables.VarContentor}<p>
- *<p
+ *<p>
  *  &nbsp;&nbsp;&nbsp;&nbsp;<i><u>Concept Classes:</u></i><p>
  *      A new version of the Macro grammar and compiler (MacroCompiler, MacroEvalVisitor)
  *
