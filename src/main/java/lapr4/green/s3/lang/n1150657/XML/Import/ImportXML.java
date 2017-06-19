@@ -428,7 +428,7 @@ public class ImportXML implements ImportStrategy {
 
         Color newColor = new Color(red, green, blue, alpha);
         return newColor;
-    }
+    }       
 
     private int append(Spreadsheet spread) {
         Address ad = new Address(0, 0);
