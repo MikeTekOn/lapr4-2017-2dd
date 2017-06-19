@@ -2,7 +2,7 @@
     participant "uic: UIController" as uic
     participant "uiExtension : UIExtensionImages" as UIExt
     participant "ImagesPanel : JPanel" as ip
-    participant "ImagesController" as ctrl
+    participant "InsertImageController" as ctrl
     participant "event: SelectionEvent" as event
     participant "cell: Cell" as cell
     participant "activeCell: ImageableCell" as activeCell
@@ -23,8 +23,8 @@
     ip -> cell : activeCell=getExtension(ImagesExtension.NAME)
 
     ip -> ctrl : cellSelected(cell);
-    ctrl -> activeCell : imagePath = cell.getUserImage()
-    ctrl -> ip : setImage(imagePath)
+    ctrl -> activeCell : imagesPaths = cell.getImages()
+    ctrl -> ip : cell.getImages()
 
     note right of ip
         ... the ImagesPanel displays the image(s) of the current cell.

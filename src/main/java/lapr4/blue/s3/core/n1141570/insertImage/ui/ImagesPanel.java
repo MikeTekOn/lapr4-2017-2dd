@@ -72,8 +72,25 @@ public class ImagesPanel extends JPanel implements SelectionListener,
      */
     private final Dimension BUTTON_SIZE = new Dimension(100, 30);
 
+    /**
+     * The remove image JButton.
+     */
     private JButton removeImageButton;
+
+    /**
+     * The open image JButton.
+     */
     private JButton openImageButton;
+
+    /**
+     * The next image JButton.
+     */
+    private JButton nextImageButton;
+
+    /**
+     * The previous image JButton.
+     */
+    private JButton previousImageButton;
 
     /**
      * Creates a new images panel.
@@ -199,7 +216,7 @@ public class ImagesPanel extends JPanel implements SelectionListener,
 
                 if (chooserResult == JFileChooser.APPROVE_OPTION) {
                     File file = fileChooser.getSelectedFile();
-                    boolean repetitiveImage = true;
+                    boolean repetitiveImage = false;
                     if (file != null) {
 
                         path = file.getAbsolutePath();
@@ -209,18 +226,25 @@ public class ImagesPanel extends JPanel implements SelectionListener,
 
                         for (String currentImage : imageableCell.getImages()) {
                             if (currentImage.equalsIgnoreCase(path)) {
-                                repetitiveImage = false;
+                                repetitiveImage = true;
                             }
                         }
 
-                        if (repetitiveImage) {
+                        if (!repetitiveImage) {
+                            //UPDATES the cell with new image
                             imageableCell.setImageToImages(path);
                             removeImageButton.setEnabled(true);
                             openImageButton.setEnabled(true);
+
+                            if (imageableCell.getImages().size() > 1) {
+                                nextImageButton.setEnabled(true);
+                                previousImageButton.setEnabled(true);
+                            }
+
                         }
                         imagePath = path;
 
-                        if (!repetitiveImage) {
+                        if (repetitiveImage) {
                             JOptionPane.showMessageDialog(fileChooser, "Cannot add the same image!", "Error", JOptionPane.ERROR_MESSAGE);
                         }
 
@@ -276,6 +300,10 @@ public class ImagesPanel extends JPanel implements SelectionListener,
                     if (cell.getImages().isEmpty()) {
                         removeImageButton.setEnabled(false);
                         openImageButton.setEnabled(false);
+                        if (cell.getImages().size() < 2) {
+                            nextImageButton.setEnabled(false);
+                            previousImageButton.setEnabled(false);
+                        }
                     }
                 } else {
                     JOptionPane.showMessageDialog(cardLayoutPanel, "Removing the current image failed.", "Removed failed", JOptionPane.ERROR_MESSAGE);
@@ -327,7 +355,7 @@ public class ImagesPanel extends JPanel implements SelectionListener,
                 imageLabel.setName(imgStr);
 
                 dialog.add(imageLabel);
-                dialog.setLocationRelativeTo(cardLayoutPanel);
+                dialog.setLocationRelativeTo(getRootPane());
                 dialog.pack();
                 dialog.setVisible(true);
 
@@ -342,8 +370,19 @@ public class ImagesPanel extends JPanel implements SelectionListener,
      * @return the next button
      */
     private JButton nextImageButton() {
-        JButton nextImageButton = new JButton("Next");
+
+        nextImageButton = new JButton("Next");
         nextImageButton.setPreferredSize(BUTTON_SIZE);
+
+        if (cell == null) {
+            nextImageButton.setEnabled(false);
+        }
+        if (cell != null) {
+            if (cell.getImages().size() < 2) {
+                nextImageButton.setEnabled(false);
+            }
+        }
+
         nextImageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -360,8 +399,19 @@ public class ImagesPanel extends JPanel implements SelectionListener,
      * @return the previous button
      */
     private JButton previousImageButton() {
-        JButton previousImageButton = new JButton("Previous");
+
+        previousImageButton = new JButton("Previous");
         previousImageButton.setPreferredSize(BUTTON_SIZE);
+
+        if (cell == null) {
+            previousImageButton.setEnabled(false);
+        }
+        if (cell != null) {
+            if (cell.getImages().size() < 2) {
+                previousImageButton.setEnabled(false);
+            }
+        }
+
         previousImageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -402,6 +452,15 @@ public class ImagesPanel extends JPanel implements SelectionListener,
         if (event.getPreviousCell() != null) {
             ((ImageableCell) event.getPreviousCell().getExtension(ImagesExtension.NAME))
                     .removeImageableCellListener(this);
+        }
+
+        if (this.cell.getImages().size() > 1) {
+            nextImageButton.setEnabled(true);
+            previousImageButton.setEnabled(true);
+        }
+        if (this.cell != null && !this.cell.getImages().isEmpty()) {
+            openImageButton.setEnabled(true);
+            removeImageButton.setEnabled(true);
         }
     }
 

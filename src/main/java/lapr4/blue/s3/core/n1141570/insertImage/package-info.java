@@ -58,7 +58,7 @@
  * implement the Cell interface. If we open the {@link csheets.core.Cell} code
  * we see that the interface is defined as:
  * <code>public interface Cell extends Comparable &lt;Cell&gt;, Extensible&lt;Cell&gt;, Serializable</code>.
- * Because of the <code>Extensible</code> it seams that a cell can be extended.
+ * Because of the <code>Extensible</code> it seems that a cell can be extended.
  * If we further investigate the hierarchy of {@link csheets.core.Cell} we see
  * that it has a subclass {@link csheets.ext.CellExtension} which has a subclass
  * {@link csheets.ext.style.StylableCell}.
@@ -107,7 +107,7 @@
  * delegate to <code>CellImpl</code> all the method invocations regarding
  * methods of the <code>Cell</code> interface. Obviously, methods specific to
  * <code>StylableCell</code> must be implemented by it. Therefore, to implement
- * a cell that can have images associates we need to implement a class similar
+ * a cell that can have images associated we need to implement a class similar
  * to <code>StylableCell</code>, the <code>ImageableCell</code> for instance.
  *
  * <h2>4. Design</h2>
@@ -187,7 +187,7 @@
  * <p>
  * <b>Sunday 18/06/2017</b>
  * <p>
- * Finishes implementation and updates documentation.
+ * Finished implementation and updates documentation.
  * <p>
  *
  * @author Eric Amaral 1141570@isep.ipp.pt
