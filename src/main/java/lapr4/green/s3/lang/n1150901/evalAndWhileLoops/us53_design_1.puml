@@ -4,12 +4,14 @@
     participant "CellImpl" as cell
     participant "Formula" as f
     participant "FunctionCall" as fc
+    participant "NaryOperation" as nary
     participant "Eval" as eval
     
     user -> cell : Enters 'eval' function in a cell
     activate cell
-        cell -> cell : setContent(string)
-        cell -> cell : storeContent(string)
+        cell -> cell : setContent(content)
+        cell -> cell : storeContent(content)
+        cell -> cell : checkContent(contentToCheck)
         cell -> cell : formula = FormulaCompiler.getInstance().compile(this, content, uiController)
         cell -> f : formula.evaluate()
 
@@ -17,11 +19,17 @@
             f -> fc : expression.evaluate()
 
             activate fc
-                fc -> eval : applyTo(args)
+                fc -> nary : operator.applyTo(operands)
 
-                activate eval
-                    fc <-- eval : return newValue
-                deactivate eval
+                    activate nary
+                        nary -> eval : applyTo(operands)
+
+                                activate eval
+                                    nary <-- eval : return newValue
+                                deactivate eval
+
+                        fc <-- nary : return newValue
+                    deactivate nary
 
                 f <-- fc : return newValue
             deactivate fc

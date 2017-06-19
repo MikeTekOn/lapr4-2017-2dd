@@ -7,7 +7,7 @@ import lapr4.blue.s1.lang.n1151159.macros.ui.UIMacroExtension;
 
 /**
  * Represents an extension to run macros. The macros syntax uses the first
- * version of CleanSheet formulas defined at "Macro.g4".
+ * version of CleanSheet formulas defined at "Macro2.g4".
  *
  * @author Ivo Ferro
  */
@@ -22,7 +22,7 @@ public class MacroExtension extends Extension {
      * The description of the extension
      */
     public static final String DESCRIPTION = "Represents an extension to run macros.\n"
-            + "The macros syntax uses the first version of CleanSheet formulas defined at \"Macro.g4\".";
+            + "The macros syntax uses the first version of CleanSheet formulas defined at \"Macro2.g4\".";
     
     /**
      * The first version of the macro extension.
