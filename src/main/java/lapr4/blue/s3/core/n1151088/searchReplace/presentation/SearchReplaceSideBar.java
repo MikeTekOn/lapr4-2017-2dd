@@ -43,10 +43,10 @@ import lapr4.green.s2.core.n1150838.GlobalSearch.util.GlobalSearchPublisher;
  * @author Diana Silva [1151088@isep.ipp.pt] update
  * @author Nuno Pinto 1150838
  */
-
 public class SearchReplaceSideBar extends JPanel implements Observer {
 
     private JTextField searchField, replaceField ,toField, commExp, commTo;
+    private JTextArea textArea;
     private JLabel previewLabel;
     private UIController extension;
     private SearchReplaceController ctrl;
@@ -54,7 +54,6 @@ public class SearchReplaceSideBar extends JPanel implements Observer {
     private CellList model;
     private PreviewerList modelReplace;
     private ConfigPane paneFilters;
-    private JTextArea textArea;
  
     public SearchReplaceSideBar(UIController extension) {
         GlobalSearchPublisher.getInstance().addObserver(this);
@@ -193,9 +192,8 @@ public class SearchReplaceSideBar extends JPanel implements Observer {
                 JList list = (JList) evt.getSource();
                 int index = list.locationToIndex(evt.getPoint());
                 if (evt.getClickCount() == 1 && index >= 0) {
-                    textArea.setText("Comments:");
                     PreviewCellDTO prev=(PreviewCellDTO) replaceList.getSelectedValue();
-                    ArrayList<String> array=prev.commentPreview(searchField.getText());
+                     ArrayList<String> array=prev.commentPreview(searchField.getText());
                     for(String comment: array){
                            textArea.append("\n");
                            textArea.append(comment);
@@ -206,15 +204,151 @@ public class SearchReplaceSideBar extends JPanel implements Observer {
         }); 
         JScrollPane scroll = new JScrollPane(replaceList);
         scroll.setPreferredSize(new Dimension(50, 50));
-        
         p.add(scroll, BorderLayout.CENTER);
         p.add(createReplaceButtons(), BorderLayout.SOUTH);
         
-        panel.add(p, BorderLayout.CENTER);
-        panel.add(replaceCommentPanel(), BorderLayout.EAST);
+        
+        panel.add(p, BorderLayout.WEST);
+        panel.add(createCommPanel(), BorderLayout.CENTER);
         return panel;
     }
     
+    private JPanel createCommPanel(){
+        JPanel p=new JPanel();
+        p.setLayout(new BorderLayout());
+        buildBorder("Comments", p);
+        
+        textArea=new JTextArea();
+       // textArea.setEditable(false);
+        textArea.setText("Comments: ");
+        p.add(textArea, BorderLayout.CENTER);
+        
+         JPanel pFields=new JPanel();
+        pFields.setLayout(new BorderLayout());
+        JPanel panelComm=new JPanel();
+        JPanel replacePanel=new JPanel();
+        replacePanel.setLayout(new GridLayout(2,1));
+ 
+        
+        JPanel pReplace=new JPanel();
+        
+        BoxLayout box = new BoxLayout(pReplace, BoxLayout.X_AXIS);
+        pReplace.setLayout(box);;
+        
+        commExp=new JTextField();
+        commExp.setPreferredSize(new Dimension(100,5));
+       
+        JLabel jlabel=new JLabel("Replace");
+        
+        pReplace.add(jlabel);
+        pReplace.add(commExp); 
+        
+        
+         JPanel pTo=new JPanel();
+        
+        BoxLayout box2 = new BoxLayout(pTo, BoxLayout.X_AXIS);
+        pTo.setLayout(box2);;
+        
+        commTo=new JTextField();
+        commTo.setPreferredSize(new Dimension(100,5));
+       
+        JLabel jlabel2=new JLabel("To");
+        
+        pTo.add(jlabel2);
+        pTo.add(commTo); 
+        
+     
+        replacePanel.add(pReplace);
+        replacePanel.add(pTo);
+        
+        JPanel button =new JPanel();
+        button.add(createButtonReplaceComm());
+        
+        panelComm.add(replacePanel,BorderLayout.NORTH);
+        panelComm.add(button,BorderLayout.SOUTH);
+        
+        pFields.add(panelComm, BorderLayout.CENTER);
+      
+        p.add(pFields, BorderLayout.NORTH);
+        return p;
+    }
+
+    private JButton createButtonReplaceComm(){
+        JButton btReplace=new JButton("Update");
+        
+        btReplace.addActionListener((new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ctrl.stopReplaceThread();
+              
+                 PreviewCellDTO prev= (PreviewCellDTO) replaceList.getSelectedValue();
+
+               if(replaceField.getText().length()>0 && toField.getText().length()>0){              
+                    try {
+                          
+                        if(replaceList.getSelectedIndex()>=0){
+                            
+                           modelReplace.setSelectedItem(prev.getBeforeCell().toString());
+
+                          
+                            PreviewCellDTO selected=(PreviewCellDTO)  modelReplace.getSelectedItem();
+
+                            if (ctrl.checkIfPreviewValid(selected.getBeforeCell(),
+                                    replaceField.getText(), toField.getText(), extension)!=null ){
+
+                                ctrl.startPreviewThread(selected.getBeforeCell(),
+                                        replaceField.getText(),toField.getText());
+
+                                try {
+                                  
+                                   modelReplace.setSelectedItem(prev.getBeforeCell().toString());
+                                    extension.setActiveCell(modelReplace.getSelectedItem().getBeforeCell());
+
+                                    ctrl.startReplaceThread(selected.getBeforeCell(), commExp.getText(),
+                                            commTo.getText(),extension);
+                                   
+                                    prev.getAfterCell().setContent(prev.getBeforeCell().getContent());
+                                    
+
+                                  //  selected.getBeforeCell().setContent(selected.getAfterCell().getContent());
+                                    updateUI();
+
+                                } catch (CloneNotSupportedException ex) {
+                                    JOptionPane.showMessageDialog(null,
+                                            "It wasn´t possible to replace.",
+                                            "Replace error",
+                                            JOptionPane.ERROR_MESSAGE);
+//                                        } catch (FormulaCompilationException ex ) {
+//                                            JOptionPane.showMessageDialog(null,
+//                                                    "It wasn´t possible to replace.",
+//                                                    "Formula compilation error",
+//                                                    JOptionPane.ERROR_MESSAGE);
+                                } catch (FormulaCompilationException ex) {
+                                   Logger.getLogger(SearchReplaceSideBar.class.getName()).log(Level.SEVERE, null, ex);
+                               }
+
+                            } else {
+                                JOptionPane.showMessageDialog(null,
+                                        "The inserted expression to replace is not valid. Verify if cell contains expression to replace",
+                                        "Invalid replace text",
+                                        JOptionPane.ERROR_MESSAGE);
+                            }
+
+                        }
+                    } catch (CloneNotSupportedException ex) {
+                        Logger.getLogger(SearchReplaceSideBar.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+  
+                } 
+              
+            }
+                
+        }));
+        return btReplace;
+    
+    }
+    
+ 
     private JPanel createReplaceButtons(){
         JPanel p=new JPanel();
         p.setLayout(new GridLayout(1,3));
@@ -393,9 +527,8 @@ public class SearchReplaceSideBar extends JPanel implements Observer {
         p.add(replacePanel,BorderLayout.NORTH);
         p.add(button,BorderLayout.SOUTH);
         
-        upper.add(p, BorderLayout.CENTER);
-        upper.add(previewPanel(), BorderLayout.WEST);
-    
+        upper.add(p, BorderLayout.WEST);
+        upper.add(previewPanel(), BorderLayout.EAST );
         
         return upper;
     }
@@ -483,7 +616,7 @@ public class SearchReplaceSideBar extends JPanel implements Observer {
         }));
         return b;
     }
-    
+
      /**
      *
      * @return the button to add filters
@@ -509,16 +642,17 @@ public class SearchReplaceSideBar extends JPanel implements Observer {
                                     replaceField.getText(), toField.getText(), extension)!=null ){
 
                                     ctrl.startPreviewThread(selected.getBeforeCell(),
-                                    replaceField.getText(),toField.getText());
+                                            replaceField.getText(),toField.getText());
                                     
-                                     ArrayList<String> array=prev.commentPreview(searchField.getText());
-                                    for(String comment: array){
-                                           textArea.append("\n");
-                                           textArea.append(comment);
-                                           textArea.updateUI();
+                                    ArrayList<String> array=prev.commentPreview(searchField.getText());
+                                    for(String comment:array){
+                                        textArea.append("\n");
+                                        textArea.append(comment);
+                                        textArea.updateUI();
                                     }
-                                    
-                                    
+                                
+                                
+                                
                                 } else {
                                     JOptionPane.showMessageDialog(null,
                                             "The inserted expression to replace is not valid. Verify if cell contains expression to replace",
@@ -549,131 +683,6 @@ public class SearchReplaceSideBar extends JPanel implements Observer {
         }
     }));
     return btPreview;
-    }
-    
-    private JPanel replaceCommentPanel(){
-        JPanel upper=new JPanel();
-        buildBorder("Comments", upper);
-        upper.setLayout(new BorderLayout());
-        JPanel p=new JPanel();
-        JPanel replacePanel=new JPanel();
-        replacePanel.setLayout(new GridLayout(2,1));
-           textArea=new JTextArea();
-       // textArea.setEditable(false);
-        textArea.setText("Comments: ");
-        
-  
-        JPanel pReplace=new JPanel();
-        
-        BoxLayout box = new BoxLayout(pReplace, BoxLayout.X_AXIS);
-        pReplace.setLayout(box);;
-        
-        commExp=new JTextField();
-        commExp.setPreferredSize(new Dimension(100,5));
-       
-        JLabel jlabel=new JLabel("Replace");
-        
-        pReplace.add(jlabel);
-        pReplace.add(commExp); 
-        
-        
-         JPanel pTo=new JPanel();
-        
-        BoxLayout box2 = new BoxLayout(pTo, BoxLayout.X_AXIS);
-        pTo.setLayout(box2);;
-        
-        commTo=new JTextField();
-        commTo.setPreferredSize(new Dimension(100,5));
-       
-        JLabel jlabel2=new JLabel("To");
-        
-        pTo.add(jlabel2);
-        pTo.add(commTo); 
-        
-        replacePanel.add(pReplace);
-        replacePanel.add(pTo);
-        
-        JPanel button =new JPanel();
-        button.add(createCommButton());
-        
-        p.add(replacePanel,BorderLayout.NORTH);
-        p.add(button,BorderLayout.SOUTH);
-        
-        upper.add(p, BorderLayout.EAST);
-        upper.add(previewPanel(), BorderLayout.WEST );
-        
-        return upper;
-    }
-    
-    private JButton createCommButton(){
-        JButton btReplace= new JButton("Replace");
-        //b.setPreferredSize(new Dimension(10,10));
-        btReplace.addActionListener((new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                ctrl.stopReplaceThread();
-                 PreviewCellDTO prev= (PreviewCellDTO) replaceList.getSelectedValue();
-
-              if(replaceField.getText().length()>0 && toField.getText().length()>0){              
-                    try {
-                          
-                        if(replaceList.getSelectedIndex()>=0){
-                            
-                           modelReplace.setSelectedItem(prev.getBeforeCell().toString());
-
-                            PreviewCellDTO selected=(PreviewCellDTO)  modelReplace.getSelectedItem();
-
-                          
-                                ctrl.startPreviewThread(selected.getBeforeCell(),
-                                        replaceField.getText(),toField.getText());
-
-                                try {
-                                   ctrl.stopReplaceThread();
-
-                                    extension.setActiveCell(modelReplace.getSelectedItem().getBeforeCell());
-
-                                    ctrl.startReplaceThread(selected.getBeforeCell(), replaceField.getText(),
-                                            toField.getText(),extension);
-                                  //  selected.getBeforeCell().setContent(selected.getAfterCell().getContent());
-                                    updateUI();
-
-                                } catch (CloneNotSupportedException ex) {
-                                    JOptionPane.showMessageDialog(null,
-                                            "It wasn´t possible to replace.",
-                                            "Replace error",
-                                            JOptionPane.ERROR_MESSAGE);
-//                                        } catch (FormulaCompilationException ex ) {
-//                                            JOptionPane.showMessageDialog(null,
-//                                                    "It wasn´t possible to replace.",
-//                                                    "Formula compilation error",
-//                                                    JOptionPane.ERROR_MESSAGE);
-                                }
-
-                            } else {
-                                JOptionPane.showMessageDialog(null,
-                                        "The inserted expression to replace is not valid. Verify if cell contains expression to replace",
-                                        "Invalid replace text",
-                                        JOptionPane.ERROR_MESSAGE);
-                            }
-
-                        } catch (CloneNotSupportedException ex) {
-                        Logger.getLogger(SearchReplaceSideBar.class.getName()).log(Level.SEVERE, null, ex);
-                    
-                    
-                    }
-
-                    }else{
-                         JOptionPane.showMessageDialog(null,
-                                    "Please fill the replace and expression to replace.",
-                                    "Invalid fieds",
-                                    JOptionPane.ERROR_MESSAGE);
-                    }   
-                } 
-              
-            
-                
-        }));
-        return btReplace;
     }
 
     @Override

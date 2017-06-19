@@ -59,11 +59,10 @@ public class PreviewCellDTO implements DTO {
       
         String replacedContent=replaceContent();
         String replaced="";
-        validateReplace(replacedContent);
-
+       
         ArrayList<String> found=new ArrayList<>();
-        if(((CommentableCellWithMultipleUsers)beforeCell.getExtension(CommentsExtension.NAME)).hasComments()){
-            for (List<String> comments : ((CommentableCellWithMultipleUsers) beforeCell.getExtension(CommentsExtension.NAME)).comments().values()) {
+        if((commentPreview(insertedExp).size()>0)){
+            for (List<String> comments : ((CommentableCellWithMultipleUsers) afterCell.getExtension(CommentsExtension.NAME)).comments().values()) {
                for (String comment : comments) {
                    if(comment.contains(this.insertedExp))
                       replaced=comment.replace(insertedExp,to);
@@ -71,6 +70,9 @@ public class PreviewCellDTO implements DTO {
                    }
                }
            }
+        else{
+             validateReplace(replacedContent);
+        }
         
     }
     
