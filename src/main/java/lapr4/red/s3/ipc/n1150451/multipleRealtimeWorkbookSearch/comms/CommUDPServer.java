@@ -59,9 +59,9 @@ public class CommUDPServer extends Thread {
     private TrafficInputStream in = null;
 
     /**
-     * The port number in which to send the broadcast.
+     * The port number in which to receive the broadcast.
      */
-    private final int portNumber = 15310;
+    private static int portNumber = 15309;
 
     /**
      * The handlers of the client.
@@ -104,7 +104,7 @@ public class CommUDPServer extends Thread {
     @Override
     public void run() {
         try {
-            sock = new DatagramSocket(15310, null);
+            sock = new DatagramSocket(++portNumber, null);
             sock.setBroadcast(true);
             byte[] data;
             DatagramPacket udpPacket;
@@ -114,9 +114,7 @@ public class CommUDPServer extends Thread {
                 udpPacket = new DatagramPacket(data1, data1.length);
                 udpPacket.setData(data1);
                 udpPacket.setLength(data1.length);
-                System.out.println("Estou no receive esperando...");
                 sock.receive(udpPacket);
-                System.out.println("recebi coisas");
                 data=udpPacket.getData();
                 bis = new ByteArrayInputStream(data);
                 in = new TrafficInputStream(bis, udpPacket.getAddress(), 15310, new OpenTransmission());

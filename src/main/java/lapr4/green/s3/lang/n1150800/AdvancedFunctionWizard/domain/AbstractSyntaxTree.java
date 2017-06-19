@@ -5,6 +5,7 @@
  */
 package lapr4.green.s3.lang.n1150800.AdvancedFunctionWizard.domain;
 
+import lapr4.green.s3.lang.n1150800.AdvancedFunctionWizard.AbstractSyntaxTreeSelectionModel;
 import java.awt.Color;
 import java.util.ArrayList;
 import javax.swing.Icon;
@@ -178,7 +179,7 @@ public class AbstractSyntaxTree {
      * @param c - the character to be found and counted
      * @return the number of occurrences the character is found
      */
-    private int occurrencesOfACharInAString(String string, char c) {
+    protected int occurrencesOfACharInAString(String string, char c) {
         int counter = 0;
         for (int i = 0; i < string.length(); i++) {
             if (string.charAt(i) == c) {
@@ -207,9 +208,9 @@ public class AbstractSyntaxTree {
      * Manages all the leaf nodes from a tree through a Depth-First Search (DFS)
      * recursive algorithm
      *
-     * @param tree - the tree
+     * @param node - the tree root
      */
-    private void manageLeafNodes(DefaultMutableTreeNode node) {
+    protected void manageLeafNodes(DefaultMutableTreeNode node) {
         int childCount = node.getChildCount();
 
         for (int i = 0; i < childCount; i++) {
@@ -245,6 +246,22 @@ public class AbstractSyntaxTree {
     public String selectedNodeInfo() {
         return selectedNodeInfo;
     }
+    
+    /**
+     * Sets the selected node information
+     * @param nodeInfo the node information to set
+     */
+    protected void setSelectedNodeInfo(String nodeInfo) {
+        selectedNodeInfo = nodeInfo;
+    }
+    
+    /**
+     * Provides the leaf nodes from the syntax tree
+     * @return the leaf nodes from the syntax tree
+     */
+    protected ArrayList<DefaultMutableTreeNode> leafNodes() {
+        return leafNodes;
+    }
 
     /**
      * Updates the edit box, highlighting the token selected from the syntax
@@ -272,7 +289,7 @@ public class AbstractSyntaxTree {
      * @param occurrence - number of occurrences of the token before the current
      * token
      */
-    private void boxPositionToHighlight(int occurrence) {
+    protected void boxPositionToHighlight(int occurrence) {
         int lastOccurrence, lastOccurrenceStart = -1;
 
         for (int i = 0; i < occurrence; i++) {
@@ -282,5 +299,21 @@ public class AbstractSyntaxTree {
 
         highlightStart = editBox.getText().indexOf(selectedNodeInfo, lastOccurrenceStart + 1);
         highlightEnd = highlightStart + selectedNodeInfo.length() - 1;
+    }
+    
+    /**
+     * Provides the highlight starting position
+     * @return the highlight starting position
+     */
+    protected int highlightStart() {
+        return highlightStart;
+    }
+    
+    /**
+     * Provides the highlight ending position
+     * @return the highlight ending position
+     */
+    protected int highlightEnd() {
+        return highlightEnd;
     }
 }

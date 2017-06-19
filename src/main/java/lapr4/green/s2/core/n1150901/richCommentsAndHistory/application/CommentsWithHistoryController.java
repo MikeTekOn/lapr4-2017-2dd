@@ -93,4 +93,8 @@ public class CommentsWithHistoryController extends AddCommentsWithUserController
         map.put(2, history);
         return map;
     }
+    
+    public CommentableCellWithMultipleUsers activeCell(){
+        return cell;
+    }
 }

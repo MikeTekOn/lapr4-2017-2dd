@@ -27,6 +27,7 @@ import csheets.core.formula.lang.ReferenceOperation;
 import lapr4.blue.s1.lang.n1151088.temporaryVariables.Variable;
 import lapr4.blue.s1.lang.n1151159.macros.Macro;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperation;
+import lapr4.green.s3.lang.n1150738.macros.ParameterReference;
 import lapr4.red.s2.lang.n1150690.formula.MonetaryValue;
 
 /**
@@ -134,6 +135,11 @@ public class ExpressionBuilder implements ExpressionVisitor {
     @Override
     public Object visitMonetaryValue(MonetaryValue money) {
         return new MonetaryValue(money.getValue());
+    }
+
+    @Override
+    public Object visitParameterReference(ParameterReference parameterReference) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

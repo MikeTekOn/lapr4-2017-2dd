@@ -266,6 +266,10 @@ public class CommentsWithUserUI extends JPanel implements SelectionListener, Com
 
         updateList();
     }
+    
+    public CommentsWithHistoryController controller(){
+        return controller;
+    }
 
     /**
      * Updates the comments list when the comments of the active cell are
@@ -283,7 +287,7 @@ public class CommentsWithUserUI extends JPanel implements SelectionListener, Com
      */
     private void updateList() {
         model.removeAllElements();
-        Map<User, List<String>> comments = controller.comments();
+        Map<User, List<String>> comments = controller.activeCell().comments();
         for (Map.Entry<User, List<String>> entry : comments.entrySet()) {
             for (String com : entry.getValue()) {
                 model.addElement(entry.getKey().name() + ": " + com);

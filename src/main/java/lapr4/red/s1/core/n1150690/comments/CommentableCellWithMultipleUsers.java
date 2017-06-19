@@ -14,13 +14,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lapr4.red.s1.core.n1150690.comments.domain.User;
+import lapr4.white.s1.core.n1234567.comments.CommentableCellListener;
 
 /**
  * An extension of a cell in a spreadsheet, with support for comments and their
  * authors.
  *
- * @author Sofia Silva [1150690@isep.ipp.pt]
- * EDIT:
+ * @author Sofia Silva [1150690@isep.ipp.pt] EDIT:
  * @author Miguel Silva (1150901) Sprint 2 - I've edited this class to allow to
  * update the history of comments.
  */
@@ -50,36 +50,39 @@ public class CommentableCellWithMultipleUsers extends CommentableCell {
         /* THIS IS A CHANGE I MADE */
         history = new HashMap<>();
         /*-------------------------*/
+        addCellListener(this);
     }
 
     /**
      * Adds a new comment to the list.
      *
      * @param comment the comment to add
-     * @param user the author of the comment
+     * @param user the author of the commentSystem.out.println
      */
     public void addUsersComment(String comment, User user) {
         if (Strings.isNullOrEmpty(comment) || Strings.isNullOrWhiteSpace(comment)) {
             throw new IllegalArgumentException("The comment should not be empty!");
         }
         //changes the user comment calling the method in the parent class
-        super.setUserComment(comment);
+        //super.setUserComment(comment);
 
         for (Map.Entry<User, List<String>> entry : comments.entrySet()) {
             if (entry.getKey().name().equals(user.name())) {
-                entry.getValue().add(super.getUserComment());
+                entry.getValue().add(comment);
+                fireCommentsChanged();
                 return;
             }
         }
 
         //if the user does not exists, it puts a new field on the list
         List<String> newList = new ArrayList<>();
-        newList.add(super.getUserComment());
+        newList.add(comment);
         comments.put(user, newList);
+        fireCommentsChanged();
         /* THIS IS A CHANGE I MADE */
         List<String> newList2 = new ArrayList<>();
         Map<String, List<String>> map = new HashMap<>();
-        map.put(super.getUserComment(), newList2);
+        map.put(comment, newList2);
         history.put(user, map);
         /*-------------------------*/
     }
@@ -154,6 +157,7 @@ public class CommentableCellWithMultipleUsers extends CommentableCell {
     public boolean hasHistory() {
         return !this.history.isEmpty();
     }
+
     /*-------------------------*/
 
 }

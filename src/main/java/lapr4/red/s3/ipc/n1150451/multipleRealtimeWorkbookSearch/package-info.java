@@ -99,6 +99,10 @@
  * "find workbooks" functionality, have a thread listening to those packets. In
  * order to improve performance, each thread should check if the file data
  * received in the packet is in the JList. If not, the packet is ignored.
+ * <p>
+ * Since it was not possible to extends the previously made ui, change were made
+ * in order to support the inovcation of the CommServer thread, in the Action
+ * Listener of the "Search Button".
  *
  * <h2>6. Integration/Demonstration</h2>
  *

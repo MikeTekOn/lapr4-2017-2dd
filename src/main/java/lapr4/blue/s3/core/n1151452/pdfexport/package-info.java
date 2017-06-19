@@ -9,6 +9,7 @@
  * <p><ol>
  * <li><b>I analysed the related FIs to elaborate an integrated solution if possible.</b>
  * <li><b>Explored the <a href="http://itextsupport.com/apidocs/itext5/latest/">itext5 PDF API</a> capabilities.</b>
+ * <li><b>The images where not implemented in time to include in this FI.</b></li>
  * </ol>
  * <p>
  * <p>
@@ -170,9 +171,19 @@
  * <p>
  * <h2>6. Integration/Demonstration</h2>
  * <p>
+ * I tried, when possible, to integrate with the already in place solution. The itext5 PDF framework has a limitation with the column width
+ * that I couldn't surpass. More concretely, it is not possible to split a table by columns only rows, with this all columns must fit in the desired
+ * page size.
+ * All FI requirements are functional.
  * <p>
  * <h2>7. Final Remarks</h2>
  * <p>
+ * As described above, the only negative aspect of the API was the column width limitation. But all requirements where complete, with some extras
+ * a table of contents with page numbers and links to the respective page, pdf bookmarks, include spreadsheet styles (column width &amp; row heights), etc.
+ * <p>
+ * To improve this FI, we would maybe take a look at more powerful API, like PDFBOX from Apache Commons and better positioning pf PDF blocks.
+ * <p>
+ * Feature Suggestions, A preview panel and more detailed options.
  * <p>
  * <br>
  * <h2>8. Work Log</h2>
@@ -253,6 +264,23 @@
  * <li>Finish domain class setup</li>
  * <li>Complete design</li>
  * <li>Start application layer implementation</li>
+ * </ol><p>
+ * Blocking:
+ * <p>
+ * -nothing-
+ * <p>
+ * <b>Sunday [18/06/2017]</b><p>
+ * I worked on:<p>
+ * Yesterday
+ * <p><ol>
+ * <li>Finish domain class setup</li>
+ * <li>Complete design</li>
+ * <li>Start application layer implementation</li>
+ * </ol><p>
+ * Today
+ * <p><ol>
+ * <li>Finished Implementation</li>
+ * <li>Code Review</li>
  * </ol><p>
  * Blocking:
  * <p>
