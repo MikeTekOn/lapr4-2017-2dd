@@ -5,7 +5,6 @@
  */
 package lapr4.green.s3.lang.n1150800.AdvancedFunctionWizard.domain;
 
-import csheets.core.formula.compiler.FormulaCompilationException;
 import java.util.ArrayList;
 import javax.swing.JTextField;
 import javax.swing.JTree;
