@@ -6,6 +6,7 @@
 package lapr4.green.s1.ipc.n1150901.search.workbook;
 
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Observable;
 
 import lapr4.blue.s2.ipc.n1151452.netanalyzer.domain.TrafficOutputStream;
@@ -15,7 +16,7 @@ import lapr4.green.s1.ipc.n1150532.comm.CommHandler;
  *
  * @author Miguel Silva - 1150901
  */
-public class HandlerResponseWorkbookDTO extends Observable implements CommHandler {
+public class HandlerResponseWorkbookDTO extends Observable implements CommHandler, Serializable {
 
     /**
      * The last DTO received.

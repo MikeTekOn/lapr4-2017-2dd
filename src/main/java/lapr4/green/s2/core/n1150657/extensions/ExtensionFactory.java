@@ -24,6 +24,7 @@ import lapr4.green.s2.core.n1150838.GlobalSearch.GlobalSearchExtension;
 import lapr4.green.s2.core.n1150901.richCommentsAndHistory.domain.CommentsWithHistoryExtension;
 import lapr4.green.s3.lang.n1150532.variables.globalVariablesExtension.GlobalVariablesExtension;
 import lapr4.red.s1.core.n1150613.workbookSearch.SearchExtension;
+import lapr4.red.s3.ipc.n1151094.networkExplorer.NetworkExplorerExtension;
 import lapr4.red.s3.ipc.n1150613.NetworkSearchByFile.NetworkSearchExtension;
 import lapr4.white.s1.core.n1234567.comments.CommentsExtension;
 import lapr4.white.s1.core.n4567890.contacts.ContactsExtension;
@@ -133,6 +134,11 @@ public class ExtensionFactory {
             if (criteria2 == version1) {
                 return new NetAnalyzerExtension();
             }
+
+        } else if (criteria1.equals(NetworkExplorerExtension.NAME)) {
+
+            return new NetworkExplorerExtension();
+
         } else if (criteria1.equals(GlobalVariablesExtension.NAME)) {
             if (criteria2 == version1) {
                 return new GlobalVariablesExtension();
@@ -141,6 +147,7 @@ public class ExtensionFactory {
             if (criteria2 == version1) {
                 return new NetworkSearchExtension();//
             }
+
         }
 
         throw new IllegalArgumentException(EX_MESSAGE);

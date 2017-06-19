@@ -7,6 +7,7 @@ package lapr4.green.s2.core.n1150657.extensions;
 
 import csheets.ext.Extension;
 import csheets.ext.ExtensionManager;
+
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -21,12 +22,14 @@ public class ExtensionLoadController {
     /**
      * The extension manager.
      */
-    private ExtensionManager extensionInstance = ExtensionManager.getInstance();;
+    private ExtensionManager extensionInstance = ExtensionManager.getInstance();
+    ;
 
     /**
      * The properties.
      */
-    private Properties properties  = ExtensionManager.getInstance().getProperties();;
+    private Properties properties = ExtensionManager.getInstance().getProperties();
+    ;
 
     /**
      * The extension option.

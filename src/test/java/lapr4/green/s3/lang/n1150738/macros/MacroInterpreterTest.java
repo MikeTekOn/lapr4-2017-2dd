@@ -82,7 +82,7 @@ public class MacroInterpreterTest {
         String macro2 = MACRO_SIMPLE_HEADER+"1+2";
         MacroWithParameters m2 = Macro2Compiler.getInstance().compile(sheet, null, macro2);
         Value result2 = (Value) m2.accept(new MacroInterpreter(m2, MACRO_SIMPLE_PARAMETER_LIST));
-        assertEquals(Value.parseNumericValue("3.0").toString(), result2.toString());
+       // assertEquals(Value.parseNumericValue("3.0").toString(), result2.toString());
     }
 */
     @Test
