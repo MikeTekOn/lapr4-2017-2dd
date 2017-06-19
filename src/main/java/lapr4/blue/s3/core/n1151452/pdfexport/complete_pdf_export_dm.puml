@@ -14,6 +14,11 @@ class PdfExportableCell <<ValueObject>> {
     ~ ~~exportImages() : List<Image>~~
 }
 
+note left
+export images if FI
+ready in time
+end note
+
 class PdfExportableComment <<ValueObject>> {
     - commentableCell : CommentableCell
     /' **** Behaviour **** '/
@@ -51,16 +56,11 @@ interface ExportStrategy <<Strategy>> {
 }
 
 class PdfExport <<Entity>> {
-    - exportableWorkbook : PdfExportableWorkbook
+    - options
+    .. more ..
 }
 
 /' *** PURE FABRICATION *** '/
-
-class PdfExportableCellFactory <<Factory>> {
-    - widths : int[]
-    - heights : int[]
-    build() : PdfExportableCell
-}
 
 class PDFOptionsDTO <<DTO>> {
     pdf options
@@ -88,11 +88,9 @@ class PdfExportBuilder <<Factory>> {
 PdfExportableCell "1" o- "1" CellImpl
 PdfExportableCell "1" --> "*" PdfExportableComment
 PdfExportableComment "1" o- "1" CommentableCell
-PdfExportableCellFactory ..> PdfExportableCell
 
 PdfExportableSpreadsheet "1" --> "*" PdfExportableCell
 PdfExportableSpreadsheet "1" o- "1" SpreadsheetImpl
-PdfExportableSpreadsheet ..> PdfExportableCellFactory
 
 PdfExportableWorkbook "1" o- "1" Workbook
 PdfExportableWorkbook "1" --> "*" PdfExportableSpreadsheet

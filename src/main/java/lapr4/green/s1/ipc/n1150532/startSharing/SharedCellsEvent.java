@@ -7,7 +7,7 @@ import java.util.SortedSet;
 
 /**
  * An event that contains the shared cells received and the connection.
- *
+ * @author Guilherme Ferreira 1150623 Added Share Name
  * @author Manuel Meireles (1150532@isep.ipp.pt)
  */
 public class SharedCellsEvent {
@@ -28,16 +28,22 @@ public class SharedCellsEvent {
     private final ConnectionID connection;
 
     /**
+     * The Share Name
+     */
+    private String shareName;
+
+    /**
      * The full constructor of the event.
      *
      * @param theSpreadsheetName The spreadsheet name from where the Cells are
      *                           original.
      * @param theCells           The shared cells.
      */
-    public SharedCellsEvent(String theSpreadsheetName, SortedSet<CellDTO> theCells, ConnectionID theConnection) {
+    public SharedCellsEvent(String theSpreadsheetName, SortedSet<CellDTO> theCells, ConnectionID theConnection, String shareName) {
         spreadsheetName = theSpreadsheetName;
         sharedcells = theCells;
         connection = theConnection;
+        this.shareName = shareName;
     }
 
     /**
@@ -65,5 +71,9 @@ public class SharedCellsEvent {
      */
     public ConnectionID getConnection() {
         return connection;
+    }
+
+    public String getShareName(){
+        return this.shareName;
     }
 }

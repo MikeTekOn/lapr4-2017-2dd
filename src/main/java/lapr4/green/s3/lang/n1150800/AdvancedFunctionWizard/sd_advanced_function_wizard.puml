@@ -1,0 +1,76 @@
+@startuml sd_advanced_function_wizard.png
+skinparam handwritten false
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor User 
+
+participant "<<presentation>>\nFunctionWizardUI" as UI
+participant "<<application>>\nFunctionWizardController" as CTRL
+participant "<<domain>>\nFunctionUtils" as func
+participant ExcelExpressionCompiler as compiler
+participant "<<domain>>\nAbstractSyntaxTree" as ast
+participant "ActiveCell" as cell
+
+
+User -> UI : Selects "Function Wizard" option
+create UI
+activate UI
+create CTRL
+
+
+UI -> CTRL : create()
+activate CTRL
+CTRL -> compiler : create()
+activate compiler
+deactivate compiler
+deactivate CTRL
+note right of UI
+    These steps were detailed in 
+    the previous diagram to simply 
+    this diagram.
+end note
+UI --> User : Asks for parameters 
+deactivate UI
+
+loop : 
+User -> UI : Inserts parameter
+activate UI
+UI -> CTRL : calculateResult()
+activate CTRL
+CTRL -> func : calculateResult()
+activate func
+deactivate func
+CTRL -> CTRL : compile()
+CTRL --> UI : return result
+deactivate CTRL
+UI -> CTRL : syntaxTree()
+activate CTRL
+CTRL -> compiler : abstractSyntaxTree()
+activate compiler
+compiler -> ast : buildSyntaxTree()
+activate ast
+deactivate ast
+deactivate compiler
+UI <-- CTRL : return abstract syntax tree
+deactivate CTRL
+UI --> User : show result & abstract syntax tree
+deactivate UI
+end
+
+alt : if apply
+User -> UI : Select "Apply" option
+activate UI
+UI -> CTRL : setContent()
+activate CTRL
+CTRL -> cell : setActiveCellContent()
+activate cell
+deactivate cell
+deactivate CTRL
+deactivate UI
+end
+
+
+@enduml

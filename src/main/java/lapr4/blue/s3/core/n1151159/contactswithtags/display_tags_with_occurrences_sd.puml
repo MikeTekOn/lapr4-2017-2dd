@@ -1,18 +1,18 @@
-@startuml search_contacts_by_tag_ssd.png
+@startuml display_tags_with_occurrences_sd.png
 
 'http://plantuml.com/skinparam.html'
 skinparam handwritten true
 skinparam defaultFontName FG Virgil
 skinparam shadowing false
 
-participant "TagsFrequenceAction" as action
-participant "SearchContactByTagController" as ctrl <<Application>>
-participant "contacts : List<Taggable>" as contacts
+participant "TagsFrequencyActionListener" as action
+participant "TagController" as ctrl <<Application>>
+participant "contacts : List<Contactable>" as contacts
 database PersonContactRepository as pRepo <<Repository>>
 database CompanyContactRepository as cRepo <<repository>>
 participant TagService as serv <<Domain>>
-participant "tagsFreq : Map<String, Integer>" as tf
-participant "t : Taggable" as t
+participant "tagsFreq : Map<Tag, Integer>" as tf
+participant "c : Contactable" as t
 
 activate action
 action -> ctrl : getTagsFrequency()
@@ -32,26 +32,31 @@ ctrl -> contacts : addAll(companyContacts)
 activate contacts
 deactivate contacts
 
-ctrl -> serv : tagsFreq = getTagsFreq(contacts)
+ctrl -> serv : tagsFreq = getTagsFrequency(contacts)
 activate serv
 
 create tf
 serv -> tf : create()
-loop foreach t in contacts
-    serv -> t : tag = getTag()
+loop foreach c in contacts
+    serv -> t : tags = getTags()
     activate t
     deactivate t
-    alt tagsFreq contains tag
-        serv -> tf : count = get(tag)
+    loop foreach tag in tags
+        serv -> tf : b = containsKey(tag)
         activate tf
         deactivate tf
-        serv -> tf : put(tag, count+1)
-        activate tf
-        deactivate tf
-    else otherwise
-        serv -> tf : put(tag, 1)
-        activate tf
-        deactivate tf
+        alt b is true
+            serv -> tf : count = get(tag)
+            activate tf
+            deactivate tf
+            serv -> tf : put(tag, count+1)
+            activate tf
+            deactivate tf
+        else b is false
+            serv -> tf : put(tag, 1)
+            activate tf
+            deactivate tf
+        end
     end
 end
 deactivate serv

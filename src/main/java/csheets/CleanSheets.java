@@ -60,6 +60,8 @@ import java.util.Observer;
 import java.util.ResourceBundle;
 import lapr4.blue.s2.ipc.n1140822.fileShare.ShareConfiguration;
 import lapr4.green.s2.core.n1150657.extensions.ui.ExtensionLoadFrame;
+import lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch.comms.CommUDPClient;
+import lapr4.red.s3.ipc.n1150451.multipleRealtimeWorkbookSearch.comms.FilePathDTO;
 
 /**
  * CleanSheets - the main class of the application. The class manages workbooks,
@@ -128,7 +130,7 @@ public class CleanSheets implements Observer {
 
     private ExtensionLoadFrame extensionLoadFrame;
 
-    public static boolean flag = true;
+    public static boolean flag = false;
 
     /**
      * Creates the CleanSheets application.
@@ -255,7 +257,7 @@ public class CleanSheets implements Observer {
      * @param args the command-line arguments (not used)
      */
     public static void main(String[] args) {
-        //CleanSheets.setFlag(true); if the beggining of the app is without the loading
+       // CleanSheets.setFlag(true); //if the beggining of the app is without the loading
         CleanSheets app = new CleanSheets();
 
         // Configures look and feel
@@ -387,6 +389,8 @@ public class CleanSheets implements Observer {
         File file = workbooks.get(workbook);
         if (file != null) {
             saveAs(workbook, file);
+            CommUDPClient c = new CommUDPClient(new FilePathDTO(file.getName(), file.getAbsolutePath()), 15310);
+            c.start();
         } else {
             throw new FileNotFoundException("No file assigned to the workbook.");
         }

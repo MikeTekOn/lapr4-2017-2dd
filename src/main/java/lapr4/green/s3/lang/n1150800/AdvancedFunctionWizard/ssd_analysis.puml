@@ -1,0 +1,35 @@
+@startuml ssd_analysis.png
+skinparam handwritten false
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+actor User 
+participant "System" as S
+User -> S : Selects the "Function Wizard" option
+S --> User : Displays the window that contains a list of functions/operators
+User -> S : Selects the functions/operators
+
+note right of User
+    This is a new functionality. The user can now select as many functions/operators as he wants to.
+end note
+
+S --> User : Displays the syntax in the cursor position and a description of the selected functions/operators and requests parameters
+
+note right of User
+    Also a new functionality. The functions/operators selected are now displayed 
+    in the cursor position and their parameters are no longer edited in the description box.
+end note
+
+User -> S : Edits the parameters freely in the edit box
+S --> User : Shows the dynamic result and the Abstract Syntax Tree (AST) for the given expression
+
+note right of User
+    As the formula/expression is edited, the result and the AST should be dynamically updated.
+end note
+
+User -> S : Chooses the "Apply" option
+S --> User : Disposes the Function Wizard window and writes the syntax function in the formula bar
+
+@enduml

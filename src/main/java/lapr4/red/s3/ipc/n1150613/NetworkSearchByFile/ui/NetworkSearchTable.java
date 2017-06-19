@@ -12,7 +12,7 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
-import lapr4.blue.s2.ipc.n1151031.searchnetwork.SearchResults;
+import lapr4.red.s3.ipc.n1150613.NetworkSearchByFile.SearchResults;
 
 /**
  * The table with the results of the workbook's network search.

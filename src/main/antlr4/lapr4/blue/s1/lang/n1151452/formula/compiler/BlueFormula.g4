@@ -8,13 +8,25 @@ expression
 	;
 
 comparison
-	: concatenation
+        : eval
+	| concatenation
 		(  ( EQ | NEQ | LTEQ | GTEQ | GT | LT ) concatenation )?
 	| for_loop
+        | do_while_loop
+        | while_do_loop
 	;
 
 concatenation
         : ( MINUS )? atom
+        | concatenation PERCENT
+        | <assoc=right> concatenation POWER concatenation
+        | concatenation ( MULTI | DIV ) concatenation
+        | concatenation ( PLUS | MINUS ) concatenation
+        | concatenation AMP concatenation
+        ;
+
+concatenation_eval
+        : ( MINUS )? atom_eval
         | concatenation PERCENT
         | <assoc=right> concatenation POWER concatenation
         | concatenation ( MULTI | DIV ) concatenation
@@ -42,8 +54,27 @@ atom
     |   G_VARIABLE_NAME
 	;
 
+atom_eval
+	:	reference
+	|	NUMBER
+        |       VARIABLE_NAME
+        |       G_VARIABLE_NAME
+	;
+
 for_loop
     : FOR L_CURLY_BRACKET assignment SEMI  comparison ( SEMI comparison )+ R_CURLY_BRACKET
+    ;
+
+do_while_loop
+    : DOWHILE LPAR comparison SEMI comparison RPAR
+    ;
+
+while_do_loop
+    : WHILEDO LPAR comparison SEMI comparison RPAR
+    ;
+
+eval
+    : EVAL LPAR QUOT concatenation_eval QUOT RPAR
     ;
 
 block
@@ -80,6 +111,12 @@ fragment LETTER: ('a'..'z'|'A'..'Z') ;
 
 FOR : 'FOR' | 'for' | 'For';
 
+DOWHILE : 'DOWHILE' | 'dowhile' | 'DoWhile';
+
+WHILEDO : 'WHILEDO' | 'whiledo' | 'WhileDo';
+
+EVAL : 'EVAL' | 'eval' | 'Eval';
+
 FUNCTION :
 	  ( LETTER )+
 	;
@@ -113,14 +150,14 @@ STRING  : QUOT ('\\"' | ~'"')* QUOT
         ;
 
 QUOT: '"'
-	;
+        ;
 
 /* Numeric literals */
 NUMBER: ( DIGIT )+ ( COMMA ( DIGIT )+ )? ;
 
 fragment
 DIGIT : '0'..'9' ;
-POSITIVE_DIGIT : '0'..'9' ;
+POSITIVE_DIGIT : '1'..'9' ;
 
 /* Comparison operators */
 EQ		: '=' ;

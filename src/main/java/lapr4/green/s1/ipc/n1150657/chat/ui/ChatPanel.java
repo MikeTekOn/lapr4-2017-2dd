@@ -60,7 +60,7 @@ public class ChatPanel extends JPanel {
      */
     public static Vector listMessage;
     
-    public static Map<String,List> map = new HashMap<>();
+    public static Map<String, List> map = new HashMap<>();
     
     //private JTextArea textField = new JTextArea();
     /**
@@ -114,7 +114,9 @@ public class ChatPanel extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 JList list = (JList) e.getSource();
                 if (e.getClickCount() == CLICKING_NUM) {
-                    ChatFormatFrame chatFormatFrame = new ChatFormatFrame(getConversation(list.getSelectedValue().toString()));
+                    if(list.getSelectedValue() != null){
+                        ChatFormatFrame chatFormatFrame = new ChatFormatFrame(getConversation(list.getSelectedValue().toString()));
+                    }
                 }
             }
         });

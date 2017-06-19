@@ -21,7 +21,7 @@
  * <p>It should be possible to associate contacts with tags.</p>
  * <p>
  *     A new windows must be created to search contacts based on tags. This search must be performed with a regular
- *     expression.
+ *     expression. The user can press the contact to edit it.
  * </p>
  * <p>
  *     There should be a window with a list of tags that is automatically sorted (descending) based on the frequency of
@@ -56,7 +56,9 @@
  * <br>
  *
  * <h3>3.2. Glossary</h3>
- * <p>Tag: An alphanumeric word that can be associated to person contacts or company contacts.</p>
+ * <p><b>Tag:</b> An alphanumeric word that can be associated to person contacts or company contacts.</p>
+ * <p><b>Contactable:</b> The ability of being contactable. All contactables must be Taggables.</p>
+ * <p><b>Taggable:</b> The ability of being taggable.</p>
  * <br>
  *
  * <h3>3.3. Domain Model</h3>
@@ -163,10 +165,80 @@
  * <p>The only change is that the CRM user will insert the tag designation.</p>
  *
  * <h3>5.2. Search contacts by tags</h3>
- * <img src="search_contacts_by_tag_sd.png" alt="Search contacts by tag placeholder">
+ * <h4>5.2.1. Sequence Diagram</h4>
+ * <img src="search_contacts_by_tag_sd.png" alt="Search contacts by tag SD placeholder">
+ * <h4>5.2.2. Class Diagram</h4>
+ * <img src="search_contacts_by_tag_cd.png" alt="Search contacts by tag CD placeholder">
+ * <p>
+ *     Since not all database systems have the ability to query the database filtering with a regular expression, this
+ *     logic is made in the java side. Also, as the contact and company contact are not the same aggregate (defined in
+ *     the previous iterations) we join them in a list of contactables to filter them with a domain service. The tag
+ *     domain service was created, because there is not any domain class that naturally matches the functionality
+ *     purpose.
+ * </p>
  *
  * <h3>5.3. Display tags with occurrences</h3>
- * <img src="display_tags_with_occurrences_sd.png" alt="Display tags with occurrences placeholder">
+ * <h4>5.3.1. Sequence Diagram</h4>
+ * <img src="display_tags_with_occurrences_sd.png" alt="Display tags with occurrences SD placeholder">
+ * <h4>5.3.2. Class Diagram</h4>
+ * <img src="display_tags_with_occurrences_cd.png" alt="Display tags with occurrences CD placeholder">
+ * <br>
+ *
+ * <h3>5.4. Design Patterns</h3>
+ * <p>Good practices and domain-driven design approach were the key to succeed in this functional increment.</p>
+ * <p>All good practices dictated by SOLID and GRASP was followed, to make the software maintainable.</p>
+ * <p>As an example, the repository pattern was used to gather the data of the contacts.</p>
+ * <br>
+ *
+ *
+ *
+ *
+ * <h2>6. Implementation</h2>
+ * <p>There is 4 packages in this functional increment, achieving a good layered system:</p>
+ * <ul>
+ *     <li>
+ *         <b>domain:</b> Contains all the domain classes. That is, the classes that really matters for the business.
+ *     </li>
+ *     <li>
+ *         <b>application:</b> The applicational layer, containing the controller to make the bridge between the user
+ *         interface (presentation) and the business logic (domain).
+ *     </li>
+ *     <li>
+ *         <b>presentation:</b> The package for user interface related classes. Gathers all the items for the
+ *         presentation of the functionality.
+ *     </li>
+ *     <li>
+ *         <b>util:</b> The utilitary package containing utilitary classes with utilitary methods.
+ *     </li>
+ * </ul>
+ * <p>
+ *     Since there is a big impact extending the domain classes to add functionalities, some changes were made directly
+ *     in the domain classes presented in the packages of the previous core elements. Mainly, the classes Contact and
+ *     CompanyContact now have a list of tags and implements the interface Contactable.
+ * </p>
+ * <br>
+ *
+ *
+ *
+ *
+ * <h2>7. Integration/Demonstration</h2>
+ *
+ * <p>
+ *     It was necessary to integrate this FI with the previous FI of this feature. Some domain changes were made in the
+ *     already existing classes, otherwise the impact in the project would be really big.
+ * </p>
+ * <p>I was very active and I successfully collaborate with the team members.</p>
+ * <br>
+ *
+ *
+ *
+ *
+ * <h2>8. Final Remarks</h2>
+ * <p>
+ *     I added and extra to the tag regex search functionality, in which we can filter the search with only personal
+ *     contacts, only company contact, or both.
+ * </p>
+ * <p>As a possible future extra for this feature, it should be possible to add tags to events and to notes.</p>
  * <br>
  *
  *
@@ -185,7 +257,7 @@
  * </ol>
  * <p><b>Today</b></p>
  * <ol>
- *     <li>Spring review & retrospective.</li>
+ *     <li>Spring review &amp; retrospective.</li>
  *     <li>Brainstorming about what was done in core.</li>
  *     <li>Start the functional increment analysis.</li>
  * </ol>
@@ -193,6 +265,7 @@
  * <ol>
  *     <li>Nothing.</li>
  * </ol>
+ * <br>
  *
  * <h3>Wednesday 14/06/2017</h3>
  * <p>Yesterday I've worked on:</p>
@@ -207,6 +280,7 @@
  * <ol>
  *     <li>Nothing.</li>
  * </ol>
+ * <br>
  *
  * <h3>Thursday 15/06/2017</h3>
  * <p>Yesterday I've worked on:</p>
@@ -223,6 +297,58 @@
  * <ol>
  *     <li>Nothing.</li>
  * </ol>
+ * <br>
+ *
+ * <h3>Friday 16/06/2017</h3>
+ * <p>Yesterday I've worked on:</p>
+ * <ol>
+ *     <li>Tests</li>
+ *     <li>Design</li>
+ * </ol>
+ * <p><b>Today</b></p>
+ * <ol>
+ *     <li>Implementation</li>
+ * </ol>
+ * <p><b>Blocking:</b></p>
+ * <ol>
+ *     <li>Nothing.</li>
+ * </ol>
+ * <br>
+ *
+ * <h3>Saturday 17/06/2017</h3>
+ * <p>Yesterday I've worked on:</p>
+ * <ol>
+ *     <li>Implementation</li>
+ * </ol>
+ * <p><b>Today</b></p>
+ * <ol>
+ *     <li>Implementation</li>
+ *     <li>Helping teammates</li>
+ * </ol>
+ * <p><b>Blocking:</b></p>
+ * <ol>
+ *     <li>Nothing.</li>
+ * </ol>
+ * <br>
+ *
+ * <h3>Sunday 18/06/2017</h3>
+ * <p>Yesterday I've worked on:</p>
+ * <ol>
+ *     <li>Implementation</li>
+ *     <li>Helping teammates</li>
+ * </ol>
+ * <p><b>Today</b></p>
+ * <ol>
+ *     <li>Finish Implementation</li>
+ *     <li>Make some extras to the use case (filter the search by regex)</li>
+ *     <li>Helping teammates</li>
+ *     <li>Update design</li>
+ * </ol>
+ * <p><b>Blocking:</b></p>
+ * <ol>
+ *     <li>Nothing.</li>
+ * </ol>
+ * <br>
  *
  *
  *

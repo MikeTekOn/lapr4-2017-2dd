@@ -8,7 +8,6 @@ package lapr4.blue.s1.lang.n1151452.formula.compiler;
 import csheets.core.Cell;
 import csheets.core.SpreadsheetImpl;
 import csheets.core.Value;
-import csheets.core.Workbook;
 import csheets.core.formula.*;
 import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.core.formula.compiler.IllegalFunctionCallException;
@@ -19,7 +18,7 @@ import csheets.core.formula.lang.UnknownElementException;
 import csheets.ui.ctrl.UIController;
 import lapr4.blue.s1.lang.n1140822.beanshellwindow.BeanShellInstance;
 import lapr4.blue.s1.lang.n1140822.beanshellwindow.BeanShellLoader;
-import lapr4.blue.s1.lang.n1151452.formula.lang.Language;
+import lapr4.green.s3.lang.n1150901.evalAndWhileLoops.Language;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperation;
 import lapr4.gray.s1.lang.n3456789.formula.NaryOperator;
 import lapr4.red.s2.lang.n1150623.globalVariables.VarContentor;
@@ -28,29 +27,22 @@ import org.antlr.v4.runtime.Token;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import lapr4.green.s3.lang.n1150532.variables.Variable;
 import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.DataRow;
-import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.HeaderRow;
-import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.Row;
 import lapr4.green.s3.lang.n1150838.TablesAndFilters.domain.Table;
 import lapr4.green.s3.lang.n1150838.TablesAndFilters.exception.InvalidIndexException;
-import lapr4.green.s3.lang.n1150838.Util.StringUtil;
-import org.antlr.v4.runtime.tree.TerminalNode;
+import lapr4.green.s3.lang.n1150838.TablesAndFilters.util.StringUtil;
 
 /**
  * Represents the Formula Visitor (ANTLR4).
  *
  * @author Diana Silva {1151088@isep.ipp.pt]} on 03/06/17
  * @author Daniel Gonçalves [1151452@isep.ipp.pt] on 01/06/17.
- *
  * @author Guilherme Ferreira 1150623 corrected to work with 'Variable' class
  * and VarContentor
  * @author Ricardo Catalão (1150385) on 08/06/2017
+ * @author Miguel Silva (1150901) on 15/06/2017
  * @author jrt
- *
- *
  * @author Manuel Meireles (1150532):
  * <ul>
  * <li>I've changed the Variable class (from
@@ -160,7 +152,7 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
             return visit(ctx.concatenation(0));
         }
 
-        return visit(ctx.for_loop());
+        return visitChildren(ctx);
     }
 
     @Override
@@ -274,7 +266,7 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
                     return new CellReference(referenceCell.getSpreadsheet(), referenceCell.getAddress().toString());
                 } else {
                     String number = StringUtil.removeStartEndSpecialChars(ctx.getChild(0).getChild(1).getText());
-                    Cell referenceCell = ((DataRow) tableCtx.getRowByCell(cell)).getCellAt(Integer.parseInt(number));
+                    Cell referenceCell = ((DataRow) tableCtx.getRowByCell(cell)).getCellAt(Integer.parseInt(number) - 1);
 
                     return new CellReference(referenceCell.getSpreadsheet(), referenceCell.getAddress().toString());
                 }
@@ -399,6 +391,82 @@ public class FormulaEvalVisitor extends BlueFormulaBaseVisitor<Expression> {
 
                     expressions[i] = visit(ctx.getChild(nChild));
                 }
+
+                return new NaryOperation(operator, expressions);
+
+            } catch (UnknownElementException ex) {
+                addVisitError(ex.getMessage());
+            }
+        }
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Expression visitDo_while_loop(BlueFormulaParser.Do_while_loopContext ctx) {
+
+        if (ctx.DOWHILE() != null) {
+            try {
+                // Get n-ary operator that identifies a dowhile loop
+                String operatorID = ctx.DOWHILE().getText().toLowerCase();
+                NaryOperator operator = Language.getInstance().getNaryOperator(operatorID);
+
+                // Get # of expressions by: dividing by 2 to not count for SEMI-COLON/PARENTHESIS & - 1 for the "dowhile"
+                Expression expressions[] = new Expression[(ctx.getChildCount() / 2) - 1];
+
+                // #1 Convert all the child nodes
+                for (int nChild = 2, i = 0; i < expressions.length; nChild += 2, i++) {
+                    expressions[i] = visit(ctx.getChild(nChild));
+                }
+
+                return new NaryOperation(operator, expressions);
+
+            } catch (UnknownElementException ex) {
+                addVisitError(ex.getMessage());
+            }
+        }
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Expression visitWhile_do_loop(BlueFormulaParser.While_do_loopContext ctx) {
+
+        if (ctx.WHILEDO() != null) {
+            try {
+                // Get n-ary operator that identifies a whiledo loop
+                String operatorID = ctx.WHILEDO().getText().toLowerCase();
+                NaryOperator operator = Language.getInstance().getNaryOperator(operatorID);
+
+                // Get # of expressions by: dividing by 2 to not count for SEMI-COLON/PARENTHESIS & - 1 for the "whiledo"
+                Expression expressions[] = new Expression[(ctx.getChildCount() / 2) - 1];
+
+                // #1 Convert all the child nodes
+                for (int nChild = 2, i = 0; i < expressions.length; nChild += 2, i++) {
+
+                    expressions[i] = visit(ctx.getChild(nChild));
+                }
+
+                return new NaryOperation(operator, expressions);
+
+            } catch (UnknownElementException ex) {
+                addVisitError(ex.getMessage());
+            }
+        }
+        return visitChildren(ctx);
+    }
+
+    @Override
+    public Expression visitEval(BlueFormulaParser.EvalContext ctx) {
+
+        if (ctx.EVAL() != null) {
+            try {
+                // Get n-ary operator that identifies a eval function
+                String operatorID = ctx.EVAL().getText().toLowerCase();
+                NaryOperator operator = Language.getInstance().getNaryOperator(operatorID);
+
+                // Only has 1 expresion
+                Expression expressions[] = new Expression[1];
+
+                expressions[0] = visit(ctx.getChild(3));
 
                 return new NaryOperation(operator, expressions);
 

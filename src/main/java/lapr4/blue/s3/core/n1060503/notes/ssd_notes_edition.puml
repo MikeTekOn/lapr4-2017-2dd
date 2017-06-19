@@ -1,0 +1,21 @@
+@startuml ssd_notes_edition.png
+skinparam handwritten true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false 
+skinparam SequenceMessageAlign center
+
+actor User 
+participant "System" as S
+User -> S : select notes editon tab
+S --> User : show all contacts
+User -> S : choose a contact
+S --> User : show the history of notes associated from selected contact
+group #F6E3CE alt : new / edi / remove note
+User -> S : choose new / edi / remove note option
+S --> User : show window to fill title and content
+User -> S : confirm submission
+end group
+S --> User : informs the success of the operation
+
+@enduml

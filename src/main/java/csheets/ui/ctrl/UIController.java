@@ -20,14 +20,7 @@
  */
 package csheets.ui.ctrl;
 
-import java.util.ArrayList;
-import java.util.EmptyStackException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Stack;
+import java.util.*;
 
 import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
@@ -35,10 +28,7 @@ import javax.swing.TransferHandler;
 import csheets.CleanSheets;
 import csheets.SpreadsheetAppEvent;
 import csheets.SpreadsheetAppListener;
-import csheets.core.Cell;
-import csheets.core.HeaderCellListener;
-import csheets.core.Spreadsheet;
-import csheets.core.Workbook;
+import csheets.core.*;
 import csheets.ext.Extension;
 import csheets.ext.ExtensionManager;
 import csheets.ui.ext.UIExtension;
@@ -47,8 +37,10 @@ import java.io.File;
 
 import lapr4.green.s3.lang.n1150532.variables.globalVariablesExtension.GlobalVariablesExtensionSideBarUI;
 import lapr4.green.s3.lang.n1150532.variables.globalVariablesExtension.GlobalVariablesExtensionUI;
+import lapr4.green.s3.lang.n1150657.XML.Export.TagsName;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionEvent;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionStateListener;
+import lapr4.red.s3.ipc.n1150623.MultipleSharing.ReceivedShareInfo;
 
 /**
  * A controller for managing the current selection, i.e. the active workbook,
@@ -95,6 +87,15 @@ public class UIController implements SpreadsheetAppListener, ExtensionStateListe
 	/** The header cell listener registered to receive events */
 	private List<HeaderCellListener>headerListeners =  new ArrayList<HeaderCellListener>();
 
+
+	/**shared cells name and corresponding spreadsheet*/
+	private Set<ReceivedShareInfo> sharesInfo = new HashSet<>();
+
+        /**
+         * The tagsName for the export/import xml
+         */
+        private TagsName tagsNameWorkbook;
+        
 	// private Map<Workbook, Spreadsheet> activeSpreadsheets;
 	// private Map<Spreadsheet, Cell> activeCells;
 
@@ -127,6 +128,7 @@ public class UIController implements SpreadsheetAppListener, ExtensionStateListe
                         app.addSpreadsheetAppListener((GlobalVariablesExtensionSideBarUI)ext.getSideBar());
                     }
                 }
+                this.tagsNameWorkbook = new TagsName();
 	}
 
 /*
@@ -175,6 +177,31 @@ public class UIController implements SpreadsheetAppListener, ExtensionStateListe
 				prevWorkbook, prevSpreadsheet, prevCell));
 		}
 	}
+
+	/**
+	 * Gets the spreadsheet for a specific cell share. attributes one if the share is new.
+	 * @param shareName - Name of the share
+	 * @return correct spreadsheet to position shared cells
+	 */
+	public Spreadsheet getSpreadSheetForSharedCells(String shareName, Address ini, Address end){
+
+		for(ReceivedShareInfo e : sharesInfo){
+			if(e.shareName().equals(shareName)){
+				return e.spreadsheet();
+			}
+		}
+		Spreadsheet toReturn = getActiveSpreadsheet();
+
+		ReceivedShareInfo createdInfo = ReceivedShareInfo.createShareInfo(shareName, ini, end, toReturn);
+		sharesInfo.add(createdInfo);
+
+		return toReturn;
+	}
+
+	public Set<ReceivedShareInfo> sharesInfo(){
+		return this.sharesInfo;
+	}
+
 
 	/**
 	 * Returns the active spreadsheet.
@@ -478,4 +505,21 @@ public class UIController implements SpreadsheetAppListener, ExtensionStateListe
 				listener.selectionChanged(event);
 		}
 	}
+        
+        /**
+         * It adds into the tag map the name of the original tag and the user choice.
+         * @param tag The tag to be chosen.
+         * @param name The new tag name.
+         */
+    public void addTagName(String tag, String name){
+        tagsNameWorkbook.addTagUserName(tag, name);
+    }
+    
+    /**
+     * It gives the tags name.
+     * @return It returns a tagsname.
+     */
+    public TagsName getTagsName(){
+        return tagsNameWorkbook;
+    }
 }

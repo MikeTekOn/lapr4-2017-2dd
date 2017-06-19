@@ -1,12 +1,12 @@
 package lapr4.green.s1.ipc.n1150532.comm;
 
+import lapr4.red.s3.ipc.n1150385.groupchat.ChatRoomServer;
+import lapr4.red.s3.ipc.n1150385.groupchat.dto.ChatRoomMessageDTO;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,7 +36,7 @@ public class CommTCPServer extends Thread {
     /**
      * The TCP server handlers.
      */
-    private static Map<Class, CommHandler> handlers;
+    private static Map<Class, List<CommHandler>> handlers;
 
     /**
      * It keeps all the server's workers.
@@ -92,7 +92,10 @@ public class CommTCPServer extends Thread {
      * @param handler The handler itself.
      */
     public void addHandler(Class dto, CommHandler handler) {
-        handlers.put(dto, handler);
+        if(!handlers.containsKey(dto)) {
+            handlers.put(dto, new LinkedList<>());
+        }
+        handlers.get(dto).add(handler);
     }
 
     /**
@@ -101,7 +104,7 @@ public class CommTCPServer extends Thread {
      * @param dto The class to handle.
      * @return It returns the handler or null if no capable handler is found.
      */
-    public CommHandler getHandler(Class dto) {
+    public Iterable<CommHandler> getHandler(Class dto) {
         return handlers.get(dto);
     }
 
@@ -159,5 +162,11 @@ public class CommTCPServer extends Thread {
 
     public static List<CommTCPServerWorker> getWorkers() {
         return workers;
+    }
+
+    public void removeHandler(Class dto, CommHandler handler) {
+        if(handlers.containsKey(dto)){
+            handlers.get(dto).remove(handler);
+        }
     }
 }
