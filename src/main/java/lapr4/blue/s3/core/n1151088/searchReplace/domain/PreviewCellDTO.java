@@ -1,6 +1,5 @@
 package lapr4.blue.s3.core.n1151088.searchReplace.domain;
 
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
 import csheets.core.Cell;
 import csheets.core.CellImpl;
 import csheets.core.IllegalValueTypeException;
@@ -10,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.AbstractListModel;
 import lapr4.red.s1.core.n1150690.comments.CommentableCellWithMultipleUsers;
 import lapr4.white.s1.core.n1234567.comments.CommentsExtension;
 
