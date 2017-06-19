@@ -1,0 +1,31 @@
+@startuml us05.3_eval_visitor_params.png
+
+
+hide footbox
+
+participant Macro2EvalVisitor as visitor
+participant "macroToBeInvoked: MacroWithParameter" as m
+participant Macro2Compiler
+... ...
+->visitor: visitMacro_invoked(Ctx)
+activate visitor
+    visitor->UIController: uiController.getActiveWorkbook().getMacroList().getMacroByName(macroName).getMacroCode()
+    visitor -> Macro2Compiler: compile macro code
+    activate Macro2Compiler
+    create m
+    Macro2Compiler->m
+    visitor <-- Macro2Compiler: m
+    deactivate Macro2Compiler
+    visitor->m: definition = getParameterDefinition
+    visitor->visitor: check recursion
+    visitor->visitor: validate param value list against macro's ParameterDefinition
+    visitor->visitor: build final ParameterList
+    create MacroInterpreter
+    visitor->MacroInterpreter : (macroToBeInvoked, parameterList)
+
+    <--visitor: macroToBeInvoked.accept(macroInterpreter)
+deactivate visitor
+
+
+
+@enduml
