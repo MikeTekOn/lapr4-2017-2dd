@@ -36,25 +36,6 @@ public class Previewer implements Runnable {
         this.cell=cellBefore;
         this.uiCtrl=uiCtrl;
     }
-//    
-//   /**
-//    * Update the list with new cell
-//    * @param cell cell to replace
-//    * @return true if added, false if not
-//    */
-//    public boolean addCell(CellInfoDTO cell){
-//        try{
-//            validateContent(cell.getCell().getContent());
-//        }catch(FormulaCompilationException | IllegalValueTypeException ex ){
-//            ex.getMessage();
-//        }
-////        if(cellList.containsElement(cell)){
-////            return false;
-////        } else {
-////            cellList.addElement(cell);
-////        }
-//        return true;
-//    }
     
     /**
      * Validate if content is compilable by Formula
