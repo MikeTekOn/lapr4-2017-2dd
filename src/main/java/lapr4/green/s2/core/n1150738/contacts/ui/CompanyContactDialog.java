@@ -8,17 +8,14 @@ package lapr4.green.s2.core.n1150738.contacts.ui;
 import csheets.CleanSheets;
 import eapli.framework.persistence.DataConcurrencyException;
 import eapli.framework.persistence.DataIntegrityViolationException;
-import lapr4.blue.s3.core.n1151159.contactswithtags.ui.TagManagerPanel;
+import lapr4.blue.s3.core.n1151159.contactswithtags.presentation.TagManagerPanel;
 import lapr4.green.s2.core.n1150738.contacts.application.CompanyContactController;
 import lapr4.green.s2.core.n1150738.contacts.domain.CompanyContact;
-import lapr4.green.s2.core.n1150738.contacts.domain.Profession;
 import lapr4.white.s1.core.n4567890.contacts.ui.SpringUtilities;
 import org.apache.commons.io.IOUtils;
-import org.xml.sax.SAXException;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.xml.parsers.ParserConfigurationException;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -151,6 +148,10 @@ public class CompanyContactDialog extends JDialog implements ActionListener {
         // Final Pane: The status label for messages
         statusLabel = new JLabel();
 
+        // Creates the tags panel
+        tagsPanel = new TagManagerPanel(this);
+        tagsPanel.setBorder(BorderFactory.createTitledBorder("Associated Tags"));
+
 
         switch (this.mode) {
             case ADD:
@@ -163,16 +164,13 @@ public class CompanyContactDialog extends JDialog implements ActionListener {
                 this.nameField.setEditable(false);
                 this.emailField.setEditable(false);
                 this.phoneField.setEditable(false);
+                this.tagsPanel.hideButtons();
                 //this.addressField.setEditable(false);
                 break;
             case EDIT:
                 statusLabel.setText(CleanSheets.getString("status_please_update_data_of_contcat"));
                 break;
         }
-
-        // Creates the tags panel
-        tagsPanel = new TagManagerPanel(this);
-        tagsPanel.setBorder(BorderFactory.createTitledBorder("Associated Tags"));
 
         // Creates the fields panel
         JPanel fieldsPanel = new JPanel(new BorderLayout());

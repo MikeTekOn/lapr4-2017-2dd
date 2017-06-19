@@ -73,6 +73,26 @@ public class ImagesPanel extends JPanel implements SelectionListener,
     private final Dimension BUTTON_SIZE = new Dimension(100, 30);
 
     /**
+     * The remove image JButton.
+     */
+    private JButton removeImageButton;
+
+    /**
+     * The open image JButton.
+     */
+    private JButton openImageButton;
+
+    /**
+     * The next image JButton.
+     */
+    private JButton nextImageButton;
+
+    /**
+     * The previous image JButton.
+     */
+    private JButton previousImageButton;
+
+    /**
      * Creates a new images panel.
      *
      * @param uiController the user interface controller
@@ -139,6 +159,10 @@ public class ImagesPanel extends JPanel implements SelectionListener,
             }
         }
         //creates layout
+        if (cell == null || cell.getImages().isEmpty()) {
+            imageLabel.setText("No images to display...");
+            cardLayoutPanel.add(imageLabel);
+        }
         cardLayoutPanel.setLayout(cardLayout);
 
         return cardLayoutPanel;
@@ -186,40 +210,49 @@ public class ImagesPanel extends JPanel implements SelectionListener,
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
 
-                JFileChooser chooser = new JFileChooser();
-                int returnName = chooser.showOpenDialog(null);
+                JFileChooser fileChooser = new JFileChooser();
+                int chooserResult = fileChooser.showOpenDialog(null);
                 String path;
 
-                if (returnName == JFileChooser.APPROVE_OPTION) {
-                    File f = chooser.getSelectedFile();
-                    boolean notFound = true;
-                    if (f != null) {
+                if (chooserResult == JFileChooser.APPROVE_OPTION) {
+                    File file = fileChooser.getSelectedFile();
+                    boolean repetitiveImage = false;
+                    if (file != null) {
 
-                        path = f.getAbsolutePath();
+                        path = file.getAbsolutePath();
 
                         Cell activeCell = uiController.getActiveCell();
                         ImageableCell imageableCell = (ImageableCell) activeCell.getExtension(ImagesExtension.NAME);
 
                         for (String currentImage : imageableCell.getImages()) {
                             if (currentImage.equalsIgnoreCase(path)) {
-                                notFound = false;
+                                repetitiveImage = true;
                             }
                         }
 
-                        if (notFound) {
+                        if (!repetitiveImage) {
+                            //UPDATES the cell with new image
                             imageableCell.setImageToImages(path);
+                            removeImageButton.setEnabled(true);
+                            openImageButton.setEnabled(true);
+
+                            if (imageableCell.getImages().size() > 1) {
+                                nextImageButton.setEnabled(true);
+                                previousImageButton.setEnabled(true);
+                            }
+
                         }
                         imagePath = path;
 
-                        if (!notFound) {
-                            JOptionPane.showMessageDialog(chooser, "Cannot add the same image!", "Error", JOptionPane.ERROR_MESSAGE);
+                        if (repetitiveImage) {
+                            JOptionPane.showMessageDialog(fileChooser, "Cannot add the same image!", "Error", JOptionPane.ERROR_MESSAGE);
                         }
 
                     } else {
-                        JOptionPane.showMessageDialog(chooser, "Chosen file is not valid!", "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(fileChooser, "Chosen file is not valid!", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
-                    JOptionPane.showMessageDialog(chooser, "Canceled the image choosing", "Cancel", JOptionPane.CANCEL_OPTION);
+                    JOptionPane.showMessageDialog(fileChooser, "Canceled the image choosing", "Cancel", JOptionPane.CANCEL_OPTION);
                 }
 
             }
@@ -234,8 +267,17 @@ public class ImagesPanel extends JPanel implements SelectionListener,
      * @return remove button
      */
     private JButton removeImageButton() {
-        JButton removeImageButton = new JButton("Remove");
+        removeImageButton = new JButton("Remove");
         removeImageButton.setPreferredSize(BUTTON_SIZE);
+
+        if (cell == null) {
+            removeImageButton.setEnabled(false);
+        }
+        if (cell != null) {
+            if (cell.getImages().isEmpty()) {
+                removeImageButton.setEnabled(false);
+            }
+        }
 
         removeImageButton.addActionListener(new ActionListener() {
             @Override
@@ -245,7 +287,6 @@ public class ImagesPanel extends JPanel implements SelectionListener,
                 Component visibleComponent = getCurrentCard();
                 String imgPath = ((JLabel) visibleComponent).getName();
 
-                //cardLayout.removeLayoutComponent(visibleComponentName.);
                 if (cell.removeImageFromImages(imgPath)) {
                     removed = true;
                 }
@@ -255,7 +296,15 @@ public class ImagesPanel extends JPanel implements SelectionListener,
                 imageChanged(activeCell);
 
                 if (removed) {
-                    JOptionPane.showMessageDialog(cardLayoutPanel, "Removed the current image.", "Remove image", JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(cardLayoutPanel, "Image removed.", "Remove image", JOptionPane.PLAIN_MESSAGE);
+                    if (cell.getImages().isEmpty()) {
+                        removeImageButton.setEnabled(false);
+                        openImageButton.setEnabled(false);
+                        if (cell.getImages().size() < 2) {
+                            nextImageButton.setEnabled(false);
+                            previousImageButton.setEnabled(false);
+                        }
+                    }
                 } else {
                     JOptionPane.showMessageDialog(cardLayoutPanel, "Removing the current image failed.", "Removed failed", JOptionPane.ERROR_MESSAGE);
                 }
@@ -271,14 +320,27 @@ public class ImagesPanel extends JPanel implements SelectionListener,
      * @return open button
      */
     private JButton openImageButton() {
-        JButton removeImageButton = new JButton("Open");
-        removeImageButton.setPreferredSize(BUTTON_SIZE);
+        openImageButton = new JButton("Open");
+        openImageButton.setPreferredSize(BUTTON_SIZE);
 
-        removeImageButton.addActionListener(new ActionListener() {
+        if (cell == null) {
+            openImageButton.setEnabled(false);
+        }
+        if (cell != null) {
+            if (cell.getImages().isEmpty()) {
+                openImageButton.setEnabled(false);
+            }
+        }
+
+        openImageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
 
-                JDialog dialog = new JDialog((Frame) null, "Image selected to open");
+                Component activeComponent = getCurrentCard();
+                String imagePath = ((JLabel) activeComponent).getName();
+                String imageTitle = imagePath.substring(imagePath.lastIndexOf("\\") + 1);
+
+                JDialog dialog = new JDialog((Frame) null, imageTitle);
                 dialog.setUndecorated(true);
 
                 Component visibleComponent = getCurrentCard();
@@ -293,13 +355,13 @@ public class ImagesPanel extends JPanel implements SelectionListener,
                 imageLabel.setName(imgStr);
 
                 dialog.add(imageLabel);
-                dialog.setLocationRelativeTo(cardLayoutPanel);
+                dialog.setLocationRelativeTo(getRootPane());
                 dialog.pack();
                 dialog.setVisible(true);
 
             }
         });
-        return removeImageButton;
+        return openImageButton;
     }
 
     /**
@@ -308,8 +370,19 @@ public class ImagesPanel extends JPanel implements SelectionListener,
      * @return the next button
      */
     private JButton nextImageButton() {
-        JButton nextImageButton = new JButton("Next");
+
+        nextImageButton = new JButton("Next");
         nextImageButton.setPreferredSize(BUTTON_SIZE);
+
+        if (cell == null) {
+            nextImageButton.setEnabled(false);
+        }
+        if (cell != null) {
+            if (cell.getImages().size() < 2) {
+                nextImageButton.setEnabled(false);
+            }
+        }
+
         nextImageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -326,8 +399,19 @@ public class ImagesPanel extends JPanel implements SelectionListener,
      * @return the previous button
      */
     private JButton previousImageButton() {
-        JButton previousImageButton = new JButton("Previous");
+
+        previousImageButton = new JButton("Previous");
         previousImageButton.setPreferredSize(BUTTON_SIZE);
+
+        if (cell == null) {
+            previousImageButton.setEnabled(false);
+        }
+        if (cell != null) {
+            if (cell.getImages().size() < 2) {
+                previousImageButton.setEnabled(false);
+            }
+        }
+
         previousImageButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
@@ -368,6 +452,15 @@ public class ImagesPanel extends JPanel implements SelectionListener,
         if (event.getPreviousCell() != null) {
             ((ImageableCell) event.getPreviousCell().getExtension(ImagesExtension.NAME))
                     .removeImageableCellListener(this);
+        }
+
+        if (this.cell.getImages().size() > 1) {
+            nextImageButton.setEnabled(true);
+            previousImageButton.setEnabled(true);
+        }
+        if (this.cell != null && !this.cell.getImages().isEmpty()) {
+            openImageButton.setEnabled(true);
+            removeImageButton.setEnabled(true);
         }
     }
 

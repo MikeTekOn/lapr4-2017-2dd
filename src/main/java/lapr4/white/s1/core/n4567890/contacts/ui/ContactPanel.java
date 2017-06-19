@@ -9,7 +9,9 @@ import csheets.CleanSheets;
 import csheets.ui.ctrl.UIController;
 import eapli.framework.persistence.DataConcurrencyException;
 import eapli.framework.persistence.DataIntegrityViolationException;
-import lapr4.blue.s3.core.n1151159.contactswithtags.ui.SearchContactsByTagButton;
+import lapr4.blue.s3.core.n1151159.contactswithtags.presentation.SearchContactsByTagButton;
+import lapr4.blue.s3.core.n1151159.contactswithtags.presentation.TagFrequencyPanel;
+import lapr4.blue.s3.core.n1151159.contactswithtags.presentation.TagsChangesWatchDog;
 import lapr4.red.s1.core.n1150623.labelsForContacts.application.LabelsForContactsController;
 import lapr4.red.s1.core.n1150623.labelsForContacts.presentation.LabelsForContactsUI;
 import lapr4.red.s1.core.n1150943.contacts.application.EventController;
@@ -78,6 +80,7 @@ public class ContactPanel extends JPanel implements ActionListener {
 
     private JPanel contactsPane= null;
     private JPanel agendaPane=null;
+    private TagFrequencyPanel tagsFrequencyPane=null;
     private JPanel filterPane = null;
     private JPanel contactsButtonPane = null;
     private JPanel eventsPane = null;
@@ -235,6 +238,9 @@ public class ContactPanel extends JPanel implements ActionListener {
         agendaPane = new JPanel(new BorderLayout());
         agendaPane.add(eventsPane, BorderLayout.CENTER);
         agendaPane.add(agendaButtonPane, BorderLayout.PAGE_END);
+
+        tagsFrequencyPane = new TagFrequencyPanel(uiController);
+        TagsChangesWatchDog.getInstance().addTagFrequencyListener(tagsFrequencyPane);
     }
 
     private void updateEventModel() {
@@ -266,7 +272,7 @@ public class ContactPanel extends JPanel implements ActionListener {
         this.expController = new LabelsForContactsController((uiController.getUserProperties()));
         setupContactsWidgets();
 
-        JPanel mainPanel = new JPanel(new GridLayout(2, 1));
+        JPanel mainPanel = new JPanel(new GridLayout(3, 1));
 
         // Adds borders
         TitledBorder border = BorderFactory.createTitledBorder("Contacts");
@@ -277,9 +283,14 @@ public class ContactPanel extends JPanel implements ActionListener {
         border.setTitleJustification(TitledBorder.CENTER);
         agendaPane.setBorder(border);
 
+        border = BorderFactory.createTitledBorder("Tags Frequency");
+        border.setTitleJustification(TitledBorder.CENTER);
+        tagsFrequencyPane.setBorder(border);
+
         // Creates side bar
         mainPanel.add(contactsPane);
         mainPanel.add(agendaPane);
+        mainPanel.add(tagsFrequencyPane);
 
         add(mainPanel);
     }
@@ -297,6 +308,8 @@ public class ContactPanel extends JPanel implements ActionListener {
                     c = ContactDialog.contact();
                     // Update the model of the JList
                     contactsModel.addElement(c);
+
+                    TagsChangesWatchDog.getInstance().notifyListeners();
                 }
             }
             break;
@@ -313,6 +326,8 @@ public class ContactPanel extends JPanel implements ActionListener {
                     if (ContactDialog.successResult()) {
                         // Update the model of the JList
                         contactsModel.remove(index);
+
+                        TagsChangesWatchDog.getInstance().notifyListeners();
                     }
                 }
                 break;
@@ -336,6 +351,7 @@ public class ContactPanel extends JPanel implements ActionListener {
                         contactsModel.set(index, updatedContact);
                     }
 
+                    TagsChangesWatchDog.getInstance().notifyListeners();
                 }
                 break;
 

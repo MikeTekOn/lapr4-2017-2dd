@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Set;
 import javax.swing.*;
+import javax.swing.border.Border;
 
 import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
@@ -50,10 +51,14 @@ public class ShareCellsUI extends JDialog {
         setLayout(new BorderLayout());
 
         add(shareNamePanel(), BorderLayout.NORTH);
+
         JPanel range = new JPanel();
         range.setLayout(new BorderLayout());
-        add(createHeaderPanel(), BorderLayout.NORTH);
+        range.add(createHeaderPanel(), BorderLayout.NORTH);
         range.add(createCellsRangePanel(), BorderLayout.SOUTH);
+
+        add(range, BorderLayout.CENTER);
+
         add(createBottomPanel(), BorderLayout.SOUTH);
         setTitle(title);
         pack();

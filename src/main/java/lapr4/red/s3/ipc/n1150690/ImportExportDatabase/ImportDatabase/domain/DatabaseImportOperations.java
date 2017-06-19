@@ -71,9 +71,9 @@ public class DatabaseImportOperations {
         String content = "SELECT * FROM " + tableName;
         statement = connection.createStatement();
         ResultSet executeQuery = null;
-        try{
+        try {
             executeQuery = statement.executeQuery(content);
-        }catch(SQLException e){
+        } catch (SQLException e) {
             throw new SQLException("The table does not exist! Please insert another name.");
         }
         ResultSetMetaData metadata = executeQuery.getMetaData();
@@ -95,12 +95,23 @@ public class DatabaseImportOperations {
             }
             j++;
         }
+        try {
+            if (statement != null) {
+                statement.close();
+            }
+        } catch (SQLException se2) {
+        }// nothing we can do
     }
 
     /**
-     * Imports the content of the table to the active spreadsheet
+     * Imports the content of the table to the active spreadsheet using a range
+     * of cells defined by the user.
      *
-     * @throws SQLException
+     * @param topLeftRow the lop left row of the range
+     * @param bottomRightRow the bottom right row of the range
+     * @param topLeftColumn the top left column of the range
+     * @param topRightColumn the top right column of the range
+     * @throws SQLException 
      * @throws FormulaCompilationException
      */
     public void importTableContent(int topLeftRow, int bottomRightRow, int topLeftColumn, int topRightColumn) throws SQLException, FormulaCompilationException {
@@ -123,6 +134,13 @@ public class DatabaseImportOperations {
                 break;
             }
         }
+        try {
+            if (statement != null) {
+                statement.close();
+            }
+        } catch (SQLException se2) {
+        }// nothing we can do
+
     }
 
     /**

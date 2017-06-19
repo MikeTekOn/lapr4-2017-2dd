@@ -1,0 +1,27 @@
+@startuml associate_tags_with_occurrences_cd.png
+
+class SearchContactsByTagDialog {
+}
+class TagController {
+    getTagsFrequence()
+}
+interface Contactable {
+    containsTag(regex)
+}
+class PersonContactRepository {
+    findAll()
+}
+class CompanyContactRepository {
+    findAll()
+}
+class TagService {
+    filterTaggablesByTagRegex(contacts, regex)
+}
+
+SearchContactsByTagDialog .> TagController
+TagController ..> Contactable
+TagController ..> PersonContactRepository
+TagController ..> CompanyContactRepository
+TagController .> TagService
+TagService ..> Contactable
+@enduml

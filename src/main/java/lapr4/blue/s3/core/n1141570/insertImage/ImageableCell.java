@@ -2,7 +2,6 @@ package lapr4.blue.s3.core.n1141570.insertImage;
 
 import csheets.core.Cell;
 import csheets.ext.CellExtension;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,22 +96,11 @@ public class ImageableCell extends CellExtension {
      * @return true if the cell has any image, false otherwise
      */
     public boolean hasAnyImage() {
-        return imagesPaths != null;
+        return imagesPaths != null && imagesPaths.size() > 0;
     }
 
     /*
  * IMAGE MODIFIERS
-     */
-    /**
-     * Sets the user-specified image for the cell.
-     *
-     * @param imagePath the user-specified image
-     */
-    public void setImage(String imagePath) {
-        this.imagePath = imagePath;
-        // Notifies listeners
-        fireImagesChanged();
-    }
 
     /**
      * Adds the image to the images list.

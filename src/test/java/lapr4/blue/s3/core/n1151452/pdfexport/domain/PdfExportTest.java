@@ -6,6 +6,7 @@ import csheets.core.Cell;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,8 +44,8 @@ public class PdfExportTest {
     @Test(expected = IllegalStateException.class)
     public void ensurePdfExportHasNonNullListOfActiveCells() {
 
-        PdfExport pdfExport = new PdfExport(null, PdfExport.MACROS|PdfExport.COMMENTS| PdfExport.FORMULAS,
-                GridType.NO_GRID, PrintArea.WORKBOOK, PageSize.A4, PageOrientation.PORTRAIT, "dest");
+        PdfExport pdfExport = new PdfExport(null, PdfExport.MACROS | PdfExport.COMMENTS | PdfExport.FORMULAS,
+                true, GridType.NO_GRID, Color.BLACK, PrintArea.WORKBOOK, PageSize.A4, PageOrientation.PORTRAIT, "dest");
     }
 
     /**
@@ -53,8 +54,8 @@ public class PdfExportTest {
     @Test(expected = IllegalStateException.class)
     public void ensurePdfExportHasNonEmptyListOfActiveCells() {
 
-        PdfExport pdfExport = new PdfExport(new ArrayList<>(), PdfExport.MACROS,
-                GridType.NO_GRID, PrintArea.WORKBOOK, PageSize.A4, PageOrientation.PORTRAIT, "dest");
+        PdfExport pdfExport = new PdfExport(new ArrayList<Cell>(), PdfExport.MACROS,
+                true, GridType.NO_GRID, Color.BLACK, PrintArea.WORKBOOK, PageSize.A4, PageOrientation.PORTRAIT, "dest");
     }
 
     /**
@@ -67,7 +68,7 @@ public class PdfExportTest {
         activeCells.add(app.getWorkbooks()[0].getSpreadsheet(0).getCell(0, 0));
 
         PdfExport pdfExport = new PdfExport(activeCells, PdfExport.MACROS | PdfExport.COMMENTS,
-                null, PrintArea.WORKBOOK, PageSize.A4, PageOrientation.PORTRAIT, "dest");
+                true, null, Color.BLACK, PrintArea.WORKBOOK, PageSize.A4, PageOrientation.PORTRAIT, "dest");
     }
 
     /**
@@ -79,8 +80,8 @@ public class PdfExportTest {
         List<Cell> activeCells = new ArrayList<>();
         activeCells.add(app.getWorkbooks()[0].getSpreadsheet(0).getCell(0, 0));
 
-        PdfExport pdfExport = new PdfExport(activeCells, PdfExport.NO_SECTIONS, GridType.NO_GRID,
-                null, PageSize.A4, PageOrientation.PORTRAIT, "dest");
+        PdfExport pdfExport = new PdfExport(activeCells, PdfExport.NO_SECTIONS,
+                true, GridType.NO_GRID, Color.BLACK, null, PageSize.A4, PageOrientation.PORTRAIT, "dest");
     }
 
     /**
@@ -92,7 +93,7 @@ public class PdfExportTest {
         List<Cell> activeCells = new ArrayList<>();
         activeCells.add(app.getWorkbooks()[0].getSpreadsheet(0).getCell(0, 0));
 
-        PdfExport pdfExport = new PdfExport(activeCells, PdfExport.NO_SECTIONS, GridType.NO_GRID,
+        PdfExport pdfExport = new PdfExport(activeCells, PdfExport.NO_SECTIONS, true, GridType.NO_GRID, Color.BLACK,
                 PrintArea.ACTIVE_SPREADSHEET, PageSize.A3, PageOrientation.LANDSCAPE, null);
     }
 }

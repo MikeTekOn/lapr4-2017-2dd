@@ -163,7 +163,10 @@
  * <b>Verify formula test</b>:Tests the method that checks if the filter entered
  * by the user is valid and if it is valid returns the rows of the table that do
  * not respect the filter
- *
+ * </p>
+ * <p>
+ * <b>Build table test</b>:Tests the method that build a table and all his rows
+ * from a given set off cells.
  * </p>
  * <h1>Design</h1>
  *

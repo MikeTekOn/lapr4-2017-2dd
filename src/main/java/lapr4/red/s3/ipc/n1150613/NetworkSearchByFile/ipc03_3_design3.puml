@@ -1,0 +1,45 @@
+@startuml ipc03_2_design3.png
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+participant "HandlerSearchWorkbookRequestDTO" as handlerDTO
+participant "PacketEncapsulatorDTO" as packet
+participant "UIController" as uiController
+participant "SearchWorkbookResponseDTO" as resDTO
+participant "SearchResults" as sresults
+participant "File" as file
+participant "ObjectOutputStream" as oos
+participant "Directory" as dic
+
+-> handlerDTO : handleDTO(dto)
+handlerDTO -> packet : request = getDTO()
+handlerDTO -> packet : String namePattern = getNamePattern()
+handlerDTO -> packet : String contentPattern = getContentPattern()
+handlerDTO -> dic : searchFiles()
+loop forEach FileDTO f : dic.getDTO()
+handlerDTO -> dic : workbook w = load()
+alt : if regexChecks()
+handlerDTO -> SearchResults : create()
+handlerDTO -> handlerDTO : resultList.add(SearchResult)
+end
+end
+handlerDTO -> uiController : Stack<Workbook> activeWorkbooks = getActiveWorkbooks()
+loop forEach Workbook workbook : activeWorkbooks
+handlerDTO -> uiController : String name = getFile(workbook)
+uiController -> file : getName()
+
+create sresults
+alt : if regexChecks()
+handlerDTO -> sresults : create()
+loop forEach Spreadsheet spreadsheet : workbook.getSpreadsheets()
+handlerDTO -> handlerDTO : spreadsheetList.add(spreadsheet)
+end
+handlerDTO -> handlerDTO : resultList.add(searchResult)
+end
+end
+create resDTO
+handlerDTO -> resDTO : reply = create()
+handlerDTO -> oos : writeObject(reply)
+
+@enduml

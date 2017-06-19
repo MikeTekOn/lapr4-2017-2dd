@@ -1,0 +1,41 @@
+@startuml cd.png
+
+class SortCellRangeUI
+class SortCellRangeController{
+    ~sort(params)
+    ~createDTOs(params)
+
+}
+class AutoSortingThread <<Entity>>{
+    -RangeRowDTO :rowArray
+    -RangeRowDTOComparator: comparaotr
+    -SortingAlgorithm : algorithm
+    -final SortingFocusOwner
+    -int :realSortingColumnIndex
+    -int : sortingColumnIndex
+    ~ valueChanged(Cell)
+    ~ headerValueChanged(int)
+}
+class RangeRowComparator
+class RangeRowDTO
+class SortingAlgorithm
+
+interface HeaderCellListener{
+    headerValueChanged(int)
+}
+interface CellListener{
+    valueChanged(Cell)
+}
+interface Thread{
+    run()
+}
+
+SortCellRangeUI -> SortCellRangeController
+SortCellRangeController --> AutoSortingThread
+AutoSortingThread  ..|> CellListener
+AutoSortingThread  --|> Thread
+AutoSortingThread  ..|> HeaderCellListener
+AutoSortingThread  "1" o-- "1" RangeRowComparator
+AutoSortingThread  "1" o-- "1" RangeRowDTO
+AutoSortingThread  "1" o-- "1" SortingAlgorithm
+@enduml

@@ -27,7 +27,6 @@ public class ImportXMLMenu extends JMenu {
      *
      * @param app
      * @param uiController
-     * @param controller UIController
      * @param actionManager
      */
     public ImportXMLMenu(CleanSheets app, UIController uiController, ActionManager actionManager) {
