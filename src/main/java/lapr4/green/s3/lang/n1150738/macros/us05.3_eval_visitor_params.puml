@@ -1,0 +1,33 @@
+@startuml us05.3_eval_visitor_params.png
+
+
+hide footbox
+
+participant Macro2EvalVisitor as visitor
+participant "definition: ParameterDefinition" as definition
+
+... ...
+->visitor: visitHeader(Ctx)
+activate visitor
+    visitor->visitor: macro name = ctx.identifier
+    visitor->visitor: visit(ctx.parameters)
+    <--visitor
+deactivate visitor
+... ...
+-> visitor:visitParameters(Ctx)
+activate visitor
+    visitor->definition: addFirst(paramName)
+    activate definition
+    visitor <--definition
+    deactivate definition
+    visitor->visitor: visit(ctx.parameters)
+    <--visitor
+deactivate visitor
+... ...
+->visitor: visitParameters_val_list(Ctx)
+activate visitor
+    visitor->visitor: tempParamList.addFirst(value)
+    <--visitor
+deactivate visitor
+
+@enduml

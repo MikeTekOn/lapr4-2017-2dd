@@ -1,0 +1,25 @@
+@startuml us05.3_concept_classes2.png
+
+hide methods
+
+
+class MacroWithParameter
+class Macro2EvalVisitor
+
+
+Macro2Compiler ->Macro2EvalVisitor
+
+Macro2EvalVisitor --> ParameterDefinition: builds
+Macro2EvalVisitor -> ParameterReference: compiles parameters into
+ParameterDefinition <--* MacroWithParameter
+Macro2EvalVisitor --> MacroWithParameter: builds
+
+class MacroInterpreter
+class ParameterList
+
+MacroWithParameter <- MacroInterpreter: visit
+MacroInterpreter ---> ParameterReference: visits replacing by its current value
+MacroInterpreter --> ParameterList: uses
+ParameterList *--> Parameter
+
+@enduml
