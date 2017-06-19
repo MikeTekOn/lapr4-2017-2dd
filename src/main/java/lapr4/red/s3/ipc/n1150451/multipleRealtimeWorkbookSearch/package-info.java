@@ -60,8 +60,7 @@
  * contaning the changed file, should be sent in broadcast, and then, the other
  * instances, should have "listeners" waiting for those packets.
  * <h2>4. Design</h2>
- *
- *
+ * 
  * <h3>4.1. Functional Tests</h3>
  * Test plan to test the UDP communication:
  * <ol>
@@ -91,7 +90,13 @@
  * Since there is the need to send multiple information over the network the DTO
  * pattern was used so that only one request can bring all the required data, in
  * this case, the file name and path.
- *
+ * <p>
+ * The cache should be implemented by using a map,being the file path the key, and the preview the value. 
+ * Each time the user makes a search the cache should be reset. Once the user clicks on an item from the list, 
+ * if the item exists in the cache, that stored preview is used, else a new one is generated and added. 
+ * Also, if an item from the lists updates once an udp packet arrives, the entry on the map, if existent, should be 
+ * deleted and the preview should be generated from scratch.
+ * </p>
  * <p>
  * <h2>5. Implementation</h2>
  * As stated in the design, a communication by UDP was developed. When saving a
