@@ -84,7 +84,6 @@ public class MacroInterpreterTest {
 //        Value result2 = (Value) m2.accept(new MacroInterpreter(m2, MACRO_SIMPLE_PARAMETER_LIST));
 //        assertEquals(Value.parseNumericValue("3.0").toString(), result2.toString());
 //    }
-
     @Test
     public void ensureMInterpreterEvaluatesFunctionCalls() throws MacroCompilationException, ParseException {
         Spreadsheet sheet = app.getWorkbooks()[0].getSpreadsheet(0);

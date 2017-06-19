@@ -40,7 +40,7 @@ import lapr4.green.s3.lang.n1150532.variables.globalVariablesExtension.GlobalVar
 import lapr4.green.s3.lang.n1150657.XML.Export.TagsName;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionEvent;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionStateListener;
-import lapr4.red.s3.ipc.n1150623.MultipleSharing.ReceivedShareInfo;
+import lapr4.red.s3.ipc.n1150623.MultipleSharing.ShareInfo;
 
 /**
  * A controller for managing the current selection, i.e. the active workbook,
@@ -87,9 +87,9 @@ public class UIController implements SpreadsheetAppListener, ExtensionStateListe
 	/** The header cell listener registered to receive events */
 	private List<HeaderCellListener>headerListeners =  new ArrayList<HeaderCellListener>();
 
+	/**(Received)shared cells name and corresponding information*/
+	private Set<ShareInfo> receivedSharesInfo = new HashSet<>();
 
-	/**shared cells name and corresponding spreadsheet*/
-	private Set<ReceivedShareInfo> sharesInfo = new HashSet<>();
 
         /**
          * The tagsName for the export/import xml
@@ -183,23 +183,23 @@ public class UIController implements SpreadsheetAppListener, ExtensionStateListe
 	 * @param shareName - Name of the share
 	 * @return correct spreadsheet to position shared cells
 	 */
-	public Spreadsheet getSpreadSheetForSharedCells(String shareName, Address ini, Address end){
+	public Spreadsheet getSpreadSheetForSharedCells(String shareName, Address ini, Address end, String otherParty){
 
-		for(ReceivedShareInfo e : sharesInfo){
+		for(ShareInfo e : receivedSharesInfo){
 			if(e.shareName().equals(shareName)){
 				return e.spreadsheet();
 			}
 		}
 		Spreadsheet toReturn = getActiveSpreadsheet();
 
-		ReceivedShareInfo createdInfo = ReceivedShareInfo.createShareInfo(shareName, ini, end, toReturn);
-		sharesInfo.add(createdInfo);
+		ShareInfo createdInfo = ShareInfo.createShareInfo(shareName, ini, end, toReturn, otherParty);
+		receivedSharesInfo.add(createdInfo);
 
 		return toReturn;
 	}
 
-	public Set<ReceivedShareInfo> sharesInfo(){
-		return this.sharesInfo;
+	public Set<ShareInfo> receivedSharesInfo(){
+		return this.receivedSharesInfo;
 	}
 
 

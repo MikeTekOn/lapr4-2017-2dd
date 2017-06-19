@@ -17,8 +17,7 @@ import lapr4.green.s1.ipc.n1150532.comm.connection.ConnectionID;
 import lapr4.green.s1.ipc.n1150532.startSharing.ShareCellsAction;
 import lapr4.green.s1.ipc.n1150657.chat.ControllerConnection;
 import lapr4.green.s1.ipc.n1150657.chat.ui.ChatAction;
-import lapr4.red.s3.ipc.n1150623.MultipleSharing.ReceivedShareInfo;
-import lapr4.red.s3.ipc.n1150943.automaticDownload.persistence.DownloadsListPersistence;
+import lapr4.red.s3.ipc.n1150623.MultipleSharing.ShareInfo;
 
 /**
  * The UI for the CommExtension's side bar.
@@ -220,13 +219,13 @@ public class UICommExtensionSideBar extends JPanel {
 
     private void showShares(){
 
-        Set<ReceivedShareInfo> rec = theController.sharesInfo();
+        Set<ShareInfo> rec = theController.receivedSharesInfo();
         StringBuilder s = new StringBuilder();
+        s.append("Received Shares:\n");
         if(rec.size()==0){
-            s.append("No shares done, yet.\n");
+            s.append("[No shares done, yet.]\n\n");
         }
-
-        for(ReceivedShareInfo r : rec){
+        for(ShareInfo r : rec){
             s.append(r.toString());
         }
         JOptionPane.showMessageDialog(null,  s.toString(), "Shares Done", JOptionPane.PLAIN_MESSAGE);
