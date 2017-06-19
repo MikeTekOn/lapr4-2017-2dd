@@ -283,61 +283,50 @@ public class SearchReplaceSideBar extends JPanel implements Observer {
               
                  PreviewCellDTO prev= (PreviewCellDTO) replaceList.getSelectedValue();
 
-               if(replaceField.getText().length()>0 && toField.getText().length()>0){              
-                    try {
-                          
-                        if(replaceList.getSelectedIndex()>=0){
+               if(commExp.getText().length()>0 && commTo.getText().length()>0){              
+                   if(replaceList.getSelectedIndex()>=0){
+                       
+//                           modelReplace.setSelectedItem(prev.getBeforeCell().toString());
+//  
+//                            PreviewCellDTO selected=(PreviewCellDTO)  modelReplace.getSelectedItem();
+
+
+                        ctrl.startPreviewThread(prev.getBeforeCell(),
+                                commExp.getText(),commTo.getText());
+
+                        try {
+
+                            modelReplace.setSelectedItem(prev.getBeforeCell().toString());
+                            extension.setActiveCell(modelReplace.getSelectedItem().getBeforeCell());
+
+                            ctrl.startReplaceThread(prev.getBeforeCell(), commExp.getText(),
+                                    commTo.getText(),extension);
+
                             
-                           modelReplace.setSelectedItem(prev.getBeforeCell().toString());
 
-                          
-                            PreviewCellDTO selected=(PreviewCellDTO)  modelReplace.getSelectedItem();
+                            prev.getAfterCell().setContent(prev.getBeforeCell().getContent());
 
-                            if (ctrl.checkIfPreviewValid(selected.getBeforeCell(),
-                                    replaceField.getText(), toField.getText(), extension)!=null ){
 
-                                ctrl.startPreviewThread(selected.getBeforeCell(),
-                                        replaceField.getText(),toField.getText());
+                            //  selected.getBeforeCell().setContent(selected.getAfterCell().getContent());
+                            updateUI();
 
-                                try {
-                                  
-                                   modelReplace.setSelectedItem(prev.getBeforeCell().toString());
-                                    extension.setActiveCell(modelReplace.getSelectedItem().getBeforeCell());
-
-                                    ctrl.startReplaceThread(selected.getBeforeCell(), commExp.getText(),
-                                            commTo.getText(),extension);
-                                   
-                                    prev.getAfterCell().setContent(prev.getBeforeCell().getContent());
-                                    
-
-                                  //  selected.getBeforeCell().setContent(selected.getAfterCell().getContent());
-                                    updateUI();
-
-                                } catch (CloneNotSupportedException ex) {
-                                    JOptionPane.showMessageDialog(null,
-                                            "It wasn´t possible to replace.",
-                                            "Replace error",
-                                            JOptionPane.ERROR_MESSAGE);
-//                                        } catch (FormulaCompilationException ex ) {
-//                                            JOptionPane.showMessageDialog(null,
-//                                                    "It wasn´t possible to replace.",
-//                                                    "Formula compilation error",
-//                                                    JOptionPane.ERROR_MESSAGE);
-                                } catch (FormulaCompilationException ex) {
-                                   Logger.getLogger(SearchReplaceSideBar.class.getName()).log(Level.SEVERE, null, ex);
-                               }
-
-                            } else {
-                                JOptionPane.showMessageDialog(null,
-                                        "The inserted expression to replace is not valid. Verify if cell contains expression to replace",
-                                        "Invalid replace text",
-                                        JOptionPane.ERROR_MESSAGE);
-                            }
-
+                        } catch (CloneNotSupportedException ex) {
+                            JOptionPane.showMessageDialog(null,
+                                    "It wasn´t possible to replace.",
+                                    "Replace error",
+                                    JOptionPane.ERROR_MESSAGE);
+                        //                                        } catch (FormulaCompilationException ex ) {
+                        //                                            JOptionPane.showMessageDialog(null,
+                        //                                                    "It wasn´t possible to replace.",
+                        //                                                    "Formula compilation error",
+                        //                                                    JOptionPane.ERROR_MESSAGE);
+                        } catch (FormulaCompilationException ex) {
+                            Logger.getLogger(SearchReplaceSideBar.class.getName()).log(Level.SEVERE, null, ex);
                         }
-                    } catch (CloneNotSupportedException ex) {
-                        Logger.getLogger(SearchReplaceSideBar.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+
+
+
+                   }
   
                 } 
               

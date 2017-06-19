@@ -300,11 +300,11 @@ public class ImagesPanel extends JPanel implements SelectionListener,
                     if (cell.getImages().isEmpty()) {
                         removeImageButton.setEnabled(false);
                         openImageButton.setEnabled(false);
-                        if (cell.getImages().size() < 2) {
+                    }
+                    if (cell.getImages().size() < 2) {
                             nextImageButton.setEnabled(false);
                             previousImageButton.setEnabled(false);
                         }
-                    }
                 } else {
                     JOptionPane.showMessageDialog(cardLayoutPanel, "Removing the current image failed.", "Removed failed", JOptionPane.ERROR_MESSAGE);
                 }
