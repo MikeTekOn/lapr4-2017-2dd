@@ -5,7 +5,9 @@
  */
 package lapr4.green.s3.lang.n1150657.XML.Import.Action;
 
+import csheets.core.Cell;
 import csheets.ui.ctrl.BaseAction;
+import csheets.ui.ctrl.FocusOwnerAction;
 import csheets.ui.ctrl.UIController;
 import java.awt.event.ActionEvent;
 import lapr4.green.s3.lang.n1150657.XML.Import.UI.ImportSelectedCellsUI;
@@ -14,7 +16,7 @@ import lapr4.green.s3.lang.n1150657.XML.Import.UI.ImportSelectedCellsUI;
  *
  * @author Sofia
  */
-public class ImportSelectedCellsActionUI extends BaseAction{
+public class ImportSelectedCellsActionUI extends FocusOwnerAction{
     /**
      * The user interface controller
      */
@@ -26,7 +28,7 @@ public class ImportSelectedCellsActionUI extends BaseAction{
     
     @Override
     protected String getName() {
-        return "Selected workbook";
+        return "Selected cells";
     }
 
     /**
@@ -37,6 +39,10 @@ public class ImportSelectedCellsActionUI extends BaseAction{
      */
     @Override
     public void actionPerformed(ActionEvent event) {
-        ImportSelectedCellsUI exportSelectedWorkbookUI = new ImportSelectedCellsUI(uiController);
+        if (focusOwner == null) {
+            return;
+        }
+        Cell selectedCells[][] = focusOwner.getSelectedCells();
+        ImportSelectedCellsUI exportSelectedWorkbookUI = new ImportSelectedCellsUI(uiController,selectedCells);
     }
 }

@@ -7,6 +7,7 @@ package lapr4.green.s3.lang.n1150657.XML.Import;
 
 import csheets.core.Address;
 import csheets.core.Cell;
+import csheets.core.Spreadsheet;
 import csheets.core.Workbook;
 import csheets.core.formula.compiler.FormulaCompilationException;
 import csheets.ext.style.StylableCell;
@@ -17,14 +18,24 @@ import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Map;
 import javax.swing.border.MatteBorder;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import lapr4.green.s2.core.n1150901.richCommentsAndHistory.application.CommentsWithHistoryController;
+import lapr4.green.s2.core.n1150901.richCommentsAndHistory.presentation.CommentsWithHistoryUI;
+import lapr4.green.s2.core.n1150901.richCommentsAndHistory.presentation.CommentsWithHistoryUIExtension;
+import lapr4.green.s3.lang.n1150532.variables.Variable;
+import lapr4.green.s3.lang.n1150657.XML.Export.ActiveCell;
+import lapr4.green.s3.lang.n1150657.XML.Export.ElementCleansheet;
+import lapr4.green.s3.lang.n1150657.XML.Export.TagsName;
+import lapr4.red.s1.core.n1150690.comments.CommentableCellWithMultipleUsers;
 import lapr4.red.s2.lang.n1150451.multipleMacros.domain.MacroWithName;
 import lapr4.red.s2.lang.n1151094.ImportXML.ImportStrategy;
 import org.xml.sax.SAXException;
 import org.w3c.dom.*;
+import lapr4.red.s1.core.n1150690.comments.domain.User;
 
 /**
  *
@@ -57,6 +68,24 @@ public class ImportXML implements ImportStrategy {
      */
     private final UIController uiController;
 
+    private Cell selectedCells[][];
+
+    private boolean isReplace;
+
+    private static final int DEFAULT_CHOICE = -1;
+
+    private static int spreadsheetChoice = DEFAULT_CHOICE;
+    
+    private String spreasheetTag;
+    private String workbookTag;
+    private String cellTag;
+    private String contentTag;
+    private String fontTag;
+    private String foregroundTag;
+    private String macroTag;
+    private String variablesTag;
+    private String commentTag;
+
     /**
      * This constructor receives as parameter the UIController. It is
      * responsible for instantiating the Object.
@@ -64,9 +93,37 @@ public class ImportXML implements ImportStrategy {
      * @param uiController of ImportXml
      * @param selectedPath
      */
-    public ImportXML(UIController uiController, String selectedPath) {
+    public ImportXML(UIController uiController, String selectedPath, boolean isReplace) {
         this.uiController = uiController;
         this.path = selectedPath;
+        this.isReplace = isReplace;
+        this.selectedCells = null;
+        setNamesTags();
+        
+    }
+    
+    private void setNamesTags(){
+        Map<String, String> tags = uiController.getTagsName().getMapWithTags();
+        spreasheetTag = tags.get(ElementCleansheet.SPREADSHEET.getElementName()).equals(TagsName.DEFAULT_USER_TAG_NAME) ? ElementCleansheet.SPREADSHEET.getElementName() : 
+                tags.get(ElementCleansheet.SPREADSHEET.getElementName());
+        workbookTag = tags.get(ElementCleansheet.WORKBOOK.getElementName()).equals(TagsName.DEFAULT_USER_TAG_NAME) ? ElementCleansheet.WORKBOOK.getElementName() : 
+                tags.get(ElementCleansheet.WORKBOOK.getElementName());
+        cellTag = tags.get(ElementCleansheet.CELL.getElementName()).equals(TagsName.DEFAULT_USER_TAG_NAME) ? ElementCleansheet.CELL.getElementName() : 
+                tags.get(ElementCleansheet.CELL.getElementName());
+        
+        contentTag = tags.get(ElementCleansheet.CONTENT.getElementName()).equals(TagsName.DEFAULT_USER_TAG_NAME) ? ElementCleansheet.CONTENT.getElementName() : 
+                tags.get(ElementCleansheet.CONTENT.getElementName());
+        fontTag = tags.get(ElementCleansheet.FONT.getElementName()).equals(TagsName.DEFAULT_USER_TAG_NAME) ? ElementCleansheet.FONT.getElementName() : 
+                tags.get(ElementCleansheet.FONT.getElementName());
+        foregroundTag = tags.get(ElementCleansheet.FOREGROUNG.getElementName()).equals(TagsName.DEFAULT_USER_TAG_NAME) ? ElementCleansheet.FOREGROUNG.getElementName() : 
+                tags.get(ElementCleansheet.FOREGROUNG.getElementName());
+        
+        macroTag = tags.get(ElementCleansheet.MACRO.getElementName()).equals(TagsName.DEFAULT_USER_TAG_NAME) ? ElementCleansheet.MACRO.getElementName() : 
+                tags.get(ElementCleansheet.MACRO.getElementName());
+        variablesTag = tags.get(ElementCleansheet.GLOBAL_VARIABLE.getElementName()).equals(TagsName.DEFAULT_USER_TAG_NAME) ? ElementCleansheet.GLOBAL_VARIABLE.getElementName() : 
+                tags.get(ElementCleansheet.GLOBAL_VARIABLE.getElementName());
+        commentTag = tags.get(ElementCleansheet.COMMENT.getElementName()).equals(TagsName.DEFAULT_USER_TAG_NAME) ? ElementCleansheet.COMMENT.getElementName() : 
+                tags.get(ElementCleansheet.COMMENT.getElementName());
     }
 
     /**
@@ -87,13 +144,39 @@ public class ImportXML implements ImportStrategy {
 
             int contador = countSpreadSheet(listSpreadSheet), count = 0;
             Workbook work = new Workbook(contador, null);
+            if (!isReplace) {
+                work = uiController.getActiveWorkbook();
+            }
+            if (spreadsheetChoice == DEFAULT_CHOICE && selectedCells == null) {
+                for (int i = 0; i < listSpreadSheet.getLength(); i++) {
+                    an = listSpreadSheet.item(i);
+                    if (an.getNodeName().equals(spreasheetTag)) {
+                        count = alterWorkbook(an, work, count);
+                    }
 
-            for (int i = 0; i < listSpreadSheet.getLength(); i++) {
-                an = listSpreadSheet.item(i);
-                if (an.getNodeName().equals("spreadsheet")) {
-                    count = alterWorkbook(an, work, count);
                 }
-
+            } else if (spreadsheetChoice != DEFAULT_CHOICE && selectedCells == null) {
+                for (int i = 0; i < listSpreadSheet.getLength(); i++) {
+                    an = listSpreadSheet.item(i);
+                    if (an.getNodeName().equals(spreasheetTag)) {
+                        if (count == spreadsheetChoice) {
+                            alterWorkbook(an, work, count);
+                            break;
+                        }
+                        count++;
+                    }
+                }
+            } else if (selectedCells != null) {
+                for (int i = 0; i < listSpreadSheet.getLength(); i++) {
+                    an = listSpreadSheet.item(i);
+                    if (an.getNodeName().equals(spreasheetTag)) {
+                        if (an.getAttributes().getNamedItem(DEFAULT_TITLE).getTextContent().equals(uiController.getActiveSpreadsheet().getTitle())) {
+                            alterWorkbook(an, work, count);
+                            break;
+                        }
+                        count++;
+                    }
+                }
             }
             uiController.setActiveWorkbook(work);
 
@@ -137,31 +220,56 @@ public class ImportXML implements ImportStrategy {
     private int alterWorkbook(Node spreadsheet, Workbook work, int count) throws FormulaCompilationException {
 
         Node an2;
+        int firstRowORder = 0;
 
         if (spreadsheet.getNodeType() == Node.ELEMENT_NODE) {
-            //System.out.println("aqui");
             NodeList listCellOfSpreadSheet = spreadsheet.getChildNodes();
             NamedNodeMap attr = spreadsheet.getAttributes();
-
-            String title = attr.getNamedItem("title").getTextContent();
-            work.getSpreadsheet(count).setTitle(title);
+            Spreadsheet s = work.getSpreadsheet(count);
+            if (!isReplace) {
+                firstRowORder = append(s);
+            }
+            if (isReplace) {
+                String title = attr.getNamedItem(DEFAULT_TITLE).getTextContent();
+                s.setTitle(title);
+            }
 
             for (int j = 0; j < listCellOfSpreadSheet.getLength(); j++) {
                 an2 = listCellOfSpreadSheet.item(j);
-                if (an2.getNodeType() == Node.ELEMENT_NODE && an2.getNodeName().equals("cell")) {
+                if (an2.getNodeType() == Node.ELEMENT_NODE && an2.getNodeName().equals(cellTag)) {
                     NamedNodeMap attributes = an2.getAttributes();
                     //cell
                     String column = attributes.getNamedItem(DEFAULT_COLUMN).getTextContent();
                     String row = attributes.getNamedItem(DEFAULT_ROW).getTextContent();
                     //cell address
                     Address addr = new Address(column, row);
+                    if (!isReplace) {
+                        int newColumn = addr.getColumn();
+                        int newRow = addr.getRow() + firstRowORder;
+                        addr = new Address(newColumn, newRow);
+                    }
+                    if (selectedCells != null) {
+                        int rowMax = selectedCells.length - 1;
+                        int columnMax = selectedCells[rowMax].length - 1;
+                        Cell last = null;
+                        try {
+                            last = selectedCells[rowMax][columnMax];
+                        } catch (ArrayIndexOutOfBoundsException e) {
+
+                        }
+                        if (addr.getColumn() > last.getAddress().getColumn()
+                                || addr.getRow() > last.getAddress().getRow()) {
+                            break;
+                        }
+                    }
+
                     NodeList cellChilds = an2.getChildNodes();
                     for (int i = 0; i < cellChilds.getLength(); i++) {
                         Node child = cellChilds.item(i);
                         if (child.getNodeType() == Node.ELEMENT_NODE) {
                             Cell cell = work.getSpreadsheet(count).getCell(addr);
                             //content
-                            if (child.getNodeName().equals("content")) {
+                            if (child.getNodeName().equals(contentTag)) {
                                 String content = child.getTextContent();
                                 cell.setContent(content);
                             }
@@ -201,7 +309,7 @@ public class ImportXML implements ImportStrategy {
                             }
 
                             //font
-                            if (child.getNodeName().equals("font")) {
+                            if (child.getNodeName().equals(fontTag)) {
                                 //default
                                 int style = 0;
 
@@ -231,7 +339,7 @@ public class ImportXML implements ImportStrategy {
                             }
 
                             //foreground
-                            if (child.getNodeName().equals("foreground")) {
+                            if (child.getNodeName().equals(foregroundTag)) {
                                 Color newColor = getColor(child);
                                 stylableCell.setForegroundColor(newColor);
                             }
@@ -244,62 +352,57 @@ public class ImportXML implements ImportStrategy {
                             }
 
                             //comment
-                            if (child.getNodeName().equals("comment")) {
-//                                NamedNodeMap attrChild = child.getAttributes();
-//                                String user = attrChild.getNamedItem("user").getTextContent();
-//                                User u = new User(user);
-//                                NodeList commentChild = child.getChildNodes();
+                            if (child.getNodeName().equals(commentTag)) {
 
-//                                for (int k = 0; k < commentChild.getLength(); k++) {
-//                                    Node childComment = commentChild.item(k);
-//                                    if (childComment.getNodeName().equals("content")) {
-//                                        //content
-//                                        String userContent = childComment.getTextContent();
-//                                        CommentsWithHistoryController c = new CommentsWithHistoryController(uiController);
-//                                        CommentableCellWithMultipleUsers comment = new CommentableCellWithMultipleUsers(cell);
-//
-//                                        CommentsWithHistoryUIExtension ce = null;
-//                                        for (int x = 0; x < uiController.getExtensions().length; x++) {
-//                                            if (uiController.getExtensions()[x] instanceof CommentsWithHistoryUIExtension) {
-//                                                ce = (CommentsWithHistoryUIExtension) uiController.getExtensions()[x];
-//                                            }
-//                                        }
-//                                        CommentsWithHistoryUI ui = (CommentsWithHistoryUI) ce.getSideBar();
-//
-//                                        try {
-//                                            //System.out.println(user + ":" + userContent);
-//                                            //uiController.setWorkbookModified(cell.getSpreadsheet().getWorkbook());
-//                                            comment.addUsersComment(userContent, u);
-//                                            ui.addComment(u.name(), userContent);
-//                                            //c.changeActiveCell(comment);
-//                                        } catch (IllegalArgumentException e) {
-//                                            //do nothing
-//                                        }
-//                                    }
-//
-//                                }
+                                CommentsWithHistoryUIExtension ce = null;
+                                for (int x = 0; x < uiController.getExtensions().length; x++) {
+                                    if (uiController.getExtensions()[x] instanceof CommentsWithHistoryUIExtension) {
+                                        ce = (CommentsWithHistoryUIExtension) uiController.getExtensions()[x];
+                                    }
+                                }
+                                CommentsWithHistoryUI ui = (CommentsWithHistoryUI) ce.getSideBar();
+                                CommentsWithHistoryController controller = ui.controller();
+
+                                CommentableCellWithMultipleUsers commentable = new CommentableCellWithMultipleUsers(cell);
+
+                                NamedNodeMap attrChild = child.getAttributes();
+                                String user = attrChild.getNamedItem("user").getTextContent();
+
+                                User u = new User(user);
+                                NodeList commentChild = child.getChildNodes();
+                                for (int k = 0; k < commentChild.getLength(); k++) {
+                                    Node childComment = commentChild.item(k);
+                                    if (childComment.getNodeName().equals("content") && childComment.getNodeType() == Node.ELEMENT_NODE) {
+                                        String userContent = childComment.getTextContent();
+                                        commentable.addUsersComment(userContent, u);
+                                        controller.changeActiveCell(commentable);
+                                        ui.commentChanged(commentable);
+                                    }
+                                }
                             }
                         }
                     }
-                } else if (an2.getNodeType() == Node.ELEMENT_NODE && an2.getNodeName().equals("macro")) {
+                } else if (an2.getNodeType() == Node.ELEMENT_NODE && an2.getNodeName().equals(macroTag)) {
                     NamedNodeMap attributes = an2.getAttributes();
                     String macroName = attributes.getNamedItem("name").getTextContent();
                     NodeList macroChilds = an2.getChildNodes();
                     StringBuilder stringBuilder = new StringBuilder();
                     for (int i = 0; i < macroChilds.getLength(); i++) {
                         Node macroCode = macroChilds.item(i);
-                        if(macroCode.getNodeName().equals("code")){
+                        if (macroCode.getNodeName().equals("code")) {
                             stringBuilder.append(macroCode.getTextContent());
                         }
                     }
                     MacroWithName m = new MacroWithName(macroName, stringBuilder.toString(), work.getSpreadsheet(count), uiController);
                     work.getMacroList().addMacro(m);
-                } else if (an2.getNodeType() == Node.ELEMENT_NODE && an2.getNodeName().equals("global_variables")) {
-                    //todo
+                } else if (an2.getNodeType() == Node.ELEMENT_NODE && an2.getNodeName().equals(variablesTag)) {
+                    NamedNodeMap attributes = an2.getAttributes();
+                    String varName = attributes.getNamedItem("name").getTextContent();
+                    Variable v = new Variable(varName);
+                    work.globalVariables().variables().add(v);
                 }
             }
             count++;
-
         }
         return count;
     }
@@ -327,4 +430,49 @@ public class ImportXML implements ImportStrategy {
         return newColor;
     }
 
+    private int append(Spreadsheet spread) {
+        Address ad = new Address(0, 0);
+        int greaterRow = 0;
+        for (int i = 0; i < 128; i++) {
+            for (int j = 0; j < 52; j++) {
+                Cell c = spread.getCell(i, j);
+                ActiveCell activeCell = new ActiveCell(c);
+                if (activeCell.hasContent() || activeCell.hasBackgroundColor()
+                        || activeCell.hasBorder() || activeCell.hasFormat()) {
+                    ad = c.getAddress();
+                    if (greaterRow < ad.getRow()) {
+                        greaterRow = ad.getRow();
+                    }
+                }
+            }
+        }
+
+        return greaterRow + 1;
+    }
+
+    public int countNumberSpreadSheet(String pathName) throws ParserConfigurationException, SAXException, IOException {
+        DocumentBuilder dBuilder = DocumentBuilderFactory.newInstance()
+                .newDocumentBuilder();
+        Document doc = dBuilder.parse(new File(pathName));
+        Element elementWorkbook = doc.getDocumentElement();
+        NodeList listSpreadSheet = elementWorkbook.getChildNodes();
+
+        return countSpreadSheet(listSpreadSheet);
+    }
+
+    public void setIsReplace(boolean isReplace) {
+        this.isReplace = isReplace;
+    }
+
+    public static void choiceSpreadSheet(int spreadChoice) {
+        ImportXML.spreadsheetChoice = spreadChoice;
+    }
+
+    /**
+     * Defines the selected cells.
+     *
+     */
+    public void selectRange(Cell selectedCells[][]) {
+        this.selectedCells = selectedCells;
+    }
 }

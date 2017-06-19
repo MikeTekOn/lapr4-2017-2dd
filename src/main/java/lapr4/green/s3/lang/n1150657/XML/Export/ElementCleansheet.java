@@ -41,12 +41,6 @@ public enum ElementCleansheet {
             return "macro";
         }
     },
-    STYLE_FORMATING{
-        @Override
-        public String getElementName(){
-            return "style_formating";
-        }
-    },
     COMMENT{
         @Override
         public String getElementName(){
@@ -59,16 +53,16 @@ public enum ElementCleansheet {
             return "global_variable";
         }
     },
-    USER{
+    FONT{
         @Override
         public String getElementName(){
-            return "user";
+            return "font";
         }
     },
-    TEXT{
+    FOREGROUNG{
         @Override
         public String getElementName(){
-            return "user";
+            return "foreground";
         }
     };
     public abstract String getElementName();

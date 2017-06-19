@@ -32,10 +32,24 @@ public class ImportSelectedWorkbookUI {
 
         if (answer == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
-            
+
             if (Path.validateExtension(file)) {
-                ImportXMLController importXmlController = new ImportXMLController(uiController,file.getPath());
-                importXmlController.importXml();
+
+                Object[] options = {"Replace", "Append"};
+                int choice = JOptionPane.showOptionDialog(null,
+                        "Choose option:",
+                        "Import option",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null, options, options[0]);
+                if (choice == JOptionPane.YES_OPTION) {
+                    ImportXMLController importXmlController = new ImportXMLController(uiController, file.getPath(),true);
+                    importXmlController.importXml();
+
+                } else {
+                    ImportXMLController importXmlController = new ImportXMLController(uiController, file.getPath(),false);
+                    importXmlController.importXml();
+                }
                 JOptionPane.showMessageDialog(
                         null,
                         "Uploaded File", "Import",

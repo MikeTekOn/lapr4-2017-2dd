@@ -109,13 +109,13 @@ public class ExportXML implements ExportStrategy {
 
             //root element
             Document doc = docBuilder.newDocument();
-            Element rootElement = createElementsByTreeORder(doc, TreeOrder.ROOT.nameRoot());
+            Element rootElement = createElementsByTreeORder(doc, ElementCleansheet.WORKBOOK);
             doc.appendChild(rootElement);
 
             for (Spreadsheet spreadsheet : cellMap.keySet()) {
 
                 //worksheet elements
-                Element spreadsheetElement = createElementsByTreeORder(doc, TreeOrder.ELEMENT_ROOT1.nameRoot());
+                Element spreadsheetElement = createElementsByTreeORder(doc, ElementCleansheet.SPREADSHEET);
                 rootElement.appendChild(spreadsheetElement);
 
                 // set attribute(title) to spreadsheet element
@@ -129,7 +129,7 @@ public class ExportXML implements ExportStrategy {
                     boolean hasBorder = false;
                     ActiveCell activeCell = new ActiveCell(currentCell);
                     //cell elements
-                    Element cellElement = createElementsByTreeORder(doc, TreeOrder.SUB_ELEMENT_ROOT1.nameRoot());
+                    Element cellElement = createElementsByTreeORder(doc, ElementCleansheet.CELL);
 
                     // set attribute(row) to cell element
                     Attr row_attr = doc.createAttribute(TITLE_ROW);
@@ -144,7 +144,7 @@ public class ExportXML implements ExportStrategy {
                     //CONTENT
                     if (activeCell.hasContent()) {
                         //Content
-                        contentElement = createElementsByTreeORder(doc, TreeOrder.SUB_ELEMENT_CONTENT.nameRoot());
+                        contentElement = createElementsByTreeORder(doc, ElementCleansheet.CONTENT);
                         contentElement.appendChild(doc.createTextNode((currentCell.getContent())));
                         cellElement.appendChild(contentElement);
                     }
@@ -305,7 +305,7 @@ public class ExportXML implements ExportStrategy {
                     //Comment
                     try {
                         CommentableCellWithMultipleUsers cellComment = (CommentableCellWithMultipleUsers) currentCell.getExtension(CommentsExtension.NAME);
-                        commentElement = doc.createElement(TreeOrder.SUB_ELEMENT_COMMENT.nameRoot().getElementName());
+                        commentElement = doc.createElement(ElementCleansheet.COMMENT.getElementName());
                         for (Map.Entry<User, List<String>> l : cellComment.comments().entrySet()) {
                             Attr userAttr = doc.createAttribute(TITLE_USER);
                             userAttr.setValue(l.getKey().name()); //user name

@@ -37,6 +37,7 @@ import java.io.File;
 
 import lapr4.green.s3.lang.n1150532.variables.globalVariablesExtension.GlobalVariablesExtensionSideBarUI;
 import lapr4.green.s3.lang.n1150532.variables.globalVariablesExtension.GlobalVariablesExtensionUI;
+import lapr4.green.s3.lang.n1150657.XML.Export.TagsName;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionEvent;
 import lapr4.red.s1.core.n1150385.enabledisableextensions.ExtensionStateListener;
 import lapr4.red.s3.ipc.n1150623.MultipleSharing.ReceivedShareInfo;
@@ -90,6 +91,11 @@ public class UIController implements SpreadsheetAppListener, ExtensionStateListe
 	/**shared cells name and corresponding spreadsheet*/
 	private Set<ReceivedShareInfo> sharesInfo = new HashSet<>();
 
+        /**
+         * The tagsName for the export/import xml
+         */
+        private TagsName tagsNameWorkbook;
+        
 	// private Map<Workbook, Spreadsheet> activeSpreadsheets;
 	// private Map<Spreadsheet, Cell> activeCells;
 
@@ -122,6 +128,7 @@ public class UIController implements SpreadsheetAppListener, ExtensionStateListe
                         app.addSpreadsheetAppListener((GlobalVariablesExtensionSideBarUI)ext.getSideBar());
                     }
                 }
+                this.tagsNameWorkbook = new TagsName();
 	}
 
 /*
@@ -498,4 +505,21 @@ public class UIController implements SpreadsheetAppListener, ExtensionStateListe
 				listener.selectionChanged(event);
 		}
 	}
+        
+        /**
+         * It adds into the tag map the name of the original tag and the user choice.
+         * @param tag The tag to be chosen.
+         * @param name The new tag name.
+         */
+    public void addTagName(String tag, String name){
+        tagsNameWorkbook.addTagUserName(tag, name);
+    }
+    
+    /**
+     * It gives the tags name.
+     * @return It returns a tagsname.
+     */
+    public TagsName getTagsName(){
+        return tagsNameWorkbook;
+    }
 }
