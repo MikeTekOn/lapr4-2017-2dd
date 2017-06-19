@@ -55,13 +55,33 @@
  *
  *
  *
+ * <h5>Analysis 1 - Relation between both instances:</h5>
+ * <img src="ipc_01_1_analysis1.png" alt="image">
+ *
+ * <h5>Analysis 2 - Relation between Classes:</h5>
+ * <img src="ipc_01_1_analysis2.png" alt="image">
  *
  *
+ * <h5>Transferring Data</h5>
+ *      <p>As it was already made, this is how the UDP and TCP protocols are used in this UC:</p>
  *
+ *      <h6>UDP - Client</h6>
+ *               <img src="ipc_01_1_design_udp_client.png" alt="image">
+ *      <h6>UDP - Server</h6>
+ *               <img src="ipc_01_1_design_udp_server.png" alt="image">
  *
+ *      <h6>TCP - Client</h6>
+ *               <img src="ipc_01_1_design_tcp_client.png" alt="image">
+ *      <h6>TCP - Server</h6>
+ *               <img src="ipc_01_1_design_tcp_server.png" alt="image">
  *
- *
- *
+ * <h5>How the cells behave during transfer</h5>
+ *              <h6>Styles creation for transfer</h6>
+ *              <img src="start_sharing.png" alt="image">
+ *              <h6>Share changes</h6>
+ *              <img src="share_cell_content_sd.png" alt="image">
+ *              <h6>Receive changes</h6>
+ *              <img src="receive_cell_content_sd.png" alt="image">
  *
  * <h2>4. Tests</h2>
  *
@@ -123,10 +143,6 @@
  * <h2>5. Design</h2>
  *
  *
- *
- *
- *
- *
  * <h3>5.4. Design Patterns</h3>
  * <p>To make the communication possible, the observer pattern was used to make notifications about the updates.</p>
  * <p>Also, all good practices dictated by SOLID and GRASP was followed, to make the software maintainable.</p>
@@ -152,19 +168,17 @@
  *     mechanism.
  * </p>
  * <p>
- *     The class {@link lapr4.black.s1.ipc.n2345678.comm.sharecells.CellDTO} was modified to add the StyledDTO of the
- *     shared cells. Although the extend mechanism could be used in this case, the cost would be high in terms of
- *     coupling, since there is a lot of usages of this class. A big refactor would be necessary.
+ *     All classes related to the cells transfer were altered in order to add a new attribute (name for the share)
+ *
  * </p>
  * <p>
- *     The class {@link lapr4.green.s1.ipc.n1150532.comm.CommExtension} was also modified in the update method. If we
- *     would extend this class, the method update would have to be overwritten. Since update method has a lot of logic
- *     depending on the instance of the received object (not a good approach, but for the time being a refactor would bes
- *     expensive), most of the logic would have to be duplicated. Also the usages of this class would have to be
- *     refactored as well.
+ *     The class {@link lapr4.green.s1.ipc.n1150532.comm.CommExtension} was also modified. Now the style and content are applyed
+ *     ate the same time, so that it can be synchronized with the shares and range selection by the client.
  * </p>
  *
  *
+ * <p>A new Class was created to support every alterations received and apply them to the cells:</p>
+ * <img src="cd_ipc_1.3.png" alt="image">
  *
  *
  *

@@ -1,0 +1,53 @@
+@startuml
+
+skinparam handwritten true
+skinparam monochrome true
+skinparam packageStyle rect
+skinparam defaultFontName FG Virgil
+skinparam shadowing false
+
+participant "SearchPeersAction"
+participant "ConnectionDetailsRequestDTO"
+participant "HandlerConnectionDetailsResponseDTO"
+participant "CommUDPClient"
+participant "DatagramSocket"
+participant "ByteArrayOutputStream"
+participant "ObjectOutputStream"
+participant "DatagramPacket"
+participant "ByteArrayInputStream"
+participant "ObjectInputStream"
+
+create ConnectionDetailsRequestDTO
+SearchPeersAction -> ConnectionDetailsRequestDTO : dto = new()
+SearchPeersAction -> HandlerConnectionDetailsResponseDTO : handler = new()
+create CommUDPClient
+SearchPeersAction -> CommUDPClient : new( dto , portNumber , waitingTime )
+SearchPeersAction -> CommUDPClient : addHandler( handler )
+create DatagramSocket
+CommUDPClient -> DatagramSocket : new
+CommUDPClient -> DatagramSocket : setBroadcast( true )
+CommUDPClient -> DatagramSocket : setSoTimeout( waitingTime )
+create ByteArrayOutputStream
+CommUDPClient -> ByteArrayOutputStream : bos = new()
+create ObjectOutputStream
+CommUDPClient -> ObjectOutputStream : new( bos )
+CommUDPClient -> ObjectOutputStream : writeObject( dto )
+CommUDPClient -> ByteArrayOutputStream : data = toByteArray()
+create DatagramPacket
+CommUDPClient -> DatagramPacket : udpPacket = new( data , "broadcast address" , portNumber )
+CommUDPClient-> DatagramSocket : send( udpPacket )
+loop
+CommUDPClient-> DatagramPacket : new( data , data.length )
+CommUDPClient-> DatagramSocket : receive( udpPacket )
+create ByteArrayInputStream
+CommUDPClient -> ByteArrayInputStream : bis = new( data )
+create ObjectInputStream
+CommUDPClient -> ObjectInputStream : new( bis )
+CommUDPClient -> ObjectInputStream : reply = readObject()
+CommUDPClient -> CommUDPClient : getHandler( reply )
+CommUDPClient -> HandlerConnectionDetailsResponseDTO : handleDTO( reply )
+HandlerConnectionDetailsResponseDTO -> HandlerConnectionDetailsResponseDTO : isMyReply( reply )
+note right of HandlerConnectionDetailsResponseDTO : Handler publishes a NewPeerEvent
+end loop
+
+@enduml

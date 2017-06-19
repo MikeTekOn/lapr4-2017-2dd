@@ -39,7 +39,7 @@ public class SharedCellsTest {
     private Spreadsheet s_server, s_client;
    
     @Before public void setUp() {
-        
+  /*
         // Try to create the CS application object
         CleanSheets.setFlag(true);
         CleanSheets app = new CleanSheets();
@@ -57,7 +57,8 @@ public class SharedCellsTest {
         
         // Setup the server handler
         shareCellsHandler = new HandleReceiveCells(app);
-        commServer.addHandler(RequestSharedCellsDTO.class, shareCellsHandler);        
+        commServer.addHandler(RequestSharedCellsDTO.class, shareCellsHandler);
+              */
     }
 
     @Test public void testShareCellsBetweenSheets() {
